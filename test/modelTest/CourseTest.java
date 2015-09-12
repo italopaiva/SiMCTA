@@ -31,7 +31,7 @@ public class CourseTest {
 		
 		course = new Course(name, description, courseDuration, courseValue);
 	}
-
+	
 /** Test of valid entries */
 	@Test
 	public void testAllAttributesValid(){
@@ -197,7 +197,7 @@ public class CourseTest {
 	}
 	
 	@Test(expected = CourseException.class)
-	public void testCourseDurationWithNegativeNumber() throws CourseException{
+	public void testCourseDurationWithNegativeNumbers() throws CourseException{
 		
 		// This way won't be zero
 		int randomInt = random.nextInt(Integer.MAX_VALUE - 1) + 1;
@@ -224,6 +224,44 @@ public class CourseTest {
 	}
 	
 	/** End of tests for course duration */
+	
+	/** Tests of course value*/
+	
+	@Test(expected = CourseException.class)
+	public void testCourseValueWith0() throws CourseException{
+		
+		newCourse("Aplicação de película", "Curso para aprender a aplicar película",
+					3, 0);
+	}
+	
+	@Test(expected = CourseException.class)
+	public void testCourseValueWithNegativeNumbers() throws CourseException{
+		
+		// This way won't be zero
+		int randomInt = random.nextInt(Integer.MAX_VALUE - 1) + 1;	
+		
+		newCourse("Aplicação de película", "Curso para aprender a aplicar película",
+					3, MIN_VALUE - randomInt);
+	}
+	
+	@Test(expected = CourseException.class)
+	public void testCourseValueWithOneGreaterThanMax() throws CourseException{
+				
+		newCourse("Aplicação de película", "Curso para aprender a aplicar película",
+					3, MAX_VALUE + 1);
+	}
+	
+	@Test(expected = CourseException.class)
+	public void testCourseValueGreaterThanMax() throws CourseException{
+		
+		// This way won't be zero
+		int randomInt = random.nextInt(Integer.MAX_VALUE - MAX_DURATION) + 1;
+		
+		newCourse("Aplicação de película", "Curso para aprender a aplicar película",
+					3, MAX_VALUE + randomInt);
+	}
+	
+	/** End of tests for course value */
 	
 /** End of tests of invalid entries */
 }

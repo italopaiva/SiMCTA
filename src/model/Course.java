@@ -103,8 +103,10 @@ public class Course{
 	
 	private void setCourseValue(Integer courseValue) throws CourseException{
 		
-		boolean courseValueIsValid = courseValue.intValue() > 0;
+		int value = courseValue.intValue();
 		
+		boolean courseValueIsValid = value >= MIN_VALUE 
+										&& value <= MAX_VALUE;
 		if(courseValueIsValid){
 			
 			this.courseValue = courseValue;
