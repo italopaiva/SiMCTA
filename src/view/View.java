@@ -21,22 +21,6 @@ import java.awt.event.ActionEvent;
 public class View extends JFrame {
 	
 	protected JMenuBar menuBar;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					View frame = new View();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	
 	protected void instantiateMenuBar(){
 		
@@ -68,5 +52,10 @@ public class View extends JFrame {
 		setBounds(100, 100, 450, 300);
 		
 		instantiateMenuBar();
+	}
+	
+	protected void showInfoMessage(String message){
+		
+		JOptionPane.showMessageDialog(null, message, "", JOptionPane.INFORMATION_MESSAGE);
 	}
 }

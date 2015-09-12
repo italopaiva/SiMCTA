@@ -7,8 +7,8 @@ import model.Course;
 public class CourseDAO extends DAO {
 	
 	// Course table on database constants
-	private static final String TABLE_NAME = "course";
-	private static final String NAME_COLUMN = "name";
+	private static final String TABLE_NAME = "Course";
+	private static final String NAME_COLUMN = "course_name";
 	private static final String DESCRIPTION_COLUMN = "description";
 	private static final String DURATION_COLUMN = "duration";
 	private static final String VALUE_COLUMN = "value";
