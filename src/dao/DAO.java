@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public abstract class DAO {
 	
-	public void execute(String query) throws SQLException{
+	protected void execute(String query) throws SQLException{
 		
 		Connection connection = this.connectToDB(); 
 		
@@ -17,7 +17,7 @@ public abstract class DAO {
 		connection.close();
 	}
 	
-	public ResultSet search(String query) throws SQLException{
+	protected ResultSet search(String query) throws SQLException{
 		
 		Connection connection = this.connectToDB(); 
 		
@@ -29,7 +29,7 @@ public abstract class DAO {
 		return queryResult;
 	}
 	
-	private Connection connectToDB() throws SQLException{
+	protected Connection connectToDB() throws SQLException{
 		
 		FactoryConnection factoryConnection = new FactoryConnection();
 		Connection connection = factoryConnection.establishConnection();

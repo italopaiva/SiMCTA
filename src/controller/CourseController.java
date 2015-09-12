@@ -1,6 +1,9 @@
 package controller;
 
+import java.sql.ResultSet;
+
 import dao.CourseDAO;
+import exception.CourseException;
 import model.Course;
 
 public class CourseController {
@@ -15,4 +18,17 @@ public class CourseController {
 		
 		return wasSaved;
 	}
+	
+
+	public ResultSet showCourse(String searchedCourse) throws CourseException{
+		
+		ResultSet resultOfSearch;
+		CourseDAO courseDao = new CourseDAO();
+		Course course = new Course(searchedCourse);
+		
+		resultOfSearch = courseDao.get(course);
+				
+		return resultOfSearch;
+	}
+
 }
