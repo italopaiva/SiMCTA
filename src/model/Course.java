@@ -10,6 +10,23 @@ public class Course{
 	private static final String COURSE_NAME_CANT_BE_NULL = "O nome do curso não pode ficar em branco.";
 	private static final String COURSE_DESCRIPTION_CANT_BE_NULL = "A descrição do curso não pode ficar em branco.";
 	
+	/**
+	 * The max and min duration are these because the duration must have at least 1 digit and
+	 * no more than 2 digits
+	 * Ex.: 10 weeks -> 10 has two digits
+	 * So, the greater number with 2 digits is 99, and the minimun is 1 (because can't be zero)
+	 */
+	private static final int MAX_DURATION = 99;
+	private static final int MIN_DURATION = 1;
+	
+	/**
+	 * The max and min value are these because the value must have no more than 6 digits
+	 * Ex.: R$ 2500,39 = 250039
+	 * So, the greater acceptable value is 999999 (R$ 9999,99) 
+	 */
+	private static final int MAX_VALUE = 999999;
+	private static final int MIN_VALUE = 1;
+	
 	private String courseName;
 	private String courseDescription;
 
@@ -70,7 +87,10 @@ public class Course{
 	
 	private void setCourseDuration(Integer courseDuration) throws CourseException{
 		
-		boolean courseDurationIsValid = courseDuration.intValue() > 0;
+		int duration = courseDuration.intValue();
+		
+		boolean courseDurationIsValid = duration >= MIN_DURATION 
+										&& duration <= MAX_DURATION;
 		
 		if(courseDurationIsValid){
 			

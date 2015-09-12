@@ -14,20 +14,9 @@ import exception.CourseException;
 
 public class CourseTest {
 	
-	/**
-	 * The max and min duration are these because the duration must have at least 1 digit and
-	 * no more than 2 digits
-	 * Ex.: 10 weeks -> 10 has two digits
-	 * So, the greater number with 2 digits is 99, and the minimun is 1 (because can't be zero)
-	 */
 	private static final int MAX_DURATION = 99;
 	private static final int MIN_DURATION = 1;
 	
-	/**
-	 * The max and min value are these because the value must have no more than 6 digits
-	 * Ex.: R$ 2500,39 = 250039
-	 * So, the greater acceptable value is 999999 (R$ 9999,99) 
-	 */
 	private static final int MAX_VALUE = 999999;
 	private static final int MIN_VALUE = 1;
 	
@@ -51,6 +40,9 @@ public class CourseTest {
 			
 			newCourse("Instalação de som", "Curso para aprender instalar som",
 						3, 150000);
+			
+			assertEquals("Instalação de som", course.getCourseName());
+			assertEquals("Curso para aprender instalar som", course.getCourseDescription());
 		}catch (CourseException e){
 			
 			fail("Should not throw exception.");
@@ -158,8 +150,80 @@ public class CourseTest {
 		}
 	}
 	
-	/** End of course duration tests */
-	
-	
+	/** End of course duration tests */	
 /** End of valid entries */
+	
+/** Tests of invalid entries */
+	
+	/** Tests for course name */
+	
+	@Test(expected = CourseException.class)
+	public void testCourseNameBlank() throws CourseException{
+		
+		newCourse("", "Curso para aprender a aplicar película", 3, 150000);
+	}
+	
+	@Test(expected = CourseException.class)
+	public void testCourseNameNull() throws CourseException{
+		
+		newCourse(null, "Curso para aprender a aplicar película", 3, 150000);
+	}
+	
+	/** End of tests for course name */
+	
+	/** Tests for course description */
+	
+	@Test(expected = CourseException.class)
+	public void testCourseDescriptionBlank() throws CourseException{
+		
+		newCourse("Aplicação de película", "", 3, 150000);
+	}
+	
+	@Test(expected = CourseException.class)
+	public void testCourseDescriptionNull() throws CourseException{
+		
+		newCourse("Aplicação de película", null, 3, 150000);
+	}
+	
+	/** End of tests for course description */
+	
+	/** Tests for course duration */
+	
+	@Test(expected = CourseException.class)
+	public void testCourseDurationWith0() throws CourseException{
+		
+		newCourse("Aplicação de película", "Curso para aprender a aplicar película",
+					0, 150000);
+	}
+	
+	@Test(expected = CourseException.class)
+	public void testCourseDurationWithNegativeNumber() throws CourseException{
+		
+		// This way won't be zero
+		int randomInt = random.nextInt(Integer.MAX_VALUE - 1) + 1;
+		
+		newCourse("Aplicação de película", "Curso para aprender a aplicar película",
+					MIN_DURATION - randomInt, 150000);
+	}
+	
+	@Test(expected = CourseException.class)
+	public void testCourseDurationOneGreaterThanMax() throws CourseException{
+				
+		newCourse("Aplicação de película", "Curso para aprender a aplicar película",
+					MAX_DURATION + 1, 150000);
+	}
+	
+	@Test(expected = CourseException.class)
+	public void testCourseDurationGreaterThanMax() throws CourseException{
+		
+		// This way won't be zero
+		int randomInt = random.nextInt(Integer.MAX_VALUE - MAX_DURATION) + 1;
+		
+		newCourse("Aplicação de película", "Curso para aprender a aplicar película",
+					MAX_DURATION + randomInt, 150000);
+	}
+	
+	/** End of tests for course duration */
+	
+/** End of tests of invalid entries */
 }
