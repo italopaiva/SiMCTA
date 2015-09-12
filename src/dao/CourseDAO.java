@@ -66,4 +66,21 @@ public class CourseDAO extends DAO {
 			
 		}
 
+		public ResultSet getAll() {
+			ResultSet result;
+			
+			String query = ("SELECT * FROM "+ TABLE_NAME);
+			try{
+				Connection connection = this.connectToDB(); 
+				PreparedStatement preparedStatement = connection.prepareStatement(query); 
+				result = preparedStatement.executeQuery();
+				
+			}catch(SQLException caughtException){
+				
+				result = null;
+			}
+			
+			return result;
+		}
+
 }

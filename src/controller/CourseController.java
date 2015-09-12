@@ -30,5 +30,15 @@ public class CourseController {
 				
 		return resultOfSearch;
 	}
+	
+	public ResultSet showCourse(){
+		
+		ResultSet resultOfTheSelect;
+		CourseDAO courseDao = new CourseDAO();		
+		resultOfTheSelect = courseDao.getAll();
+		
+		return resultOfTheSelect;
+		
+	}
 
 }

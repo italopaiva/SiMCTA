@@ -20,6 +20,7 @@ import view.SearchCourse;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
 
 public class View extends JFrame {
 	
@@ -58,14 +59,19 @@ public class View extends JFrame {
 			}
 		});
 		courseMenu.add(registerCourse);
-		JMenuItem searchCourse = new JMenuItem("Consultar Curso");
+		JMenuItem searchCourse = new JMenuItem("Visualizar Curso");
 		searchCourse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				dispose();
 				
-				SearchCourse searchCourseFrame = new SearchCourse();
-				searchCourseFrame.setVisible(true);
+				SearchCourse searchCourseFrame;
+				try {
+					searchCourseFrame = new SearchCourse();
+					searchCourseFrame.setVisible(true);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		courseMenu.add(searchCourse);
