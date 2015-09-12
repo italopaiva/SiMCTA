@@ -1,3 +1,10 @@
+/**
+ * Class: DAO
+ * 
+ * This class provides methods to execute queries into the database.
+ * All other DAO classes must extend this one to get access to these methods. 
+ */
+
 package dao;
 
 import java.sql.Connection;

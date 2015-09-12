@@ -1,4 +1,11 @@
 
+/**
+ * Class: FactoryConnection
+ * 
+ * This class provides methods to connect to the database with the information provided
+ * in the DatabaseConfig class.
+ */
+
 package dao;
 
 import java.sql.Connection;

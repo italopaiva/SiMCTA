@@ -12,8 +12,18 @@ public class Course{
 	
 	private String courseName;
 	private String courseDescription;
-	private Integer courseDuration; // In weeks
-	private Integer courseValue; // In reals (R$)
+
+	/**
+	 * Given in weeks
+	 * Must only have at least one digit and no more than two digits (Ex.: 10 weeks)
+	 */
+	private Integer courseDuration;
+	
+	/**
+	 * Given in reals (R$)
+	 * Cannot have more than 6 digits (Ex.: R$ 1500,50 = 150050)
+	 */
+	private Integer courseValue;
 	
 	public Course(){}
 	
@@ -30,6 +40,8 @@ public class Course{
 			throw caughtException;
 		}
 	}
+	
+/** Setters */
 	
 	private void setCourseName(String courseName) throws CourseException{
 		
@@ -82,6 +94,10 @@ public class Course{
 		}
 	}
 	
+/** End of Setters */
+	
+/** Getters */
+	
 	public String getCourseName(){
 		return this.courseName;
 	}
@@ -97,4 +113,6 @@ public class Course{
 	public Integer getCourseValue(){
 		return this.courseValue;
 	}
+
+/** End of Getters */
 }

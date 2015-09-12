@@ -13,6 +13,11 @@ public class CourseDAO extends DAO {
 	private static final String DURATION_COLUMN = "duration";
 	private static final String VALUE_COLUMN = "value";
 	
+	/**
+	 * Save the informed course into the database
+	 * @param course - a Course object with the course information to be saved
+	 * @return TRUE if the course was saved on the database, or FALSE if it does not
+	 */
 	public boolean save(Course course){
 		
 		String courseName = course.getCourseName();

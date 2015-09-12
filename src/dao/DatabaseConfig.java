@@ -1,3 +1,9 @@
+/**
+ * Class: DatabaseConfig
+ * 
+ * This class is used to set the needed information to connect to the database
+ */
+
 package dao;
 
 public class DatabaseConfig {
