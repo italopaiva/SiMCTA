@@ -14,9 +14,16 @@ public class CourseController {
 	 */
 	public boolean newCourse(Course course){
 		
-		CourseDAO courseDao = new CourseDAO();
+		boolean wasSaved;
 		
-		boolean wasSaved = courseDao.save(course);
+		if(course != null){
+			
+			CourseDAO courseDao = new CourseDAO();
+		
+			wasSaved = courseDao.save(course);
+		}else{
+			wasSaved = false;
+		}
 		
 		return wasSaved;
 	}
