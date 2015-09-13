@@ -30,8 +30,6 @@ public abstract class DAO {
 		
 		PreparedStatement preparedStatement = connection.prepareStatement(query); 
 		ResultSet queryResult = preparedStatement.executeQuery();
-		preparedStatement.close();
-		connection.close();
 		
 		return queryResult;
 	}
