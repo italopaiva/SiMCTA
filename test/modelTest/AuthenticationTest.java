@@ -60,9 +60,7 @@ public class AuthenticationTest {
 		
 		password = "";
 		authentication = new Authentication(password);
-		
-		assertEquals(password, authentication.getPassword());
-		
+				
 	}
 	
 	@Test(expected = Exception.class)
@@ -70,9 +68,7 @@ public class AuthenticationTest {
 		
 		password = null;
 		authentication = new Authentication(password);
-		
-		assertEquals(password, authentication.getPassword());
-		
+				
 	}
 	
 	@Test(expected = AuthenticationException.class)
@@ -80,9 +76,7 @@ public class AuthenticationTest {
 		
 		password = "123";
 		authentication = new Authentication(password);
-		
-		assertEquals(password, authentication.getPassword());
-		
+				
 	}
 	
 	@Test(expected = AuthenticationException.class)
@@ -90,9 +84,7 @@ public class AuthenticationTest {
 		
 		password = "012345678910";
 		authentication = new Authentication(password);
-		
-		assertEquals(password, authentication.getPassword());
-		
+				
 	}
 	/** End of tests of invalid entries */
 }
