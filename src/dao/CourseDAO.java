@@ -24,9 +24,9 @@ public class CourseDAO extends DAO {
 	public boolean save(Course course){
 		
 		String courseName = course.getCourseName();
-		String courseDescription = "lalal";
-		Integer courseDuration =1;  
-		Integer courseValue = 2;
+		String courseDescription = course.getCourseDescription();
+		Integer courseDuration = course.getCourseDuration();  
+		Integer courseValue = course.getCourseValue();
 		
 		String query = "INSERT INTO "+ TABLE_NAME + "(" + NAME_COLUMN + ", "
 						+ DESCRIPTION_COLUMN + ", " + DURATION_COLUMN + ", "

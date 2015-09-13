@@ -32,6 +32,10 @@ public class CourseTest {
 		course = new Course(name, description, courseDuration, courseValue);
 	}
 	
+	private void newCourse(String name) throws CourseException{
+		course = new Course(name);
+	}
+	
 /** Test of valid entries */
 	@Test
 	public void testAllAttributesValid(){
@@ -263,5 +267,10 @@ public class CourseTest {
 	
 	/** End of tests for course value */
 	
+	@Test(expected = CourseException.class)
+	public void testSearchedCourseBlank() throws CourseException{			
+		newCourse("");
+	}
 /** End of tests of invalid entries */
+
 }
