@@ -159,16 +159,17 @@ public class SearchCourse extends View {
 		internalFrame_1.setBounds(12, 43, 409, 196);
 		//contentPane.add(internalFrame_1);
 				
-		final JButton btnVoltar = new JButton("Voltar");
-		btnVoltar.addActionListener(new ActionListener() {
+		final JButton backButton = new JButton("Voltar");
+		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				internalFrame.setVisible(false);
 				searchedCourseField.setText("");
+				backButton.setVisible(false);
 			}
 		});
-		btnVoltar.setBounds(321, 9, 117, 25);
-		contentPane.add(btnVoltar);
-		btnVoltar.setVisible(false);
+		backButton.setBounds(321, 9, 117, 25);
+		contentPane.add(backButton);
+		backButton.setVisible(false);
 		
 		final CourseController courseController = new CourseController();			
 		getAllCourses(courseController);
@@ -191,7 +192,6 @@ public class SearchCourse extends View {
 							searchedCourse = (String) tableOfCourses.getValueAt(tableRow, NUMBER_OF_COLUMNS);
 						}
 						showCourses(searchedCourse);
-						btnVoltar.setVisible(true);
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}	
@@ -221,7 +221,8 @@ public class SearchCourse extends View {
 					if(courseFound == true){
 						internalFrame_1.dispose();
 						internalFrame.setVisible(true);
-						showDataOfCourse(resultOfTheSearch);
+						backButton.setVisible(true);
+						showDataOfCourse(resultOfTheSearch);	
 					}
 					else{
 						JOptionPane.showMessageDialog(searchedCourseField, "Curso não encontrado!");
