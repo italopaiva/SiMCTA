@@ -50,42 +50,39 @@ public class CourseDAO extends DAO {
 	}
 	
 	// Method used to search the informations of a course 
-		public ResultSet get(Course course){
-			
-			ResultSet result;
+	public ResultSet get(Course course){
+		
+		ResultSet result;
 
-			String courseName = course.getCourseName();
+		String courseName = course.getCourseName();
+		
+		String query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + NAME_COLUMN + " LIKE '%"  + courseName + "%'");
+		
+		try{
 			
-			String query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + NAME_COLUMN + " LIKE '%"  + courseName + "%'");
-			try{
-				Connection connection = this.connectToDB(); 
-				PreparedStatement preparedStatement = connection.prepareStatement(query); 
-				result = preparedStatement.executeQuery();
-				
-			}catch(SQLException caughtException){
-				
-				result = null;
-			}
+			result = this.search(query);
+		}catch(SQLException caughtException){
 			
-			return result;	
-			
+			result = null;
 		}
+		
+		return result;
+	}
 
-		public ResultSet getAll() {
-			ResultSet result;
+	public ResultSet getAll(){
+		
+		ResultSet result;
+		
+		String query = ("SELECT * FROM "+ TABLE_NAME);
+		
+		try {
 			
-			String query = ("SELECT * FROM "+ TABLE_NAME);
-			try{
-				Connection connection = this.connectToDB(); 
-				PreparedStatement preparedStatement = connection.prepareStatement(query); 
-				result = preparedStatement.executeQuery();
-				
-			}catch(SQLException caughtException){
-				
-				result = null;
-			}
+			result = this.search(query);
+		} catch (SQLException caughtException){
 			
-			return result;
+			result = null;
 		}
-
+		
+		return result;
+	}
 }
