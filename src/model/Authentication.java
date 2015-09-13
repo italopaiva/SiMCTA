@@ -34,7 +34,7 @@ public class Authentication{
 			if(passwordLengthValidMinimum && passwordLengthValidMaximum){
 				this.password = password;
 			}
-			else if (!passwordLengthValidMinimum){
+			else if(!passwordLengthValidMinimum){
 				throw new AuthenticationException(PASSWORD_CANT_BE_LESS_THAN_MINIMUM);
 			}
 			else{
