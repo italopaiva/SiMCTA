@@ -1,31 +1,26 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.Window;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.text.MaskFormatter;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.text.ParseException;
 
-import javax.swing.JFormattedTextField;
-import javax.swing.JTextArea;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.MaskFormatter;
 
 import controller.CourseController;
 import exception.CourseException;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
+@SuppressWarnings("serial")
 public class EditCourse extends View{
 	
 	private String courseName;
@@ -222,32 +217,16 @@ public class EditCourse extends View{
 		}
 	}
 
-	private String getCourseName(){
-		return courseName;
-	}
-
 	private void setCourseName(String courseName){
 		this.courseName = courseName;
-	}
-
-	private String getCourseDescription(){
-		return courseDescription;
 	}
 
 	private void setCourseDescription(String courseDescription){
 		this.courseDescription = courseDescription;
 	}
 
-	private Integer getCourseDuration(){
-		return courseDuration;
-	}
-
 	private void setCourseDuration(Integer courseDuration){
 		this.courseDuration = courseDuration;
-	}
-
-	private Integer getCourseValue(){
-		return courseValue;
 	}
 
 	private void setCourseValue(Integer courseValue){
