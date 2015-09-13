@@ -23,6 +23,8 @@ import javax.swing.JButton;
 
 import controller.CourseController;
 import exception.CourseException;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class EditCourse extends View{
 	
@@ -193,8 +195,27 @@ public class EditCourse extends View{
 					}
 				}
 			});
-			registerCourseButton.setBounds(292, 214, 114, 25);
+			registerCourseButton.setBounds(152, 214, 114, 25);
 			contentPane.add(registerCourseButton);
+			
+			JButton backBtn = new JButton("Voltar");
+			backBtn.addActionListener(new ActionListener(){
+				
+				public void actionPerformed(ActionEvent arg0){
+					
+					SearchCourse searchCourseFrame;
+					try {
+						
+						searchCourseFrame = new SearchCourse();
+						searchCourseFrame.setVisible(true);
+					}catch (SQLException e){
+						
+						e.printStackTrace();
+					}
+				}
+			});
+			backBtn.setBounds(289, 214, 117, 25);
+			contentPane.add(backBtn);
 			
 		}catch (ParseException e){
 			e.printStackTrace();
