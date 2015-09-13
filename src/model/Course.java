@@ -31,6 +31,7 @@ public class Course{
 	private int courseId;
 	private String courseName;
 	private String courseDescription;
+	private int courseStatus;
 
 	/**
 	 * Given in weeks
@@ -75,7 +76,22 @@ public class Course{
 		
 		throw caughtException;
 	}
-}
+	}
+	public Course(int courseId, String courseName, String courseDescription,
+			  Integer courseDuration, Integer courseValue, int courseStatus)
+			  throws CourseException{
+		try{
+			setCourseId(courseId);
+			setCourseName(courseName);
+			setCourseDescription(courseDescription);
+			setCourseDuration(courseDuration);
+			setCourseValue(courseValue);
+			setCourseStatus(courseStatus);
+		}catch(CourseException caughtException){
+		
+			throw caughtException;
+		}
+	}
 
 /** Setters */
 	
@@ -148,6 +164,10 @@ public class Course{
 		}
 	}
 	
+	private void setCourseStatus(int status) {
+		this.courseStatus = status;
+	}
+	
 /** End of Setters */
 	
 /** Getters */
@@ -170,6 +190,10 @@ public class Course{
 	
 	public int getCourseId(){
 		return this.courseId;
+	}
+	
+	public int getCourseStatus(){
+		return this.courseStatus;
 	}
 
 /** End of Getters */
