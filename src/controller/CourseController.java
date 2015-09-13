@@ -25,7 +25,7 @@ public class CourseController {
 		
 		Course course = new Course(courseName, courseDescription, courseDuration, courseValue);
 		
-		boolean wasSaved;
+		boolean wasSaved =  false;
 		
 		CourseDAO courseDao = new CourseDAO();
 		
@@ -34,7 +34,21 @@ public class CourseController {
 		return wasSaved;
 	}
 	
-
+	public boolean updateCourse(Integer courseId, String courseName, String courseDescription,
+								 Integer courseDuration, Integer courseValue)
+								 throws CourseException{
+		
+		Course course = new Course(courseName, courseDescription, courseDuration, courseValue);
+		
+		boolean wasSaved = false;
+		
+		CourseDAO courseDao = new CourseDAO();
+		
+		wasSaved = courseDao.update(courseId, course);
+		
+		return wasSaved;
+	}
+	
 	public ResultSet showCourse(String searchedCourse) throws CourseException{
 		
 		ResultSet resultOfSearch;

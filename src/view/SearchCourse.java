@@ -47,6 +47,9 @@ import java.awt.Panel;
 
 import javax.swing.JDesktopPane;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 public class SearchCourse extends View {
 
 	private final static int NUMBER_OF_COLUMNS = 0;
@@ -58,7 +61,12 @@ public class SearchCourse extends View {
 	private JLabel valueResultLabel;
 	final DefaultTableModel tableModel;
 	JScrollPane scrollPane;
-	
+
+	private Integer courseId;
+	private String courseName;
+	private String courseDescription;
+	private Integer courseDuration;
+	private Integer courseValue;
 	
 	/**
 	 * Launch the application.
@@ -81,8 +89,9 @@ public class SearchCourse extends View {
 	 * @throws SQLException 
 	 */
 	public SearchCourse() throws SQLException{
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		
+		super();
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -104,7 +113,22 @@ public class SearchCourse extends View {
 		internalFrame.setBounds(12, 43, 409, 196);
 		contentPane.add(internalFrame);
 		internalFrame.getContentPane().setLayout(null);
-						
+		
+		JButton editCourseBtn = new JButton("Editar");
+		editCourseBtn.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseClicked(MouseEvent e){
+				
+				dispose();
+				
+				EditCourse editCourseFrame = new EditCourse(SearchCourse.this.courseId, SearchCourse.this.courseName, SearchCourse.this.courseDescription, SearchCourse.this.courseDuration, SearchCourse.this.courseValue);
+				editCourseFrame.setVisible(true);
+			}
+		});
+		editCourseBtn.setBounds(268, 127, 117, 25);
+		internalFrame.getContentPane().add(editCourseBtn);
+		
 		JLabel courseLabel = new JLabel("Curso:");
 		courseLabel.setBounds(12, 12, 70, 15);
 		internalFrame.getContentPane().add(courseLabel);
@@ -173,9 +197,6 @@ public class SearchCourse extends View {
 		final CourseController courseController = new CourseController();			
 		getAllCourses(courseController);
 		
-		
-
-		
 		btnConsultar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -239,14 +260,22 @@ public class SearchCourse extends View {
 				String description = "";
 				Integer value = 0;
 				Integer duration = 0;
+				Integer courseId = 0;
 				String valueText = "";
 				String durationString = "";
 				
+				courseId = resultOfTheSearch.getInt("id_course");
 				courseName = resultOfTheSearch.getString("course_name");
 				description = resultOfTheSearch.getString("description");
 				value = resultOfTheSearch.getInt("value");
 				duration = resultOfTheSearch.getInt("duration");
-
+				
+				SearchCourse.this.courseId = courseId;
+				SearchCourse.this.courseName = courseName;
+				SearchCourse.this.courseDescription = description;
+				SearchCourse.this.courseDuration = duration;
+				SearchCourse.this.courseValue = value;
+				
 				valueText = passValueToMonetaryForm(value);
 				durationString = duration.toString() + " semanas";
 							
@@ -289,5 +318,4 @@ public class SearchCourse extends View {
 			//allCourses.clear();
 		}		
 	}
-
 }

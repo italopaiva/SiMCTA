@@ -80,6 +80,7 @@ public class View extends JFrame {
 		
 		instantiateMenuBar();
 	}
+	
 	protected void showInfoMessage(String message){
 		
 		JOptionPane.showMessageDialog(null, message, "", JOptionPane.INFORMATION_MESSAGE);
