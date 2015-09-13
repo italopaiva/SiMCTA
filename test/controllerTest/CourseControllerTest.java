@@ -78,6 +78,25 @@ public class CourseControllerTest {
 		}
 		
 	}  
+	
+	@Test(expected = Exception.class)
+	public void testSearchACourseWithAEnteredNameNull() throws SQLException{
+		
+		String enteredName = null;
+		resultOfTheMethod = null;
+		
+		try{
+			resultOfTheMethod = courseController.showCourse(enteredName);
+			String courseFound = "";
+			
+			resultOfTheMethod.next();
+			courseFound = resultOfTheMethod.getString("course_name");
+
+		}catch (CourseException e){
+			e.printStackTrace();
+		}
+	}  
+	
 	@Test
 	public void testShowAllCoursesRegistered() throws SQLException, CourseException{
 		
