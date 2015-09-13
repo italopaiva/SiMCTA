@@ -59,23 +59,25 @@ public class Course{
 			throw caughtException;
 		}
 	}
+	
 	public Course(String courseName) throws CourseException{
 		setCourseName(courseName);
 	}
+	
 	public Course(int courseId, String courseName, String courseDescription,
 			  Integer courseDuration, Integer courseValue)
 			  throws CourseException{
-	try{
-		setCourseId(courseId);
-		setCourseName(courseName);
-		setCourseDescription(courseDescription);
-		setCourseDuration(courseDuration);
-		setCourseValue(courseValue);
-	}catch(CourseException caughtException){
-		
-		throw caughtException;
+		try{
+			setCourseId(courseId);
+			setCourseName(courseName);
+			setCourseDescription(courseDescription);
+			setCourseDuration(courseDuration);
+			setCourseValue(courseValue);
+		}catch(CourseException caughtException){
+			
+			throw caughtException;
+		}
 	}
-}
 
 /** Setters */
 	

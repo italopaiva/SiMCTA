@@ -1,32 +1,21 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.EventQueue;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
-import javax.swing.JMenuBar;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JButton;
 import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 
 import exception.AuthenticationException;
 
-import java.sql.SQLException;
-
-import view.SearchCourse;
-
+@SuppressWarnings("serial")
 public class View extends JFrame {
 	
 	protected JMenuBar menuBar;
@@ -45,6 +34,7 @@ public class View extends JFrame {
 			}
 		});
 	}
+	
 	protected void instantiateMenuBar(){
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -137,6 +127,7 @@ public class View extends JFrame {
 		
 		instantiateMenuBar();
 	}
+	
 	protected void showInfoMessage(String message){
 		
 		JOptionPane.showMessageDialog(null, message, "", JOptionPane.INFORMATION_MESSAGE);
