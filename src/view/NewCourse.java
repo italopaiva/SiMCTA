@@ -34,6 +34,7 @@ public class NewCourse extends View {
 	private JFormattedTextField durationField;
 	private JFormattedTextField valueField;
 	private JTextArea descriptionField;
+	
 	/**
 	 * Create the frame.
 	 */

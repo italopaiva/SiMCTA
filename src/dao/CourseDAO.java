@@ -50,15 +50,19 @@ public class CourseDAO extends DAO {
 		return wasSaved;
 	}
 	
+	/**
+	 * Update a given course on the database
+	 * @param courseId - The course to be updated
+	 * @param course - A Course object with the course new data
+	 * @return TRUE if the course was updated on database or FALSE if it does not
+	 */
 	public boolean update(Integer courseId, Course course){
 		
-		String courseName = course.getCourseName();
 		String courseDescription = course.getCourseDescription();
 		Integer courseDuration = course.getCourseDuration();  
 		Integer courseValue = course.getCourseValue();
 		
 		String query = "UPDATE "+ TABLE_NAME + " SET "
-					   + NAME_COLUMN + "='"+ courseName +"', "
 					   + DESCRIPTION_COLUMN + "='" + courseDescription + "', "
 					   + DURATION_COLUMN + "='" + courseDuration + "', "
 					   + VALUE_COLUMN + "='" + courseValue + "' "

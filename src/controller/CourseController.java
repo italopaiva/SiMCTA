@@ -34,6 +34,16 @@ public class CourseController {
 		return wasSaved;
 	}
 	
+	/**
+	 * Update a given course with the new information
+	 * @param courseId - The course id to be updated
+	 * @param courseName - The name of the course
+	 * @param courseDescription - The new description of the course
+	 * @param courseDuration - The new duration of the course
+	 * @param courseValue - The new value of the course
+	 * @return TRUE if the course was updated or FALSE if it does not
+	 * @throws CourseException
+	 */
 	public boolean updateCourse(Integer courseId, String courseName, String courseDescription,
 								 Integer courseDuration, Integer courseValue)
 								 throws CourseException{
