@@ -12,7 +12,6 @@ import exception.CourseException;
 public class CourseControllerTest {
 
 	private CourseController courseController;
-	private Course course;
 	
 	@Before
 	public void setUp(){
@@ -23,17 +22,15 @@ public class CourseControllerTest {
 	@Test
 	public void testNewCourseMethodWithValidCourse() throws CourseException{
 		
-		course = new Course("Aplicação de película", "Curso bom", 3, 500000);
-		
-		boolean wasSaved = courseController.newCourse(course);
+		boolean wasSaved = courseController.newCourse("Aplicação de película", "Curso bom", 3, 500000);
 		
 		assertTrue("Should create the given course", wasSaved);
 	}
 	
-	@Test
+	@Test(expected = CourseException.class)
 	public void testNewCourseMethodWithInvalidCourse() throws CourseException{
 				
-		boolean wasSaved = courseController.newCourse(null);
+		boolean wasSaved = courseController.newCourse(null, null, -3, 1000000);
 		
 		assertFalse("Should not create the given course", wasSaved);
 	}

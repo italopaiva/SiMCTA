@@ -124,12 +124,15 @@ public class NewCourse extends View {
 					}
 					
 					try{
-						
-						Course course = new Course(courseName, courseDescription, courseDuration, courseValue);
-						
+												
 						CourseController courseController = new CourseController();
 						
-						boolean courseWasSaved = courseController.newCourse(course);
+						boolean courseWasSaved = courseController.newCourse(
+							courseName,
+							courseDescription,
+							courseDuration,
+							courseValue
+						);
 						
 						String message = "";
 						if(courseWasSaved){

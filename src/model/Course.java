@@ -9,6 +9,7 @@ public class Course{
 	private static final String COURSE_DURATION_CANT_BE_ZERO = "Um curso deve durar pelo menos uma semana.";
 	private static final String COURSE_NAME_CANT_BE_NULL = "O nome do curso não pode ficar em branco.";
 	private static final String COURSE_DESCRIPTION_CANT_BE_NULL = "A descrição do curso não pode ficar em branco.";
+	private static final String COURSE_ID_MUST_BE_GREATER_THAN_ZERO = "O id do curso não pode ser menor que 0"; 
 	
 	/**
 	 * The max and min duration are these because the duration must have at least 1 digit and
@@ -27,6 +28,7 @@ public class Course{
 	private static final int MAX_VALUE = 999999;
 	private static final int MIN_VALUE = 1;
 	
+	private int courseId;
 	private String courseName;
 	private String courseDescription;
 
@@ -57,6 +59,21 @@ public class Course{
 			throw caughtException;
 		}
 	}
+	
+	public Course(int courseId, String courseName, String courseDescription,
+			  Integer courseDuration, Integer courseValue)
+			  throws CourseException{
+	try{
+		setCourseId(courseId);
+		setCourseName(courseName);
+		setCourseDescription(courseDescription);
+		setCourseDuration(courseDuration);
+		setCourseValue(courseValue);
+	}catch(CourseException caughtException){
+		
+		throw caughtException;
+	}
+}
 	
 /** Setters */
 	
@@ -116,6 +133,19 @@ public class Course{
 		}
 	}
 	
+	private void setCourseId(int courseId) throws CourseException{
+		
+		boolean courseIdIsValid = courseId > 0;
+		
+		if(courseIdIsValid){
+			
+			this.courseId = courseId;
+		}else{
+			
+			throw new CourseException(COURSE_ID_MUST_BE_GREATER_THAN_ZERO);
+		}
+	}
+	
 /** End of Setters */
 	
 /** Getters */
@@ -134,6 +164,10 @@ public class Course{
 	
 	public Integer getCourseValue(){
 		return this.courseValue;
+	}
+	
+	public int getCourseId(){
+		return this.courseId;
 	}
 
 /** End of Getters */
