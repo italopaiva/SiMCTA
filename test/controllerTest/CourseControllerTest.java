@@ -24,37 +24,30 @@ public class CourseControllerTest {
 	private Course course;
 	private ResultSet resultOfTheMethod;
 	private Connection connection;
-	
+
 	@Before
 	public void setUp() throws CourseException{
 		
 		courseController = new CourseController();
 		
-		// Register to test the search of a course
-		
-		// Inserting another course in the database for test this method with two courses
-		Course first_course = new Course("Instalação de Som", "Curso bom", 3, 500000);
-		courseController.newCourse(first_course);
-		
-		Course second_course = new Course("Aplicação de película", "Curso bom", 3, 500000);
-		courseController.newCourse(second_course);
+		// Register to test the methods of show course
+		courseController.newCourse("Instalação de Som", "Curso bom", 3, 500000);
+		courseController.newCourse("Aplicação de película", "Curso bom", 3, 500000);
 
 	}
 
 	@Test
 	public void testNewCourseMethodWithValidCourse() throws CourseException{
 		
-		course = new Course("Aplicação de película", "Curso bom", 3, 500000);
-		
-		boolean wasSaved = courseController.newCourse(course);
+		boolean wasSaved = courseController.newCourse("Aplicação de película", "Curso bom", 3, 500000);
 		
 		assertTrue("Should create the given course", wasSaved);
 	}
 	
-	@Test
+	@Test(expected = CourseException.class)
 	public void testNewCourseMethodWithInvalidCourse() throws CourseException{
 				
-		boolean wasSaved = courseController.newCourse(null);
+		boolean wasSaved = courseController.newCourse(null, null, -3, 1000000);
 		
 		assertFalse("Should not create the given course", wasSaved);
 	}
