@@ -2,7 +2,6 @@ package view;
 
 import java.awt.Color;
 import java.awt.EventQueue;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -10,66 +9,21 @@ import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.swing.JButton;
-import javax.swing.JInternalFrame;
-
-import java.awt.List;
-import java.awt.TrayIcon.MessageType;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.InternalFrameAdapter;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.text.TabExpander;
-
-import controller.CourseController;
-import exception.CourseException;
-import util.ButtonEditor;
-import util.ButtonRenderer;
-import util.ButtonColumn;
-
-import java.awt.TextField;
-import java.awt.Button;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.EventObject;
-import java.util.Vector;
-import java.util.logging.Logger;
-
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.DefaultCellEditor;
-import javax.swing.DefaultListModel;
-
+import javax.swing.JButton;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-
-import javax.swing.SwingUtilities;
-
-import model.Course;
-
-import javax.swing.JButton;
-
-import java.awt.Color;
-
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import util.ButtonColumn;
 import controller.CourseController;
 import exception.CourseException;
 
@@ -84,14 +38,16 @@ public class SearchCourse extends View {
 	private JLabel durationResultLabel;
 	private JLabel valueResultLabel;
 	final DefaultTableModel tableModel;
-	JScrollPane scrollPane;
+	private JScrollPane scrollPane;
 
 	private Integer courseId;
 	private String courseName;
 	private String courseDescription;
 	private Integer courseDuration;
 	private Integer courseValue;
-
+	
+	private JButton btnAtivarOrDesativar;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -158,7 +114,7 @@ public class SearchCourse extends View {
 				}
 			}
 		});
-		editCourseBtn.setBounds(268, 90, 117, 25);
+		editCourseBtn.setBounds(268, 127, 117, 25);
 		internalFrame.getContentPane().add(editCourseBtn);
 		
 		JLabel courseLabel = new JLabel("Curso:");
@@ -194,7 +150,7 @@ public class SearchCourse extends View {
 		valueResultLabel.setBounds(268, 43, 70, 15);
 		internalFrame.getContentPane().add(valueResultLabel);
 		
-		JButton btnAtivarOrDesativar = new JButton("New Button");
+		btnAtivarOrDesativar = new JButton("New Button");
 		btnAtivarOrDesativar.setBounds(282, 127, 105, 25);
 		internalFrame.getContentPane().add(btnAtivarOrDesativar);
 		
@@ -326,7 +282,7 @@ public class SearchCourse extends View {
 				}
 			}
 
-			private void showDataOfCourse(ResultSet resultOfTheSearch) throws SQLException {
+			private void showDataOfCourse(final ResultSet resultOfTheSearch) throws SQLException {
 				
 				String courseName = "";
 				String description = "";
@@ -427,7 +383,7 @@ public class SearchCourse extends View {
 			//allCourses.clear();
 		}		
 	}
-	
+
 	private String showsAtivarOrDesativar(int status){
 		return ((status==1) ? "Desativar":"Ativar");
 	}
@@ -435,5 +391,4 @@ public class SearchCourse extends View {
 	private String showsAtivoOrInativo(int status){
 		return ((status==0) ? "Desativado":"Ativo");
 	}
-
 }

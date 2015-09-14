@@ -3,8 +3,6 @@ package dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.sun.net.httpserver.Authenticator.Result;
-
 import exception.CourseException;
 import model.Course;
 
