@@ -224,7 +224,7 @@ public class SearchCourse extends View {
 		
 		final CourseController courseController = new CourseController();			
 		getAllCourses(courseController);
-		
+
 		btnConsultar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -249,6 +249,11 @@ public class SearchCourse extends View {
 				}
 			}
 
+			/**
+			 * Method used to search a course by name on database
+			 * @param searchedCourse - Receives the course name entered by user
+			 * @throws SQLException
+			 */
 			private void showCourses(String searchedCourse) throws SQLException{
 				
 				try {
@@ -282,6 +287,11 @@ public class SearchCourse extends View {
 				}
 			}
 
+			/**
+			 * Method used to show the information about the found course
+			 * @param resultOfTheSearch - Receives the result of the search from database
+			 * @throws SQLException
+			 */
 			private void showDataOfCourse(final ResultSet resultOfTheSearch) throws SQLException {
 				
 				String courseName = "";
@@ -349,7 +359,11 @@ public class SearchCourse extends View {
 				durationResultLabel.setText(durationString);
 			}
 
-			// Method used to pass the course value to monetary form
+			/**
+			 * Method used to pass the course value to monetary form
+			 * @param value - Receives the course value on entire form
+			 * @return - Return the course value on monetary form (R$)
+			 */
 			private String passValueToMonetaryForm(Integer value) {
 				
 				String valueText= "";
@@ -367,12 +381,17 @@ public class SearchCourse extends View {
 			}
 		});	
 	}
-	
-	// Method used to show all existing courses
+
+	/**
+	 *  Method used to show all existing courses
+	 * @param courses - Receives an instance of the class CourseController 
+	 * @throws SQLException
+	 */
 	private void getAllCourses(CourseController courses) throws SQLException{
 					
 		ResultSet resultOfTheSelect = courses.showCourse();		
 
+	
 		while(resultOfTheSelect.next()){
 			String[] allCourses = new String[4];
 			allCourses[0] = (resultOfTheSelect.getString("course_name"));
@@ -380,8 +399,7 @@ public class SearchCourse extends View {
 			allCourses[2] = (showsAtivarOrDesativar(resultOfTheSelect.getInt("status")));
 			allCourses[3] = (resultOfTheSelect.getString("id_course"));
 			tableModel.addRow(allCourses);
-			//allCourses.clear();
-		}		
+		}				
 	}
 
 	private String showsAtivarOrDesativar(int status){

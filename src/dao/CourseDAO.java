@@ -94,7 +94,11 @@ public class CourseDAO extends DAO {
 		return wasUpdated;
 	}
 	
-	// Method used to search the informations of a course 
+	/**
+	 * Searches the informations of a course 
+	 * @param course - Course object with the course to be searched 
+	 * @return the data produced by the given query
+	 */
 	public ResultSet get(Course course){
 		
 		ResultSet result;
@@ -114,6 +118,10 @@ public class CourseDAO extends DAO {
 		return result;
 	}
 
+	/**
+	 * Gets all courses from database
+	 * @return the data produced by the given query
+	 */
 	public ResultSet getAll(){
 		
 		ResultSet result;

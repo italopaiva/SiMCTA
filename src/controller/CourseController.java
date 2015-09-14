@@ -95,17 +95,26 @@ public class CourseController {
 		return wasSaved;
 	}
 	
+	/**
+	 * Show the information of a course searched by user
+	 * @param searchedCourse - The name of course to be searched
+	 * @return the data produced by the given query
+	 * @throws CourseException
+	 */
 	public ResultSet showCourse(String searchedCourse) throws CourseException{
 		
-		ResultSet resultOfSearch;
 		CourseDAO courseDao = new CourseDAO();
 		Course course = new Course(searchedCourse);
 		
-		resultOfSearch = courseDao.get(course);
+		ResultSet resultOfSearch = courseDao.get(course);
 				
 		return resultOfSearch;
 	}
 	
+	/**
+	 * Show the name and the status of all courses registered
+	 * @return the data produced by the given query
+	 */
 	public ResultSet showCourse(){
 		
 		ResultSet resultOfTheSelect;

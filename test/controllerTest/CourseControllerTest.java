@@ -32,9 +32,10 @@ public class CourseControllerTest {
 		
 		courseController = new CourseController();
 		
-		// Register to test the methods of show course
+		// Register courses on database to test the search of a course
 		courseController.newCourse("Instalação de Som", "Curso bom", 3, 500000);
 		courseController.newCourse(ARBITRARY_ID, "Aplicação de película", "Curso bom", 3, 500000);
+
 	}
 
 	@Test
@@ -131,21 +132,15 @@ public class CourseControllerTest {
 	}  
 	
 	@Test(expected = Exception.class)
-	public void testSearchACourseWithAEnteredNameNull() throws SQLException{
+	public void testSearchACourseWithAEnteredNameNull() throws SQLException, CourseException{
 		
 		String enteredName = null;
-		resultOfTheMethod = null;
 		
-		try{
-			resultOfTheMethod = courseController.showCourse(enteredName);
-			String courseFound = "";
-			
-			resultOfTheMethod.next();
-			courseFound = resultOfTheMethod.getString("course_name");
-
-		}catch (CourseException e){
-			e.printStackTrace();
-		}
+		resultOfTheMethod = courseController.showCourse(enteredName);
+		String courseFound = "";
+		
+		resultOfTheMethod.next();
+		courseFound = resultOfTheMethod.getString("course_name");
 	}  
 	
 	@Test
