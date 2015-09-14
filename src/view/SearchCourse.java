@@ -114,7 +114,7 @@ public class SearchCourse extends View {
 				}
 			}
 		});
-		editCourseBtn.setBounds(268, 127, 117, 25);
+		editCourseBtn.setBounds(168, 127, 107, 25);
 		internalFrame.getContentPane().add(editCourseBtn);
 		
 		JLabel courseLabel = new JLabel("Curso:");
