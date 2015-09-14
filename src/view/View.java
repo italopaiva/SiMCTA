@@ -60,45 +60,6 @@ public class View extends JFrame {
 					frame.setVisible(true);
 				}
 			}
-
-			private boolean getPermissionToAccess() {
-				boolean canAccess = false;
-				String messageToUser = "";
-				String enteredPassword = "senha digitada";
-				final Object [] inputPassword;
-				final JPasswordField enteredPasswordField;
-				final JLabel passwordLabel;
-									
-				passwordLabel = new JLabel("Digite a senha:");
-				enteredPasswordField = new JPasswordField();
-				inputPassword = new Object[]{passwordLabel, enteredPasswordField};
-				
-				while(canAccess == false){
-					AuthenticationView authenticationFrame = new AuthenticationView();
-					int verify = authenticationFrame.showConfirmDialog(null, inputPassword, "Senha:",
-													  authenticationFrame.OK_CANCEL_OPTION,
-													  authenticationFrame.PLAIN_MESSAGE);
-					enteredPassword = enteredPasswordField.getText();
-					if (verify == JOptionPane.OK_OPTION) {
-						if(enteredPassword != null){
-							try {
-								canAccess = authenticationFrame.authenticateUser(enteredPassword);
-							} 
-							catch(AuthenticationException | SQLException e){	
-								messageToUser = e.toString();
-								int indexToSepare = messageToUser.indexOf(":");
-								messageToUser = messageToUser.substring(indexToSepare + 2);
-								authenticationFrame.showMessageDialog(null, messageToUser);
-							}
-						}
-					}
-					else if (verify == JOptionPane.CANCEL_OPTION) {
-						break;
-					}
-				}
-
-				return canAccess;
-			}
 		});
 		courseMenu.add(registerCourse);
 		
@@ -117,6 +78,47 @@ public class View extends JFrame {
 		});
 		courseMenu.add(searchCourse);
 	}
+	
+	protected boolean getPermissionToAccess(){
+		
+		boolean canAccess = false;
+		String messageToUser = "";
+		String enteredPassword = "senha digitada";
+		final Object [] inputPassword;
+		final JPasswordField enteredPasswordField;
+		final JLabel passwordLabel;
+							
+		passwordLabel = new JLabel("Digite a senha:");
+		enteredPasswordField = new JPasswordField();
+		inputPassword = new Object[]{passwordLabel, enteredPasswordField};
+		
+		while(canAccess == false){
+			AuthenticationView authenticationFrame = new AuthenticationView();
+			int verify = authenticationFrame.showConfirmDialog(null, inputPassword, "Senha:",
+											  authenticationFrame.OK_CANCEL_OPTION,
+											  authenticationFrame.PLAIN_MESSAGE);
+			enteredPassword = enteredPasswordField.getText();
+			if (verify == JOptionPane.OK_OPTION) {
+				if(enteredPassword != null){
+					try {
+						canAccess = authenticationFrame.authenticateUser(enteredPassword);
+					} 
+					catch(AuthenticationException | SQLException e){	
+						messageToUser = e.toString();
+						int indexToSepare = messageToUser.indexOf(":");
+						messageToUser = messageToUser.substring(indexToSepare + 2);
+						authenticationFrame.showMessageDialog(null, messageToUser);
+					}
+				}
+			}
+			else if (verify == JOptionPane.CANCEL_OPTION) {
+				break;
+			}
+		}
+
+		return canAccess;
+	}
+	
 	/**
 	 * Create the frame.
 	 */

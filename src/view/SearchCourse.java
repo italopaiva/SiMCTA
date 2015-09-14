@@ -95,10 +95,18 @@ public class SearchCourse extends View {
 			@Override
 			public void mouseClicked(MouseEvent e){
 				
-				dispose();
+				boolean hasPermission = SearchCourse.this.getPermissionToAccess();
 				
-				EditCourse editCourseFrame = new EditCourse(SearchCourse.this.courseId, SearchCourse.this.courseName, SearchCourse.this.courseDescription, SearchCourse.this.courseDuration, SearchCourse.this.courseValue);
-				editCourseFrame.setVisible(true);
+				if(hasPermission){
+					
+					dispose();
+										
+					EditCourse editCourseFrame = new EditCourse(SearchCourse.this.courseId, SearchCourse.this.courseName, SearchCourse.this.courseDescription, SearchCourse.this.courseDuration, SearchCourse.this.courseValue);
+					editCourseFrame.setVisible(true);
+				}
+				else{
+					
+				}
 			}
 		});
 		editCourseBtn.setBounds(268, 127, 117, 25);
