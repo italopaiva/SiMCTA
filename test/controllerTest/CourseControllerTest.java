@@ -19,7 +19,9 @@ import dao.FactoryConnection;
 import exception.CourseException;
 
 public class CourseControllerTest {
-
+	
+	private static final int ARBITRARY_ID = 41234;
+		
 	private CourseController courseController;
 	private Course course;
 	private ResultSet resultOfTheMethod;
@@ -30,33 +32,82 @@ public class CourseControllerTest {
 		
 		courseController = new CourseController();
 		
-		// Register to test the search of a course
-		
-		// Inserting another course in the database for test this method with two courses
-		Course first_course = new Course("Instalação de Som", "Curso bom", 3, 500000);
-		courseController.newCourse(first_course);
-		
-		Course second_course = new Course("Aplicação de película", "Curso bom", 3, 500000);
-		courseController.newCourse(second_course);
-
+		// Register to test the methods of show course
+		courseController.newCourse("Instalação de Som", "Curso bom", 3, 500000);
+		courseController.newCourse(ARBITRARY_ID, "Aplicação de película", "Curso bom", 3, 500000);
 	}
 
 	@Test
 	public void testNewCourseMethodWithValidCourse() throws CourseException{
 		
-		course = new Course("Aplicação de película", "Curso bom", 3, 500000);
-		
-		boolean wasSaved = courseController.newCourse(course);
+		boolean wasSaved = courseController.newCourse("Aplicação de película", "Curso bom", 3, 500000);
 		
 		assertTrue("Should create the given course", wasSaved);
 	}
 	
-	@Test
+	@Test(expected = CourseException.class)
 	public void testNewCourseMethodWithInvalidCourse() throws CourseException{
 				
-		boolean wasSaved = courseController.newCourse(null);
+		boolean wasSaved = courseController.newCourse(null, null, -3, 1000000);
 		
 		assertFalse("Should not create the given course", wasSaved);
+	}
+	
+	@Test
+	public void testUpdateCourseMethodWithValidCourse(){
+		
+		try{
+			
+			courseController.updateCourse(ARBITRARY_ID, "Aplicação de película", "Curso complicado", 5, 25000);
+		}catch(CourseException caughtException){
+			
+			fail("Should not throw exception");
+		}
+	}
+	
+	@Test(expected = CourseException.class)
+	public void testUpdateCourseMethodWithInvalidName() throws CourseException{
+		
+		courseController.updateCourse(ARBITRARY_ID, "", "Curso complicado", 5, 25000);
+	}
+	
+	@Test(expected = CourseException.class)
+	public void testUpdateCourseMethodWithInvalidDescription() throws CourseException{
+		
+		courseController.updateCourse(ARBITRARY_ID, "Aplicação de película", "", 5, 25000);
+	}
+	
+	@Test(expected = CourseException.class)
+	public void testUpdateCourseMethodWithInvalidDuration() throws CourseException{
+		
+		courseController.updateCourse(ARBITRARY_ID, "Aplicação de película", "Curso complicado", 0, 25000);
+	}
+	
+	@Test(expected = CourseException.class)
+	public void testUpdateCourseMethodWithInvalidValue() throws CourseException{
+		
+		courseController.updateCourse(ARBITRARY_ID, "Aplicação de película", "Curso complicado", 3, 0);
+	}
+	
+	@Test
+	public void testIfUpdateCourseDontUpdateTheCourseName() throws CourseException{
+		
+		String absurdName = "Instalação aérea de rodas cromadas";
+		
+		courseController.updateCourse(ARBITRARY_ID, absurdName, "Curso complicado", 3, 25000);
+		
+		resultOfTheMethod = courseController.showCourse(absurdName);
+		
+		boolean hasValues;
+		try{
+			
+			hasValues = resultOfTheMethod.next();
+			assertFalse(hasValues);
+		}catch(SQLException e){
+			
+			fail("SQLException thrown");
+			e.printStackTrace();
+		}
 	}
 	
 	@Test

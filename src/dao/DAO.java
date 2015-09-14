@@ -30,13 +30,11 @@ public abstract class DAO {
 		
 		PreparedStatement preparedStatement = connection.prepareStatement(query); 
 		ResultSet queryResult = preparedStatement.executeQuery();
-		preparedStatement.close();
-		connection.close();
 		
 		return queryResult;
 	}
 	
-	protected Connection connectToDB() throws SQLException{
+	private Connection connectToDB() throws SQLException{
 		
 		FactoryConnection factoryConnection = new FactoryConnection();
 		Connection connection = factoryConnection.establishConnection();
