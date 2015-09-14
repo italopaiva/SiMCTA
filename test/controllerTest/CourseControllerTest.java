@@ -159,4 +159,13 @@ public class CourseControllerTest {
 		
 		return connection;
 	}
+	
+	@Test
+	private void testAlterStatusCourse() {
+		Course courseExpected = new Course(1, "Instalação de som", "Curso que ensina a instalar som", 22, 120000,0);
+		Course course = new Course(1, "Instalação de som", "Curso que ensina a instalar som", 22, 120000,1);
+		
+		courseController.alterStatusCourse(1);
+		assertEquals(courseExpected, course);
+	}
 }

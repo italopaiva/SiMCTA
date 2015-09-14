@@ -115,4 +115,26 @@ public class CourseController {
 		return resultOfTheSelect;
 		
 	}
+<<<<<<< HEAD
+=======
+	
+	public boolean alterStatusCourse(int idCourse) throws CourseException{
+		
+		boolean statusWasAltered;
+		
+		CourseDAO courseDao = new CourseDAO();
+		int teste = courseDao.returnStatusCourse(idCourse);
+	
+		
+		if (teste == 1){
+			statusWasAltered = courseDao.alterCourseStatus(idCourse, 0);
+		} else {
+			statusWasAltered = courseDao.alterCourseStatus(idCourse, 1);
+		}
+		
+		return statusWasAltered;
+		
+	}
+
+>>>>>>> issue4
 }
