@@ -79,9 +79,7 @@ public class Course{
 			throw caughtException;
 		}
 	}
-<<<<<<< HEAD
-=======
-	}
+
 	public Course(int courseId, String courseName, String courseDescription,
 			  Integer courseDuration, Integer courseValue, int courseStatus)
 			  throws CourseException{
@@ -97,7 +95,6 @@ public class Course{
 			throw caughtException;
 		}
 	}
->>>>>>> issue4
 
 /** Setters */
 	

@@ -119,34 +119,19 @@ public class CourseDAO extends DAO {
 	public ResultSet getAll(){
 		
 		ResultSet result;
-		
-		String query = ("SELECT * FROM "+ TABLE_NAME);
-		
-		try {
-			
-<<<<<<< HEAD
-			result = this.search(query);
-		} catch (SQLException caughtException){
-=======
+
 			String query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + STATUS_COLUMN + " = 1");
 			try{
-				Connection connection = this.connectToDB();
-				PreparedStatement preparedStatement = connection.prepareStatement(query); 
-				result = preparedStatement.executeQuery();
+				result = search(query);
 				
 			}catch(SQLException caughtException){
 				
 				result = null;
-			}
->>>>>>> issue4
-			
-			result = null;
-		}
-		
-<<<<<<< HEAD
-		return result;
+			}		
+
+			return result;
 	}
-=======
+
 		/**
 		 * Change course's status into the database
 		 * @param course - Course object that will be activated or deactivated
@@ -179,9 +164,7 @@ public class CourseDAO extends DAO {
 			ResultSet result;
 			
 			try {
-				Connection connection = this.connectToDB(); 
-				PreparedStatement preparedStatement = connection.prepareStatement(query); 
-				result = preparedStatement.executeQuery();
+				result = search(query);
 				result.next();
 				course = new Course(result.getInt("id_course"),result.getString("course_name"),
 						result.getString("description"), result.getInt("duration") , result.getInt("value"), 
@@ -197,9 +180,7 @@ public class CourseDAO extends DAO {
 			ResultSet result;
 			
 			try {
-				Connection connection = this.connectToDB(); 
-				PreparedStatement preparedStatement = connection.prepareStatement(query); 
-				result = preparedStatement.executeQuery();
+				result = search(query);
 				result.next();
 				return result.getInt(STATUS_COLUMN);
 			} catch (SQLException e) {
@@ -210,5 +191,4 @@ public class CourseDAO extends DAO {
 			}
 		}
 
->>>>>>> issue4
 }

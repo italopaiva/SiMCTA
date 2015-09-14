@@ -2,7 +2,7 @@ package view;
 
 import java.awt.Color;
 import java.awt.EventQueue;
-<<<<<<< HEAD
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
-=======
+
 import java.awt.List;
 import java.awt.TrayIcon.MessageType;
 
@@ -50,14 +50,13 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListModel;
->>>>>>> issue4
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-<<<<<<< HEAD
-=======
+
 import javax.swing.SwingUtilities;
 
 import model.Course;
@@ -66,7 +65,6 @@ import javax.swing.JButton;
 
 import java.awt.Color;
 
->>>>>>> issue4
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -87,16 +85,13 @@ public class SearchCourse extends View {
 	private JLabel valueResultLabel;
 	final DefaultTableModel tableModel;
 	JScrollPane scrollPane;
-<<<<<<< HEAD
 
 	private Integer courseId;
 	private String courseName;
 	private String courseDescription;
 	private Integer courseDuration;
 	private Integer courseValue;
-=======
->>>>>>> issue4
-	
+
 	/**
 	 * Launch the application.
 	 */
@@ -163,7 +158,7 @@ public class SearchCourse extends View {
 				}
 			}
 		});
-		editCourseBtn.setBounds(268, 127, 117, 25);
+		editCourseBtn.setBounds(268, 90, 117, 25);
 		internalFrame.getContentPane().add(editCourseBtn);
 		
 		JLabel courseLabel = new JLabel("Curso:");
@@ -274,10 +269,6 @@ public class SearchCourse extends View {
 		final CourseController courseController = new CourseController();			
 		getAllCourses(courseController);
 		
-<<<<<<< HEAD
-=======
-		
->>>>>>> issue4
 		btnConsultar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -436,8 +427,6 @@ public class SearchCourse extends View {
 			//allCourses.clear();
 		}		
 	}
-<<<<<<< HEAD
-=======
 	
 	private String showsAtivarOrDesativar(int status){
 		return ((status==1) ? "Desativar":"Ativar");
@@ -447,5 +436,4 @@ public class SearchCourse extends View {
 		return ((status==0) ? "Desativado":"Ativo");
 	}
 
->>>>>>> issue4
 }

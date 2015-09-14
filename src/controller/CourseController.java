@@ -115,8 +115,6 @@ public class CourseController {
 		return resultOfTheSelect;
 		
 	}
-<<<<<<< HEAD
-=======
 	
 	public boolean alterStatusCourse(int idCourse) throws CourseException{
 		
@@ -136,5 +134,4 @@ public class CourseController {
 		
 	}
 
->>>>>>> issue4
 }
