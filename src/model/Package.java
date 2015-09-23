@@ -28,7 +28,12 @@ public class Package {
 	/** Constructors */
 	public Package(){}
 	
-	public Package(int packageId, String packageName, int packageValue) throws PackageException{
+	public Package(String packageName, Integer packageValue) throws PackageException{
+		setPackageName(packageName);
+		setPackageValue(packageValue);
+	}
+	
+	public Package(Integer packageId, String packageName, Integer packageValue) throws PackageException{
 		setPackageId(packageId);
 		setPackageName(packageName);
 		setPackageValue(packageValue);
