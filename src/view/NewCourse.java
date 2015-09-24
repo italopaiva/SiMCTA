@@ -16,6 +16,7 @@ import javax.swing.text.MaskFormatter;
 
 import controller.CourseController;
 import exception.CourseException;
+import java.awt.Color;
 
 @SuppressWarnings("serial")
 public class NewCourse extends View {
@@ -39,39 +40,39 @@ public class NewCourse extends View {
 		contentPane.setLayout(null);
 		
 		courseNameField = new JTextField();
-		courseNameField.setBounds(24, 57, 345, 19);
+		courseNameField.setBounds(276, 74, 346, 30);
 		contentPane.add(courseNameField);
 		courseNameField.setColumns(10);
 		
 		JLabel courseNameLabel = new JLabel("Nome do curso");
-		courseNameLabel.setBounds(24, 38, 124, 17);
+		courseNameLabel.setBounds(284, 45, 124, 17);
 		contentPane.add(courseNameLabel);
 		
 		JLabel lblC = new JLabel("Novo curso");
 		lblC.setFont(new Font("Dialog", Font.BOLD, 20));
-		lblC.setBounds(165, 12, 144, 15);
+		lblC.setBounds(426, 12, 144, 15);
 		contentPane.add(lblC);
 		
 		JLabel durationLabel = new JLabel("Duração");
-		durationLabel.setBounds(24, 88, 70, 15);
+		durationLabel.setBounds(286, 116, 70, 15);
 		contentPane.add(durationLabel);
 		
 		JLabel valueLabel = new JLabel("Valor");
-		valueLabel.setBounds(196, 88, 70, 15);
+		valueLabel.setBounds(286, 197, 70, 15);
 		contentPane.add(valueLabel);
 		
 		JLabel descriptionLabel = new JLabel("Descrição do curso");
-		descriptionLabel.setBounds(24, 142, 144, 15);
+		descriptionLabel.setBounds(284, 264, 144, 15);
 		contentPane.add(descriptionLabel);
 		
 		try{
 			
-			MaskFormatter durationMask = new MaskFormatter("##");
+			MaskFormatter durationMask = new MaskFormatter("## semanas");
 			durationMask.setValidCharacters("0123456789");
 			durationMask.setValueContainsLiteralCharacters(false);
 			
 			durationField = new JFormattedTextField(durationMask);
-			durationField.setBounds(24, 111, 106, 19);
+			durationField.setBounds(276, 143, 132, 25);
 			contentPane.add(durationField);
 			
 			MaskFormatter valueMask = new MaskFormatter("R$ ####,##");
@@ -79,14 +80,15 @@ public class NewCourse extends View {
 			valueMask.setValueContainsLiteralCharacters(false);
 			
 			valueField = new JFormattedTextField(valueMask);
-			valueField.setBounds(196, 111, 106, 19);
+			valueField.setBounds(284, 224, 124, 28);
 			contentPane.add(valueField);
 			
 			descriptionField = new JTextArea();
-			descriptionField.setBounds(24, 157, 382, 45);
+			descriptionField.setBounds(284, 306, 446, 105);
 			contentPane.add(descriptionField);
 			
 			JButton registerCourseButton = new JButton("Cadastrar");
+			registerCourseButton.setBackground(Color.BLUE);
 			registerCourseButton.addMouseListener(new MouseAdapter(){
 				
 				@Override
@@ -146,7 +148,7 @@ public class NewCourse extends View {
 					}
 				}
 			});
-			registerCourseButton.setBounds(292, 214, 114, 25);
+			registerCourseButton.setBounds(456, 462, 114, 25);
 			contentPane.add(registerCourseButton);
 			
 		}catch (ParseException e){
