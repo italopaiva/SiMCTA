@@ -13,10 +13,10 @@ public class ManagerMigrations{
 		/**
 		 * Call your migration class here
 		 */
-		M001_CreatingCourseTable m001 = new M001_CreatingCourseTable();
+		M003_CreatingPackageTable m = new M003_CreatingPackageTable();
 		
 		try{
-			m001.up();
+			m.up();
 			message = "Executado com sucesso!";
 		}catch(SQLException e){
 			message = e.getMessage();
