@@ -88,7 +88,7 @@ public class NewCourse extends View {
 			contentPane.add(descriptionField);
 			
 			JButton registerCourseButton = new JButton("Cadastrar");
-			registerCourseButton.setBackground(Color.BLUE);
+			registerCourseButton.setBackground(Color.WHITE);
 			registerCourseButton.addMouseListener(new MouseAdapter(){
 				
 				@Override
