@@ -19,7 +19,7 @@ hs_err_pid*
 *.project
 
 #Database config class
-src/dao/DatabaseConfig.java
+#src/dao/DatabaseConfig.java
 
 #Manager Migration file
 src/migration/ManagerMigrations.java
