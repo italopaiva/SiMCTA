@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 public class M003_CreatingPackageTable extends Migration {
 	
-	private static final int MIGRATION_VERSION = 2;
+	private static final int MIGRATION_VERSION = 3;
 	
 	public M003_CreatingPackageTable(){}
 	

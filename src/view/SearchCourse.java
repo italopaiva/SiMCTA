@@ -78,19 +78,19 @@ public class SearchCourse extends View {
 		contentPane.setLayout(null);
 		
 		final JTextField searchedCourseField = new JTextField();
-		searchedCourseField.setBounds(29, 12, 161, 19);
+		searchedCourseField.setBounds(140, 56, 446, 19);
 		contentPane.add(searchedCourseField);
 		searchedCourseField.setColumns(10);
 		
 		JButton btnConsultar = new JButton("Consultar");
-		btnConsultar.setBounds(202, 9, 117, 25);
+		btnConsultar.setBounds(598, 53, 117, 25);
 		contentPane.add(btnConsultar);
 		
 		
 		final JInternalFrame internalFrame = new JInternalFrame();
 		internalFrame.setEnabled(false);
 		internalFrame.setBackground(Color.WHITE);
-		internalFrame.setBounds(12, 43, 409, 196);
+		internalFrame.setBounds(227, 141, 557, 317);
 		contentPane.add(internalFrame);
 		internalFrame.getContentPane().setLayout(null);
 		
@@ -114,7 +114,7 @@ public class SearchCourse extends View {
 				}
 			}
 		});
-		editCourseBtn.setBounds(168, 127, 107, 25);
+		editCourseBtn.setBounds(156, 248, 107, 25);
 		internalFrame.getContentPane().add(editCourseBtn);
 		
 		JLabel courseLabel = new JLabel("Curso:");
@@ -126,12 +126,12 @@ public class SearchCourse extends View {
 		internalFrame.getContentPane().add(courseResultLabel);
 		
 		JLabel descriptionLabel = new JLabel("Descrição:");
-		descriptionLabel.setBounds(12, 70, 86, 15);
+		descriptionLabel.setBounds(12, 86, 86, 15);
 		internalFrame.getContentPane().add(descriptionLabel);
 		
 		descriptionResultLabel = new JTextArea("a");
 		descriptionResultLabel.setEditable(false);
-		descriptionResultLabel.setBounds(22, 86, 255, 66);
+		descriptionResultLabel.setBounds(12, 113, 523, 123);
 		internalFrame.getContentPane().add(descriptionResultLabel);
 		
 		JLabel durationLabel = new JLabel("Duração:");
@@ -143,68 +143,62 @@ public class SearchCourse extends View {
 		internalFrame.getContentPane().add(durationResultLabel);
 		
 		JLabel valueLabel = new JLabel("Valor:");
-		valueLabel.setBounds(216, 43, 70, 15);
+		valueLabel.setBounds(337, 43, 70, 15);
 		internalFrame.getContentPane().add(valueLabel);
 		
 		valueResultLabel = new JLabel("a");
-		valueResultLabel.setBounds(268, 43, 70, 15);
+		valueResultLabel.setBounds(401, 43, 70, 15);
 		internalFrame.getContentPane().add(valueResultLabel);
 		
 		btnAtivarOrDesativar = new JButton("New Button");
-		btnAtivarOrDesativar.setBounds(282, 127, 105, 25);
+		btnAtivarOrDesativar.setBounds(312, 248, 105, 25);
 		internalFrame.getContentPane().add(btnAtivarOrDesativar);
-		
-		final JInternalFrame internalFrame_1 = new JInternalFrame();
-		internalFrame_1.setEnabled(false);
-		internalFrame_1.getContentPane().setLayout(null);
-		internalFrame_1.setVisible(true);
-	
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 43, 409, 196);
-		scrollPane.setBackground(Color.WHITE);
-		contentPane.add(scrollPane);
-
+			
 		String [] columns = { "Curso", "Status", "Ação", "Id"};
 		
 		tableModel = new DefaultTableModel(null, columns);
 		final JTable tableOfCourses = new JTable(tableModel);
-
-		tableOfCourses.removeColumn(tableOfCourses.getColumnModel().getColumn(3));
 		
+		tableOfCourses.removeColumn(tableOfCourses.getColumnModel().getColumn(3));
+		tableOfCourses.setBackground(Color.WHITE);
+			
 		Action alterStatus = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
+				public void actionPerformed(ActionEvent e) {
 
-				JTable table = (JTable)e.getSource();
-				int idCourse = Integer.parseInt(table.getModel().getValueAt(table.getSelectedRow(),3).toString());
-				String statusCourse = table.getModel().getValueAt(table.getSelectedRow(),1).toString();
-				int statusCourseInt = (statusCourse == "Ativo" ? 1 : 0);
-				
-				int confirm = 0;
-				
-				confirm = JOptionPane.showConfirmDialog(tableOfCourses, "Tem certeza que deseja " + showsAtivarOrDesativar(statusCourseInt) + " este curso?", "Atenção!!!", JOptionPane.YES_NO_OPTION);
-				
-				if (confirm == JOptionPane.YES_OPTION) {
+					JTable table = (JTable)e.getSource();
+					int idCourse = Integer.parseInt(table.getModel().getValueAt(table.getSelectedRow(),3).toString());
+					String statusCourse = table.getModel().getValueAt(table.getSelectedRow(),1).toString();
+					int statusCourseInt = (statusCourse == "Ativo" ? 1 : 0);
 					
-					CourseController courseController = new CourseController();
-					try {
-						courseController.alterStatusCourse(idCourse);
-						statusCourseInt = (statusCourseInt == 0 ? 1 : 0);
-						JOptionPane.showMessageDialog(tableOfCourses, "Status do curso alterado! Curso " + showsAtivoOrInativo(statusCourseInt) + " !");
-						int modelRow = Integer.valueOf( e.getActionCommand() );
-					    ((DefaultTableModel)table.getModel()).removeRow(modelRow);
-					} catch (CourseException e1) {
-						e1.printStackTrace();
+					int confirm = 0;
+					
+					confirm = JOptionPane.showConfirmDialog(tableOfCourses, "Tem certeza que deseja " + showsAtivarOrDesativar(statusCourseInt) + " este curso?", "Atenção!!!", JOptionPane.YES_NO_OPTION);
+					
+					if (confirm == JOptionPane.YES_OPTION) {
+						
+						CourseController courseController = new CourseController();
+						try {
+							courseController.alterStatusCourse(idCourse);
+							statusCourseInt = (statusCourseInt == 0 ? 1 : 0);
+							JOptionPane.showMessageDialog(tableOfCourses, "Status do curso alterado! Curso " + showsAtivoOrInativo(statusCourseInt) + " !");
+							int modelRow = Integer.valueOf( e.getActionCommand() );
+						    ((DefaultTableModel)table.getModel()).removeRow(modelRow);
+						} catch (CourseException e1) {
+							e1.printStackTrace();
+						}
+						
 					}
 					
 				}
-				
-			}
-	};
+		};
 		
 		ButtonColumn buttonColumn2 = new ButtonColumn(tableOfCourses, alterStatus, 2);
+			
+		final JInternalFrame internalFrame_1 = new JInternalFrame();
+		internalFrame_1.setEnabled(false);
+		internalFrame_1.getContentPane().setLayout(null);
+		internalFrame_1.setVisible(true);
 
-		tableOfCourses.setBackground(Color.WHITE);
-		scrollPane.setViewportView(tableOfCourses);
 
 		internalFrame_1.setBackground(Color.WHITE);
 		internalFrame_1.setBounds(12, 43, 409, 196);
@@ -218,10 +212,17 @@ public class SearchCourse extends View {
 				backButton.setVisible(false);
 			}
 		});
-		backButton.setBounds(321, 9, 117, 25);
+		
+			scrollPane = new JScrollPane();
+			scrollPane.setBounds(227, 141, 557, 317);
+			contentPane.add(scrollPane);
+			scrollPane.setBackground(Color.WHITE);
+			
+						
+		backButton.setBounds(727, 53, 117, 25);
 		contentPane.add(backButton);
 		backButton.setVisible(false);
-		
+		scrollPane.setViewportView(tableOfCourses);
 		final CourseController courseController = new CourseController();			
 		getAllCourses(courseController);
 
