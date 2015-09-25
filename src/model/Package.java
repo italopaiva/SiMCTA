@@ -1,5 +1,6 @@
 package model;
 
+import exception.CourseException;
 import exception.PackageException;
 
 public class Package {
@@ -7,7 +8,16 @@ public class Package {
 	private static final String PACKAGE_NAME_CANT_BE_NULL = "O nome do pacote não pode ser nulo.";
 	private static final String PACKAGE_VALUE_CANT_BE_ZERO = "O valor do pacote não pode ser zero";
 	private static final String PACKAGE_ID_MUST_BE_GREATER_THAN_ZERO = "O código do pacote deve ser maior que zero";
+	private static final String PACKAGE_DURATION_CANT_BE_ZERO = "O pacote deve durar pelo menos 1 semana";
 	
+	/**
+	 * The max and min duration are these because the duration must have at least 1 digit and
+	 * no more than 2 digits
+	 * Ex.: 10 weeks -> 10 has two digits
+	 * So, the greater number with 2 digits is 99, and the minimun is 1 (because can't be zero)
+	 */
+	private static final int MIN_DURATION = 1;
+	private static final int MAX_DURATION = 99;
 	/**
 	 * The max and min value are these because the value must have no more than 6 digits
 	 * Ex.: R$ 2500,39 = 250039
@@ -16,15 +26,17 @@ public class Package {
 	private static final int MAX_VALUE = 999999;
 	private static final int MIN_VALUE = 1;
 	
+	
 	private Integer packageId;
 	private String packageName;
-	
+	private Integer packageDuration;
+
 	/**
 	 * Given in reals (R$)
 	 * Cannot have more than 6 digits (Ex.: R$ 1500,50 = 150050)
 	 */
 	private Integer packageValue;
-	
+		
 	/** Constructors */
 	public Package(){}
 	
@@ -81,8 +93,23 @@ public class Package {
 		}
 	}
 	
+	private void setPackageDuration() throws PackageException{
+		int duration = packageDuration.intValue();
+		
+		boolean packageDurationIsValid = duration >= MIN_DURATION 
+										&& duration <= MAX_DURATION;
+		
+		if(packageDurationIsValid){
+			
+			this.packageDuration = packageDuration;
+		}else{
+			
+			throw new PackageException(PACKAGE_DURATION_CANT_BE_ZERO);
+		}
+	}
+	
 	/** Getters */ 
-	private Integer getPackageId() {
+	public Integer getPackageId() {
 		return packageId;
 	}
 	
@@ -90,8 +117,13 @@ public class Package {
 		return packageName;
 	}
 	
-	public int getPackageValue() {
+	public Integer getPackageValue() {
 		return packageValue;
 	}
+	
+	public Integer getPackageDuration() {
+		return packageDuration;
+	}
+	
 	
 }
