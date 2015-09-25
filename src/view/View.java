@@ -77,6 +77,29 @@ public class View extends JFrame {
 			}
 		});
 		courseMenu.add(searchCourse);
+		
+		JMenu packageMenu = new JMenu("Pacotes");
+		menuBar.add(packageMenu);
+		
+		JMenuItem registerPackage = new JMenuItem("Cadastrar Pacote");
+		registerPackage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				boolean permissionToAccess = false;
+				
+				permissionToAccess = getPermissionToAccess();
+				if(permissionToAccess == true){
+					dispose();
+					NewPackage newPackageFrame = new NewPackage();
+					newPackageFrame.setVisible(true);
+				}
+				else{
+					View frame = new View();
+					frame.setVisible(true);
+				}
+			}
+		});
+		packageMenu.add(registerPackage);
 	}
 	
 	protected boolean getPermissionToAccess(){
