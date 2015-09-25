@@ -1,15 +1,21 @@
 package model;
 
+import java.util.ArrayList;
+
 import exception.CourseException;
 import exception.PackageException;
 
 public class Package {
 
+	/**
+	 * Error messages 
+	 */
 	private static final String PACKAGE_NAME_CANT_BE_NULL = "O nome do pacote não pode ser nulo.";
 	private static final String PACKAGE_VALUE_CANT_BE_ZERO = "O valor do pacote não pode ser zero";
 	private static final String PACKAGE_ID_MUST_BE_GREATER_THAN_ZERO = "O código do pacote deve ser maior que zero";
 	private static final String PACKAGE_DURATION_CANT_BE_ZERO = "O pacote deve durar pelo menos 1 semana";
-	
+	private static final String COURSES_OF_PACKAGE_CANT_BE_ZERO = "O pacote não pode ser criado sem cursos";
+
 	/**
 	 * The max and min duration are these because the duration must have at least 1 digit and
 	 * no more than 2 digits
@@ -30,12 +36,19 @@ public class Package {
 	private Integer packageId;
 	private String packageName;
 	private Integer packageDuration;
+	
+	/**
+	 * Courses contained in the package
+	 */
+	private ArrayList <Course> courses = new ArrayList<Course>();
 
+	
 	/**
 	 * Given in reals (R$)
 	 * Cannot have more than 6 digits (Ex.: R$ 1500,50 = 150050)
 	 */
 	private Integer packageValue;
+		
 		
 	/** Constructors */
 	public Package(){}
@@ -93,7 +106,8 @@ public class Package {
 		}
 	}
 	
-	private void setPackageDuration() throws PackageException{
+	private void setPackageDuration(Integer packageDuration) throws PackageException{
+		
 		int duration = packageDuration.intValue();
 		
 		boolean packageDurationIsValid = duration >= MIN_DURATION 
@@ -107,7 +121,18 @@ public class Package {
 			throw new PackageException(PACKAGE_DURATION_CANT_BE_ZERO);
 		}
 	}
-	
+	private void setCourses(ArrayList<Course> courses) throws PackageException {
+		
+		boolean coursesAreEmpty = courses.isEmpty();
+		
+		if(!coursesAreEmpty){		
+			this.courses = courses;
+		}else{
+			
+			throw new PackageException(COURSES_OF_PACKAGE_CANT_BE_ZERO);
+		}
+	}
+
 	/** Getters */ 
 	public Integer getPackageId() {
 		return packageId;
@@ -124,6 +149,11 @@ public class Package {
 	public Integer getPackageDuration() {
 		return packageDuration;
 	}
+	
+	public ArrayList<Course> getCourses() {
+		return courses;
+	}
+
 	
 	
 }

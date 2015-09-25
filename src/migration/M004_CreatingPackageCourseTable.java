@@ -17,7 +17,7 @@ public class M004_CreatingPackageCourseTable extends Migration {
 		query+= "id_course int NOT NULL,";
 		query+= "id_package int NOT NULL,";
 		query+= "FOREIGN KEY (id_course) REFERENCES Course(id_course),";
-		query+= "FOREIGN KEY (id_package) REFERENCES Package(packageID)";
+		query+= "FOREIGN KEY (id_package) REFERENCES Package(id_package)";
 		query+= ")";
 		
 		setQuery(query);
