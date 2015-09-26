@@ -10,8 +10,8 @@ public class Package {
 	/**
 	 * Error messages 
 	 */
-	private static final String PACKAGE_NAME_CANT_BE_NULL = "O nome do pacote não pode ser nulo.";
-	private static final String PACKAGE_VALUE_CANT_BE_ZERO = "O valor do pacote não pode ser zero";
+	private static final String PACKAGE_NAME_CANT_BE_NULL = "O nome do pacote deve ser preenchido";
+	private static final String PACKAGE_VALUE_CANT_BE_ZERO = "O pacote deve ter um valor";
 	private static final String PACKAGE_ID_MUST_BE_GREATER_THAN_ZERO = "O código do pacote deve ser maior que zero";
 	private static final String PACKAGE_DURATION_CANT_BE_ZERO = "O pacote deve durar pelo menos 1 semana";
 	private static final String COURSES_OF_PACKAGE_CANT_BE_ZERO = "O pacote não pode ser criado sem cursos";
@@ -40,7 +40,7 @@ public class Package {
 	/**
 	 * Courses contained in the package
 	 */
-	private ArrayList <Course> courses = new ArrayList<Course>();
+	private ArrayList <String> courses = new ArrayList<String>();
 
 	
 	/**
@@ -53,15 +53,14 @@ public class Package {
 	/** Constructors */
 	public Package(){}
 	
-	public Package(String packageName, Integer packageValue) throws PackageException{
-		setPackageName(packageName);
-		setPackageValue(packageValue);
-	}
-	
-	public Package(Integer packageId, String packageName, Integer packageValue) throws PackageException{
+	public Package(Integer packageId, String packageName, Integer packageValue, 
+			       Integer packageDuration, ArrayList <String> courses) throws PackageException{
+		
 		setPackageId(packageId);
 		setPackageName(packageName);
 		setPackageValue(packageValue);
+		setCourses(courses);
+		setPackageDuration(packageDuration);
 	}
 	
 	/** Setters 
@@ -121,7 +120,7 @@ public class Package {
 			throw new PackageException(PACKAGE_DURATION_CANT_BE_ZERO);
 		}
 	}
-	private void setCourses(ArrayList<Course> courses) throws PackageException {
+	private void setCourses(ArrayList<String> courses) throws PackageException {
 		
 		boolean coursesAreEmpty = courses.isEmpty();
 		
@@ -150,7 +149,7 @@ public class Package {
 		return packageDuration;
 	}
 	
-	public ArrayList<Course> getCourses() {
+	public ArrayList<String> getCourses() {
 		return courses;
 	}
 

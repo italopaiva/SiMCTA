@@ -132,6 +132,8 @@ public class NewPackage extends View{
 				catch(PackageException caughtException){
 					
 					showInfoMessage(caughtException.getMessage());
+				} catch (SQLException e1) {
+					e1.printStackTrace();
 				}
 			}
 
