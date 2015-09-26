@@ -41,6 +41,9 @@ import util.ButtonColumn;
 
 public class NewPackage extends View{
 	
+	// Initial label position of added courses
+	private static final int FIRST_LABEL_ADDED_COURSES_POSITION = 218;
+	
 	private JPanel contentPane;
 	private JTextField packageNameField;
 	private JFormattedTextField valueField;
@@ -52,6 +55,7 @@ public class NewPackage extends View{
 	private ArrayList <String> coursesName;
 	private ArrayList <String> coursesId;
 	private ArrayList <String> coursesDuration;
+	private int labelPosition = FIRST_LABEL_ADDED_COURSES_POSITION;
 
 	/**
 	 * Create the frame.
@@ -206,10 +210,6 @@ public class NewPackage extends View{
 		JLabel label = new JLabel("Adicionados:");
 		label.setBounds(673, 202, 144, 15);
 		contentPane.add(label);
-		
-		coursesOfPackage = new JLabel();
-		coursesOfPackage.setBounds(673, 218, 140, 311);
-		contentPane.add(coursesOfPackage);
 				
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(276, 231, 353, 169);
@@ -239,10 +239,7 @@ public class NewPackage extends View{
 		coursesName = new ArrayList<String>(); 
 		coursesId = new ArrayList<String>(); 
 		coursesDuration = new ArrayList<String>(); 
-		
-		
-		addedCourses = coursesOfPackage.getText();
-		
+			
 		quantityOfCourses = 0;
 		
 		Action addCourses = new AbstractAction() {
@@ -268,12 +265,12 @@ public class NewPackage extends View{
 			    ((DefaultTableModel)tableOfCourses.getModel()).removeRow(modelRow);
 			    
 			    // Show added courses
-			    
-			    addedCourses += "\n" + coursesName.get(quantityOfCourses);
-			    coursesOfPackage.setText(addedCourses);
-			    coursesOfPackage.setAlignmentX(Component.TOP_ALIGNMENT);
-			    //coursesOfPackage.setText(addedCourses);
-			    
+				coursesOfPackage = new JLabel();
+				coursesOfPackage.setBounds(673, labelPosition, 300, 57);
+				contentPane.add(coursesOfPackage);
+				coursesOfPackage.setText(addedCourse);
+				labelPosition = labelPosition + 15;
+
 			    //Show the current duration
 			    Integer duration = calculateDuration(coursesDuration);
 			    packageDurationField.setText(duration.toString());
