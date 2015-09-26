@@ -388,7 +388,7 @@ public class SearchCourse extends View {
 	 * @param courses - Receives an instance of the class CourseController 
 	 * @throws SQLException
 	 */
-	private void getAllCourses(CourseController courses) throws SQLException{
+	public void getAllCourses(CourseController courses) throws SQLException{
 					
 		ResultSet resultOfTheSelect = courses.showCourse();		
 
