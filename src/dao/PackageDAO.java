@@ -4,8 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
-
 import model.Package;
 
 public class PackageDAO extends DAO{
@@ -123,5 +121,27 @@ public class PackageDAO extends DAO{
 		return lastId;
 	}
 	
+	public boolean update(Integer packageId, Package newPackage){
+		
+		String newPackageName = newPackage.getPackageName();
+		Integer newPackageValue = newPackage.getPackageValue();
+		
+		String query = "UPDATE "+ TABLE_NAME + " SET "
+				   + NAME_COLUMN + "='" + newPackageName + "', "
+				   + VALUE_COLUMN + "='" + newPackageValue + "' "
+				   + "WHERE " + ID_COLUMN + "='" + packageId + "'";
 	
+		boolean wasUpdated = false;
+		
+		try{
+			
+			this.execute(query);
+			wasUpdated  = true;
+		}catch(SQLException caughtException){
+			
+			wasUpdated = false;
+		}
+		
+		return wasUpdated;
+	}
 }

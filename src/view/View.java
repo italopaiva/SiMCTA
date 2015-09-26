@@ -14,6 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
 import exception.AuthenticationException;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 @SuppressWarnings("serial")
 public class View extends JFrame {
@@ -90,6 +92,7 @@ public class View extends JFrame {
 				permissionToAccess = getPermissionToAccess();
 				if(permissionToAccess == true){
 					dispose();
+
 					try {
 						NewPackage newPackageFrame = new NewPackage();
 						newPackageFrame.setVisible(true);
@@ -97,6 +100,7 @@ public class View extends JFrame {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+
 				}
 				else{
 					View frame = new View();
@@ -105,6 +109,16 @@ public class View extends JFrame {
 			}
 		});
 		packageMenu.add(registerPackage);
+		
+		JMenuItem editPackage = new JMenuItem("Alterar Pacote");
+		editPackage.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				
+			}
+		});
+		packageMenu.add(editPackage);
 	}
 	
 	protected boolean getPermissionToAccess(){
