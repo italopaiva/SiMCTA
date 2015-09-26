@@ -90,8 +90,13 @@ public class View extends JFrame {
 				permissionToAccess = getPermissionToAccess();
 				if(permissionToAccess == true){
 					dispose();
-					NewPackage newPackageFrame = new NewPackage();
-					newPackageFrame.setVisible(true);
+					try {
+						NewPackage newPackageFrame = new NewPackage();
+						newPackageFrame.setVisible(true);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				else{
 					View frame = new View();
