@@ -2,6 +2,8 @@ package view;
 
 import java.awt.EventQueue;
 
+import javax.swing.UIManager;
+
 @SuppressWarnings("serial")
 public class SimCta extends View{
 
@@ -12,6 +14,12 @@ public class SimCta extends View{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					 try{ 
+					    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
+					 } 
+					 catch(Exception e){ 
+					
+					 }
 					SimCta frame = new SimCta();
 					frame.setVisible(true);
 				} catch (Exception e) {
