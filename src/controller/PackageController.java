@@ -32,8 +32,16 @@ public class PackageController {
 		packageCreated = packageDao.save(packageInstance);
 
 		return packageCreated;
-		
 	}
 	
-	
+	public boolean updatePackage(Integer packageId, String packageName, Integer packageValue, Integer packageDuration, ArrayList<String> packageCourses)
+		throws PackageException{
+		
+		Package newPackage = new Package(packageId, packageName, packageValue, packageDuration, packageCourses);
+		PackageDAO packageDao = new PackageDAO();
+		
+		boolean wasUpdated = packageDao.update(packageId, newPackage);
+		
+		return wasUpdated;
+	}
 }

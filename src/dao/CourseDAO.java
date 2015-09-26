@@ -138,63 +138,63 @@ public class CourseDAO extends DAO {
 			return result;
 	}
 
-		/**
-		 * Change course's status into the database
-		 * @param course - Course object that will be activated or deactivated
-		 * @return TRUE if the course's status was changed
-		 * @throws CourseException 
-		 */
-		public boolean alterCourseStatus(int courseId, int newCourseStatus) throws CourseException{
+	/**
+	 * Change course's status into the database
+	 * @param course - Course object that will be activated or deactivated
+	 * @return TRUE if the course's status was changed
+	 * @throws CourseException 
+	 */
+	public boolean alterCourseStatus(int courseId, int newCourseStatus) throws CourseException{
 
-			boolean statusWasAltered;
-			
-			String query = "UPDATE " + TABLE_NAME + 
-					" SET " + STATUS_COLUMN + "=" + newCourseStatus + 
-					" WHERE " + ID_COLUMN + "=" + courseId;
-			
-			try{
-				this.execute(query);
-				statusWasAltered = true;
-			} catch (SQLException caughtException){
-				statusWasAltered = false;
-			}
-			
-			return statusWasAltered;
+		boolean statusWasAltered;
+		
+		String query = "UPDATE " + TABLE_NAME + 
+				" SET " + STATUS_COLUMN + "=" + newCourseStatus + 
+				" WHERE " + ID_COLUMN + "=" + courseId;
+		
+		try{
+			this.execute(query);
+			statusWasAltered = true;
+		} catch (SQLException caughtException){
+			statusWasAltered = false;
 		}
 		
-		public Course returnCourseById(int courseId) throws CourseException {
-			String query = "SELECT * FROM " + TABLE_NAME + "WHERE " + ID_COLUMN + "=" + courseId;
-			
-			Course course;
-			
-			ResultSet result;
-			
-			try {
-				result = search(query);
-				result.next();
-				course = new Course(result.getInt("id_course"),result.getString("course_name"),
-						result.getString("description"), result.getInt("duration") , result.getInt("value"), 
-						result.getInt("status"));
-				return course;
-			} catch (SQLException e) {
-				return null;
-			}
-			}
+		return statusWasAltered;
+	}
+	
+	public Course returnCourseById(int courseId) throws CourseException {
+		String query = "SELECT * FROM " + TABLE_NAME + "WHERE " + ID_COLUMN + "=" + courseId;
 		
-		public int returnStatusCourse(int courseId) {
-			String query = "SELECT " + STATUS_COLUMN + " FROM " + TABLE_NAME + " WHERE " + ID_COLUMN + "=" + courseId;
-			ResultSet result;
-			
-			try {
-				result = search(query);
-				result.next();
-				return result.getInt(STATUS_COLUMN);
-			} catch (SQLException e) {
-				
-				e.printStackTrace();
-				
-				return -1;
-			}
+		Course course;
+		
+		ResultSet result;
+		
+		try {
+			result = search(query);
+			result.next();
+			course = new Course(result.getInt("id_course"),result.getString("course_name"),
+					result.getString("description"), result.getInt("duration") , result.getInt("value"), 
+					result.getInt("status"));
+			return course;
+		} catch (SQLException e) {
+			return null;
 		}
+	}
+	
+	public int returnStatusCourse(int courseId) {
+		String query = "SELECT " + STATUS_COLUMN + " FROM " + TABLE_NAME + " WHERE " + ID_COLUMN + "=" + courseId;
+		ResultSet result;
+		
+		try {
+			result = search(query);
+			result.next();
+			return result.getInt(STATUS_COLUMN);
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+			
+			return -1;
+		}
+	}
 
 }
