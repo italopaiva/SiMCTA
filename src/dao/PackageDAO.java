@@ -10,13 +10,14 @@ import model.Package;
 public class PackageDAO extends DAO{
 	
 	private static final String PACKAGE_COURSES_WASNT_SAVED = "Não foi possível associar os cursos ao pacote. Tente novamente.";
+	private static final String COULD_NOT_DISASSOCIATE_PACKAGE_COURSES = "Não foi possível desassociar os cursos do pacote.";
 	
 	private static final String TABLE_NAME = "Package";
 	private static final String NAME_COLUMN = "name";
 	private static final String VALUE_COLUMN = "value";
 	private static final String DURATION_COLUMN = "duration";
 	private static final String ID_COLUMN = "id_package";
-	private static final String TABLE_ASSOCIATION_NAME = "PackageCourse";
+	private static final String ASSOCIATION_TABLE_NAME = "PackageCourse";
 	private static final String ID_COURSE_COLUMN = "id_course";
 
 	public PackageDAO(){ }
@@ -85,7 +86,7 @@ public class PackageDAO extends DAO{
 		try{
 			while(indexOfCourses < quantityOfCourses){
 				
-				query = "INSERT INTO "+ TABLE_ASSOCIATION_NAME + "(" + ID_COLUMN + ", "
+				query = "INSERT INTO "+ ASSOCIATION_TABLE_NAME + "(" + ID_COLUMN + ", "
 						+ ID_COURSE_COLUMN + ")";
 				
 				courseIdString = coursesId.get(indexOfCourses);
@@ -131,14 +132,17 @@ public class PackageDAO extends DAO{
 		return lastId;
 	}
 	
-	public boolean update(Integer packageId, Package newPackage){
+	public boolean update(Integer packageId, Package newPackage) throws PackageException{
 		
 		String newPackageName = newPackage.getPackageName();
 		Integer newPackageValue = newPackage.getPackageValue();
+		Integer newPackageDuration = newPackage.getPackageDuration();
+		ArrayList<String> newPackageCourses = newPackage.getCourses(); 
 		
 		String query = "UPDATE "+ TABLE_NAME + " SET "
 				   + NAME_COLUMN + "='" + newPackageName + "', "
-				   + VALUE_COLUMN + "='" + newPackageValue + "' "
+				   + VALUE_COLUMN + "='" + newPackageValue + "', "
+				   + DURATION_COLUMN + "='" + newPackageDuration + "' "
 				   + "WHERE " + ID_COLUMN + "='" + packageId + "'";
 	
 		boolean wasUpdated = false;
@@ -147,11 +151,62 @@ public class PackageDAO extends DAO{
 			
 			this.execute(query);
 			wasUpdated  = true;
+			
+			try{
+				
+				updatePackageCourses(packageId, newPackageCourses);
+			}catch(SQLException caughtException){
+				
+				throw new PackageException(PACKAGE_COURSES_WASNT_SAVED);
+			}catch(PackageException caughtException){
+				
+				throw caughtException;
+			}
+			
 		}catch(SQLException caughtException){
 			
 			wasUpdated = false;
 		}
 		
 		return wasUpdated;
+	}
+	
+	private void updatePackageCourses(Integer packageId, ArrayList<String> packageCourses) throws SQLException, PackageException{
+		
+		boolean wasDisassociated = disassociateAllCoursesOfPackage(packageId);
+		
+		if(wasDisassociated){
+			
+			int i = 0;
+			for(i=0; i < packageCourses.size(); i++){
+				
+				String currentCourse = packageCourses.get(i);
+				
+				Integer courseId = Integer.parseInt(currentCourse);
+				
+				String associateCoursesToPackage = "INSERT INTO "+ ASSOCIATION_TABLE_NAME + "(" + ID_COLUMN + ", "+ ID_COURSE_COLUMN + ")";
+				associateCoursesToPackage += "VALUES('" + packageId + "','" + courseId + "')";
+				
+				this.execute(associateCoursesToPackage);
+			}
+		}else{
+			throw new PackageException(COULD_NOT_DISASSOCIATE_PACKAGE_COURSES);
+		}
+	}
+	
+	private boolean disassociateAllCoursesOfPackage(Integer packageId){
+		
+		String deleteAllPreviousAssociations = "DELETE FROM "+ ASSOCIATION_TABLE_NAME + " WHERE "+ ID_COLUMN +"= " + packageId;
+		
+		boolean disassociated = false;
+		
+		try{
+			this.execute(deleteAllPreviousAssociations);
+			disassociated = true;
+		}catch(SQLException caughtException){
+			disassociated = false;
+		}
+		
+		return disassociated;
 	}
 }
