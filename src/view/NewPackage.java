@@ -137,6 +137,7 @@ public class NewPackage extends View{
 					
 					showInfoMessage(caughtException.getMessage());
 				} catch (SQLException e1) {
+					
 					e1.printStackTrace();
 				}
 			}
@@ -144,8 +145,6 @@ public class NewPackage extends View{
 		});
 		registerPackageButton.setBounds(456, 525, 114, 25);
 		contentPane.add(registerPackageButton);
-
-		
 	}
 
 	/**

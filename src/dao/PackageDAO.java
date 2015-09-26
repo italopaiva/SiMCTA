@@ -4,9 +4,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import exception.PackageException;
 import model.Package;
 
 public class PackageDAO extends DAO{
+	
+	private static final String PACKAGE_COURSES_WASNT_SAVED = "Não foi possível associar os cursos ao pacote. Tente novamente.";
 	
 	private static final String TABLE_NAME = "Package";
 	private static final String NAME_COLUMN = "name";
@@ -21,10 +24,10 @@ public class PackageDAO extends DAO{
 	/**
 	 * Saves the data of package without the courses
 	 * @param packageInstance - a Package object with the package information to be saved
-	 * @return Query to execute in the database
-	 * @throws SQLException 
+	 * @return TRUE if the package was saved or FALSE if it does not
+	 * @throws PackageException 
 	 */
-	public boolean save(Package packageInstance) throws SQLException {
+	public boolean save(Package packageInstance) throws PackageException {
 		
 		String packageName = packageInstance.getPackageName();
 		Integer packageValue = packageInstance.getPackageValue();
@@ -35,27 +38,38 @@ public class PackageDAO extends DAO{
 		
 		query += "VALUES('" + packageName + "','" + packageValue + "','" + packageDuration + "')";
 		
-		boolean wasSaved = false;
+		boolean packageWasSaved = false;
 		
 		try{
+			
 			this.execute(query);
-			saveDataOfPackageCourse(packageInstance);
-			wasSaved = true;
+			packageWasSaved = true;
+			
+			try{
+				
+				saveDataOfPackageCourse(packageInstance);
+			}catch(SQLException caughtException){
+				
+				throw new PackageException(PACKAGE_COURSES_WASNT_SAVED);
+			}
+			
 		}catch(SQLException caughtException){
 			
-			wasSaved = false;
+			packageWasSaved = false;
 		}
-		return wasSaved;
 		
+		
+		return packageWasSaved;
 	}
 	
 	/**
 	 * Saves the data of the association between package and courses
 	 * @param packageInstance - a Package object with the association between package and courses
 	 * information to be saved
-	 * @return Query to execute in the database
+	 * @return void
+	 * @throws SQLException 
 	 */
-	private void saveDataOfPackageCourse(Package packageInstance) {
+	private void saveDataOfPackageCourse(Package packageInstance) throws SQLException {
 
 		int indexOfCourses = 0;
 		int quantityOfCourses = packageInstance.getCourses().size();
@@ -86,6 +100,7 @@ public class PackageDAO extends DAO{
 		}
 		catch(SQLException caughtException){
 			
+			throw caughtException;
 		}
 	}
 
