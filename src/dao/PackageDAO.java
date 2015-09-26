@@ -26,7 +26,7 @@ public class PackageDAO extends DAO{
 	 * @return Query to execute in the database
 	 * @throws SQLException 
 	 */
-	public boolean saveDataOfPackage(Package packageInstance) throws SQLException {
+	public boolean save(Package packageInstance) throws SQLException {
 		
 		String packageName = packageInstance.getPackageName();
 		Integer packageValue = packageInstance.getPackageValue();
@@ -41,7 +41,7 @@ public class PackageDAO extends DAO{
 		
 		try{
 			this.execute(query);
-						
+			saveDataOfPackageCourse(packageInstance);
 			wasSaved = true;
 		}catch(SQLException caughtException){
 			
@@ -57,7 +57,7 @@ public class PackageDAO extends DAO{
 	 * information to be saved
 	 * @return Query to execute in the database
 	 */
-	public boolean saveDataOfPackageCourse(Package packageInstance) {
+	private void saveDataOfPackageCourse(Package packageInstance) {
 
 		int indexOfCourses = 0;
 		int quantityOfCourses = packageInstance.getCourses().size();
@@ -69,9 +69,7 @@ public class PackageDAO extends DAO{
 		ArrayList<String> coursesId = new ArrayList<String>();
 		
 		coursesId = packageInstance.getCourses();
-		
-		boolean wasSaved = false;
-		
+
 		try{
 			while(indexOfCourses < quantityOfCourses){
 				
@@ -85,15 +83,12 @@ public class PackageDAO extends DAO{
 				query += "VALUES('" + packageId + "','" + courseId + "')";
 
 				this.execute(query);
-				System.out.print(query);
 				indexOfCourses++;
 			}						
-			wasSaved = true;
-		}catch(SQLException caughtException){
-			
-			wasSaved = false;
 		}
-		return wasSaved;
+		catch(SQLException caughtException){
+			
+		}
 	}
 
 	

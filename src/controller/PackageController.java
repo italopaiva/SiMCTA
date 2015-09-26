@@ -29,8 +29,7 @@ public class PackageController {
 		Package packageInstance = new Package(packageID, packageName, packageValue,
 				                              packageDuration, coursesId);
 		
-		packageCreated = packageDao.saveDataOfPackage(packageInstance);
-		packageCreated = packageDao.saveDataOfPackageCourse(packageInstance);
+		packageCreated = packageDao.save(packageInstance);
 
 		return packageCreated;
 		
