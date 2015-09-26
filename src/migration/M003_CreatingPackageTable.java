@@ -15,10 +15,11 @@ public class M003_CreatingPackageTable extends Migration {
 		String query = "";
 		
 		query+= "CREATE TABLE IF NOT EXISTS Package (";
-		query+= "packageID int(11) NOT NULL AUTO_INCREMENT,";
-		query+= "packageName varchar(100) NOT NULL,";
-		query+= "packageValue int(11) NOT NULL,";
-		query+= "PRIMARY KEY (packageID)";
+		query+= "id_package int(11) NOT NULL AUTO_INCREMENT,";
+		query+= "name varchar(100) NOT NULL,";
+		query+= "value int(11) NOT NULL,";
+		query+= "duration int(3) NOT NULL,";
+		query+= "PRIMARY KEY (id_package)";
 		query+= ")";
 		
 		setQuery(query);
