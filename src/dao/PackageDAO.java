@@ -66,7 +66,6 @@ public class PackageDAO extends DAO{
 	 * Saves the data of the association between package and courses
 	 * @param packageInstance - a Package object with the association between package and courses
 	 * information to be saved
-	 * @return void
 	 * @throws SQLException 
 	 */
 	private void saveDataOfPackageCourse(Package packageInstance) throws SQLException {

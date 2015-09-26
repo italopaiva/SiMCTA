@@ -13,8 +13,10 @@ public class Package {
 	private static final String PACKAGE_NAME_CANT_BE_NULL = "O nome do pacote deve ser preenchido";
 	private static final String PACKAGE_VALUE_CANT_BE_ZERO = "O pacote deve ter um valor";
 	private static final String PACKAGE_ID_MUST_BE_GREATER_THAN_ZERO = "O código do pacote deve ser maior que zero";
-	private static final String PACKAGE_DURATION_CANT_BE_ZERO = "O pacote deve durar pelo menos 1 semana";
+	private static final String PACKAGE_DURATION_CANT_GREATHER_THAN_MAX = "O pacote não pode ter mais que 99 semanas, remova algum curso";
 	private static final String COURSES_OF_PACKAGE_CANT_BE_ZERO = "O pacote não pode ser criado sem cursos";
+	private static final String PACKAGE_VALUE_GREATHER_THAN_MAX = "O pacote não pode custar mais R$ 9999,99";
+	private static final String PACKAGE_DURATION_CANT_BE_ZERO = "O pacote deve durar pelo menos 1 semana";
 
 	/**
 	 * The max and min duration are these because the duration must have at least 1 digit and
@@ -93,15 +95,21 @@ public class Package {
 		
 		int value = packageValue.intValue();
 		
-		boolean packageValueIsValid = value >= MIN_VALUE 
-									 && value <= MAX_VALUE;
+		boolean caseMin = value >= MIN_VALUE;
+		boolean caseMax = value <= MAX_VALUE;
+		
+		boolean packageValueIsValid = caseMin && caseMax;
 		if(packageValueIsValid){
 			
 			this.packageValue = packageValue;
 		}
 		else{
-			
-			throw new PackageException(PACKAGE_VALUE_CANT_BE_ZERO);
+			if(!caseMin){
+				throw new PackageException(PACKAGE_VALUE_CANT_BE_ZERO);
+			}
+			else{
+				throw new PackageException(PACKAGE_VALUE_GREATHER_THAN_MAX);
+			}
 		}
 	}
 	
@@ -109,25 +117,30 @@ public class Package {
 		
 		int duration = packageDuration.intValue();
 		
-		boolean packageDurationIsValid = duration >= MIN_DURATION 
-										&& duration <= MAX_DURATION;
+		boolean caseMin = duration >= MIN_DURATION;
+		boolean caseMax = duration <= MAX_DURATION;
+		
+		boolean packageDurationIsValid = caseMin && caseMax;
 		
 		if(packageDurationIsValid){
 			
 			this.packageDuration = packageDuration;
 		}else{
-			
-			throw new PackageException(PACKAGE_DURATION_CANT_BE_ZERO);
+			if(!caseMin){
+				throw new PackageException(PACKAGE_DURATION_CANT_BE_ZERO);
+			}
+			else{
+				throw new PackageException(PACKAGE_DURATION_CANT_GREATHER_THAN_MAX);
+			}
 		}
 	}
 	private void setCourses(ArrayList<String> courses) throws PackageException {
 		
-		boolean coursesAreEmpty = courses.isEmpty();
+		boolean coursesAreValid = courses != null && !courses.isEmpty();
 		
-		if(!coursesAreEmpty){		
+		if(coursesAreValid){		
 			this.courses = courses;
 		}else{
-			
 			throw new PackageException(COURSES_OF_PACKAGE_CANT_BE_ZERO);
 		}
 	}
