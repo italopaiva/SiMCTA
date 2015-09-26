@@ -29,7 +29,7 @@ public class PackageTest {
 		coursesID.add("2");
 	}
 	
-	private void newPackage(int packageId, String name, Integer packageDuration, Integer packageValue, ArrayList<String> courses) 
+	private void newPackage(Integer packageId, String name, Integer packageDuration, Integer packageValue, ArrayList<String> courses) 
 							throws PackageException{
 		
 		packageInstance = new Package(packageId, name, packageValue, packageDuration, courses);
@@ -150,6 +150,20 @@ public class PackageTest {
 
 			newPackage(1, "Pacote 1", 3 , 150000, null);
 	}
+	
+	/** Tests with package id */
+	
+	@Test(expected= PackageException.class)
+	public void testIfCreatesAPackageWithIdLessThanZero() throws PackageException{
+		newPackage(-1, "Pacote 1", MAX_DURATION + 3, 150000 , coursesID);
+	}
+	
+	@Test(expected= PackageException.class)
+	public void testIfCreatesAPackageWithIdNull() throws PackageException{
+
+			newPackage(null, "Pacote 1", 3 , 150000, null);
+	}
+	
 	
 	/** End of invalid entries */
 

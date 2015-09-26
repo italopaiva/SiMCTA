@@ -69,7 +69,8 @@ public class Package {
 	 * @throws PackageException */
 	
 	private void setPackageId(Integer packageId) throws PackageException {
-		boolean packageIdIsValid = packageId > 0;
+		
+		boolean packageIdIsValid = packageId != null && packageId > 0;
 		
 		if(packageIdIsValid){
 			
