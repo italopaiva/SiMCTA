@@ -41,21 +41,17 @@ import util.ButtonColumn;
 
 public class NewPackage extends View{
 	
-	// Initial label position of added courses
-	private static final int FIRST_LABEL_ADDED_COURSES_POSITION = 218;
+	private static final int NOW_ROW_SELECTED = -1;
 	
 	private JPanel contentPane;
 	private JTextField packageNameField;
 	private JFormattedTextField valueField;
 	private DefaultTableModel tableModel;
-	private int quantityOfCourses;
-	private JLabel coursesOfPackage;
-	private String addedCourses;
 	private JTextField packageDurationField;
 	private ArrayList <String> coursesName;
 	private ArrayList <String> coursesId;
 	private ArrayList <String> coursesDuration;
-	private int labelPosition = FIRST_LABEL_ADDED_COURSES_POSITION;
+	private DefaultTableModel tableSecondModel;
 
 	/**
 	 * Create the frame.
@@ -211,74 +207,153 @@ public class NewPackage extends View{
 		contentPane.add(label);
 				
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(276, 231, 353, 169);
+		scrollPane.setBounds(76, 231, 353, 169);
 		contentPane.add(scrollPane);
 		scrollPane.setBackground(Color.WHITE);
 		
-		String [] columns = {"Curso", "", "ID", "Duração"};
+		JScrollPane scrollPaneAddedCourses = new JScrollPane();
+		scrollPaneAddedCourses.setBounds(576, 231, 353, 169);
+		contentPane.add(scrollPaneAddedCourses);
+		scrollPaneAddedCourses.setBackground(Color.WHITE);
+		
+		String [] columns = {"Cursos disponíveis", "ID", "Duração"};
 		
 		tableModel = new DefaultTableModel(null, columns);			
 
 		final JTable tableOfCourses = new JTable(tableModel);
-
-		disposeColumns(tableOfCourses);
 		
+		disposeColumns(tableOfCourses);
 		tableOfCourses.setBackground(Color.WHITE);
 		scrollPane.setViewportView(tableOfCourses);
 		
-		addFunctionAddToTable(tableOfCourses);
+		String [] columnsAddedCourses = {"Cursos adicionados", "ID", "Duração"};
+		
+		tableSecondModel = new DefaultTableModel(null, columnsAddedCourses);			
+
+		final JTable tableOfAddedCourses = new JTable(tableSecondModel);
+		scrollPaneAddedCourses.setViewportView(tableOfAddedCourses);
+		disposeColumns(tableOfAddedCourses);
+
+		addCourse(tableOfCourses, tableOfAddedCourses);
 	}
 
 	/**
 	 * Adds the "Adicionar" button to table
 	 * @param tableOfCourses
+	 * @param tableOfAddedCourses 
 	 */
-	private void addFunctionAddToTable(final JTable tableOfCourses) {
+	private void addCourse(final JTable tableOfCourses, final JTable tableOfAddedCourses) {
 		
 		coursesName = new ArrayList<String>(); 
 		coursesId = new ArrayList<String>(); 
 		coursesDuration = new ArrayList<String>(); 
+					
+		JButton addCourseButton = new JButton("Adicionar");
+		addCourseButton.setBackground(Color.WHITE);
+		addCourseButton.addMouseListener(new MouseAdapter(){
 			
-		quantityOfCourses = 0;
-		
-		Action addCourses = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
+			@Override
+			public void mouseClicked(MouseEvent e){		
 				
 				int currentRow = tableOfCourses.getSelectedRow();
-				
-				// Gets the name of the selected course 
-				String addedCourse = (String) tableOfCourses.getValueAt(currentRow, 0);
-				coursesName.add(addedCourse);
-				
-				// Gets the id of the selected course
-				String addedCourseId = (String) tableOfCourses.getValueAt(currentRow, 2);
-				coursesId.add(addedCourseId);
-				
-				// Gets the duration of the selected course
-				String addedCourseDuration = (String) tableOfCourses.getValueAt(currentRow, 3);
-				coursesDuration.add(addedCourseDuration);
-				
-				// Erases the selected row 
-				int modelRow = Integer.valueOf( e.getActionCommand() );
-				
-			    ((DefaultTableModel)tableOfCourses.getModel()).removeRow(modelRow);
-			    
-			    // Show added courses
-				coursesOfPackage = new JLabel();
-				coursesOfPackage.setBounds(673, labelPosition, 300, 57);
-				contentPane.add(coursesOfPackage);
-				coursesOfPackage.setText(addedCourse);
-				labelPosition = labelPosition + 15;
-
-			    //Show the current duration
-			    Integer duration = calculateDuration(coursesDuration);
-			    packageDurationField.setText(duration.toString());
-			    
-			    quantityOfCourses++;
+							    
+				if(currentRow != NOW_ROW_SELECTED){
+					
+					// Gets the name of the selected course 
+					String addedCourse = (String) tableOfCourses.getValueAt(currentRow, 0);
+					coursesName.add(addedCourse);
+					
+					// Gets the id of the selected course
+					String addedCourseId = (String) tableOfCourses.getValueAt(currentRow, 1);
+					coursesId.add(addedCourseId);
+					
+					// Gets the duration of the selected course
+					String addedCourseDuration = (String) tableOfCourses.getValueAt(currentRow, 2);
+					coursesDuration.add(addedCourseDuration);
+				    
+					// Remove the course from available courses table
+					tableModel.removeRow(currentRow);
+					
+				    // Show added courses
+					String [] allCourses = new String[3];
+					allCourses[0] = addedCourse;
+					allCourses[1] = addedCourseId;
+					allCourses[2] = addedCourseDuration;
+					tableSecondModel.addRow(allCourses);
+	
+				    //Show the current duration
+				    Integer duration = calculateDuration(coursesDuration);
+				    packageDurationField.setText(duration.toString());
+				}	
+				else{
+					showInfoMessage("Selecione um curso da lista de cursos disponíveis");
+				}
 			}
-		};
+			
+
+		});
+		addCourseButton.setBounds(452, 231, 114, 25);
+		contentPane.add(addCourseButton);
 		
-		ButtonColumn buttonColumn2 = new ButtonColumn(tableOfCourses, addCourses, 1);
+		JButton removeAddedCourseButton = new JButton("Remover");
+		removeAddedCourseButton.setBackground(Color.WHITE);
+		removeAddedCourseButton.addMouseListener(new MouseAdapter(){
+			
+			@Override
+			public void mouseClicked(MouseEvent e){		
+				
+				int currentRow = tableOfAddedCourses.getSelectedRow();
+			
+				if(currentRow != NOW_ROW_SELECTED){
+				
+					// Gets the id of the selected course
+					String removeCourseId = (String) tableOfAddedCourses.getValueAt(currentRow, 1);
+					
+					// Search for the values to remove
+					int index = 0;
+					boolean indexFound = false;
+					while(index < coursesId.size() && !indexFound){
+						
+						if(coursesId.get(index).equals(removeCourseId)){
+							indexFound = true;
+						}
+						else{
+							index++;
+						}
+						
+					}
+					
+					String [] courseAvailable = new String[3];
+					courseAvailable[0] = coursesName.get(index);
+					courseAvailable[1] = coursesId.get(index);
+					courseAvailable[2] = coursesDuration.get(index);
+					
+					// Add the course to available courses table
+					tableModel.addRow(courseAvailable);
+					
+					// Remove the course from added courses list
+					coursesDuration.remove(index);
+					coursesName.remove(index);
+					coursesId.remove(index);
+					
+					// Remove the course from added courses table
+					tableSecondModel.removeRow(currentRow);
+					
+	
+				    //Show the current duration
+				    Integer duration = calculateDuration(coursesDuration);
+				    packageDurationField.setText(duration.toString());
+				    
+				}
+				else{
+					showInfoMessage("Selecione um curso da lista de cursos adicionados");
+				}
+			}
+
+		});
+		removeAddedCourseButton.setBounds(452, 281, 114, 25);
+		contentPane.add(removeAddedCourseButton);
+		
 	}
 
 	/**
@@ -306,13 +381,13 @@ public class NewPackage extends View{
 		
 		TableColumnModel tableModel = table.getColumnModel();
 		
+		tableModel.getColumn(1).setMinWidth(0);     
+		tableModel.getColumn(1).setPreferredWidth(0);  
+		tableModel.getColumn(1).setMaxWidth(0);    
+	
 		tableModel.getColumn(2).setMinWidth(0);     
 		tableModel.getColumn(2).setPreferredWidth(0);  
-		tableModel.getColumn(2).setMaxWidth(0);    
-	
-		tableModel.getColumn(3).setMinWidth(0);     
-		tableModel.getColumn(3).setPreferredWidth(0);  
-		tableModel.getColumn(3).setMaxWidth(0);
+		tableModel.getColumn(2).setMaxWidth(0);
 					
 		
 	}
@@ -327,11 +402,10 @@ public class NewPackage extends View{
 		ResultSet resultOfTheSelect = courses.showCourse();		
 		
 		while(resultOfTheSelect.next()){
-			String[] allCourses = new String[4];
+			String[] allCourses = new String[3];
 			allCourses[0] = (resultOfTheSelect.getString("course_name"));
-			allCourses[1] = ("Adicionar");
-			allCourses[2] = (resultOfTheSelect.getString("id_course"));
-			allCourses[3] = (resultOfTheSelect.getString("duration"));
+			allCourses[1] = (resultOfTheSelect.getString("id_course"));
+			allCourses[2] = (resultOfTheSelect.getString("duration"));
 			tableModel.addRow(allCourses);
 		}	
 		
