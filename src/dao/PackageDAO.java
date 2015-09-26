@@ -132,6 +132,13 @@ public class PackageDAO extends DAO{
 		return lastId;
 	}
 	
+	/**
+	 * Update a package on the database 
+	 * @param packageId - Id of the package to be updated
+	 * @param newPackage - Package object with the data of the new package
+	 * @return TRUE if the package was updated or FALSE if it does not
+	 * @throws PackageException
+	 */
 	public boolean update(Integer packageId, Package newPackage) throws PackageException{
 		
 		String newPackageName = newPackage.getPackageName();
@@ -171,6 +178,13 @@ public class PackageDAO extends DAO{
 		return wasUpdated;
 	}
 	
+	/**
+	 * Update the courses of a package on the database
+	 * @param packageId - Id of the package to get the courses updated
+	 * @param packageCourses - Array with the courses to be associated with the package
+	 * @throws SQLException
+	 * @throws PackageException
+	 */
 	private void updatePackageCourses(Integer packageId, ArrayList<String> packageCourses) throws SQLException, PackageException{
 		
 		boolean wasDisassociated = disassociateAllCoursesOfPackage(packageId);
@@ -194,6 +208,11 @@ public class PackageDAO extends DAO{
 		}
 	}
 	
+	/**
+	 * Disassociate all the courses of a package
+	 * @param packageId - The package to disassociate all courses
+	 * @return
+	 */
 	private boolean disassociateAllCoursesOfPackage(Integer packageId){
 		
 		String deleteAllPreviousAssociations = "DELETE FROM "+ ASSOCIATION_TABLE_NAME + " WHERE "+ ID_COLUMN +"= " + packageId;

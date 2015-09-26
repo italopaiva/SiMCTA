@@ -34,6 +34,16 @@ public class PackageController {
 		return packageCreated;
 	}
 	
+	/**
+	 * Update the data of a package with the given information
+	 * @param packageId - Id of the package to be updated
+	 * @param packageName - New name of the package
+	 * @param packageValue - New value of the package
+	 * @param packageDuration - New duration of the package
+	 * @param packageCourses - New courses associated with the package
+	 * @return TRUE if the package was updated or FALSE if it does not
+	 * @throws PackageException
+	 */
 	public boolean updatePackage(Integer packageId, String packageName, Integer packageValue, Integer packageDuration, ArrayList<String> packageCourses)
 		throws PackageException{
 		
