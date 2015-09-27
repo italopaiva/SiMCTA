@@ -104,7 +104,7 @@ public class EditPackage extends View{
 											
 					PackageController packageController = new PackageController();
 					
-					boolean packageWasSaved = packageController.updatePackage(packageName, packageValue, 
+					boolean packageWasSaved = packageController.updatePackage(packageId, packageName, packageValue, 
 																		   packageDuration, coursesId);
 					
 					String message = "";
