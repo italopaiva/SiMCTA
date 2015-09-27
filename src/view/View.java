@@ -111,11 +111,27 @@ public class View extends JFrame {
 		packageMenu.add(registerPackage);
 		
 		JMenuItem editPackage = new JMenuItem("Alterar Pacote");
-		editPackage.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
+		editPackage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				
+				boolean permissionToAccess = false;
 				
+				permissionToAccess = getPermissionToAccess();
+				if(permissionToAccess){
+					dispose();
+
+					try {
+						EditPackage editPackageFrame = new EditPackage();
+						editPackageFrame.setVisible(true);
+					} catch (SQLException e1){
+						e1.printStackTrace();
+					}
+
+				}
+				else{
+					View frame = new View();
+					frame.setVisible(true);
+				}
 			}
 		});
 		packageMenu.add(editPackage);
