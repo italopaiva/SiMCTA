@@ -6,10 +6,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javafx.beans.binding.When;
 import model.Course;
 
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.Mockito.*;
+import org.mockito.*;
+
+import org.mockito.MockitoAnnotations;
 
 import com.mysql.jdbc.Connection;
 
@@ -23,6 +28,11 @@ public class CourseControllerTest {
 	private static final int ARBITRARY_ID = 41234;
 		
 	private CourseController courseController;
+	private CourseController courseController2;
+	
+	@Mock
+	private CourseDAO courseDAOMock;
+	
 	private Course course;
 	private ResultSet resultOfTheMethod;
 	private Connection connection;
@@ -30,15 +40,20 @@ public class CourseControllerTest {
 	@Before
 	public void setUp() throws CourseException{
 		
-		courseController = new CourseController();
+		MockitoAnnotations.initMocks(this);
+		
+		courseDAOMock = mock(CourseDAO.class);
+		
+		courseController2 = new CourseController();
+		
 		
 		// Register courses on database to test the search of a course
-		courseController.newCourse("Instalação de Som", "Curso bom", 3, 500000);
-		courseController.newCourse(ARBITRARY_ID, "Aplicação de película", "Curso bom", 3, 500000);
+		//courseController.newCourse("Instalação de Som", "Curso bom", 3, 500000);
+		//courseController.newCourse(ARBITRARY_ID, "Aplicação de película", "Curso bom", 3, 500000);
 
 	}
 
-	@Test
+	/*@Test
 	public void testNewCourseMethodWithValidCourse() throws CourseException{
 		
 		boolean wasSaved = courseController.newCourse("Aplicação de película", "Curso bom", 3, 500000);
@@ -172,5 +187,35 @@ public class CourseControllerTest {
 		Connection connection = (Connection) factoryConnection.establishConnection();
 		
 		return connection;
+	}
+	
+	@Test
+	public void testAlterStatusCourseActiveToDeactived() throws CourseException{
+		
+		boolean wasAltered = false;
+		
+		when(courseDAOMock.returnStatusCourse(205)).thenReturn(1);
+		when(courseDAOMock.alterCourseStatus(205, 0)).thenReturn(true);
+		courseController2.setCourseDAO(courseDAOMock);
+		
+		
+		wasAltered = courseController2.alterStatusCourse(205);
+		
+		assertTrue(wasAltered);
+	}*/
+	
+	@Test
+	public void testAlterStatusCourseDeactivedToActive() throws CourseException{
+		
+		boolean wasAltered = false;
+		
+		when(courseDAOMock.returnStatusCourse(205)).thenReturn(0);
+		when(courseDAOMock.alterCourseStatus(205, 1)).thenReturn(true);
+		courseController2.setCourseDAO(courseDAOMock);
+		
+		
+		wasAltered = courseController2.alterStatusCourse(205);
+		
+		assertTrue(wasAltered);
 	}
 }

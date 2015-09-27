@@ -8,8 +8,20 @@ import model.Course;
 
 public class CourseController {
 	
-	public CourseController(){}
+	private CourseDAO courseDAO1;
+	
+	public CourseController(){
+		courseDAO1 = new CourseDAO();
+	}
 		
+	public CourseDAO getCourseDAO1() {
+		return courseDAO1;
+	}
+
+	public void setCourseDAO(CourseDAO courseDAO) {
+		this.courseDAO1 = courseDAO;
+	}
+
 	/**
 	 * Create a new course with the given information
 	 * @param courseName - Name of the course
@@ -129,14 +141,15 @@ public class CourseController {
 		
 		boolean statusWasAltered;
 		
-		CourseDAO courseDao = new CourseDAO();
-		int teste = courseDao.returnStatusCourse(idCourse);
+		
+		//CourseDAO courseDao = new CourseDAO();
+		int teste = courseDAO1.returnStatusCourse(idCourse);
 	
 		
 		if (teste == 1){
-			statusWasAltered = courseDao.alterCourseStatus(idCourse, 0);
+			statusWasAltered = courseDAO1.alterCourseStatus(idCourse, 0);
 		} else {
-			statusWasAltered = courseDao.alterCourseStatus(idCourse, 1);
+			statusWasAltered = courseDAO1.alterCourseStatus(idCourse, 1);
 		}
 		
 		return statusWasAltered;
