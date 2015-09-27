@@ -38,6 +38,7 @@ public class Package {
 	private Integer packageId;
 	private String packageName;
 	private Integer packageDuration;
+	private int packageStatus;
 	
 	/**
 	 * Courses contained in the package
@@ -63,6 +64,22 @@ public class Package {
 		setPackageValue(packageValue);
 		setCourses(courses);
 		setPackageDuration(packageDuration);
+	}
+	
+	public Package(int packageId, String packageName, Integer packageValue,
+			  Integer packageDuration, ArrayList <String> courses, int packageStatus)
+			  throws PackageException{
+		try{
+			setPackageId(packageId);
+			setPackageName(packageName);
+			setPackageValue(packageValue);
+			setPackageDuration(packageDuration);
+			setCourses(courses);
+			setPackageStatus(packageStatus);
+		}catch(PackageException caughtException){
+		
+			throw caughtException;
+		}
 	}
 	
 	/** Setters 
@@ -145,6 +162,10 @@ public class Package {
 			throw new PackageException(COURSES_OF_PACKAGE_CANT_BE_ZERO);
 		}
 	}
+	
+	private void setPackageStatus(int status) {
+		this.packageStatus = status;
+	}
 
 	/** Getters */ 
 	public Integer getPackageId() {
@@ -165,6 +186,10 @@ public class Package {
 	
 	public ArrayList<String> getCourses() {
 		return courses;
+	}
+	
+	public int getPackageStatus(){
+		return this.packageStatus;
 	}
 
 	
