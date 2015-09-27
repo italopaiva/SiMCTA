@@ -54,4 +54,22 @@ public class PackageController {
 		
 		return wasUpdated;
 	}
+	
+public boolean changeStatusPackage(int idPackage) throws PackageException{
+		
+		boolean statusWasAltered;
+		
+		PackageDAO packageDao = new PackageDAO();
+		int teste = packageDao.returnStatusPackage(idPackage);
+	
+		
+		if (teste == 1){
+			statusWasAltered = packageDao.changePackageStatus(idPackage, 0);
+		} else {
+			statusWasAltered = packageDao.changePackageStatus(idPackage, 1);
+		}
+		
+		return statusWasAltered;
+		
+	}
 }

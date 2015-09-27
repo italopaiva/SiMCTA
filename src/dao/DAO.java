@@ -34,7 +34,7 @@ public abstract class DAO {
 		return queryResult;
 	}
 	
-	private Connection connectToDB() throws SQLException{
+	protected Connection connectToDB() throws SQLException{
 		
 		FactoryConnection factoryConnection = new FactoryConnection();
 		Connection connection = factoryConnection.establishConnection();

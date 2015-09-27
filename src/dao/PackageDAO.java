@@ -3,6 +3,10 @@ package dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+
 
 import exception.PackageException;
 import model.Package;
@@ -19,6 +23,7 @@ public class PackageDAO extends DAO{
 	private static final String ID_COLUMN = "id_package";
 	private static final String ASSOCIATION_TABLE_NAME = "PackageCourse";
 	private static final String ID_COURSE_COLUMN = "id_course";
+	private static final String STATUS_COLUMN = "status";
 
 	public PackageDAO(){ }
 	
@@ -227,4 +232,41 @@ public class PackageDAO extends DAO{
 		
 		return disassociated;
 	}
+	
+	public boolean changePackageStatus(int packageId, int newPackageStatus) throws PackageException{
+
+		boolean statusWasAltered;
+		
+		String query = "UPDATE " + TABLE_NAME + 
+				" SET " + STATUS_COLUMN + "=" + newPackageStatus + 
+				" WHERE " + ID_COLUMN + "=" + packageId;
+		
+		try{
+			this.execute(query);
+			statusWasAltered = true;
+		} catch (SQLException caughtException){
+			statusWasAltered = false;
+		}
+		
+		return statusWasAltered;
+	}
+	
+	public int returnStatusPackage(int packageId) {
+		String query = "SELECT " + STATUS_COLUMN + " FROM " + TABLE_NAME + " WHERE " + ID_COLUMN + "=" + packageId;
+		ResultSet result;
+		
+		try {
+			Connection connection = this.connectToDB(); 
+			PreparedStatement preparedStatement = connection.prepareStatement(query); 
+			result = preparedStatement.executeQuery();
+			result.next();
+			return result.getInt(STATUS_COLUMN);
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+			
+			return -1;
+		}
+	}
+	
 }
