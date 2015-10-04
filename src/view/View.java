@@ -14,6 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
 import exception.AuthenticationException;
+import exception.PackageException;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -109,6 +111,37 @@ public class View extends JFrame {
 			}
 		});
 		packageMenu.add(registerPackage);
+		
+		JMenuItem searchPackage = new JMenuItem("Visualizar Pacote");
+		searchPackage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				boolean permissionToAccess = false;
+				
+				permissionToAccess = getPermissionToAccess();
+				if(permissionToAccess == true){
+					dispose();
+
+					try {
+						SearchPackage newPackageFrame = new SearchPackage();
+						newPackageFrame.setVisible(true);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (PackageException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+				else{
+					View frame = new View();
+					frame.setVisible(true);
+				}
+			}
+		});
+		packageMenu.add(searchPackage);
+		
 		
 		JMenuItem editPackage = new JMenuItem("Alterar Pacote");
 		editPackage.addMouseListener(new MouseAdapter() {
