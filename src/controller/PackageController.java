@@ -9,6 +9,20 @@ import model.Package;
 
 public class PackageController {
 
+	private PackageDAO packageDAO;
+	
+	public PackageController(){
+		packageDAO = new PackageDAO();
+	}
+	
+	public PackageDAO getPackageDAO() {
+		return packageDAO;
+	}
+
+	public void setPackageDAO(PackageDAO packageDAO) {
+		this.packageDAO = packageDAO;
+	}
+
 	/**
 	 * Create a new course with the given information
 	 * @param packageName - the name of the Package
@@ -22,14 +36,13 @@ public class PackageController {
 	public boolean newPackage(String packageName, Integer packageValue, Integer packageDuration, ArrayList<String> coursesId) throws PackageException, SQLException{
 		
 		boolean packageCreated = false;
-		PackageDAO packageDao = new PackageDAO();
 
-		int packageID = packageDao.getTheLastId() + 1;
+		int packageID = packageDAO.getTheLastId() + 1;
 		
 		Package packageInstance = new Package(packageID, packageName, packageValue,
 				                              packageDuration, coursesId);
 		
-		packageCreated = packageDao.save(packageInstance);
+		packageCreated = packageDAO.save(packageInstance);
 
 		return packageCreated;
 	}
@@ -38,21 +51,18 @@ public class PackageController {
 		throws PackageException{
 		
 		Package newPackage = new Package(packageId, packageName, packageValue, packageDuration, packageCourses);
-		PackageDAO packageDao = new PackageDAO();
 		
-		boolean wasUpdated = packageDao.update(packageId, newPackage);
+		boolean wasUpdated = packageDAO.update(packageId, newPackage);
 		
 		return wasUpdated;
 	}
 	
 	public ArrayList<Package> searchPackageByName(String name) {
 		
-		PackageDAO packageDao = new PackageDAO();
-		
 		ArrayList<Package> searchedPackages = null; 
 		
 		try{
-				searchedPackages = packageDao.searchPackageByName(name);
+				searchedPackages = packageDAO.searchPackageByName(name);
 				if (searchedPackages.isEmpty()){
 					return null;
 				} else {
@@ -68,15 +78,14 @@ public class PackageController {
 	
 	public Package showPackage(int idPackage) throws PackageException{
 		
-		PackageDAO packageDao = new PackageDAO();
 		Package packageAux;
 		Package packageToShow;
 		
 		ArrayList<String> coursesName;
 		
-		coursesName = packageDao.getNameCoursesInPackages(idPackage);
+		coursesName = packageDAO.getNameCoursesInPackages(idPackage);
 		
-		packageAux = packageDao.showPackage(idPackage);
+		packageAux = packageDAO.showPackage(idPackage);
 		
 		packageToShow = new Package(packageAux.getPackageId(), packageAux.getPackageName(),
 				packageAux.getPackageValue(), packageAux.getPackageDuration(), packageAux.getPackageStatus(),
