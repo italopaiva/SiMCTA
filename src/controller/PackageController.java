@@ -44,4 +44,46 @@ public class PackageController {
 		
 		return wasUpdated;
 	}
+	
+	public ArrayList<Package> searchPackageByName(String name) {
+		
+		PackageDAO packageDao = new PackageDAO();
+		
+		ArrayList<Package> searchedPackages = null; 
+		
+		try{
+				searchedPackages = packageDao.searchPackageByName(name);
+				if (searchedPackages.isEmpty()){
+					return null;
+				} else {
+					return searchedPackages;
+				}
+			} catch (PackageException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			} 
+					
+	}
+	
+	public Package showPackage(int idPackage) throws PackageException{
+		
+		PackageDAO packageDao = new PackageDAO();
+		Package packageAux;
+		Package packageToShow;
+		
+		ArrayList<String> coursesName;
+		
+		coursesName = packageDao.getNameCoursesInPackages(idPackage);
+		
+		packageAux = packageDao.showPackage(idPackage);
+		
+		packageToShow = new Package(packageAux.getPackageId(), packageAux.getPackageName(),
+				packageAux.getPackageValue(), packageAux.getPackageDuration(), packageAux.getPackageStatus(),
+				coursesName);
+		
+		return packageToShow;
+
+	}
+	
 }
