@@ -4,7 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.mysql.jdbc.ResultSetMetaData;
+
 import exception.PackageException;
+import model.Course;
 import model.Package;
 
 public class PackageDAO extends DAO{
@@ -18,6 +21,8 @@ public class PackageDAO extends DAO{
 	private static final String ID_COLUMN = "id_package";
 	private static final String TABLE_ASSOCIATION_NAME = "PackageCourse";
 	private static final String ID_COURSE_COLUMN = "id_course";
+	private static final String TABLE_ASSOCIATION_NAME2 = "Course";
+	private static final String COURSE_NAME_COLUMN = "course_name";
 
 	public PackageDAO(){ }
 	
@@ -153,4 +158,133 @@ public class PackageDAO extends DAO{
 		
 		return wasUpdated;
 	}
+	
+	public ArrayList<Package> searchPackageByName(String package_name) throws PackageException{
+		
+		ResultSet resultSet;
+		String query = "SELECT * FROM " + TABLE_NAME 
+				+ " WHERE " + NAME_COLUMN 
+				+ " LIKE \"%" + package_name + "%\"";
+		
+		try{
+			
+			resultSet = this.search(query);
+			
+			//test if there was return to resultSet
+			if (!resultSet.isBeforeFirst() ) { 
+				
+				return null;
+				
+			} else {
+				
+				ArrayList<Package> arrayListPackage = new ArrayList<Package>();
+				
+				while (resultSet.next()) {              
+			       arrayListPackage.add(returnAPackageOfResultSet(resultSet));
+				}
+				
+				return arrayListPackage;
+				
+			}
+
+		
+		}catch(SQLException caughtException){
+			
+			caughtException.printStackTrace();
+			return null;
+		}
+		
+		
+	}
+	
+	public Package showPackage(int idPackage){
+		
+		ResultSet resultSet;
+		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID_COLUMN + " = " + idPackage;
+		
+		try{
+			resultSet = search(query);
+			
+			if (!resultSet.isBeforeFirst() ) { 
+				
+				return null;
+				
+			} else {
+				
+				resultSet.next();
+				return returnAPackageOfResultSet(resultSet);
+			}
+			
+		} catch (SQLException | PackageException caughtException){
+			
+			caughtException.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	public ArrayList<String> getNameCoursesInPackages(int idPackage) {
+
+		ResultSet resultSet;
+		String query = "SELECT " + COURSE_NAME_COLUMN + " FROM "
+				+ TABLE_ASSOCIATION_NAME2 + " INNER JOIN "
+				+ TABLE_ASSOCIATION_NAME + " ON " + TABLE_ASSOCIATION_NAME2
+				+ "." + ID_COURSE_COLUMN + " = " + TABLE_ASSOCIATION_NAME + "."
+				+ ID_COURSE_COLUMN + " WHERE " + ID_COLUMN	+ " = " + idPackage;
+
+		try {
+			
+			resultSet = search(query);
+			
+			if (!resultSet.isBeforeFirst()) {
+
+				return null;
+
+			} else {
+
+				ArrayList<String> arrayListNameCourse = new ArrayList<String>();
+
+				while (resultSet.next()) {
+					arrayListNameCourse.add(resultSet.getString(1));
+				}
+
+				return arrayListNameCourse;
+
+			}
+
+		} catch (SQLException caughtException) {
+
+			caughtException.printStackTrace();
+			return null;
+		}
+	}
+	
+	public Package returnAPackageOfResultSet(ResultSet resultSet) throws PackageException, SQLException{
+		
+		Package newPackage = new Package(
+				resultSet.getInt(1), 
+				resultSet.getString(2), 
+				resultSet.getInt(3), 
+				resultSet.getInt(4), 
+				resultSet.getInt(5));
+		
+		return newPackage;
+	}
+
+	public Package returnACompletePackageOfResultSet(ResultSet resultSet) throws PackageException, SQLException{
+		
+		ArrayList<String> arraylist;
+		arraylist = getNameCoursesInPackages(resultSet.getInt(1));
+		
+		Package newPackage = new Package(
+				resultSet.getInt(1), 
+				resultSet.getString(2), 
+				resultSet.getInt(3), 
+				resultSet.getInt(4), 
+				resultSet.getInt(5),
+				arraylist);
+		
+		return newPackage;
+	}
+
 }
