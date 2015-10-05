@@ -53,6 +53,11 @@ public class PackageController {
 		return wasUpdated;
 	}
 	
+	/**
+	 * Search a packages that have part or all string name parameter 
+	 * @param name - name of course that will be searched
+	 * @return  ArrayList<Package> of packages found or null if not were found packages 
+	 */
 	public ArrayList<Package> searchPackageByName(String name) {
 		
 		ArrayList<Package> searchedPackages = null; 
@@ -72,6 +77,12 @@ public class PackageController {
 					
 	}
 	
+	/**
+	 * Get a package by idPackage to show
+	 * @param idPackage
+	 * @return a package that was founded by idPackage
+	 * @throws PackageException
+	 */
 	public Package showPackage(int idPackage) throws PackageException{
 		
 		Package packageAux;
