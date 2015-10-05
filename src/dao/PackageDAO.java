@@ -23,8 +23,6 @@ public class PackageDAO extends DAO{
 	private static final String ID_COURSE_COLUMN = "id_course";
 	private static final String TABLE_ASSOCIATION_NAME2 = "Course";
 	private static final String COURSE_NAME_COLUMN = "course_name";
-
-	public PackageDAO(){ }
 	
 	/**
 	 * Saves the data of package without the courses
@@ -73,7 +71,7 @@ public class PackageDAO extends DAO{
 	 * information to be saved
 	 * @throws SQLException 
 	 */
-	private void saveDataOfPackageCourse(Package packageInstance) throws SQLException {
+	public void saveDataOfPackageCourse(Package packageInstance) throws SQLException {
 
 		int indexOfCourses = 0;
 		int quantityOfCourses = packageInstance.getCourses().size();
