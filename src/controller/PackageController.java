@@ -14,10 +14,6 @@ public class PackageController {
 	public PackageController(){
 		packageDAO = new PackageDAO();
 	}
-	
-	public PackageDAO getPackageDAO() {
-		return packageDAO;
-	}
 
 	public void setPackageDAO(PackageDAO packageDAO) {
 		this.packageDAO = packageDAO;
