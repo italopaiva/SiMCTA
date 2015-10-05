@@ -156,7 +156,12 @@ public class PackageDAO extends DAO{
 		
 		return wasUpdated;
 	}
-	
+	/**
+	 * Search and get package(s) name that contains the string parameter package_name
+	 * @param package_name
+	 * @return ArrayList<Package> of founded packages or null if were not founded packages
+	 * @throws PackageException
+	 */
 	public ArrayList<Package> searchPackageByName(String package_name) throws PackageException{
 		
 		ResultSet resultSet;
@@ -194,7 +199,11 @@ public class PackageDAO extends DAO{
 		
 		
 	}
-	
+	/**
+	 * Get a package by a idPackage informed
+	 * @param idPackage
+	 * @return a Package that was founded by idPackage or null if doesn't exist a package to idPackage informed
+	 */
 	public Package showPackage(int idPackage){
 		
 		ResultSet resultSet;
@@ -221,6 +230,11 @@ public class PackageDAO extends DAO{
 		
 	}
 	
+	/**
+	 * Get names of courses registered in package informed by idPackage
+	 * @param idPackage
+	 * @return ArrayList<String> of name of courses registered in package informed or null if doesn't exist courses to idPackage informed
+	 */
 	public ArrayList<String> getNameCoursesInPackages(int idPackage) {
 
 		ResultSet resultSet;
@@ -257,6 +271,13 @@ public class PackageDAO extends DAO{
 		}
 	}
 	
+	/**
+	 * Returns a package to the resulSet received without a ArrayList<String> of courses' name
+	 * @param resultSet
+	 * @return new package from a resultSet received
+	 * @throws PackageException
+	 * @throws SQLException
+	 */
 	public Package returnAPackageOfResultSet(ResultSet resultSet) throws PackageException, SQLException{
 		
 		Package newPackage = new Package(
@@ -268,6 +289,14 @@ public class PackageDAO extends DAO{
 		
 		return newPackage;
 	}
+	
+	/**
+	 * Returns a package to the resulSet received with a ArrayList<String> of courses' name
+	 * @param resultSet
+	 * @return new package from a resultSet received
+	 * @throws PackageException
+	 * @throws SQLException
+	 */
 
 	public Package returnACompletePackageOfResultSet(ResultSet resultSet) throws PackageException, SQLException{
 		
