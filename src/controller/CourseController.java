@@ -8,8 +8,16 @@ import model.Course;
 
 public class CourseController {
 	
-	public CourseController(){}
-		
+	private CourseDAO courseDAO1;
+	
+	public CourseController(){
+		courseDAO1 = new CourseDAO();
+	}
+
+	public void setCourseDAO(CourseDAO courseDAO) {
+		this.courseDAO1 = courseDAO;
+	}
+
 	/**
 	 * Create a new course with the given information
 	 * @param courseName - Name of the course
@@ -63,9 +71,9 @@ public class CourseController {
 		
 		boolean wasSaved =  false;
 		
-		CourseDAO courseDao = new CourseDAO();
+		//CourseDAO courseDao = new CourseDAO();
 		
-		wasSaved = courseDao.save(course, hasId);
+		wasSaved = courseDAO1.save(course, hasId);
 		
 		return wasSaved;
 	}
@@ -103,10 +111,10 @@ public class CourseController {
 	 */
 	public ResultSet showCourse(String searchedCourse) throws CourseException{
 		
-		CourseDAO courseDao = new CourseDAO();
+		//CourseDAO courseDao = new CourseDAO();
 		Course course = new Course(searchedCourse);
 		
-		ResultSet resultOfSearch = courseDao.get(course);
+		ResultSet resultOfSearch = courseDAO1.get(course);
 				
 		return resultOfSearch;
 	}
@@ -125,18 +133,23 @@ public class CourseController {
 		
 	}
 	
+	/**
+	 * Alter status of a course by id
+	 * @param idCourse - id of the course that will be status altered
+	 * @return boolean statusWasAltered (true if status was altered or false if else)
+	 */
 	public boolean alterStatusCourse(int idCourse) throws CourseException{
 		
 		boolean statusWasAltered;
 		
-		CourseDAO courseDao = new CourseDAO();
-		int teste = courseDao.returnStatusCourse(idCourse);
+		//CourseDAO courseDao = new CourseDAO();
+		int teste = courseDAO1.returnStatusCourse(idCourse);
 	
 		
 		if (teste == 1){
-			statusWasAltered = courseDao.alterCourseStatus(idCourse, 0);
+			statusWasAltered = courseDAO1.alterCourseStatus(idCourse, 0);
 		} else {
-			statusWasAltered = courseDao.alterCourseStatus(idCourse, 1);
+			statusWasAltered = courseDAO1.alterCourseStatus(idCourse, 1);
 		}
 		
 		return statusWasAltered;

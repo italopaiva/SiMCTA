@@ -38,7 +38,8 @@ public class Package {
 	private Integer packageId;
 	private String packageName;
 	private Integer packageDuration;
-	
+	private Integer packageStatus;
+
 	/**
 	 * Courses contained in the package
 	 */
@@ -64,6 +65,28 @@ public class Package {
 		setCourses(courses);
 		setPackageDuration(packageDuration);
 	}
+	
+	public Package(Integer packageId, String packageName, Integer packageValue, 
+			       Integer packageDuration, Integer status, ArrayList <String> courses) throws PackageException{
+		
+		setPackageId(packageId);
+		setPackageName(packageName);
+		setPackageValue(packageValue);
+		setPackageDuration(packageDuration);
+		setPackageStatus(status);
+		setCourses(courses);
+	}
+	
+	public Package(Integer packageId, String packageName, Integer packageValue, 
+		       Integer packageDuration, Integer status) throws PackageException{
+	
+	setPackageId(packageId);
+	setPackageName(packageName);
+	setPackageValue(packageValue);
+	setPackageDuration(packageDuration);
+	setPackageStatus(status);
+
+}
 	
 	/** Setters 
 	 * @throws PackageException */
@@ -145,6 +168,10 @@ public class Package {
 			throw new PackageException(COURSES_OF_PACKAGE_CANT_BE_ZERO);
 		}
 	}
+	
+	private void setPackageStatus(Integer packageStatus) {
+		this.packageStatus = packageStatus;
+	}
 
 	/** Getters */ 
 	public Integer getPackageId() {
@@ -166,7 +193,9 @@ public class Package {
 	public ArrayList<String> getCourses() {
 		return courses;
 	}
+	
+	public Integer getPackageStatus() {
+		return packageStatus;
+	}
 
-	
-	
 }
