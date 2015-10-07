@@ -4,41 +4,30 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.naming.directory.SearchResult;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.InternalFrameAdapter;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 import util.ButtonColumn;
-import controller.CourseController;
 import controller.PackageController;
 import dao.PackageDAO;
-import exception.CourseException;
 import exception.PackageException;
-
-import javax.swing.JList;
 
 @SuppressWarnings("serial")
 public class SearchPackage extends View {
@@ -55,6 +44,9 @@ public class SearchPackage extends View {
 	private JLabel jLblValor;
 	private JLabel jLblDuracao;
 	private JList<String> jLstCourses;
+
+	private JInternalFrame internalFrame;
+	private int packageId;
 	
 	/**
 	 * Launch the application.
@@ -95,12 +87,39 @@ public class SearchPackage extends View {
 		btnPesquisar.setBounds(598, 53, 152, 25);
 		contentPane.add(btnPesquisar);
 		
-		final JInternalFrame internalFrame = new JInternalFrame();
+		internalFrame = new JInternalFrame();
 		internalFrame.getContentPane().setLayout(null);
 		
-		JButton button = new JButton("Editar");
-		button.setBounds(156, 248, 107, 25);
-		internalFrame.getContentPane().add(button);
+		JButton editPackageBtn = new JButton("Editar");
+		editPackageBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				boolean permissionToAccess = false;
+				
+				permissionToAccess = getPermissionToAccess();
+				if(permissionToAccess){
+					
+					dispose();
+					
+					try {
+						dispose();
+						EditPackage editPackageFrame;
+						editPackageFrame = new EditPackage(packageId);
+						editPackageFrame.setVisible(true);
+					} catch (SQLException e) {
+						showInfoMessage("Ocorreu um erro ao carregar os cursos. Tente novamente.");
+					}
+
+				}
+				else{
+					View frame = new View();
+					frame.setVisible(true);
+				}				
+			}
+		});
+		editPackageBtn.setBounds(156, 248, 107, 25);
+		editPackageBtn.setVisible(true);
+		internalFrame.getContentPane().add(editPackageBtn);
 		
 		JLabel lblInfo = new JLabel("Informações sobre Pacote");
 		lblInfo.setBounds(12, 14, 219, 15);
@@ -352,7 +371,9 @@ public class SearchPackage extends View {
 		return ((status==0) ? "Desativado":"Ativo");
 	}
 	
-	public void getPackageById(int idPackage) throws PackageException{
+	public void getPackageById(final int idPackage) throws PackageException{
+		
+		this.packageId = idPackage;
 		
 		PackageController packageController = new PackageController();
 		model.Package packageToShow;
@@ -376,6 +397,6 @@ public class SearchPackage extends View {
 			i++;
 		}
 		
-		jLstCourses.setModel(courseListModel);		
+		jLstCourses.setModel(courseListModel);
 	}
 }

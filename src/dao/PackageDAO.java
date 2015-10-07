@@ -22,8 +22,9 @@ public class PackageDAO extends DAO{
 	private static final String ID_COLUMN = "id_package";
 	private static final String ASSOCIATION_TABLE_NAME = "PackageCourse";
 	private static final String ID_COURSE_COLUMN = "id_course";
-	private static final String ASSOCIATION_TABLE_NAME2 = "Course";
+	private static final String COURSE_TABLE = "Course";
 	private static final String COURSE_NAME_COLUMN = "course_name";
+	private static final String STATUS_COLUMN = "status";
 	
 	public PackageDAO(){ }
 	
@@ -252,11 +253,11 @@ public class PackageDAO extends DAO{
 			resultSet = this.search(query);
 			
 			//test if there was return to resultSet
-			if (!resultSet.isBeforeFirst() ) { 
+			//if (!resultSet.isBeforeFirst() ) { 
 				
-				return null;
+				//return null;
 				
-			} else {
+			//} else {
 				
 				ArrayList<Package> arrayListPackage = new ArrayList<Package>();
 				
@@ -266,7 +267,7 @@ public class PackageDAO extends DAO{
 				
 				return arrayListPackage;
 				
-			}
+			//}
 
 		
 		}catch(SQLException caughtException){
@@ -274,7 +275,6 @@ public class PackageDAO extends DAO{
 			caughtException.printStackTrace();
 			return null;
 		}
-		
 		
 	}
 	/**
@@ -317,8 +317,8 @@ public class PackageDAO extends DAO{
 
 		ResultSet resultSet;
 		String query = "SELECT " + COURSE_NAME_COLUMN + " FROM "
-				+ ASSOCIATION_TABLE_NAME2 + " INNER JOIN "
-				+ ASSOCIATION_TABLE_NAME + " ON " + ASSOCIATION_TABLE_NAME2
+				+ COURSE_TABLE + " INNER JOIN "
+				+ ASSOCIATION_TABLE_NAME + " ON " + COURSE_TABLE
 				+ "." + ID_COURSE_COLUMN + " = " + ASSOCIATION_TABLE_NAME + "."
 				+ ID_COURSE_COLUMN + " WHERE " + ID_COLUMN	+ " = " + idPackage;
 
@@ -358,12 +358,28 @@ public class PackageDAO extends DAO{
 	 */
 	public Package returnAPackageOfResultSet(ResultSet resultSet) throws PackageException, SQLException{
 		
+		/**
+		 * GET THE PACKAGE COURSES TO SET ON THIS ARRAY LIST
+		 */
+		ArrayList<String> packageCourses = new ArrayList<String>();
+		/**
+		 * THIS IS A RANDOM COURSE
+		 * TAKE THIS OUT OF HERE
+		 */
+		packageCourses.add("5");
+		
 		Package newPackage = new Package(
-				resultSet.getInt(1), 
-				resultSet.getString(2), 
-				resultSet.getInt(3), 
-				resultSet.getInt(4), 
-				resultSet.getInt(5));
+			resultSet.getInt(ID_COLUMN), 
+			resultSet.getString(NAME_COLUMN), 
+			resultSet.getInt(VALUE_COLUMN), 
+			resultSet.getInt(DURATION_COLUMN),
+			resultSet.getInt(STATUS_COLUMN),
+		
+			/**
+			 * GET THE PACKAGE COURSES TO SET ON THIS ARRAY LIST
+			 */
+			packageCourses
+		);
 		
 		return newPackage;
 	}

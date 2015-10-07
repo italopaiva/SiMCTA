@@ -80,13 +80,12 @@ public class Package {
 	public Package(Integer packageId, String packageName, Integer packageValue, 
 		       Integer packageDuration, Integer status) throws PackageException{
 	
-	setPackageId(packageId);
-	setPackageName(packageName);
-	setPackageValue(packageValue);
-	setPackageDuration(packageDuration);
-	setPackageStatus(status);
-
-}
+		setPackageId(packageId);
+		setPackageName(packageName);
+		setPackageValue(packageValue);
+		setPackageDuration(packageDuration);
+		setPackageStatus(status);
+	}
 	
 	/** Setters 
 	 * @throws PackageException */

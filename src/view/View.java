@@ -116,58 +116,21 @@ public class View extends JFrame {
 		searchPackage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				boolean permissionToAccess = false;
-				
-				permissionToAccess = getPermissionToAccess();
-				if(permissionToAccess == true){
-					dispose();
+				dispose();
 
-					try {
-						SearchPackage newPackageFrame = new SearchPackage();
-						newPackageFrame.setVisible(true);
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (PackageException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-				}
-				else{
-					View frame = new View();
-					frame.setVisible(true);
-				}
+				try {
+					SearchPackage newPackageFrame = new SearchPackage();
+					newPackageFrame.setVisible(true);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (PackageException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
 			}
 		});
 		packageMenu.add(searchPackage);
-		
-		
-		JMenuItem editPackage = new JMenuItem("Alterar Pacote");
-		editPackage.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				boolean permissionToAccess = false;
-				
-				permissionToAccess = getPermissionToAccess();
-				if(permissionToAccess){
-					dispose();
-
-					try {
-						EditPackage editPackageFrame = new EditPackage();
-						editPackageFrame.setVisible(true);
-					} catch (SQLException e1){
-						e1.printStackTrace();
-					}
-
-				}
-				else{
-					View frame = new View();
-					frame.setVisible(true);
-				}
-			}
-		});
-		packageMenu.add(editPackage);
 	}
 	
 	protected boolean getPermissionToAccess(){

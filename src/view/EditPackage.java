@@ -41,14 +41,18 @@ public class EditPackage extends View{
 	private ArrayList <String> coursesId;
 	private ArrayList <String> coursesDuration;
 	private DefaultTableModel tableSecondModel;
-
+	
+	private int packageId;
+	
 	/**
 	 * Create the frame.
 	 * @throws SQLException 
 	 */
-	public EditPackage() throws SQLException {
+	public EditPackage(int packageId) throws SQLException {
 		
 		super();
+		
+		this.packageId = packageId;
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
