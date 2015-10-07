@@ -99,14 +99,19 @@ public class CourseDAO extends DAO {
 	 * @param course - Course object with the course to be searched 
 	 * @return the data produced by the given query
 	 */
-	public ResultSet get(Course course){
+	public ResultSet get(Course course, boolean hasId){
 		
 		ResultSet result;
-
-		String courseName = course.getCourseName();
-		
-		String query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + NAME_COLUMN + " LIKE '%"  + courseName + "%'");
-		
+		String query = null;
+				
+		if(hasId){
+			int courseId = course.getCourseId();
+			query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + ID_COLUMN + " = " + courseId);
+		}
+		else{
+			String courseName = course.getCourseName();
+			query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + NAME_COLUMN + " LIKE \"%" + courseName + "%\"");
+		}
 		try{
 			
 			result = this.search(query);
@@ -117,6 +122,7 @@ public class CourseDAO extends DAO {
 		
 		return result;
 	}
+	
 
 	/**
 	 * Gets all courses from database

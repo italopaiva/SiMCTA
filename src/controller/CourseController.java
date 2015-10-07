@@ -105,8 +105,9 @@ public class CourseController {
 		
 		CourseDAO courseDao = new CourseDAO();
 		Course course = new Course(searchedCourse);
+		boolean hasId = false;
 		
-		ResultSet resultOfSearch = courseDao.get(course);
+		ResultSet resultOfSearch = courseDao.get(course, hasId);
 				
 		return resultOfSearch;
 	}
@@ -123,6 +124,22 @@ public class CourseController {
 		
 		return resultOfTheSelect;
 		
+	}
+	
+	/**
+	 * Show the information of a course searched by user
+	 * @param idCourse - The id of course to be searched
+	 * @return the data produced by the given query
+	 * @throws CourseException
+	 */
+	public ResultSet showCourse(int idCourse) throws CourseException{
+		
+		CourseDAO courseDao = new CourseDAO();
+		Course course = new Course(idCourse);
+		boolean hasId = true;
+		ResultSet resultOfSearch = courseDao.get(course, hasId);
+				
+		return resultOfSearch;
 	}
 	
 	public boolean alterStatusCourse(int idCourse) throws CourseException{
