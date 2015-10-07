@@ -61,8 +61,12 @@ public class Course{
 		}
 	}
 	
-	public Course(String courseName) throws CourseException{
-		setCourseName(courseName);
+	public Course(int courseId) throws CourseException{
+		setCourseId(courseId);
+	}
+	
+	public Course(String searchedCourse) throws CourseException{
+		setCourseName(searchedCourse);
 	}
 	
 	public Course(int courseId, String courseName, String courseDescription,
@@ -95,6 +99,8 @@ public class Course{
 			throw caughtException;
 		}
 	}
+
+
 
 /** Setters */
 	

@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
@@ -29,8 +30,6 @@ import exception.CourseException;
 
 @SuppressWarnings("serial")
 public class SearchCourse extends View {
-
-	private final static int NUMBER_OF_COLUMNS = 0;
 	
 	private JPanel contentPane;
 	private JLabel courseResultLabel;
@@ -39,13 +38,20 @@ public class SearchCourse extends View {
 	private JLabel valueResultLabel;
 	final DefaultTableModel tableModel;
 	private JScrollPane scrollPane;
+	private JTextField searchedCourseField;
+	private JTable tableOfCourses;
+	private JInternalFrame internalFrame;
+	private JInternalFrame internalFrame_1;
+	private JButton backButton;
+	private JButton editCourseBtn;
 
 	private Integer courseId;
 	private String courseName;
 	private String courseDescription;
 	private Integer courseDuration;
 	private Integer courseValue;
-	
+	private Integer courseStatus;
+
 	private JButton btnAtivarOrDesativar;
 	
 	/**
@@ -77,43 +83,25 @@ public class SearchCourse extends View {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		final JTextField searchedCourseField = new JTextField();
+		searchedCourseField = new JTextField();
 		searchedCourseField.setBounds(140, 56, 446, 19);
 		contentPane.add(searchedCourseField);
 		searchedCourseField.setColumns(10);
 		
-		JButton btnConsultar = new JButton("Consultar");
+		JButton btnConsultar = new JButton("Pesquisar");
 		btnConsultar.setBounds(598, 53, 117, 25);
 		contentPane.add(btnConsultar);
 		
 		
-		final JInternalFrame internalFrame = new JInternalFrame();
+		internalFrame = new JInternalFrame();
 		internalFrame.setEnabled(false);
 		internalFrame.setBackground(Color.WHITE);
 		internalFrame.setBounds(227, 141, 557, 317);
 		contentPane.add(internalFrame);
 		internalFrame.getContentPane().setLayout(null);
 		
-		JButton editCourseBtn = new JButton("Editar");
-		editCourseBtn.addMouseListener(new MouseAdapter() {
-			
-			@Override
-			public void mouseClicked(MouseEvent e){
-				
-				boolean hasPermission = SearchCourse.this.getPermissionToAccess();
-				
-				if(hasPermission){
-					
-					dispose();
-										
-					EditCourse editCourseFrame = new EditCourse(SearchCourse.this.courseId, SearchCourse.this.courseName, SearchCourse.this.courseDescription, SearchCourse.this.courseDuration, SearchCourse.this.courseValue);
-					editCourseFrame.setVisible(true);
-				}
-				else{
-					
-				}
-			}
-		});
+		editCourseBtn = new JButton("Editar");
+
 		editCourseBtn.setBounds(156, 248, 107, 25);
 		internalFrame.getContentPane().add(editCourseBtn);
 		
@@ -157,44 +145,31 @@ public class SearchCourse extends View {
 		String [] columns = { "Curso", "Status", "Ação", "Id"};
 		
 		tableModel = new DefaultTableModel(null, columns);
-		final JTable tableOfCourses = new JTable(tableModel);
+		tableOfCourses = new JTable(tableModel);
 		
 		tableOfCourses.removeColumn(tableOfCourses.getColumnModel().getColumn(3));
 		tableOfCourses.setBackground(Color.WHITE);
 			
-		Action alterStatus = new AbstractAction() {
-				public void actionPerformed(ActionEvent e) {
+		Action showCourse = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
 
-					JTable table = (JTable)e.getSource();
-					int idCourse = Integer.parseInt(table.getModel().getValueAt(table.getSelectedRow(),3).toString());
-					String statusCourse = table.getModel().getValueAt(table.getSelectedRow(),1).toString();
-					int statusCourseInt = (statusCourse == "Ativo" ? 1 : 0);
-					
-					int confirm = 0;
-					
-					confirm = JOptionPane.showConfirmDialog(tableOfCourses, "Tem certeza que deseja " + showsAtivarOrDesativar(statusCourseInt) + " este curso?", "Atenção!!!", JOptionPane.YES_NO_OPTION);
-					
-					if (confirm == JOptionPane.YES_OPTION) {
-						
-						CourseController courseController = new CourseController();
-						try {
-							courseController.alterStatusCourse(idCourse);
-							statusCourseInt = (statusCourseInt == 0 ? 1 : 0);
-							JOptionPane.showMessageDialog(tableOfCourses, "Status do curso alterado! Curso " + showsAtivoOrInativo(statusCourseInt) + " !");
-							int modelRow = Integer.valueOf( e.getActionCommand() );
-						    ((DefaultTableModel)table.getModel()).removeRow(modelRow);
-						} catch (CourseException e1) {
-							e1.printStackTrace();
-						}
-						
-					}
+				JTable table = (JTable)e.getSource();
+				int selectedRow = table.getSelectedRow();
+				
+				int idCourse = Integer.parseInt(table.getModel().getValueAt(selectedRow,3).toString());
+				try {
+					getCourseForId(idCourse);
+				} 
+				catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 					
 				}
 		};
 		
-		ButtonColumn buttonColumn2 = new ButtonColumn(tableOfCourses, alterStatus, 2);
+		ButtonColumn buttonColumn2 = new ButtonColumn(tableOfCourses, showCourse, 2);
 			
-		final JInternalFrame internalFrame_1 = new JInternalFrame();
+		internalFrame_1 = new JInternalFrame();
 		internalFrame_1.setEnabled(false);
 		internalFrame_1.getContentPane().setLayout(null);
 		internalFrame_1.setVisible(true);
@@ -204,12 +179,13 @@ public class SearchCourse extends View {
 		internalFrame_1.setBounds(12, 43, 409, 196);
 		//contentPane.add(internalFrame_1);
 				
-		final JButton backButton = new JButton("Voltar");
+		backButton = new JButton("Voltar");
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				internalFrame.setVisible(false);
 				searchedCourseField.setText("");
 				backButton.setVisible(false);
+				tableOfCourses.setVisible(true);
 			}
 		});
 		
@@ -230,159 +206,189 @@ public class SearchCourse extends View {
 			public void actionPerformed(ActionEvent e) {
 				
 				String searchedCourse = searchedCourseField.getText();
-				int tableRow = tableOfCourses.getSelectedRow();
 				
 				boolean enteredCourse = !searchedCourse.isEmpty();
-				boolean selectedCourse = tableRow != -1;
 				
-				if(enteredCourse == true || selectedCourse == true){
+				if(enteredCourse){
 					try {
-						if(enteredCourse == false){
-							searchedCourse = (String) tableOfCourses.getValueAt(tableRow, NUMBER_OF_COLUMNS);
-						}
-						showCourses(searchedCourse);
+						buildTableWithSearchedCourse(searchedCourse);
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}	
 				}
 				else{
-					JOptionPane.showMessageDialog(null, "Digite ou selecione um curso");
+					JOptionPane.showMessageDialog(null, "Digite o nome de um curso");
 				}
+				tableOfCourses.updateUI();
 			}
-
-			/**
-			 * Method used to search a course by name on database
-			 * @param searchedCourse - Receives the course name entered by user
-			 * @throws SQLException
-			 */
-			private void showCourses(String searchedCourse) throws SQLException{
-				
-				try {
-					ResultSet resultOfTheSearch = courseController.showCourse(searchedCourse);
-					boolean courseFound = false;
-					String current_name = "";
 					
-					while(resultOfTheSearch.next()){
-						current_name = resultOfTheSearch.getString("course_name");
-						if(current_name.equals(searchedCourse)){
-							courseFound = true;
-							break;
-						}
-						else{
-							
-						}
-					}
-					if(courseFound == true){
-						internalFrame_1.dispose();
-						internalFrame.setVisible(true);
-						backButton.setVisible(true);
-						showDataOfCourse(resultOfTheSearch);	
-					}
-					else{
-						JOptionPane.showMessageDialog(searchedCourseField, "Curso não encontrado!");
-						searchedCourseField.setText("");
-					}
-					
-				} catch (CourseException e1) {
-					e1.printStackTrace();
-				}
-			}
-
-			/**
-			 * Method used to show the information about the found course
-			 * @param resultOfTheSearch - Receives the result of the search from database
-			 * @throws SQLException
-			 */
-			private void showDataOfCourse(final ResultSet resultOfTheSearch) throws SQLException {
-				
-				String courseName = "";
-				String description = "";
-				Integer value = 0;
-				Integer duration = 0;
-				Integer courseId = 0;
-				String valueText = "";
-				String durationString = "";
-				
-				courseId = resultOfTheSearch.getInt("id_course");
-				courseName = resultOfTheSearch.getString("course_name");
-				description = resultOfTheSearch.getString("description");
-				value = resultOfTheSearch.getInt("value");
-				duration = resultOfTheSearch.getInt("duration");
-				
-				SearchCourse.this.courseId = courseId;
-				SearchCourse.this.courseName = courseName;
-				SearchCourse.this.courseDescription = description;
-				SearchCourse.this.courseDuration = duration;
-				SearchCourse.this.courseValue = value;
-				
-				valueText = passValueToMonetaryForm(value);
-				durationString = duration.toString() + " semanas";
-				
-				btnAtivarOrDesativar.setText(showsAtivarOrDesativar(resultOfTheSearch.getInt("status")));
-				
-				btnAtivarOrDesativar.addActionListener(new ActionListener() {
-					
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						int idCourse = 0;
-						int statusCourseInt = 0;
-						try {
-							idCourse = resultOfTheSearch.getInt("id_course");
-							statusCourseInt = resultOfTheSearch.getInt("status");
-						} catch (SQLException e2) {
-							e2.printStackTrace();
-						}
-						
-						int confirm = 0;
-						
-						confirm = JOptionPane.showConfirmDialog(tableOfCourses, "Tem certeza que deseja " + showsAtivarOrDesativar(statusCourseInt) + " este curso?", "Atenção!!!", JOptionPane.YES_NO_OPTION);
-						
-						if (confirm == JOptionPane.YES_OPTION) {
-							
-							CourseController courseController = new CourseController();
-							try {
-								courseController.alterStatusCourse(idCourse);
-								statusCourseInt = (statusCourseInt == 0 ? 1 : 0);
-								JOptionPane.showMessageDialog(tableOfCourses, "Status do curso alterado! Curso " + showsAtivoOrInativo(statusCourseInt) + " !");
-								SimCta mainPage = new SimCta();
-								mainPage.setVisible(true);	
-							} catch (CourseException e1) {
-								e1.printStackTrace();
-							}	
-						}
-						
-					}
-				});
-				
-				courseResultLabel.setText(courseName);
-				descriptionResultLabel.setText(description);
-				valueResultLabel.setText(valueText);
-				durationResultLabel.setText(durationString);
-			}
-
-			/**
-			 * Method used to pass the course value to monetary form
-			 * @param value - Receives the course value on entire form
-			 * @return - Return the course value on monetary form (R$)
-			 */
-			private String passValueToMonetaryForm(Integer value) {
-				
-				String valueText= "";
-				String entireValue = "";
-				String decimalValue = "";
-				int lengthOfValue = 0;
-				
-				valueText = value.toString();
-				lengthOfValue = valueText.length();
-				entireValue = valueText.substring(0, (lengthOfValue - 2));
-				decimalValue = valueText.substring((lengthOfValue - 2), lengthOfValue);
-				valueText = entireValue + "," + decimalValue;
-				
-				return valueText;
-			}
 		});	
 	}
+	
+	/**
+	 * Method used to search a course by name on database
+	 * @param idCourse - id of the selected row by the user
+	 * @throws SQLException 
+	 */
+	protected void getCourseForId(int idCourse) throws SQLException {
+		
+		CourseController courseController = new CourseController();
+		
+		try {
+			ResultSet resultOfTheSearch = courseController.showCourse(idCourse);
+			String currentId = "";
+			
+			while(resultOfTheSearch.next()){
+				currentId = resultOfTheSearch.getString("id_course");
+				int idToCompare = Integer.parseInt(currentId);
+				if(idToCompare == idCourse){
+					showDataOfCourse(resultOfTheSearch);
+				}
+			}
+			
+		} catch (CourseException e1) {
+			e1.printStackTrace();
+		}
+		
+	}
 
+	/**
+	 * Method used to search a course by name on database
+	 * @param searchedCourse - Receives the course name entered by user
+	 * @throws SQLException
+	 */
+	private void buildTableWithSearchedCourse(String searchedCourse) throws SQLException{
+		
+		CourseController courseController = new CourseController();
+		tableModel.setRowCount(0);
+		try {
+			ResultSet resultOfTheSearch = courseController.showCourse(searchedCourse);
+			
+			
+			while(resultOfTheSearch.next()){
+				String[] allCourses = new String[4];
+				allCourses[0] = (resultOfTheSearch.getString("course_name"));
+				allCourses[1] = (showsAtivoOrInativo(resultOfTheSearch.getInt("status")));
+				allCourses[2] = ("Ver");
+				allCourses[3] = (resultOfTheSearch.getString("id_course"));
+				tableModel.addRow(allCourses);
+			}
+						
+		} 
+		catch(CourseException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	
+
+	/**
+	 * Method used to pass the course value to monetary form
+	 * @param value - Receives the course value on entire form
+	 * @return - Return the course value on monetary form (R$)
+	 */
+	private String passValueToMonetaryForm(Integer value) {
+		
+		String valueText= "";
+		String entireValue = "";
+		String decimalValue = "";
+		int lengthOfValue = 0;
+		
+		valueText = value.toString();
+		lengthOfValue = valueText.length();
+		entireValue = valueText.substring(0, (lengthOfValue - 2));
+		decimalValue = valueText.substring((lengthOfValue - 2), lengthOfValue);
+		valueText = entireValue + "," + decimalValue;
+		
+		return valueText;
+	}
+	/**
+	 * Method used to show the information about the found course
+	 * @param resultOfTheSearch - Receives the result of the search from database
+	 * @throws SQLException
+	 */
+	public void showDataOfCourse(final ResultSet resultOfTheSearch) throws SQLException {
+		
+		internalFrame_1.dispose();
+		internalFrame.setVisible(true);
+		backButton.setVisible(true);
+		tableOfCourses.setVisible(false);
+		
+		String valueText = "";
+		String durationString = "";
+		
+		courseId = resultOfTheSearch.getInt("id_course");
+		courseName = resultOfTheSearch.getString("course_name");
+		courseDescription = resultOfTheSearch.getString("description");
+		courseValue = resultOfTheSearch.getInt("value");
+		courseDuration = resultOfTheSearch.getInt("duration");
+		courseStatus = resultOfTheSearch.getInt("status");
+		
+		valueText = passValueToMonetaryForm(courseValue);
+		durationString = courseDuration.toString() + " semanas";
+		
+		
+		courseResultLabel.setText(courseName);
+		descriptionResultLabel.setText(courseDescription);
+		valueResultLabel.setText(valueText);
+		durationResultLabel.setText(durationString);
+		
+		editCourseBtn.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseClicked(MouseEvent e){
+				
+				boolean hasPermission = SearchCourse.this.getPermissionToAccess();
+				
+				if(hasPermission){
+					
+					dispose();
+										
+					EditCourse editCourseFrame = new EditCourse(
+						SearchCourse.this.courseId, 
+						SearchCourse.this.courseName, 
+						SearchCourse.this.courseDescription, 
+						SearchCourse.this.courseDuration, 
+						SearchCourse.this.courseValue
+					);
+					
+					editCourseFrame.setVisible(true);
+				}
+				else{
+					
+				}
+			}
+		});
+		
+		btnAtivarOrDesativar.setText(showsAtivarOrDesativar(resultOfTheSearch.getInt("status")));
+		
+		btnAtivarOrDesativar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int confirm = 0;				
+				confirm = JOptionPane.showConfirmDialog(tableOfCourses, "Tem certeza que deseja " + showsAtivarOrDesativar(courseStatus) + " este curso?", "Atenção!!!", JOptionPane.YES_NO_OPTION);
+				
+				if (confirm == JOptionPane.YES_OPTION) {
+					
+					CourseController courseController = new CourseController();
+					try {
+						int courseID = courseId;
+						courseController.alterStatusCourse(courseID);
+						courseStatus = (courseStatus == 0 ? 1 : 0);
+						JOptionPane.showMessageDialog(tableOfCourses, "Status do curso alterado! Curso " + showsAtivoOrInativo(courseStatus) + " !");
+						SimCta mainPage = new SimCta();
+						mainPage.setVisible(true);	
+					} catch (CourseException e1) {
+						e1.printStackTrace();
+					}	
+				}
+				
+			}
+		});
+
+	}
+	
 	/**
 	 *  Method used to show all existing courses
 	 * @param courses - Receives an instance of the class CourseController 
@@ -397,7 +403,7 @@ public class SearchCourse extends View {
 			String[] allCourses = new String[4];
 			allCourses[0] = (resultOfTheSelect.getString("course_name"));
 			allCourses[1] = (showsAtivoOrInativo(resultOfTheSelect.getInt("status")));
-			allCourses[2] = (showsAtivarOrDesativar(resultOfTheSelect.getInt("status")));
+			allCourses[2] = ("Ver");
 			allCourses[3] = (resultOfTheSelect.getString("id_course"));
 			tableModel.addRow(allCourses);
 		}				
