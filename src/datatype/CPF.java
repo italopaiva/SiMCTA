@@ -6,6 +6,7 @@ public class CPF {
 	
 	private static final String CPF_CANT_BE_EMPTY = "O CPF não pode estar em branco.";
 	private static final String CPF_IS_INVALID = "O CPF informado não é válido";
+	private static final String CPF_MUST_BE_ONLY_NUMBERS = "O CPF deve conter apenas números.";
 	
 	private static final int CPF_LENGTH = 11;
 	
@@ -26,40 +27,50 @@ public class CPF {
 		String formatted = "";
 		
 		// Three first numbers
-		formatted+= cpf.substring(0, 2);
+		formatted+= cpf.substring(0, 3);
 		formatted+=".";
 		
 		// Three second numbers
-		formatted+=cpf.substring(3, 5);
+		formatted+=cpf.substring(3, 6);
 		formatted+=".";
 		
 		// Three third numbers
-		formatted+=cpf.substring(6, 8);
+		formatted+=cpf.substring(6, 9);
 		formatted+="-";
 		
 		//Last two digits
-		formatted+=cpf.substring(9, 10);
+		formatted+=cpf.substring(9, 11);
 		
 		return formatted;
 	}
 	
 	private void setCPF(final String cpf) throws CPFException{
 		
-		boolean cpfIsNotEmpty = !cpf.isEmpty() && cpf != null;
-		
-		if(cpfIsNotEmpty){
+		if(cpf != null){
 			
-			if(cpf.length() == CPF_LENGTH){
-	
-				boolean isValid = validateCpf(cpf);
+			boolean cpfIsNotEmpty = !cpf.isEmpty();
+			
+			if(cpfIsNotEmpty){
 				
-				if(isValid){
-					this.cpf = cpf;
+				if(cpf.length() == CPF_LENGTH){
+					
+					if(cpf.matches("[0-9]+")){
+										
+						boolean isValid = validateCpf(cpf);
+					
+						if(isValid){
+							this.cpf = cpf;
+						}else{
+							throw new CPFException(CPF_IS_INVALID);
+						}
+					}else{
+						throw new CPFException(CPF_MUST_BE_ONLY_NUMBERS);
+					}
 				}else{
 					throw new CPFException(CPF_IS_INVALID);
 				}
 			}else{
-				throw new CPFException(CPF_IS_INVALID);
+				throw new CPFException(CPF_CANT_BE_EMPTY);
 			}
 		}else{
 			throw new CPFException(CPF_CANT_BE_EMPTY);
