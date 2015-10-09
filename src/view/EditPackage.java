@@ -24,9 +24,9 @@ import javax.swing.text.MaskFormatter;
 
 import controller.CourseController;
 import controller.PackageController;
+import model.Package;
+import exception.CourseException;
 import exception.PackageException;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class EditPackage extends View{
 	
@@ -47,42 +47,49 @@ public class EditPackage extends View{
 	/**
 	 * Create the frame.
 	 * @throws SQLException 
+	 * @throws CourseException 
+	 * @throws ParseException 
+	 * @throws PackageException 
 	 */
-	public EditPackage(int packageId) throws SQLException {
+	public EditPackage(int packageId) throws SQLException, CourseException, ParseException {
 		
 		super();
 		
 		this.packageId = packageId;
-		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		coursesName = null;
-		coursesId = null;
-		coursesDuration = null;
+		PackageController packageController = new PackageController();
+
+		coursesName = new ArrayList<String>(); 
+		coursesId = new ArrayList<String>(); 
+		coursesDuration = new ArrayList<String>();
+
 		
-		createLabelsAndFields();
-		
-		try{
-			
+		try {
+			Package currentPackage = packageController.searchCoursesOfAPackage(packageId);
+			createLabelsAndFields();
 			createMasks();				
+			setFieldValues(currentPackage);
 			
-			getAllCoursesToSelect();
+		} 
+		catch(PackageException e1) {
 			
-			createAPackage();
-						
-		}catch(ParseException e){
-			e.printStackTrace();
 		}
 		
-	}
+
+		getAllCoursesToSelect();
+		
+		editAPackage();
 	
+	}
+
 	/**
 	 * Creates a new package
 	 */
-	private void createAPackage() {
+	private void editAPackage() {
 		JButton updatePackageButton = new JButton("Alterar");
 		updatePackageButton.setBackground(Color.WHITE);
 		updatePackageButton.addMouseListener(new MouseAdapter(){
@@ -95,7 +102,7 @@ public class EditPackage extends View{
 				Integer packageValue;
 				Object packageValueField = valueField.getValue(); 
 				
-				if(!(packageValueField == null)){
+				if(packageValueField != null){
 					
 					String value = packageValueField.toString();
 					packageValue = new Integer(value);
@@ -120,11 +127,15 @@ public class EditPackage extends View{
 					}
 					
 					showInfoMessage(message);
-					
+					dispose();
+					SearchPackage searchPackageFrame = new SearchPackage();
+					searchPackageFrame.setVisible(true);
 				}
 				catch(PackageException caughtException){
 					
 					showInfoMessage(caughtException.getMessage());
+				} catch (SQLException e1) {
+
 				}
 			}
 
@@ -227,6 +238,73 @@ public class EditPackage extends View{
 		addCourse(tableOfCourses, tableOfAddedCourses);
 	}
 
+	
+	/**
+	 * Set the data of the package on the fields
+	 * @param currentPackage - Package object to edit
+	 * @throws CourseException 
+	 * @throws SQLException 
+	 */
+	private void setFieldValues(Package currentPackage) throws CourseException, SQLException {
+		
+		String packageName = currentPackage.getPackageName();
+		String packageDuration = currentPackage.getPackageDuration().toString();
+		String packageValue = currentPackage.getPackageValue().toString();
+				
+		packageNameField.setText(packageName);
+		packageDurationField.setText(packageDuration);
+		packageDurationField.setEditable(false);
+		valueField.setText(packageValue);
+		buildTableAddedCourses(currentPackage);
+		
+	}
+
+	/**
+	 * Show the courses of the package on added courses table
+	 * @param currentPackage - Package object to edit
+	 * @throws CourseException
+	 * @throws SQLException
+	 */
+	private void buildTableAddedCourses(Package currentPackage) throws CourseException, SQLException {
+ 
+
+		coursesId = currentPackage.getCourses();
+		CourseController courseController = new CourseController();
+		
+		int index = 0;
+		String courseName = null;
+		String courseDuration = null;
+
+		while(index < coursesId.size()){
+			
+			int courseId = Integer.parseInt(coursesId.get(index));
+			
+			ResultSet dataOfCourse = courseController.showCourse(courseId);
+			while(dataOfCourse.next()){
+				courseName = dataOfCourse.getString("course_name");
+				courseDuration = dataOfCourse.getString("duration");
+			}
+
+			coursesName.add(courseName);
+			coursesDuration.add(courseDuration);
+			
+			index++;
+		}
+		
+	    // Show added courses
+		index = 0;
+		while(index < coursesId.size()){
+			String [] allCourses = new String[3];
+			allCourses[0] = coursesName.get(index);
+			allCourses[1] = coursesId.get(index);
+			allCourses[2] = coursesDuration.get(index);
+			tableSecondModel.addRow(allCourses);
+			index++;
+		}
+
+					
+	}
+
 	/**
 	 * Adds the "Adicionar" button to table
 	 * @param tableOfCourses
@@ -234,9 +312,9 @@ public class EditPackage extends View{
 	 */
 	private void addCourse(final JTable tableOfCourses, final JTable tableOfAddedCourses) {
 		
-		coursesName = new ArrayList<String>(); 
-		coursesId = new ArrayList<String>(); 
-		coursesDuration = new ArrayList<String>(); 
+		coursesName.clear();
+		coursesId.clear();
+		coursesDuration.clear();
 					
 		JButton addCourseButton = new JButton("Adicionar");
 		addCourseButton.setBackground(Color.WHITE);
@@ -378,7 +456,6 @@ public class EditPackage extends View{
 		tableModel.getColumn(2).setMinWidth(0);     
 		tableModel.getColumn(2).setPreferredWidth(0);  
 		tableModel.getColumn(2).setMaxWidth(0);
-					
 		
 	}
 

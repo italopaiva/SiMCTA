@@ -408,4 +408,40 @@ public class PackageDAO extends DAO{
 		return newPackage;
 	}
 
+	/**
+	 * Gets the courses id that form the package
+	 * @param idPackage
+	 * @return
+	 */
+	public ArrayList<String> getIdCourses(int idPackage) {
+		
+		ResultSet resultSet;
+		String query = "SELECT " + ID_COURSE_COLUMN + " FROM "
+				+ ASSOCIATION_TABLE_NAME + " WHERE " + ID_COLUMN	+ " = " + idPackage;
+		
+		
+		try {
+			resultSet = search(query);
+			if (!resultSet.isBeforeFirst()) {
+
+				return null;
+
+			} 
+			else {
+				ArrayList<String> coursesId = new ArrayList<String>();
+				while (resultSet.next()) {
+					Integer idCourse = resultSet.getInt(ID_COURSE_COLUMN);
+					String addedCourse = idCourse.toString();
+					coursesId.add(addedCourse);
+				}
+				return coursesId;
+			}
+		} 
+		catch (SQLException caughtException) {
+
+			caughtException.printStackTrace();
+			return null;
+		}
+	}
+
 }

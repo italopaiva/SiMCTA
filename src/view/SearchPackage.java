@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
@@ -27,6 +28,7 @@ import javax.swing.table.DefaultTableModel;
 import util.ButtonColumn;
 import controller.PackageController;
 import dao.PackageDAO;
+import exception.CourseException;
 import exception.PackageException;
 
 @SuppressWarnings("serial")
@@ -108,6 +110,10 @@ public class SearchPackage extends View {
 						editPackageFrame.setVisible(true);
 					} catch (SQLException e) {
 						showInfoMessage("Ocorreu um erro ao carregar os cursos. Tente novamente.");
+					} catch (CourseException e) {
+						
+					} catch (ParseException e) {
+
 					}
 
 				}
@@ -229,6 +235,7 @@ public class SearchPackage extends View {
 					internalFrame.setVisible(true);
 					internalFrame.updateUI();
 					backButton.setVisible(true);
+					tableOfPackages.setVisible(false);
 
 				}
 		};

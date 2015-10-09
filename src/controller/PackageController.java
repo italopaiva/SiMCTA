@@ -1,5 +1,6 @@
 package controller;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -111,5 +112,29 @@ public class PackageController {
 		return packageToShow;
 
 	}
-	
+
+	/**
+	 * Get a package by idPackage to show
+	 * @param idPackage
+	 * @return a package that was founded by idPackage
+	 * @throws PackageException
+	 */
+	public Package searchCoursesOfAPackage(int idPackage) throws PackageException{
+		
+		Package packageAux;
+		Package packageToShow;
+		
+		ArrayList<String> coursesId;
+		
+		coursesId = packageDAO.getIdCourses(idPackage);
+
+		packageAux = packageDAO.showPackage(idPackage);
+		
+		packageToShow = new Package(packageAux.getPackageId(), packageAux.getPackageName(),
+				packageAux.getPackageValue(), packageAux.getPackageDuration(), packageAux.getPackageStatus(),
+				coursesId);
+		
+		return packageToShow;
+
+	}
 }

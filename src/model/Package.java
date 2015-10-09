@@ -105,7 +105,7 @@ public class Package {
 
 	private void setPackageName(String packageName) throws PackageException {
 		
-		boolean packageNameIsValid = packageName != null && !packageName.isEmpty();  
+		boolean packageNameIsValid = ((packageName != null) && (!packageName.isEmpty()));  
 		
 		if(packageNameIsValid){
 			this.packageName = packageName;
