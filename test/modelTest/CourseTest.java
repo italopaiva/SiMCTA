@@ -1,13 +1,12 @@
 package modelTest;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.Random;
 
-import junit.framework.Assert;
 import model.Course;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import exception.CourseException;
