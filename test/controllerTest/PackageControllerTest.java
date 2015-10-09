@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import model.Course;
 import model.Package;
 
 import org.junit.Before;
@@ -65,7 +66,6 @@ public class PackageControllerTest {
 		boolean wasSaved;
 		wasSaved = packageController.newPackage("PelSom", 500000, 3, coursesID); 
 		
-		
 		assertTrue("Should create the given package", wasSaved);
 	}
 	
@@ -86,7 +86,6 @@ public class PackageControllerTest {
 		packageController.setPackageDAO(packageDAOMock);		
 		
 		boolean wasSaved = packageController.newPackage("PelSom", 500000, 3, coursesID);
-		assertTrue(wasSaved);
 
 	}
 	
@@ -157,6 +156,47 @@ public class PackageControllerTest {
 		assertEquals(expectedPackage.getPackageStatus(), receivedPackage.getPackageStatus());
 		assertEquals(expectedPackage.getCourses(), receivedPackage.getCourses());
 		
+	}
+	
+	@Test
+	public void testUpdatePackageMethodWithValidCourse() throws PackageException, SQLException{
+		
+		try{
+			
+			Package packageModel = new Package(packageDAOMock.getTheLastId() + 1,"PelSom", 500000, 3, coursesID); 		
+			when(packageDAOMock.update(packageDAOMock.getTheLastId(), packageModel)).thenReturn(true);
+			packageController.setPackageDAO(packageDAOMock);
+			
+			packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"SomPel", 500000, 3, coursesID);
+		
+		}catch(PackageException caughtException){
+			
+			fail("Should not throw exception");
+		}
+	}
+	
+	@Test(expected = PackageException.class)
+	public void testUpdatePackageMethodWithInvalidName() throws CourseException, PackageException, SQLException{
+		
+		packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"", 500000, 3, coursesID);
+	}
+
+	@Test(expected = PackageException.class)
+	public void testUpdatePackageMethodWithInvalidDuration() throws CourseException, PackageException, SQLException{
+		
+		packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"Pelsom", 500000, null, coursesID);
+	}
+	
+	@Test(expected = PackageException.class)
+	public void testUpdatePackageMethodWithInvalidValue() throws CourseException, PackageException, SQLException{
+		
+		packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"PelSom", null, 3, coursesID);
+	}
+	
+	@Test(expected = PackageException.class)
+	public void testUpdatePackageMethodWithInvalidCourses() throws CourseException, PackageException, SQLException{
+		coursesID.clear();
+		packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"PelSom", 500000, 3, coursesID);
 	}
 	
 	

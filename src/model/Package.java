@@ -116,46 +116,59 @@ public class Package {
 	}
 	private void setPackageValue(Integer packageValue) throws PackageException {
 		
-		int value = packageValue.intValue();
-		
-		boolean caseMin = value >= MIN_VALUE;
-		boolean caseMax = value <= MAX_VALUE;
-		
-		boolean packageValueIsValid = caseMin && caseMax;
-		if(packageValueIsValid){
+		if(packageValue != null){
+			int value = packageValue.intValue();
 			
-			this.packageValue = packageValue;
-		}
-		else{
-			if(!caseMin){
-				throw new PackageException(PACKAGE_VALUE_CANT_BE_ZERO);
+			boolean caseMin = value >= MIN_VALUE;
+			boolean caseMax = value <= MAX_VALUE;
+			
+			boolean packageValueIsValid = caseMin && caseMax;
+			if(packageValueIsValid){
+				
+				this.packageValue = packageValue;
 			}
 			else{
-				throw new PackageException(PACKAGE_VALUE_GREATHER_THAN_MAX);
+				if(!caseMin){
+					throw new PackageException(PACKAGE_VALUE_CANT_BE_ZERO);
+				}
+				else{
+					throw new PackageException(PACKAGE_VALUE_GREATHER_THAN_MAX);
+				}
 			}
 		}
+		else{
+			throw new PackageException(PACKAGE_VALUE_CANT_BE_ZERO);
+		}
+		
 	}
 	
 	private void setPackageDuration(Integer packageDuration) throws PackageException{
 		
-		int duration = packageDuration.intValue();
-		
-		boolean caseMin = duration >= MIN_DURATION;
-		boolean caseMax = duration <= MAX_DURATION;
-		
-		boolean packageDurationIsValid = caseMin && caseMax;
-		
-		if(packageDurationIsValid){
+		if(packageDuration != null){
+			int duration = packageDuration.intValue();
 			
-			this.packageDuration = packageDuration;
-		}else{
-			if(!caseMin){
-				throw new PackageException(PACKAGE_DURATION_CANT_BE_ZERO);
+			boolean caseMin = duration >= MIN_DURATION;
+			boolean caseMax = duration <= MAX_DURATION;
+			
+			boolean packageDurationIsValid = caseMin && caseMax;
+			
+			if(packageDurationIsValid){
+				
+				this.packageDuration = packageDuration;
 			}
 			else{
-				throw new PackageException(PACKAGE_DURATION_CANT_GREATHER_THAN_MAX);
+				if(!caseMin){
+					throw new PackageException(PACKAGE_DURATION_CANT_BE_ZERO);
+				}
+				else{
+					throw new PackageException(PACKAGE_DURATION_CANT_GREATHER_THAN_MAX);
+				}
 			}
 		}
+		else{
+			throw new PackageException(PACKAGE_DURATION_CANT_BE_ZERO);
+		}
+		
 	}
 	private void setCourses(ArrayList<String> courses) throws PackageException {
 		
