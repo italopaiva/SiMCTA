@@ -16,7 +16,7 @@ public abstract class Model {
 		return isNotEmpty;
 	}
 	
-	protected boolean containsOnlyNumbers(final String string){
+	protected boolean containsOnlyNumbers(String string){
 		
 		boolean containsOnlyNumbers = false;
 		
@@ -41,7 +41,27 @@ public abstract class Model {
 		
 		if(this.isNotEmpty(string)){
 			
-			if(string.matches("[a-zA-Z]+")){
+			if(string.matches("[a-zA-Zà-úÀ-Ú]+")){
+				
+				containsOnlyLetters = true;
+			}else{
+				containsOnlyLetters = false;
+			}
+			
+		}else{
+			containsOnlyLetters = false;
+		}
+		
+		return containsOnlyLetters;
+	}
+	
+	protected boolean containsOnlyLettersAndSpaces(final String string){
+		
+		boolean containsOnlyLetters = false;
+		
+		if(this.isNotEmpty(string)){
+			
+			if(string.matches("[a-zA-Zà-úÀ-Ú\\s]+")){
 				
 				containsOnlyLetters = true;
 			}else{
