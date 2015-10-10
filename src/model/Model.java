@@ -41,7 +41,7 @@ public abstract class Model {
 		
 		if(this.isNotEmpty(string)){
 			
-			if(string.matches("[a-zA-Z\\s]+")){
+			if(string.matches("[a-zA-Z]+")){
 				
 				containsOnlyLetters = true;
 			}else{
