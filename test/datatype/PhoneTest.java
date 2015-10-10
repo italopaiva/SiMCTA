@@ -72,7 +72,7 @@ public class PhoneTest {
 	}
 	
 	@Test(expected = PhoneException.class)
-	public void testDDDWithLengthGratherThanTwo() throws PhoneException{
+	public void testDDDWithLengthGreaterThanTwo() throws PhoneException{
 		
 		phone = new Phone("061", "81558781");
 	}
@@ -90,7 +90,7 @@ public class PhoneTest {
 	}
 	
 	@Test(expected = PhoneException.class)
-	public void testPhoneWithLengthGreatherThanEight() throws PhoneException{
+	public void testPhoneWithLengthGreaterThanEight() throws PhoneException{
 		
 		phone = new Phone("61", "815587811");
 	}
