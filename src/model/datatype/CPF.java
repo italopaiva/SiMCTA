@@ -65,7 +65,7 @@ public class CPF extends Model{
 		}
 	}
 	
-	private boolean validateCpf (String cpf){
+	private boolean validateCpf(String cpf){
 		
 		// Auxiliary variables to check Cpf
 		int auxiliary1 = 0;
