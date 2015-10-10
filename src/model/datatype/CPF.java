@@ -1,12 +1,12 @@
-package datatype;
+package model.datatype;
 
 import exception.CPFException;
+import model.Model;
 
-public class CPF {
+public class CPF extends Model{
 	
-	private static final String CPF_CANT_BE_EMPTY = "O CPF não pode estar em branco.";
 	private static final String CPF_IS_INVALID = "O CPF informado não é válido";
-	private static final String CPF_MUST_BE_ONLY_NUMBERS = "O CPF deve conter apenas números.";
+	private static final String CPF_MUST_BE_ONLY_NUMBERS = "O CPF deve conter apenas 11 números.";
 	
 	private static final int CPF_LENGTH = 11;
 	
@@ -46,34 +46,22 @@ public class CPF {
 	
 	private void setCPF(final String cpf) throws CPFException{
 		
-		if(cpf != null){
-			
-			boolean cpfIsNotEmpty = !cpf.isEmpty();
-			
-			if(cpfIsNotEmpty){
-				
-				if(cpf.length() == CPF_LENGTH){
+		if(containsOnlyNumbers(cpf)){
 					
-					if(cpf.matches("[0-9]+")){
-										
-						boolean isValid = validateCpf(cpf);
-					
-						if(isValid){
-							this.cpf = cpf;
-						}else{
-							throw new CPFException(CPF_IS_INVALID);
-						}
-					}else{
-						throw new CPFException(CPF_MUST_BE_ONLY_NUMBERS);
-					}
+			if(cpf.length() == CPF_LENGTH){		
+								
+				boolean isValid = validateCpf(cpf);
+			
+				if(isValid){
+					this.cpf = cpf;
 				}else{
 					throw new CPFException(CPF_IS_INVALID);
 				}
 			}else{
-				throw new CPFException(CPF_CANT_BE_EMPTY);
+				throw new CPFException(CPF_IS_INVALID);
 			}
 		}else{
-			throw new CPFException(CPF_CANT_BE_EMPTY);
+			throw new CPFException(CPF_MUST_BE_ONLY_NUMBERS);
 		}
 	}
 	

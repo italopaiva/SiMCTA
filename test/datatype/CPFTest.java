@@ -1,6 +1,7 @@
 package datatype;
 
 import static org.junit.Assert.*;
+import model.datatype.CPF;
 
 import org.junit.Test;
 
@@ -66,6 +67,14 @@ private static String randomValidCPF = "51464638403";
 	public void testInvalidCPFWithLetters() throws CPFException{
 		
 		String randomInvalidCPF = "0asfad13478"; 
+		cpf = new CPF(randomInvalidCPF);
+	}
+	
+	
+	@Test(expected=CPFException.class)
+	public void testInvalidCPFWithSpaces() throws CPFException{
+		
+		String randomInvalidCPF = "514   12312"; 
 		cpf = new CPF(randomInvalidCPF);
 	}
 	
