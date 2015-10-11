@@ -174,4 +174,124 @@ public class StudentTest {
 		student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
 							  "Milene Souza Medeiros", invalidFatherName);
 	}
+	
+	/** Tests for CPF*/
+	@Test
+	public void testValidStudentCPF(){
+				
+		try {
+			student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+								  "Milene Souza Medeiros", "Mário Souza Filho");
+			assertEquals(cpf, student.getStudentCpf());
+		} catch (StudentException e){
+			fail("Should not throw this exception: "+e.getMessage());
+		}
+	}
+	
+	@Test(expected = StudentException.class)
+	public void testInvalidStudentCPF() throws StudentException{
+			
+		student = new Student("Jacó Mario Souza", null, rg, date, address, phone1, phone2, 
+							  "Milene Souza Medeiros", "Mário Souza Filho");
+	}
+	
+	/** Tests for RG*/
+	@Test
+	public void testValidStudentRG(){
+				
+		try {
+			student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+								  "Milene Souza Medeiros", "Mário Souza Filho");
+			assertEquals(rg, student.getStudentRg());
+		} catch (StudentException e){
+			fail("Should not throw this exception: "+e.getMessage());
+		}
+	}
+	
+	@Test(expected = StudentException.class)
+	public void testInvalidStudentRG() throws StudentException{
+			
+		student = new Student("Jacó Mario Souza", cpf, null, date, address, phone1, phone2, 
+							  "Milene Souza Medeiros", "Mário Souza Filho");
+	}
+	
+	/** Tests for Address*/
+	@Test
+	public void testValidStudentAddress(){
+				
+		try {
+			student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+								  "Milene Souza Medeiros", "Mário Souza Filho");
+			assertEquals(address, student.getAddress());
+		} catch (StudentException e){
+			fail("Should not throw this exception: "+e.getMessage());
+		}
+	}
+	
+	@Test(expected = StudentException.class)
+	public void testInvalidStudentAddress() throws StudentException{
+			
+		student = new Student("Jacó Mario Souza", cpf, rg, date, null, phone1, phone2, 
+							  "Milene Souza Medeiros", "Mário Souza Filho");
+	}
+	
+	/** Tests for Phone 1*/
+	@Test
+	public void testValidStudentPhone1(){
+				
+		try {
+			student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+								  "Milene Souza Medeiros", "Mário Souza Filho");
+			assertEquals(phone1, student.getPrincipalPhone());
+		} catch (StudentException e){
+			fail("Should not throw this exception: "+e.getMessage());
+		}
+	}
+	
+	@Test(expected = StudentException.class)
+	public void testInvalidStudentPhone1() throws StudentException{
+			
+		student = new Student("Jacó Mario Souza", cpf, rg, date, address, null, phone2, 
+							  "Milene Souza Medeiros", "Mário Souza Filho");
+	}
+	
+	/** Tests for Phone 2*/
+	@Test
+	public void testValidStudentPhone2(){
+				
+		try {
+			student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+								  "Milene Souza Medeiros", "Mário Souza Filho");
+			assertEquals(phone2, student.getSecondaryPhone());
+		} catch (StudentException e){
+			fail("Should not throw this exception: "+e.getMessage());
+		}
+	}
+	
+	@Test(expected = StudentException.class)
+	public void testInvalidStudentPhone2() throws StudentException{
+			
+		student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, null, 
+							  "Milene Souza Medeiros", "Mário Souza Filho");
+	}
+	
+	/** Tests for Birthdate*/
+	@Test
+	public void testValidStudentBirthdate(){
+				
+		try {
+			student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+								  "Milene Souza Medeiros", "Mário Souza Filho");
+			assertEquals(date, student.getBirthdate());
+		} catch (StudentException e){
+			fail("Should not throw this exception: "+e.getMessage());
+		}
+	}
+	
+	@Test(expected = StudentException.class)
+	public void testInvalidStudentBirthdate() throws StudentException{
+			
+		student = new Student("Jacó Mario Souza", cpf, rg, null, address, phone1, phone2, 
+							  "Milene Souza Medeiros", "Mário Souza Filho");
+	}
 }
