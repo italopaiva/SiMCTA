@@ -336,7 +336,7 @@ public class SearchStudent extends View {
 			}
 		}
 		else{
-			JOptionPane.showMessageDialog(null, "Nenhum aluno com esse nome foi encontrado");
+			showInfoMessage("Nenhum aluno com esse nome foi encontrado");
 		}
 		
 	}
@@ -421,7 +421,7 @@ public class SearchStudent extends View {
 			});
 		}
 		else{
-			JOptionPane.showMessageDialog(null, "Não foi possível mostrar os dados do aluno");
+			showInfoMessage("Não foi possível mostrar os dados do aluno");
 		}
 		
 	}
