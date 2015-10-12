@@ -270,11 +270,16 @@ public class StudentTest {
 		}
 	}
 	
-	@Test(expected = StudentException.class)
-	public void testInvalidStudentPhone2() throws StudentException{
-			
-		student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, null, 
-							  "Milene Souza Medeiros", "Mário Souza Filho");
+	@Test
+	public void testValidNullStudentPhone2(){
+				
+		try {
+			student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, null, 
+								  "Milene Souza Medeiros", "Mário Souza Filho");
+			assertEquals(null, student.getSecondaryPhone());
+		} catch (StudentException e){
+			fail("Should not throw this exception: "+e.getMessage());
+		}
 	}
 	
 	/** Tests for Birthdate*/

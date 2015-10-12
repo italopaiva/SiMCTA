@@ -64,6 +64,13 @@ public class PackageController {
 		return wasUpdated;
 	}
 	
+	public Package getPackage(int packageId){
+		
+		Package foundPackage = packageDAO.get(packageId);
+		
+		return foundPackage;
+	}
+	
 	/**
 	 * Search a packages that have part or all string name parameter 
 	 * @param name - name of course that will be searched

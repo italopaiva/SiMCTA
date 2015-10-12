@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
+import controller.CourseController;
 import exception.CourseException;
 import exception.PackageException;
 
@@ -17,6 +18,8 @@ public class Package {
 	private static final String COURSES_OF_PACKAGE_CANT_BE_ZERO = "O pacote não pode ser criado sem cursos";
 	private static final String PACKAGE_VALUE_GREATHER_THAN_MAX = "O pacote não pode custar mais R$ 9999,99";
 	private static final String PACKAGE_DURATION_CANT_BE_ZERO = "O pacote deve durar pelo menos 1 semana";
+	private static final String PACKAGE_MUST_CONTAIN_COURSES = "Um pacote deve conter pelo menos um curso associado a ele.";
+	private static final String GIVEN_INVALID_COURSE_TO_PACKAGE = "O curso informado para adicionar ao pacote não é válido.";
 
 	/**
 	 * The max and min duration are these because the duration must have at least 1 digit and
@@ -44,6 +47,7 @@ public class Package {
 	 * Courses contained in the package
 	 */
 	private ArrayList <String> courses = new ArrayList<String>();
+	private ArrayList<Course> packageCourses = new ArrayList<Course>();
 
 	
 	/**
@@ -62,8 +66,9 @@ public class Package {
 		setPackageId(packageId);
 		setPackageName(packageName);
 		setPackageValue(packageValue);
-		setCourses(courses);
 		setPackageDuration(packageDuration);
+		setCourses(courses);
+		setPackageCourses(courses);
 	}
 	
 	public Package(Integer packageId, String packageName, Integer packageValue, 
@@ -114,6 +119,7 @@ public class Package {
 			throw new PackageException(PACKAGE_NAME_CANT_BE_NULL);
 		}
 	}
+	
 	private void setPackageValue(Integer packageValue) throws PackageException {
 		
 		if(packageValue != null){
@@ -170,6 +176,7 @@ public class Package {
 		}
 		
 	}
+	
 	private void setCourses(ArrayList<String> courses) throws PackageException {
 		
 		boolean coursesAreValid = courses != null && !courses.isEmpty();
@@ -184,7 +191,34 @@ public class Package {
 	private void setPackageStatus(Integer packageStatus) {
 		this.packageStatus = packageStatus;
 	}
-
+	
+	private void setPackageCourses(ArrayList<String> packageCourses) throws PackageException{
+		
+		if(packageCourses != null){
+			
+			CourseController courseController = new CourseController();
+			
+			int i = 0;
+			for(i = 0; i < packageCourses.size(); i++){
+				
+				int courseId = Integer.parseInt(packageCourses.get(i));
+				
+				Course course = courseController.get(courseId);
+				
+				if(course != null){
+				
+					this.packageCourses.add(course);
+				}
+				else{
+					throw new PackageException(GIVEN_INVALID_COURSE_TO_PACKAGE);
+				}
+			}
+		}
+		else{
+			throw new PackageException(PACKAGE_MUST_CONTAIN_COURSES);
+		}
+	}
+	
 	/** Getters */ 
 	public Integer getPackageId() {
 		return packageId;
@@ -209,5 +243,8 @@ public class Package {
 	public Integer getPackageStatus() {
 		return packageStatus;
 	}
-
+	
+	public ArrayList<Course> getPackageCourses(){
+		return packageCourses;
+	}
 }
