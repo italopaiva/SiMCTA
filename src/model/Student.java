@@ -47,6 +47,11 @@ public class Student extends Model{
 		setFatherName(fatherName);
 	}
 	
+	public Student(String studentName, CPF studentCpf) throws StudentException {
+		setStudentName(studentName);
+		setStudentCpf(studentCpf);
+	}
+
 	private void setFatherName(String fatherName) throws StudentException {
 		
 		if(fatherName != null && fatherName != ""){
