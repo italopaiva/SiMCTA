@@ -27,7 +27,7 @@ public class Date extends Model{
 		setMonth(month);
 		setDay(day);
 	}
-
+	
 	private void setYear(Integer year) throws DateException {
 		
 		boolean yearIsValid = year != null && (year >= MIN_YEAR);
@@ -124,6 +124,15 @@ public class Date extends Model{
 		}
 		
 		return isBissextile;
+	}
+	
+	public String getFormattedDate(){
+		
+		String birthdate = getDay() + "/" ;
+		birthdate+= getMonth() + "/";
+		birthdate+= getYear();
+
+		return birthdate;
 	}
 	
 	public Integer getYear() {

@@ -5,7 +5,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import dao.StudentDAO;
+import exception.AddressException;
 import exception.CPFException;
+import exception.DateException;
+import exception.PhoneException;
+import exception.RGException;
 import exception.StudentException;
 import model.Student;
 import model.datatype.Address;
@@ -35,22 +39,11 @@ public class StudentController {
 		return foundStudents;
 	}
 
-	public Student searchStudent(CPF studentCPF) throws SQLException, StudentException {
+	public Student searchStudent(CPF studentCPF) throws SQLException, StudentException, PhoneException, CPFException, DateException, AddressException, RGException {
 		
-		String currentCPF = "";
-		String studentName = "";
-		String receivedCPF = studentCPF.getCpf();
-
 		StudentDAO studentDAO = new StudentDAO();
-		ResultSet resultOfTheSearch = studentDAO.get(studentCPF);
-		Student student = null;
 		
-		while(resultOfTheSearch.next()){
-			currentCPF = resultOfTheSearch.getString("cpf");
-			if(currentCPF.equals(receivedCPF)){
-				break;
-			}
-		}
+		Student student = studentDAO.get(studentCPF);
 		
 		return student;
 	}
