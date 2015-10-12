@@ -39,7 +39,23 @@ public class Payment extends Model{
 		this.description = paymentDescription;
 	}
 	
-	private void setPaymentId(Integer paymentId) {
+	private void setPaymentId(Integer paymentId){
 		this.paymentId = paymentId;
+	}
+
+	public Integer getPaymentId(){
+		return paymentId;
+	}
+
+	public PaymentDescription getDescription(){
+		return description;
+	}
+
+	public Service getService(){
+		return service;
+	}
+
+	public Integer getValue(){
+		return value;
 	}
 }
