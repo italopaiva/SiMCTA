@@ -1,5 +1,8 @@
 package model;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import exception.StudentException;
 import model.datatype.CPF;
 import model.datatype.RG;
@@ -15,11 +18,13 @@ public class Student extends Model{
 	private static final String BIRTHDATE_CANT_BE_NULL = "A data de aniversário não pode estar em branco.";
 	private static final String RG_CANT_BE_NULL = "O RG não pode estar em branco.";
 	private static final String CPF_CANT_BE_NULL = "O CPF não pode estar em branco.";
+	private static final String EMAIL_INVALID = "O e-mail informado é inválido.";
 	
 	private String studentName;
 	private CPF studentCpf;
 	private RG studentRg;
 	private Date birthdate;
+	private String studentEmail;
 	private Address address;
 	private Phone principalPhone;
 	private Phone secondaryPhone;
@@ -27,13 +32,14 @@ public class Student extends Model{
 	private String fatherName;
 	
 	public Student(String studentName, CPF studentCpf, RG studentRg,
-			Date birthdate, Address address, Phone principalPhone,
+			Date birthdate, String studentEmail, Address address, Phone principalPhone,
 			Phone secondaryPhone, String motherName, String fatherName) throws StudentException {
 			
 		setStudentName(studentName);
 		setStudentCpf(studentCpf);
 		setStudentRg(studentRg);
 		setBirthdate(birthdate);
+		setStudentEmail(studentEmail);
 		setAddress(address);
 		setPrincipalPhone(principalPhone);
 		setSecondaryPhone(secondaryPhone);
@@ -41,10 +47,6 @@ public class Student extends Model{
 		setFatherName(fatherName);
 	}
 	
-	public Student(Date birth) throws StudentException{
-		setBirthdate(birth);
-	}
-
 	private void setFatherName(String fatherName) throws StudentException {
 		
 		if(fatherName != null && fatherName != ""){
@@ -142,6 +144,27 @@ public class Student extends Model{
 			throw new StudentException(BIRTHDATE_CANT_BE_NULL);
 		}
 	}
+	
+	private void setStudentEmail(String studentEmail) throws StudentException{
+		
+		if(isNotEmpty(studentEmail)){
+			
+			String emailPattern = "\\b(^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-])+(\\.[A-Za-z0-9-]+)*((\\.[A-Za-z0-9]{2,})|(\\.[A-Za-z0-9]{2,}\\.[A-Za-z0-9]{2,}))$)\\b";
+	        Pattern pattern = Pattern.compile(emailPattern, Pattern.CASE_INSENSITIVE);
+	        Matcher matcher = pattern.matcher(studentEmail);
+	        boolean emailIsValid = matcher.matches();
+	        
+	        if(emailIsValid){
+	        	this.studentEmail = studentEmail;
+	        }
+	        else{
+	        	throw new StudentException(EMAIL_INVALID);
+	        }
+		}
+		else{
+			this.studentEmail = "";
+		}
+	}
 
 	public String getStudentName(){
 		return studentName;
@@ -157,6 +180,10 @@ public class Student extends Model{
 
 	public Date getBirthdate(){
 		return birthdate;
+	}
+	
+	public String getStudentEmail(){
+		return studentEmail;
 	}
 
 	public Address getAddress(){

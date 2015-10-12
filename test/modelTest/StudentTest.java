@@ -27,6 +27,7 @@ public class StudentTest {
 	Phone phone2;
 	CPF cpf;
 	RG rg;
+	String email;
 	
 	@Before
 	public void setUp() throws PhoneException, CPFException, RGException, StudentException, DateException, AddressException{
@@ -37,6 +38,7 @@ public class StudentTest {
 		phone2 = new Phone("61","32551111");
 		cpf = new CPF("51464638403");
 		rg = new RG("8598298", "SSP", "DF");
+		email = "jacoma@gmail.com";
 	}
 	
 	/** Tests for student name */
@@ -46,7 +48,7 @@ public class StudentTest {
 		String validStudentName = "Jacó Mario Souza";
 		
 		try {
-			student = new Student(validStudentName, cpf, rg, date, address, phone1, phone2, 
+			student = new Student(validStudentName, cpf, rg, date, email, address, phone1, phone2, 
 							      "Milene Souza Medeiros", "Mário Souza Filho");
 			assertEquals(validStudentName, student.getStudentName());
 		} catch (StudentException e){
@@ -59,7 +61,7 @@ public class StudentTest {
 		
 		String validStudentName = "";
 		
-		student = new Student(validStudentName, cpf, rg, date, address, phone1, phone2, 
+		student = new Student(validStudentName, cpf, rg, date, email, address, phone1, phone2, 
 							      "Milene Souza Medeiros", "Mário Souza Filho");
 	}
 	
@@ -68,7 +70,7 @@ public class StudentTest {
 		
 		String validStudentName = null;
 		
-		student = new Student(validStudentName, cpf, rg, date, address, phone1, phone2, 
+		student = new Student(validStudentName, cpf, rg, date, email, address, phone1, phone2, 
 							      "Milene Souza Medeiros", "Mário Souza Filho");
 	}
 	
@@ -77,7 +79,7 @@ public class StudentTest {
 		
 		String validStudentName = "João 123";
 		
-		student = new Student(validStudentName, cpf, rg, date, address, phone1, phone2, 
+		student = new Student(validStudentName, cpf, rg, date, email, address, phone1, phone2, 
 							      "Milene Souza Medeiros", "Mário Souza Filho");
 	}
 	
@@ -88,7 +90,7 @@ public class StudentTest {
 		String validMotherName = "Milene Souza Medeiros";
 		
 		try {
-			student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+			student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, phone2, 
 							      validMotherName, "Mário Souza Filho");
 			assertEquals(validMotherName, student.getMotherName());
 		} catch (StudentException e){
@@ -101,7 +103,7 @@ public class StudentTest {
 		
 		String invalidMotherName = "";
 		
-		student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+		student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, phone2, 
 						      invalidMotherName, "Mário Souza Filho");
 	}
 
@@ -110,7 +112,7 @@ public class StudentTest {
 		
 		String invalidMotherName = null;
 		
-		student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+		student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, phone2, 
 						      invalidMotherName, "Mário Souza Filho");
 	}
 	
@@ -119,7 +121,7 @@ public class StudentTest {
 		
 		String invalidMotherName = "Milene 124";
 		
-		student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+		student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, phone2, 
 						      invalidMotherName, "Mário Souza Filho");
 	}
 	
@@ -130,7 +132,7 @@ public class StudentTest {
 		String validFatherName = "Mário Souza Filho";
 		
 		try {
-			student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+			student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, phone2, 
 								  "Milene Souza Medeiros", validFatherName);
 			assertEquals(validFatherName, student.getFatherName());
 		} catch (StudentException e){
@@ -144,7 +146,7 @@ public class StudentTest {
 		String validFatherName = "";
 		
 		try {
-			student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+			student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, phone2, 
 								  "Milene Souza Medeiros", validFatherName);
 			assertEquals("", student.getFatherName());
 		} catch (StudentException e){
@@ -158,7 +160,7 @@ public class StudentTest {
 		String validFatherName = null;
 		
 		try {
-			student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+			student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, phone2, 
 								  "Milene Souza Medeiros", validFatherName);
 			assertEquals("", student.getFatherName());
 		} catch (StudentException e){
@@ -171,7 +173,7 @@ public class StudentTest {
 		
 		String invalidFatherName = "Mário 123";
 		
-		student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+		student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, phone2, 
 							  "Milene Souza Medeiros", invalidFatherName);
 	}
 	
@@ -180,7 +182,7 @@ public class StudentTest {
 	public void testValidStudentCPF(){
 				
 		try {
-			student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+			student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, phone2, 
 								  "Milene Souza Medeiros", "Mário Souza Filho");
 			assertEquals(cpf, student.getStudentCpf());
 		} catch (StudentException e){
@@ -191,7 +193,7 @@ public class StudentTest {
 	@Test(expected = StudentException.class)
 	public void testInvalidStudentCPF() throws StudentException{
 			
-		student = new Student("Jacó Mario Souza", null, rg, date, address, phone1, phone2, 
+		student = new Student("Jacó Mario Souza", null, rg, date, email, address, phone1, phone2, 
 							  "Milene Souza Medeiros", "Mário Souza Filho");
 	}
 	
@@ -200,7 +202,7 @@ public class StudentTest {
 	public void testValidStudentRG(){
 				
 		try {
-			student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+			student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, phone2, 
 								  "Milene Souza Medeiros", "Mário Souza Filho");
 			assertEquals(rg, student.getStudentRg());
 		} catch (StudentException e){
@@ -211,7 +213,7 @@ public class StudentTest {
 	@Test(expected = StudentException.class)
 	public void testInvalidStudentRG() throws StudentException{
 			
-		student = new Student("Jacó Mario Souza", cpf, null, date, address, phone1, phone2, 
+		student = new Student("Jacó Mario Souza", cpf, null, date, email, address, phone1, phone2, 
 							  "Milene Souza Medeiros", "Mário Souza Filho");
 	}
 	
@@ -220,7 +222,7 @@ public class StudentTest {
 	public void testValidStudentAddress(){
 				
 		try {
-			student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+			student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, phone2, 
 								  "Milene Souza Medeiros", "Mário Souza Filho");
 			assertEquals(address, student.getAddress());
 		} catch (StudentException e){
@@ -231,7 +233,7 @@ public class StudentTest {
 	@Test(expected = StudentException.class)
 	public void testInvalidStudentAddress() throws StudentException{
 			
-		student = new Student("Jacó Mario Souza", cpf, rg, date, null, phone1, phone2, 
+		student = new Student("Jacó Mario Souza", cpf, rg, date, email, null, phone1, phone2, 
 							  "Milene Souza Medeiros", "Mário Souza Filho");
 	}
 	
@@ -240,7 +242,7 @@ public class StudentTest {
 	public void testValidStudentPhone1(){
 				
 		try {
-			student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+			student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, phone2, 
 								  "Milene Souza Medeiros", "Mário Souza Filho");
 			assertEquals(phone1, student.getPrincipalPhone());
 		} catch (StudentException e){
@@ -251,7 +253,7 @@ public class StudentTest {
 	@Test(expected = StudentException.class)
 	public void testInvalidStudentPhone1() throws StudentException{
 			
-		student = new Student("Jacó Mario Souza", cpf, rg, date, address, null, phone2, 
+		student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, null, phone2, 
 							  "Milene Souza Medeiros", "Mário Souza Filho");
 	}
 	
@@ -260,7 +262,7 @@ public class StudentTest {
 	public void testValidStudentPhone2(){
 				
 		try {
-			student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+			student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, phone2, 
 								  "Milene Souza Medeiros", "Mário Souza Filho");
 			assertEquals(phone2, student.getSecondaryPhone());
 		} catch (StudentException e){
@@ -271,7 +273,7 @@ public class StudentTest {
 	@Test(expected = StudentException.class)
 	public void testInvalidStudentPhone2() throws StudentException{
 			
-		student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, null, 
+		student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, null, 
 							  "Milene Souza Medeiros", "Mário Souza Filho");
 	}
 	
@@ -280,7 +282,7 @@ public class StudentTest {
 	public void testValidStudentBirthdate(){
 				
 		try {
-			student = new Student("Jacó Mario Souza", cpf, rg, date, address, phone1, phone2, 
+			student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, phone2, 
 								  "Milene Souza Medeiros", "Mário Souza Filho");
 			assertEquals(date, student.getBirthdate());
 		} catch (StudentException e){
@@ -291,7 +293,71 @@ public class StudentTest {
 	@Test(expected = StudentException.class)
 	public void testInvalidStudentBirthdate() throws StudentException{
 			
-		student = new Student("Jacó Mario Souza", cpf, rg, null, address, phone1, phone2, 
+		student = new Student("Jacó Mario Souza", cpf, rg, null, email, address, phone1, phone2, 
+							  "Milene Souza Medeiros", "Mário Souza Filho");
+	}
+	
+	/** Tests for Email*/
+	@Test
+	public void testValidStudentEmail(){
+				
+		try {
+			student = new Student("Jacó Mario Souza", cpf, rg, date, email, address, phone1, phone2, 
+								  "Milene Souza Medeiros", "Mário Souza Filho");
+			assertEquals(email, student.getStudentEmail());
+		} catch (StudentException e){
+			fail("Should not throw this exception: "+e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testValidEmptyStudentEmail(){
+				
+		try {
+			student = new Student("Jacó Mario Souza", cpf, rg, date, "", address, phone1, phone2, 
+								  "Milene Souza Medeiros", "Mário Souza Filho");
+			assertEquals("", student.getStudentEmail());
+		} catch (StudentException e){
+			fail("Should not throw this exception: "+e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testValidNullStudentEmail(){
+				
+		try {
+			student = new Student("Jacó Mario Souza", cpf, rg, date, null, address, phone1, phone2, 
+								  "Milene Souza Medeiros", "Mário Souza Filho");
+			assertEquals("", student.getStudentEmail());
+		} catch (StudentException e){
+			fail("Should not throw this exception: "+e.getMessage());
+		}
+	}
+	
+	@Test(expected = StudentException.class)
+	public void testInvalidSingleNameStudentEmail() throws StudentException{
+				
+		String invalidEmail = "jacoma";
+		
+		student = new Student("Jacó Mario Souza", cpf, rg, date, invalidEmail, address, phone1, phone2, 
+							  "Milene Souza Medeiros", "Mário Souza Filho");
+	}
+	
+	@Test(expected = StudentException.class)
+	public void testInvalidWithBlankSpaceslStudentEmail() throws StudentException{
+				
+		String invalidEmail = "jac  oma @ gmail.com";
+		
+		student = new Student("Jacó Mario Souza", cpf, rg, date, invalidEmail, address, phone1, phone2, 
+							  "Milene Souza Medeiros", "Mário Souza Filho");
+	}
+	
+	@Test(expected = StudentException.class)
+	public void testInvalidONStudentEmail() throws StudentException{
+				
+		String invalidEmail = "21342345";
+		
+		student = new Student("Jacó Mario Souza", cpf, rg, date, invalidEmail, address, phone1, phone2, 
 							  "Milene Souza Medeiros", "Mário Souza Filho");
 	}
 }
