@@ -145,6 +145,16 @@ public class View extends JFrame {
 			}
 		});
 		studentMenu.add(newStudent);
+
+		JMenuItem searchStudent = new JMenuItem("Visualizar Aluno");
+		searchStudent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				SearchStudent searchStudentFrame = new SearchStudent();
+				searchStudentFrame.setVisible(true);
+			}
+		});
+		studentMenu.add(searchStudent);
 	}
 	
 	protected boolean getPermissionToAccess(){
