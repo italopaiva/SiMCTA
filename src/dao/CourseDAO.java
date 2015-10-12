@@ -99,14 +99,19 @@ public class CourseDAO extends DAO {
 	 * @param course - Course object with the course to be searched 
 	 * @return the data produced by the given query
 	 */
-	public ResultSet get(Course course){
+	public ResultSet get(Course course, boolean hasId){
 		
 		ResultSet result;
-
-		String courseName = course.getCourseName();
-		
-		String query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + NAME_COLUMN + " LIKE '%"  + courseName + "%'");
-		
+		String query = null;
+				
+		if(hasId){
+			int courseId = course.getCourseId();
+			query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + ID_COLUMN + " = " + courseId);
+		}
+		else{
+			String courseName = course.getCourseName();
+			query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + NAME_COLUMN + " LIKE \"%" + courseName + "%\"");
+		}
 		try{
 			
 			result = this.search(query);
@@ -117,6 +122,7 @@ public class CourseDAO extends DAO {
 		
 		return result;
 	}
+	
 
 	/**
 	 * Gets all courses from database
@@ -162,6 +168,12 @@ public class CourseDAO extends DAO {
 		return statusWasAltered;
 	}
 	
+	/**
+	 * Returns course by Id
+	 * @param courseId - id of the course that wants to be return
+	 * @return course if the course could be select in the database or null if not
+	 * @throws CourseException 
+	 */
 	public Course returnCourseById(int courseId) throws CourseException {
 		String query = "SELECT * FROM " + TABLE_NAME + "WHERE " + ID_COLUMN + "=" + courseId;
 		
@@ -181,6 +193,13 @@ public class CourseDAO extends DAO {
 		}
 	}
 	
+	
+	/**
+	 * Returns status of a course by Id
+	 * @param courseId - id of the course that wants to be return status
+	 * @return status of the course or throws an error
+	 * @throws CourseException 
+	 */
 	public int returnStatusCourse(int courseId) {
 		String query = "SELECT " + STATUS_COLUMN + " FROM " + TABLE_NAME + " WHERE " + ID_COLUMN + "=" + courseId;
 		ResultSet result;

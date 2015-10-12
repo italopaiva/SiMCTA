@@ -1,6 +1,11 @@
 package controllerTest;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,6 +15,8 @@ import model.Course;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.mysql.jdbc.Connection;
 
@@ -23,6 +30,11 @@ public class CourseControllerTest {
 	private static final int ARBITRARY_ID = 41234;
 		
 	private CourseController courseController;
+	private CourseController courseController2;
+	
+	@Mock
+	private CourseDAO courseDAOMock;
+	
 	private Course course;
 	private ResultSet resultOfTheMethod;
 	private Connection connection;
@@ -30,9 +42,15 @@ public class CourseControllerTest {
 	@Before
 	public void setUp() throws CourseException{
 		
-		courseController = new CourseController();
+		MockitoAnnotations.initMocks(this);
+		//Mock to can use class CourseDAO
+		courseDAOMock = mock(CourseDAO.class);
+		
+		courseController2 = new CourseController();
+		
 		
 		// Register courses on database to test the search of a course
+		courseController = new CourseController();
 		courseController.newCourse("Instalação de Som", "Curso bom", 3, 500000);
 		courseController.newCourse(ARBITRARY_ID, "Aplicação de película", "Curso bom", 3, 500000);
 
@@ -41,7 +59,12 @@ public class CourseControllerTest {
 	@Test
 	public void testNewCourseMethodWithValidCourse() throws CourseException{
 		
-		boolean wasSaved = courseController.newCourse("Aplicação de película", "Curso bom", 3, 500000);
+		Course course = new Course("Aplicação de película", "Curso bom", 3, 500000); 		
+		when(courseDAOMock.save(course, false)).thenReturn(true);
+		courseController2.setCourseDAO(courseDAOMock);		
+		
+		boolean wasSaved = false;
+		wasSaved = courseController2.newCourse("Aplicação de película", "Curso bom", 3, 500000);
 		
 		assertTrue("Should create the given course", wasSaved);
 	}
@@ -49,7 +72,11 @@ public class CourseControllerTest {
 	@Test(expected = CourseException.class)
 	public void testNewCourseMethodWithInvalidCourse() throws CourseException{
 				
-		boolean wasSaved = courseController.newCourse(null, null, -3, 1000000);
+		Course course = new Course(null, null, -3, 1000000); 		
+		when(courseDAOMock.save(course, false)).thenReturn(true);
+		courseController2.setCourseDAO(courseDAOMock);	
+		
+		boolean wasSaved = courseController2.newCourse(null, null, -3, 1000000);
 		
 		assertFalse("Should not create the given course", wasSaved);
 	}
@@ -59,7 +86,12 @@ public class CourseControllerTest {
 		
 		try{
 			
-			courseController.updateCourse(ARBITRARY_ID, "Aplicação de película", "Curso complicado", 5, 25000);
+			Course course = new Course(ARBITRARY_ID, "Aplicação de película", "Curso complicado", 5, 25000); 		
+			when(courseDAOMock.update(ARBITRARY_ID, course)).thenReturn(true);
+			courseController2.setCourseDAO(courseDAOMock);
+			
+			courseController2.updateCourse(ARBITRARY_ID, "Aplicação de película", "Curso complicado", 5, 25000);
+		
 		}catch(CourseException caughtException){
 			
 			fail("Should not throw exception");
@@ -69,25 +101,25 @@ public class CourseControllerTest {
 	@Test(expected = CourseException.class)
 	public void testUpdateCourseMethodWithInvalidName() throws CourseException{
 		
-		courseController.updateCourse(ARBITRARY_ID, "", "Curso complicado", 5, 25000);
+		courseController2.updateCourse(ARBITRARY_ID, "", "Curso complicado", 5, 25000);
 	}
 	
 	@Test(expected = CourseException.class)
 	public void testUpdateCourseMethodWithInvalidDescription() throws CourseException{
 		
-		courseController.updateCourse(ARBITRARY_ID, "Aplicação de película", "", 5, 25000);
+		courseController2.updateCourse(ARBITRARY_ID, "Aplicação de película", "", 5, 25000);
 	}
 	
 	@Test(expected = CourseException.class)
 	public void testUpdateCourseMethodWithInvalidDuration() throws CourseException{
 		
-		courseController.updateCourse(ARBITRARY_ID, "Aplicação de película", "Curso complicado", 0, 25000);
+		courseController2.updateCourse(ARBITRARY_ID, "Aplicação de película", "Curso complicado", 0, 25000);
 	}
 	
 	@Test(expected = CourseException.class)
 	public void testUpdateCourseMethodWithInvalidValue() throws CourseException{
 		
-		courseController.updateCourse(ARBITRARY_ID, "Aplicação de película", "Curso complicado", 3, 0);
+		courseController2.updateCourse(ARBITRARY_ID, "Aplicação de película", "Curso complicado", 3, 0);
 	}
 	
 	@Test
@@ -118,7 +150,7 @@ public class CourseControllerTest {
 		resultOfTheMethod = null;
 		
 		try{
-			resultOfTheMethod = courseController.showCourse(enteredName);
+			resultOfTheMethod = courseController2.showCourse(enteredName);
 			String courseFound = "";
 			
 			resultOfTheMethod.next();
@@ -136,13 +168,13 @@ public class CourseControllerTest {
 		
 		String enteredName = null;
 		
-		resultOfTheMethod = courseController.showCourse(enteredName);
+		resultOfTheMethod = courseController2.showCourse(enteredName);
 		String courseFound = "";
 		
 		resultOfTheMethod.next();
 		courseFound = resultOfTheMethod.getString("course_name");
 	}  
-	
+
 	@Test
 	public void testShowAllCoursesRegistered() throws SQLException, CourseException{
 		
@@ -173,4 +205,35 @@ public class CourseControllerTest {
 		
 		return connection;
 	}
+	
+	@Test
+	public void testAlterStatusCourseActiveToDeactived() throws CourseException{
+		
+		boolean wasAltered = false;
+		
+		when(courseDAOMock.returnStatusCourse(205)).thenReturn(1);
+		when(courseDAOMock.alterCourseStatus(205, 0)).thenReturn(true);
+		courseController2.setCourseDAO(courseDAOMock);
+		
+		
+		wasAltered = courseController2.alterStatusCourse(205);
+		
+		assertTrue("Should alter status the given course", wasAltered);
+	}
+	
+	@Test
+	public void testAlterStatusCourseDeactivedToActive() throws CourseException{
+		
+		boolean wasAltered = false;
+		
+		when(courseDAOMock.returnStatusCourse(205)).thenReturn(0);
+		when(courseDAOMock.alterCourseStatus(205, 1)).thenReturn(true);
+		courseController2.setCourseDAO(courseDAOMock);
+		
+		
+		wasAltered = courseController2.alterStatusCourse(205);
+		
+		assertTrue("Should alter status the given course", wasAltered);
+	}
+	
 }

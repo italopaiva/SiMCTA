@@ -8,7 +8,10 @@ import java.sql.PreparedStatement;
 
 
 
+import com.mysql.jdbc.ResultSetMetaData;
+
 import exception.PackageException;
+import model.Course;
 import model.Package;
 
 public class PackageDAO extends DAO{
@@ -24,6 +27,50 @@ public class PackageDAO extends DAO{
 	private static final String ASSOCIATION_TABLE_NAME = "PackageCourse";
 	private static final String ID_COURSE_COLUMN = "id_course";
 	private static final String STATUS_COLUMN = "status";
+	private static final String COURSE_TABLE = "Course";
+	private static final String COURSE_NAME_COLUMN = "course_name";
+	
+public boolean save(Package newPackage, boolean hasId){
+		
+		
+		String packageName = newPackage.getPackageName();
+		Integer packageDuration = newPackage.getPackageDuration();
+		Integer packageStatus = newPackage.getPackageStatus();
+		ArrayList<String> courses = newPackage.getCourses();
+		Integer packageValue = newPackage.getPackageValue();
+		
+		String query = "";
+		if(hasId){
+			
+			int packageId = newPackage.getPackageId();
+			query = "INSERT INTO "+ TABLE_NAME + "(" + ID_COLUMN + ", " + NAME_COLUMN + ", "
+					+ DURATION_COLUMN + ", " + STATUS_COLUMN + ", "
+					+ ID_COURSE_COLUMN + VALUE_COLUMN +")";
+			query += "VALUES('" + packageId + "', '" + packageName + "','" + packageDuration + "', '"
+				  + packageStatus + "', '" + courses + "', '" + packageValue + "')";
+		}else{
+			
+			query = "INSERT INTO "+ TABLE_NAME + "(" + NAME_COLUMN + ", "
+					+ DURATION_COLUMN + ", " + STATUS_COLUMN + ", "
+					+ ID_COURSE_COLUMN + VALUE_COLUMN +")";
+			query += "VALUES('" + packageName + "','" + packageDuration + "', '"
+				  + packageStatus + "', '" + courses + "', '" + packageValue + "')";
+		}
+	
+		boolean wasSaved = false;
+		
+		try{
+			
+			this.execute(query);
+			wasSaved  = true;
+		}catch(SQLException caughtException){
+			
+			wasSaved = false;
+		}
+		
+		return wasSaved;
+	}
+	
 
 	public PackageDAO(){ }
 	
@@ -269,4 +316,213 @@ public class PackageDAO extends DAO{
 		}
 	}
 	
+	
+	/**
+	 * Search and get package(s) name that contains the string parameter package_name
+	 * @param package_name
+	 * @return ArrayList<Package> of founded packages or null if were not founded packages
+	 * @throws PackageException
+	 */
+	public ArrayList<Package> searchPackageByName(String package_name) throws PackageException{
+		
+		ResultSet resultSet;
+		String query = "SELECT * FROM " + TABLE_NAME 
+				+ " WHERE " + NAME_COLUMN 
+				+ " LIKE \"%" + package_name + "%\"";
+		
+		try{
+			
+			resultSet = this.search(query);
+			
+			//test if there was return to resultSet
+			//if (!resultSet.isBeforeFirst() ) { 
+				
+				//return null;
+				
+			//} else {
+				
+				ArrayList<Package> arrayListPackage = new ArrayList<Package>();
+				
+				while (resultSet.next()) {              
+			       arrayListPackage.add(returnAPackageOfResultSet(resultSet));
+				}
+				
+				return arrayListPackage;
+				
+			//}
+
+		
+		}catch(SQLException caughtException){
+			
+			caughtException.printStackTrace();
+			return null;
+		}
+		
+	}
+	/**
+	 * Get a package by a idPackage informed
+	 * @param idPackage
+	 * @return a Package that was founded by idPackage or null if doesn't exist a package to idPackage informed
+	 */
+	public Package showPackage(int idPackage){
+		
+		ResultSet resultSet;
+		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID_COLUMN + " = " + idPackage;
+		
+		try{
+			resultSet = search(query);
+			
+			if (!resultSet.isBeforeFirst() ) { 
+				
+				return null;
+				
+			} else {
+				
+				resultSet.next();
+				return returnAPackageOfResultSet(resultSet);
+			}
+			
+		} catch (SQLException | PackageException caughtException){
+			
+			caughtException.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	/**
+	 * Get names of courses registered in package informed by idPackage
+	 * @param idPackage
+	 * @return ArrayList<String> of name of courses registered in package informed or null if doesn't exist courses to idPackage informed
+	 */
+	public ArrayList<String> getNameCoursesInPackages(int idPackage) {
+
+		ResultSet resultSet;
+		String query = "SELECT " + COURSE_NAME_COLUMN + " FROM "
+				+ COURSE_TABLE + " INNER JOIN "
+				+ ASSOCIATION_TABLE_NAME + " ON " + COURSE_TABLE
+				+ "." + ID_COURSE_COLUMN + " = " + ASSOCIATION_TABLE_NAME + "."
+				+ ID_COURSE_COLUMN + " WHERE " + ID_COLUMN	+ " = " + idPackage;
+
+		try {
+			
+			resultSet = search(query);
+			
+			if (!resultSet.isBeforeFirst()) {
+
+				return null;
+
+			} else {
+
+				ArrayList<String> arrayListNameCourse = new ArrayList<String>();
+
+				while (resultSet.next()) {
+					arrayListNameCourse.add(resultSet.getString(1));
+				}
+
+				return arrayListNameCourse;
+
+			}
+
+		} catch (SQLException caughtException) {
+
+			caughtException.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * Returns a package to the resulSet received without a ArrayList<String> of courses' name
+	 * @param resultSet
+	 * @return new package from a resultSet received
+	 * @throws PackageException
+	 * @throws SQLException
+	 */
+	public Package returnAPackageOfResultSet(ResultSet resultSet) throws PackageException, SQLException{
+		
+		/**
+		 * GET THE PACKAGE COURSES TO SET ON THIS ARRAY LIST
+		 */
+		ArrayList<String> packageCourses = new ArrayList<String>();
+		/**
+		 * THIS IS A RANDOM COURSE
+		 * TAKE THIS OUT OF HERE
+		 */
+		packageCourses.add("5");
+		
+		Package newPackage = new Package(
+			resultSet.getInt(ID_COLUMN), 
+			resultSet.getString(NAME_COLUMN), 
+			resultSet.getInt(VALUE_COLUMN), 
+			resultSet.getInt(DURATION_COLUMN),
+			resultSet.getInt(STATUS_COLUMN),
+		
+			/**
+			 * GET THE PACKAGE COURSES TO SET ON THIS ARRAY LIST
+			 */
+			packageCourses
+		);
+		
+		return newPackage;
+	}
+	
+	/**
+	 * Returns a package to the resulSet received with a ArrayList<String> of courses' name
+	 * @param resultSet
+	 * @return new package from a resultSet received
+	 * @throws PackageException
+	 * @throws SQLException
+	 */
+
+	public Package returnACompletePackageOfResultSet(ResultSet resultSet) throws PackageException, SQLException{
+		
+		ArrayList<String> arraylist;
+		arraylist = getNameCoursesInPackages(resultSet.getInt(1));
+		
+		Package newPackage = new Package(
+				resultSet.getInt(1), 
+				resultSet.getString(2), 
+				resultSet.getInt(3), 
+				resultSet.getInt(4), 
+				resultSet.getInt(5),
+				arraylist);
+		
+		return newPackage;
+	}
+
+	/**
+	 * Gets the courses id that form the package
+	 * @param idPackage
+	 * @return
+	 */
+	public ArrayList<String> getIdCourses(int idPackage) {
+		
+		ResultSet resultSet;
+		String query = "SELECT " + ID_COURSE_COLUMN + " FROM "
+				+ ASSOCIATION_TABLE_NAME + " WHERE " + ID_COLUMN	+ " = " + idPackage;
+		
+		
+		try {
+			resultSet = search(query);
+			if (!resultSet.isBeforeFirst()) {
+
+				return null;
+
+			} 
+			else {
+				ArrayList<String> coursesId = new ArrayList<String>();
+				while (resultSet.next()) {
+					Integer idCourse = resultSet.getInt(ID_COURSE_COLUMN);
+					String addedCourse = idCourse.toString();
+					coursesId.add(addedCourse);
+				}
+				return coursesId;
+			}
+		} 
+		catch (SQLException caughtException) {
+
+			caughtException.printStackTrace();
+			return null;
+		}
+	}
 }
