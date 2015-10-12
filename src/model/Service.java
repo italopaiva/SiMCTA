@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import controller.CourseController;
 import controller.PackageController;
+import exception.PaymentException;
 import exception.ServiceException;
 import model.Package;
 
@@ -11,11 +12,13 @@ public class Service extends Model{
 	
 	private static final String STUDENT_OF_SERVICE_CANT_BE_NULL = "O serviço deve ser vinculado a um estudante. Informe um estudante válido.";
 	private static final String SERVICE_MUST_CONTAIN_AT_LEAST_A_COURSE_OR_PACKAGE = "O estudante deve estar vinculado a um curso ou pacote, pelo menos.";
+	private static final String PAYMENT_CANT_BE_NULL = "O pagamento do serviço não pode estar em branco.";
 	
 	private Integer serviceId; 
 	private Student student;
 	private ArrayList<Course> courses = new ArrayList<Course>();
 	private ArrayList<Package> packages = new ArrayList<Package>();
+	private Payment payment;
 	
 	public Service(Student student, ArrayList<String> courses, ArrayList<String> packages) throws ServiceException{
 		
@@ -32,6 +35,20 @@ public class Service extends Model{
 		else{
 			throw new ServiceException(SERVICE_MUST_CONTAIN_AT_LEAST_A_COURSE_OR_PACKAGE);
 		}
+	}
+	
+	public void addPayment(Payment payment) throws PaymentException{
+		
+		if(payment != null){
+			setPayment(payment);
+		}
+		else{
+			throw new PaymentException(PAYMENT_CANT_BE_NULL);
+		}
+	}
+	
+	private void setPayment(Payment payment){
+		this.payment = payment;
 	}
 	
 	private void addPackagesToService(ArrayList<String> packages){
@@ -112,6 +129,48 @@ public class Service extends Model{
 		}
 	}
 
+	public Integer getTotalValue(){
+		
+		Integer coursesTotalValue = getCoursesValue();
+		Integer packagesTotalValue = getPackagesValue();
+		
+		Integer serviceTotal = coursesTotalValue + packagesTotalValue;
+		
+		return serviceTotal;
+	}
+	
+	private Integer getCoursesValue(){
+		
+		ArrayList<Course> courses = this.courses;
+		
+		Integer coursesTotalValue = 0;
+		
+		int i = 0;
+		for(i = 0; i < courses.size(); i++){
+			
+			Integer courseValue = courses.get(i).getCourseValue();
+			coursesTotalValue += courseValue;
+		}
+		
+		return coursesTotalValue;
+	}
+	
+	private Integer getPackagesValue(){
+		
+		ArrayList<Package> packages = this.packages;
+		
+		Integer packagesTotalValue = 0;
+		
+		int i = 0;
+		for(i = 0; i < packages.size(); i++){
+			
+			Integer packageValue = packages.get(i).getPackageValue();
+			packagesTotalValue += packageValue;
+		}
+		
+		return packagesTotalValue;
+	}
+	
 	public Integer getServiceId(){
 		return this.serviceId;
 	}
