@@ -249,7 +249,7 @@ public class PackageDAO extends DAO{
 			
 			if(result.first()){
 				
-				Integer idPackage = result.getInt(ID_COURSE_COLUMN);
+				Integer idPackage = result.getInt(ID_COLUMN);
 				String packageName = result.getString(NAME_COLUMN);
 				Integer packageDuration = result.getInt(DURATION_COLUMN);
 				Integer packageValue = result.getInt(VALUE_COLUMN);
