@@ -87,12 +87,7 @@ public class Student extends Model{
 
 	private void setSecondaryPhone(Phone secondaryPhone) throws StudentException{
 		
-		if(secondaryPhone != null){
-			this.secondaryPhone = secondaryPhone;
-		}
-		else{
-			throw new StudentException(PHONE_CANT_BE_NULL);
-		}
+		this.secondaryPhone = secondaryPhone;
 	}
 
 	private void setPrincipalPhone(Phone principalPhone) throws StudentException{
