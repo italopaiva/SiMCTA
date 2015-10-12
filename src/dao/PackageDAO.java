@@ -1,5 +1,6 @@
 package dao;
 
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -234,6 +235,46 @@ public class PackageDAO extends DAO{
 		return disassociated;
 	}
 	
+	public Package get(int packageId){
+		
+		String query = "SELECT "+ TABLE_NAME +".* , " + ASSOCIATION_TABLE_NAME + ". " + ID_COURSE_COLUMN;
+			   query += " FROM " + TABLE_NAME + " JOIN " + ASSOCIATION_TABLE_NAME;
+			   query += " ON " + TABLE_NAME + "." + ID_COLUMN +" = " + ASSOCIATION_TABLE_NAME + "." + ID_COLUMN;
+			   query += " WHERE " + TABLE_NAME + "." + ID_COLUMN + "=" + packageId;
+				
+		Package foundPackage = null;
+		try{
+			
+			ResultSet result = this.search(query);
+			
+			if(result.first()){
+				
+				Integer idPackage = result.getInt(ID_COURSE_COLUMN);
+				String packageName = result.getString(NAME_COLUMN);
+				Integer packageDuration = result.getInt(DURATION_COLUMN);
+				Integer packageValue = result.getInt(VALUE_COLUMN);
+				ArrayList<String> packageCourses = new ArrayList<String>();
+				
+				// Get back to first tuple and add each id_course to packageCourses 
+				result.first();
+				while(result.next()){
+					packageCourses.add(result.getString(ID_COURSE_COLUMN));
+				}
+				
+				foundPackage = new Package(idPackage, packageName, packageValue, packageDuration, packageCourses);
+			}
+			else{
+				foundPackage = null;
+			}
+		}
+		catch(SQLException e){
+			foundPackage = null;
+		}catch(PackageException e){
+			foundPackage = null;
+		}
+		
+		return foundPackage;
+	}
 	
 	/**
 	 * Search and get package(s) name that contains the string parameter package_name
@@ -290,11 +331,11 @@ public class PackageDAO extends DAO{
 		try{
 			resultSet = search(query);
 			
-			if (!resultSet.isBeforeFirst() ) { 
+			if(!resultSet.isBeforeFirst()){ 
 				
 				return null;
 				
-			} else {
+			}else{
 				
 				resultSet.next();
 				return returnAPackageOfResultSet(resultSet);
@@ -356,7 +397,7 @@ public class PackageDAO extends DAO{
 	 * @throws PackageException
 	 * @throws SQLException
 	 */
-	public Package returnAPackageOfResultSet(ResultSet resultSet) throws PackageException, SQLException{
+	private Package returnAPackageOfResultSet(ResultSet resultSet) throws PackageException, SQLException{
 		
 		/**
 		 * GET THE PACKAGE COURSES TO SET ON THIS ARRAY LIST

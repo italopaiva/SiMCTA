@@ -68,6 +68,8 @@ public class EnrollStudent extends View {
 					courses.add("1");
 					courses.add("2");
 					ArrayList<String> packages = new ArrayList<String>();
+					packages.add("7");
+					packages.add("8");
 					
 					StudentController studentController = new StudentController();
 					studentController.newStudent(studentName, studentCpf, studentRg, birthdate, email, address,

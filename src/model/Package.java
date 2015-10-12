@@ -203,18 +203,13 @@ public class Package {
 				
 				int courseId = Integer.parseInt(packageCourses.get(i));
 				
-				try{
-					Course course = courseController.get(courseId);
-					
-					if(course != null){
-					
-						this.packageCourses.add(course);
-					}
-					else{
-						throw new PackageException(GIVEN_INVALID_COURSE_TO_PACKAGE);
-					}
+				Course course = courseController.get(courseId);
+				
+				if(course != null){
+				
+					this.packageCourses.add(course);
 				}
-				catch(CourseException e){
+				else{
 					throw new PackageException(GIVEN_INVALID_COURSE_TO_PACKAGE);
 				}
 			}

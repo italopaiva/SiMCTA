@@ -135,12 +135,13 @@ public class CourseController {
 		
 	}
 
-	public Course get(int courseId) throws CourseException{
-		
-		ResultSet result = showCourse(courseId);
-		
+	public Course get(int courseId){
+	
 		Course foundCourse = null;
+		
 		try{
+			
+			ResultSet result = showCourse(courseId);
 			
 			if(result.first()){
 				
@@ -156,6 +157,8 @@ public class CourseController {
 			}
 		}
 		catch(SQLException e){
+			// Nothing to do
+		}catch (CourseException e){
 			// Nothing to do
 		}
 		

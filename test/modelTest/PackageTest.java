@@ -111,9 +111,6 @@ public class PackageTest {
 		catch(NumberFormatException e){
 			fail("Should not throw exception."+e.getMessage());
 		}
-		catch(CourseException e){
-			fail("Should not throw exception."+e.getMessage());
-		}
 	}
 	
 	/** End of valid entries */
