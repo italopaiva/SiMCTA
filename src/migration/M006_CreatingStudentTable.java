@@ -22,13 +22,15 @@ public class M006_CreatingStudentTable extends Migration {
 		query+= "father varchar(100),";
 		query+= "uf varchar(20) NOT NULL,";
 		query+= "issuing_institution varchar(100) NOT NULL,";
-		query+= "number int NOT NULL,";
+		query+= "rg_number varchar(20) NOT NULL,";
 		query+= "residence_phone varchar(10) NOT NULL,";
 		query+= "cell_phone varchar(10) NOT NULL,";
 		query+= "complement text,";
+		query+= "number int NOT NULL,";
 		query+= "city varchar(100) NOT NULL,";
 		query+= "cep varchar(8) NOT NULL,";
-		query+= "address_info varchar(200) NOT NULL";
+		query+= "address_info varchar(200) NOT NULL,";
+		query+= "status tinyint(1) DEFAULT 1";
 		query+= ")";
 
 		setQuery(query);
