@@ -131,6 +131,20 @@ public class View extends JFrame {
 			}
 		});
 		packageMenu.add(searchPackage);
+		
+		JMenu studentMenu = new JMenu("Alunos");
+		menuBar.add(studentMenu);
+		
+		JMenuItem newStudent = new JMenuItem("Cadastrar aluno");
+		newStudent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				dispose();
+				EnrollStudent newStudentFrame = new EnrollStudent();
+				newStudentFrame.setVisible(true);
+			}
+		});
+		studentMenu.add(newStudent);
 	}
 	
 	protected boolean getPermissionToAccess(){

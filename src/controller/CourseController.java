@@ -1,6 +1,7 @@
 package controller;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import dao.CourseDAO;
 import exception.CourseException;
@@ -133,8 +134,34 @@ public class CourseController {
 		return resultOfTheSelect;
 		
 	}
-	
 
+	public Course get(int courseId) throws CourseException{
+		
+		ResultSet result = showCourse(courseId);
+		
+		Course foundCourse = null;
+		try{
+			
+			if(result.first()){
+				
+				foundCourse = new Course(result.getInt(CourseDAO.ID_COLUMN),
+										 result.getString(CourseDAO.NAME_COLUMN),
+										 result.getString(CourseDAO.DESCRIPTION_COLUMN),
+										 result.getInt(CourseDAO.DURATION_COLUMN),
+										 result.getInt(CourseDAO.VALUE_COLUMN),
+										 result.getInt(CourseDAO.STATUS_COLUMN));
+			}
+			else{
+				// Nothing to do
+			}
+		}
+		catch(SQLException e){
+			// Nothing to do
+		}
+		
+		return foundCourse;
+	}
+	
 	/** 
 	 * Show the information of a course searched by user
 	 * @param idCourse - The id of course to be searched
