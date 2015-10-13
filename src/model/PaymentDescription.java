@@ -27,6 +27,7 @@ public class PaymentDescription extends Model{
 	private int paymentType;
 	private int paymentForm;
 	private String description;
+	private int paymentDescriptionId;
 	
 	public PaymentDescription(int paymentType, int paymentForm) throws PaymentException{
 		
@@ -71,6 +72,10 @@ public class PaymentDescription extends Model{
 		}
 	}
 	
+	private void setPaymentDescriptionId(int descriptionId){
+		this.paymentDescriptionId = descriptionId;
+	}
+	
 	private void setPaymentDescription() throws PaymentException{
 		
 		int paymentType = this.paymentType;
@@ -84,12 +89,15 @@ public class PaymentDescription extends Model{
 				switch(paymentForm){
 					case CASH_FORM:
 						description = CASH_CASH_DESCRIPTION;
+						setPaymentDescriptionId(1);
 						break;
 					case CARD_FORM:
 						description = CASH_CARD_DESCRIPTION;
+						setPaymentDescriptionId(2);
 						break;
 					case CHECK_FORM:
 						description = CASH_CHECK_DESCRIPTION;
+						setPaymentDescriptionId(3);
 						break;
 					default:
 						throw new PaymentException(INVALID_PAYMENT_FORM);
@@ -102,12 +110,15 @@ public class PaymentDescription extends Model{
 				switch(paymentForm){
 					case CASH_FORM:
 						description = INSTALLMENT_CASH_DESCRIPTION;
+						setPaymentDescriptionId(4);
 						break;
 					case CARD_FORM:
 						description = INSTALLMENT_CARD_DESCRIPTION;
+						setPaymentDescriptionId(5);
 						break;
 					case CHECK_FORM:
 						description = INSTALLMENT_CHECK_DESCRIPTION;
+						setPaymentDescriptionId(6);
 						break;
 					default:
 						throw new PaymentException(INVALID_PAYMENT_FORM);
@@ -131,5 +142,9 @@ public class PaymentDescription extends Model{
 
 	public String getDescription(){
 		return this.description;
+	}
+	
+	public int getPaymentDescriptionId(){
+		return this.paymentDescriptionId;
 	}
 }
