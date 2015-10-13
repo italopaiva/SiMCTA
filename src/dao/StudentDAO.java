@@ -37,6 +37,13 @@ public class StudentDAO extends DAO {
 	private static final String CEP_COLUMN	= "cep";
 	private static final String ADDRESS_COLUMN	= "address_info";
 	
+	/**
+	 * Gets the students with the searched name
+	 * @param searchedStudentName - searched name by the user
+	 * @return an arraylist with the found students
+	 * @throws StudentException
+	 * @throws CPFException
+	 */
 	public ArrayList<Student> get(String searchedStudentName) throws StudentException, CPFException {
 		
 		ResultSet resultOfTheSearch = null;
@@ -64,6 +71,17 @@ public class StudentDAO extends DAO {
 		return foundStudents;
 	}
 	
+	/**
+	 * Gets the student that has the specific 'cpf'
+	 * @param studentCpf - the 'cpf' of the searched student 
+	 * @return an object with the data of the student 
+	 * @throws PhoneException
+	 * @throws CPFException
+	 * @throws DateException
+	 * @throws AddressException
+	 * @throws RGException
+	 * @throws StudentException
+	 */
 	public Student get(CPF studentCpf) throws PhoneException, CPFException, DateException, AddressException,
 												RGException, StudentException {
 		
@@ -85,6 +103,18 @@ public class StudentDAO extends DAO {
 		return student;
 	}
 
+	/**
+	 * Gets the data of the student
+	 * @param resultOfTheSearch the row from database that contains the data of the student
+	 * @return an object with the data of the student
+	 * @throws PhoneException
+	 * @throws SQLException
+	 * @throws CPFException
+	 * @throws DateException
+	 * @throws AddressException
+	 * @throws RGException
+	 * @throws StudentException
+	 */
 	private Student getFoundStudent(ResultSet resultOfTheSearch) throws PhoneException, SQLException, 
 	CPFException, DateException, AddressException, RGException, StudentException {
 

@@ -84,14 +84,14 @@ public class Service extends Model{
 				for(i = 0; i < packages.size(); i++){
 					
 					int packageId = Integer.parseInt(packages.get(i));
-					
 					Package currentPackage;
-					
+
 					currentPackage = packageController.getPackage(packageId);
-					
+
 					if(currentPackage != null){
 						this.packages.add(currentPackage);
 					}else{
+						System.out.print("veio pacote não");
 						// Nothing to do because the package is invalid
 					}
 				}

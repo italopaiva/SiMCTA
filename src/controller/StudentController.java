@@ -45,6 +45,13 @@ public class StudentController {
 		serviceController.newService(student, courses, packages, paymentType, paymentForm);
 	}
 
+	/**
+	 * Search the student with the entered name
+	 * @param studentName - the entered name by user
+	 * @return an arraylist with the found students
+	 * @throws StudentException
+	 * @throws CPFException
+	 */
 	public ArrayList<Student> searchStudent(String studentName) throws StudentException, CPFException {
 			
 		ArrayList <Student> foundStudents = studentDAO.get(studentName);
@@ -52,6 +59,20 @@ public class StudentController {
 		return foundStudents;
 	}
 
+	/**
+	 * Search the student selected by the user
+	 * @param studentCPF - the 'cpf' of the selected student 
+	 * @return an object with the data of the selected student
+	 * @throws SQLException
+	 * @throws StudentException
+	 * @throws PhoneException
+	 * @throws CPFException
+	 * @throws DateException
+	 * @throws AddressException
+	 * @throws RGException
+	 * @throws CourseException
+	 * @throws ServiceException
+	 */
 	public Student searchStudent(CPF studentCPF) throws SQLException, StudentException, PhoneException, CPFException, DateException, AddressException, RGException, CourseException, ServiceException {
 		
 		Student basicDataOfStudent = studentDAO.get(studentCPF);

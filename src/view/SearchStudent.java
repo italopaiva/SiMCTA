@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
@@ -21,15 +22,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import model.Course;
+import model.Service;
 import model.Student;
+import model.Package;
 import model.datatype.Address;
 import model.datatype.CPF;
 import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
+import controller.ServiceController;
 import controller.StudentController;
 import util.ButtonColumn;
 import exception.AddressException;
@@ -40,6 +46,10 @@ import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
 import exception.StudentException;
+
+import javax.swing.JList;
+import javax.swing.AbstractListModel;
+import javax.swing.ListSelectionModel;
 
 
 public class SearchStudent extends View {
@@ -65,6 +75,12 @@ public class SearchStudent extends View {
 	private JTextField fatherField;
 	private JLabel studentNameLbl;
 	private JButton backButton;
+	private JLabel firstListLabel;
+	private JLabel secondListLabel;
+	private JList<String> list;
+	private JList<String> firstList;
+	private JList<String> secondList;
+	private JLabel dateLabel;
 	
 	/**
 	 * Launch the application.
@@ -143,9 +159,9 @@ public class SearchStudent extends View {
 		contentPane.add(searchButtton);
 		
 		internalFrame = new JInternalFrame();
-		internalFrame.setBounds(227, 141, 557, 560);
+		internalFrame.setBounds(112, 124, 900, 560);
 		contentPane.add(internalFrame);
-		
+			
 		studentNameLbl = new JLabel("New label");
 		studentNameLbl.setBounds(176, 12, 348, 23);
 		setFont(new Font("Dialog", Font.BOLD, 14));
@@ -265,6 +281,33 @@ public class SearchStudent extends View {
 		fatherField.setBounds(137, 471, 402, 27);
 		internalFrame.getContentPane().add(fatherField);
 		fatherField.setEditable(false);
+		
+		firstListLabel = new JLabel();
+		firstListLabel.setBounds(576, 73, 120, 17);
+		internalFrame.getContentPane().add(firstListLabel);
+		
+		secondListLabel = new JLabel("Pacotes");
+		secondListLabel.setBounds(576, 308, 70, 17);
+		secondListLabel.setBackground(Color.LIGHT_GRAY);
+		internalFrame.getContentPane().add(secondListLabel);
+		
+		firstList = new JList<String>();
+		firstList.setBackground(Color.LIGHT_GRAY);
+		firstList.setBounds(574, 112, 286, 153);
+		internalFrame.getContentPane().add(firstList);
+		
+		secondList = new JList<String>();
+		secondList.setBackground(Color.LIGHT_GRAY);
+		secondList.setBounds(576, 337, 286, 153);
+		internalFrame.getContentPane().add(secondList);
+		
+		JLabel lblDataDaMatrcula = new JLabel("Data da matrícula");
+		lblDataDaMatrcula.setBounds(576, 44, 140, 17);
+		internalFrame.getContentPane().add(lblDataDaMatrcula);
+		
+		dateLabel = new JLabel("New label");
+		dateLabel.setBounds(718, 44, 100, 17);
+		internalFrame.getContentPane().add(dateLabel);
 
 		internalFrame.setVisible(false);
 		
@@ -344,7 +387,7 @@ public class SearchStudent extends View {
 	}
 	
 	/**
-	 * Gets the information of the selected student
+	 * Show the information of the selected student
 	 * @param studentCPF - CPF of the selected student
 	 * @throws StudentException 
 	 * @throws SQLException 
@@ -368,6 +411,9 @@ public class SearchStudent extends View {
 			tableOfStudents.setVisible(false);
 			backButton.setVisible(true);
 
+			/**
+			 * Basic data of student
+			 */
 			String studentName = student.getStudentName();		
 			String email = student.getStudentEmail();
 			String motherName = student.getMotherName();
@@ -415,10 +461,14 @@ public class SearchStudent extends View {
 			cellField.setText(cellPhone);
 			phoneField.setText(residencePhone);
 			
+			visualizeServices(student);
+			
 			backButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					internalFrame.setVisible(false);
 					searchedStudentField.setText("");
+					firstList.removeAll();
+					secondList.removeAll();
 					backButton.setVisible(false);
 					tableOfStudents.setVisible(true);
 				}
@@ -427,6 +477,102 @@ public class SearchStudent extends View {
 		else{
 			showInfoMessage("Não foi possível mostrar os dados do aluno");
 		}
+		
+	}
+
+	/**
+	 * Show the data of the services contracts by the selected student
+	 * @param student
+	 * @param onlyHasPackages 
+	 */
+	private void visualizeServices(Student student) {
+		
+		ArrayList<Service> services = student.getServicesOfStudent();
+		int servicesIndex = 0;			
+		boolean onlyHasPackages = false;
+		
+		while(servicesIndex < services.size()){
+			
+			Date date = services.get(servicesIndex).getContractsDate();
+			String contractsDate = date.getFormattedDate();
+			dateLabel.setText(contractsDate);
+			
+			/**
+			 * Courses and packages of a student
+			 */
+			ArrayList<Course> courses = services.get(servicesIndex).getCourses();			
+			if(!courses.isEmpty()){
+				DefaultListModel<String> courseListModel = new DefaultListModel<String>();
+				ArrayList<String> coursesName = new ArrayList<String>();
+
+				int i = 0;
+				
+				// Building the arraylist with the courses name
+				while (i < courses.size()){
+					String courseName = courses.get(i).getCourseName();
+					coursesName.add(courseName);
+					i++;
+				}
+				
+				// Adding the courses name to the list
+				i = 0;
+				while (i < coursesName.size()){
+					courseListModel.addElement(coursesName.get(i));
+					i++;
+				}
+				
+				firstListLabel.setText("Cursos");
+				firstListLabel.setVisible(true);
+				firstList.setVisible(true);
+				firstList.setModel(courseListModel);
+				
+			}
+			else{
+				onlyHasPackages = true;
+			}
+			
+			ArrayList<Package> packages = services.get(servicesIndex).getPackages();
+			if(!packages.isEmpty()){
+				
+				DefaultListModel<String> packageListModel = new DefaultListModel<String>();
+				ArrayList<String> packagesName = new ArrayList<String>();
+				
+				int i = 0;
+				
+				// Building the arraylist with the courses name
+				while (i < packages.size()){
+					String packageName = packages.get(i).getPackageName();
+					packagesName.add(packageName);
+					i++;
+				}
+				
+				// Adding the courses name to the list
+				i = 0;
+				while (i < packagesName.size()){
+					packageListModel.addElement(packagesName.get(i));
+					i++;
+				}
+
+				if(onlyHasPackages){
+					firstListLabel.setText("Pacotes");
+					firstListLabel.setVisible(true);
+					firstList.setVisible(true);
+					firstList.setModel(packageListModel);
+					secondListLabel.setVisible(false);
+					secondList.setVisible(false);
+				}
+				else{
+					secondListLabel.setVisible(true);
+					secondList.setVisible(true);
+					secondList.setModel(packageListModel);
+				}
+
+			}
+
+			servicesIndex++;
+		}
+		
+
 		
 	}
 }

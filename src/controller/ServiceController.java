@@ -32,6 +32,14 @@ public class ServiceController {
 		}
 	}
 
+	/**
+	 * Search a service of a specific student
+	 * @param basicDataOfStudent - contains the data of the student
+	 * @return and arrayList of services
+	 * @throws CourseException
+	 * @throws DateException
+	 * @throws ServiceException
+	 */
 	public ArrayList<Service> searchService(Student basicDataOfStudent) throws CourseException, DateException, ServiceException {
 		
 		ArrayList<Service> services = new ArrayList<Service>();
