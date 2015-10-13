@@ -51,6 +51,18 @@ public class RG extends Model{
 		}
 	}
 
+	public String getFormattedRg(){
+			
+		String formattedRg;
+		
+		formattedRg = getRgNumber();
+		formattedRg+= " " + getIssuingInstitution();
+		formattedRg+= " " + getUf();
+		
+		return formattedRg;
+		
+	}
+	
 	public String getRgNumber() {
 		return this.rgNumber;
 	}

@@ -56,6 +56,7 @@ public class StudentTest {
 		}
 	}
 	
+
 	@Test(expected = StudentException.class)
 	public void testEmptyStudentName() throws StudentException{
 		
@@ -365,4 +366,5 @@ public class StudentTest {
 		student = new Student("Jacó Mario Souza", cpf, rg, date, invalidEmail, address, phone1, phone2, 
 							  "Milene Souza Medeiros", "Mário Souza Filho");
 	}
+		
 }

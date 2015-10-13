@@ -79,6 +79,17 @@ public class Address extends Model{
 		}
 	}
 
+	public String getCompleteAddress(){
+		
+		String addressInfo = getAddressInfo();
+		String complement = getComplement();
+		String number = getNumber();
+		
+		String completeAddress = addressInfo + " " + complement + " " + number;
+
+		return completeAddress;
+	}
+	
 	public String getAddressInfo() {
 		return addressInfo;
 	}
