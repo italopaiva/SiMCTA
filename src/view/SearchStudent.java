@@ -34,9 +34,11 @@ import controller.StudentController;
 import util.ButtonColumn;
 import exception.AddressException;
 import exception.CPFException;
+import exception.CourseException;
 import exception.DateException;
 import exception.PhoneException;
 import exception.RGException;
+import exception.ServiceException;
 import exception.StudentException;
 
 
@@ -292,7 +294,7 @@ public class SearchStudent extends View {
 					visualizeStudent(selectedStudent);
 				} 
 				catch(CPFException | SQLException | StudentException | PhoneException | DateException |
-						AddressException | RGException e1){
+						AddressException | RGException | CourseException | ServiceException e1){
 					
 				}
 				
@@ -351,9 +353,11 @@ public class SearchStudent extends View {
 	 * @throws DateException 
 	 * @throws CPFException 
 	 * @throws PhoneException 
+	 * @throws ServiceException 
+	 * @throws CourseException 
 	 */
 	private void visualizeStudent(CPF studentCPF) throws SQLException, StudentException, PhoneException, 
-												CPFException, DateException, AddressException, RGException {
+												CPFException, DateException, AddressException, RGException, CourseException, ServiceException {
 		
 		StudentController studentController = new StudentController();
 		Student student = studentController.searchStudent(studentCPF);	

@@ -7,6 +7,7 @@ import controller.PackageController;
 import exception.PaymentException;
 import exception.ServiceException;
 import model.Package;
+import model.datatype.Date;
 
 public class Service extends Model{
 	
@@ -19,6 +20,7 @@ public class Service extends Model{
 	private ArrayList<Course> courses = new ArrayList<Course>();
 	private ArrayList<Package> packages = new ArrayList<Package>();
 	private Payment payment;
+	private Date contractsDate;
 	
 	public Service(Student student, ArrayList<String> courses, ArrayList<String> packages) throws ServiceException{
 		
@@ -35,6 +37,23 @@ public class Service extends Model{
 		else{
 			throw new ServiceException(SERVICE_MUST_CONTAIN_AT_LEAST_A_COURSE_OR_PACKAGE);
 		}
+	}
+	
+	public Service(Student student, ArrayList<String> courses, ArrayList<String> packages, Date contractsDate) throws ServiceException{
+		
+		boolean thereIsCourses = courses != null && !courses.isEmpty();
+		boolean thereIsPackages = packages != null && !packages.isEmpty(); 
+		
+		if(thereIsCourses || thereIsPackages){
+			setContractsDate(contractsDate);
+			setStudent(student);
+			addCoursesToService(courses);
+			addPackagesToService(packages);
+		}
+		else{
+			throw new ServiceException(SERVICE_MUST_CONTAIN_AT_LEAST_A_COURSE_OR_PACKAGE);
+		}
+
 	}
 	
 	public void addPayment(Payment payment) throws PaymentException{
@@ -128,7 +147,11 @@ public class Service extends Model{
 			throw new ServiceException(STUDENT_OF_SERVICE_CANT_BE_NULL);
 		}
 	}
-
+	
+	private void setContractsDate(Date contractsDate){
+		this.contractsDate = contractsDate;
+	}
+	
 	public Integer getTotalValue(){
 		
 		Integer coursesTotalValue = getCoursesValue();
@@ -185,5 +208,9 @@ public class Service extends Model{
 
 	public ArrayList<Package> getPackages(){
 		return this.packages;
+	}
+	
+	public Date getContractsDate(){
+		return this.contractsDate;
 	}
 }

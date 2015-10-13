@@ -24,9 +24,11 @@ import controller.StudentController;
 import dao.StudentDAO;
 import exception.AddressException;
 import exception.CPFException;
+import exception.CourseException;
 import exception.DateException;
 import exception.PhoneException;
 import exception.RGException;
+import exception.ServiceException;
 import exception.StudentException;
 
 public class StudentControllerTest {
@@ -81,7 +83,7 @@ public class StudentControllerTest {
 	
 	@Test
 	public void testIfFoundTheBasicDataOfAStudent() throws StudentException, CPFException, PhoneException, 
-													DateException, AddressException, RGException, SQLException {
+													DateException, AddressException, RGException, SQLException, CourseException, ServiceException {
 		
 		Student student = new Student("Jacó Mário Souza", cpf);
 		

@@ -29,8 +29,8 @@ public class StudentDAO extends DAO {
 	private static final String UF_COLUMN	= "uf";
 	private static final String ISSUING_INSTITUTION_COLUMN	= "issuing_institution";
 	private static final String RG_NUMBER_COLUMN	= "rg_number";
-	private static final String RESIDENCE_PHONE_COLUMN	= "residence_phone";
-	private static final String CELL_COLUMN	= "cell_phone";
+	private static final String SECONDARY_PHONE_COLUMN	= "secondary_phone";
+	private static final String PRINCIPAL_PHONE_COLUMN	= "principal_phone";
 	private static final String NUMBER_COLUMN	= "number";
 	private static final String COMPLEMENT_COLUMN	= "complement";
 	private static final String CITY_COLUMN	= "city";
@@ -72,7 +72,7 @@ public class StudentDAO extends DAO {
 		
 		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + CPF_COLUMN + "= \"" + receivedCPF + "\""; 
 		Student student = null;
-		
+
 		try{
 			resultOfTheSearch = this.search(query);
 			while(resultOfTheSearch.next()){
@@ -114,8 +114,8 @@ public class StudentDAO extends DAO {
 		Address address = new Address(addressInfo, number, complement, cep,city);
 
 		//Phones
-		String cellPhone = resultOfTheSearch.getString(CELL_COLUMN);
-		String residencePhone = resultOfTheSearch.getString(RESIDENCE_PHONE_COLUMN);
+		String cellPhone = resultOfTheSearch.getString(PRINCIPAL_PHONE_COLUMN);
+		String residencePhone = resultOfTheSearch.getString(SECONDARY_PHONE_COLUMN);
 		String DDDPrincipalPhone = cellPhone.substring(0,2);
 		String numberPrincipalPhone = cellPhone.substring(2,10);
 		String DDDSecondaryPhone = residencePhone.substring(0,2);
@@ -134,7 +134,6 @@ public class StudentDAO extends DAO {
 		
 		Student student = new Student(studentName, studentCpf, studentRg, birthdate, email, address,
 									 principalPhone, secondaryPhone, motherName, fatherName);
-
 	
 		return student;
 	}
