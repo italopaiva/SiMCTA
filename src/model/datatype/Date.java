@@ -126,13 +126,22 @@ public class Date extends Model{
 		return isBissextile;
 	}
 	
-	public String getFormattedDate(){
+	public String getHyphenFormattedDate(){
 		
-		String birthdate = getDay() + "/" ;
-		birthdate+= getMonth() + "/";
-		birthdate+= getYear();
+		String date = getYear() + "-";
+			   date += getMonth() + "-";
+			   date += getDay();
+			   
+		return date;
+	}
+	
+	public String getSlashFormattedDate(){
+		
+		String date = getDay() + "/" ;
+		date+= getMonth() + "/";
+		date+= getYear();
 
-		return birthdate;
+		return date;
 	}
 	
 	public Integer getYear() {

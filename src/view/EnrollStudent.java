@@ -53,33 +53,36 @@ public class EnrollStudent extends View {
 				String message = "";
 				try{
 					
-					String studentName = "Mário Oliveira";
-					CPF studentCpf = new CPF("00240137140");
-					RG studentRg = new RG("18480543", "SSP", "BA");
-					Date birthdate = new Date(20, 8, 1999);
-					String email = "mariooliv@gmail.com";
-					Address address = new Address("QR 507 Conjunto 9", "14", "", "72331009", "Samambaia");
-					Phone principalPhone = new Phone("61", "85678934");
-					Phone secondaryPhone = new Phone("61", "88677935");
-					String motherName = "Maria Julia Azevedo";
-					String fatherName = "Paulo Julio Aragão";
+					String studentName = "Emilie Morais";
+					CPF studentCpf = new CPF("59418933535");
+					RG studentRg = new RG("13454343", "SSP", "BA");
+					Date birthdate = new Date(15, 10, 1998);
+					String email = "italo@gmail.com";
+					Address address = new Address("QS 122 Conjunto 9", "22", "", "72331009", "Samambaia");
+					Phone principalPhone = new Phone("61", "85675434");
+					Phone secondaryPhone = new Phone("61", "88672335");
+					String motherName = "Vaneide Paiva";
+					String fatherName = "ALtamir Batista";
 					
 					ArrayList<String> courses = new ArrayList<String>();
 					courses.add("1");
-					courses.add("2");
 					ArrayList<String> packages = new ArrayList<String>();
 					packages.add("7");
-					packages.add("8");
 					
 					int paymentType = 1;
-					int paymentForm = 3;
-					Integer installments = new Integer(0);
+					int paymentForm = 1;
+					Integer installments = new Integer(1);
 					
 					StudentController studentController = new StudentController();
-					studentController.newStudent(studentName, studentCpf, studentRg, birthdate, email, address,
-												 principalPhone, secondaryPhone, motherName, fatherName, courses, packages, paymentType, paymentForm, installments);
+					boolean wasSaved = studentController.newStudent(studentName, studentCpf, studentRg, birthdate, email, address,
+																	principalPhone, secondaryPhone, motherName, fatherName, courses, packages, paymentType, paymentForm, installments);
 					
-					message = "Aluno matriculado com sucesso."; 
+					if(wasSaved){
+						message = "Aluno matriculado com sucesso.";
+					}
+					else{
+						message = "Não foi possível matricular o aluno informado.";
+					}
 				}
 				catch(CPFException e1){
 					message = e1.getMessage();

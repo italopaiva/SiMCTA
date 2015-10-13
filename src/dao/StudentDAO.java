@@ -19,7 +19,7 @@ import model.datatype.Date;
 
 public class StudentDAO extends DAO {
 
-	private static final String TABLE_NAME = "Student";
+	private static final String STUDENT_TABLE_NAME = "Student";
 	private static final String NAME_COLUMN = "name_student";
 	private static final String CPF_COLUMN = "cpf";
 	private static final String	BIRTHDATE_COLUMN = "birthdate";
@@ -37,6 +37,39 @@ public class StudentDAO extends DAO {
 	private static final String CEP_COLUMN	= "cep";
 	private static final String ADDRESS_COLUMN	= "address_info";
 	
+
+	public boolean save(Student student){
+		
+		boolean wasSaved = false;
+		
+		try{
+			
+			String query = "INSERT INTO "+ STUDENT_TABLE_NAME +" ("+ CPF_COLUMN +", "+ NAME_COLUMN +", "
+					   + BIRTHDATE_COLUMN +", "+ EMAIL_COLUMN +", "+ MOTHER_COLUMN +", "
+					   + FATHER_COLUMN +", "+ UF_COLUMN +", "+ ISSUING_INSTITUTION_COLUMN +", "
+					   + RG_NUMBER_COLUMN +", "+ PRINCIPAL_PHONE_COLUMN +", "+ SECONDARY_PHONE_COLUMN +", "
+					   + COMPLEMENT_COLUMN +", "+ NUMBER_COLUMN +", "+ CITY_COLUMN +", "+ CEP_COLUMN +", "
+					   + ADDRESS_COLUMN +")"
+					   + " VALUES ('"+ student.getStudentCpf().getCpf() +"', '"+ student.getStudentName() +"', '"
+					   + student.getBirthdate().getHyphenFormattedDate() +"', '"+ student.getStudentEmail() +"', '"
+					   + student.getMotherName() +"', '"+ student.getFatherName() +"', '"
+					   + student.getStudentRg().getUf() +"', '"
+					   + student.getStudentRg().getIssuingInstitution() +"', '"+ student.getStudentRg().getRgNumber() +"', '"
+					   + student.getPrincipalPhone().getWholePhone() +"', '"
+					   + student.getSecondaryPhone().getWholePhone() +"', '"+ student.getAddress().getComplement() +"','"
+					   + student.getAddress().getNumber() +"', '"+ student.getAddress().getCity() +"', '"
+					   + student.getAddress().getCep() +"', '"+ student.getAddress().getAddressInfo() +"')";
+
+			this.execute(query);
+			wasSaved = true;
+		}
+		catch(SQLException e){
+			wasSaved = false;
+		}
+		
+		return wasSaved;
+	}
+	
 	/**
 	 * Gets the students with the searched name
 	 * @param searchedStudentName - searched name by the user
@@ -47,7 +80,7 @@ public class StudentDAO extends DAO {
 	public ArrayList<Student> get(String searchedStudentName) throws StudentException, CPFException {
 		
 		ResultSet resultOfTheSearch = null;
-		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + NAME_COLUMN + " LIKE \"%" + searchedStudentName + "%\""; 
+		String query = "SELECT * FROM " + STUDENT_TABLE_NAME + " WHERE " + NAME_COLUMN + " LIKE \"%" + searchedStudentName + "%\""; 
 		ArrayList<Student> foundStudents = new ArrayList<Student>();
 		Student student = null;
 		CPF studentCpf = null;
@@ -88,7 +121,7 @@ public class StudentDAO extends DAO {
 		ResultSet resultOfTheSearch = null;
 		String receivedCPF = studentCpf.getCpf();
 		
-		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + CPF_COLUMN + "= \"" + receivedCPF + "\""; 
+		String query = "SELECT * FROM " + STUDENT_TABLE_NAME + " WHERE " + CPF_COLUMN + "= \"" + receivedCPF + "\""; 
 		Student student = null;
 
 		try{
@@ -167,5 +200,4 @@ public class StudentDAO extends DAO {
 	
 		return student;
 	}
-
 }

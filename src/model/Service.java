@@ -14,6 +14,8 @@ public class Service extends Model{
 	private static final String STUDENT_OF_SERVICE_CANT_BE_NULL = "O serviço deve ser vinculado a um estudante. Informe um estudante válido.";
 	private static final String SERVICE_MUST_CONTAIN_AT_LEAST_A_COURSE_OR_PACKAGE = "O estudante deve estar vinculado a um curso ou pacote, pelo menos.";
 	private static final String PAYMENT_CANT_BE_NULL = "O pagamento do serviço não pode estar em branco.";
+	private static final String DATE_CANT_BE_NULL = "A data da matrícula não pode estar em branco.";
+	private static final String SERVICE_ID_CANT_BE_ZERO = "O ID do serviço deve ser maior que zero.";
 	
 	private Integer serviceId; 
 	private Student student;
@@ -30,6 +32,24 @@ public class Service extends Model{
 		// At least one of it must contains something
 		if(thereIsCourses || thereIsPackages){
 		
+			setStudent(student);
+			addCoursesToService(courses);
+			addPackagesToService(packages);
+		}
+		else{
+			throw new ServiceException(SERVICE_MUST_CONTAIN_AT_LEAST_A_COURSE_OR_PACKAGE);
+		}
+	}
+	
+	public Service(Integer serviceId, Student student, ArrayList<String> courses, ArrayList<String> packages) throws ServiceException{
+		
+		boolean thereIsCourses = courses != null && !courses.isEmpty();
+		boolean thereIsPackages = packages != null && !packages.isEmpty(); 
+		
+		// At least one of it must contains something
+		if(thereIsCourses || thereIsPackages){
+			
+			setServiceId(serviceId);
 			setStudent(student);
 			addCoursesToService(courses);
 			addPackagesToService(packages);
@@ -138,6 +158,16 @@ public class Service extends Model{
 		}
 	}
 	
+	private void setServiceId(Integer serviceId) throws ServiceException{
+		
+		if(serviceId != null && serviceId > 0){
+			this.serviceId = serviceId;
+		}
+		else{
+			throw new ServiceException(SERVICE_ID_CANT_BE_ZERO);
+		}
+	}
+	
 	private void setStudent(Student student) throws ServiceException{
 		
 		if(student != null){
@@ -148,8 +178,14 @@ public class Service extends Model{
 		}
 	}
 	
-	private void setContractsDate(Date contractsDate){
-		this.contractsDate = contractsDate;
+	private void setContractsDate(Date contractsDate) throws ServiceException{
+		
+		if(contractsDate != null){
+			this.contractsDate = contractsDate;
+		}
+		else{
+			throw new ServiceException(DATE_CANT_BE_NULL);
+		}
 	}
 	
 	public Integer getTotalValue(){
@@ -208,6 +244,10 @@ public class Service extends Model{
 
 	public ArrayList<Package> getPackages(){
 		return this.packages;
+	}
+	
+	public Payment getPayment(){
+		return this.payment;
 	}
 	
 	public Date getContractsDate(){

@@ -35,14 +35,23 @@ public class StudentController {
 		this.studentDAO = studentDAO;
 	}
 	
-	public void newStudent(String studentName, CPF studentCpf, RG studentRg, Date birthdate, String email, Address address,
+	public boolean newStudent(String studentName, CPF studentCpf, RG studentRg, Date birthdate, String email, Address address,
 			 			   Phone principalPhone, Phone secondaryPhone, String motherName, String fatherName,
 			 			   ArrayList<String> courses, ArrayList<String> packages, int paymentType, int paymentForm, Integer installments) throws StudentException{
 		
 		Student student = new Student(studentName, studentCpf, studentRg, birthdate, email, address, principalPhone, secondaryPhone, motherName, fatherName);
+		boolean studentWasSaved = studentDAO.save(student);
 		
-		ServiceController serviceController = new ServiceController();
-		serviceController.newService(student, courses, packages, paymentType, paymentForm, installments);
+		boolean allSaved = false;
+		if(studentWasSaved){
+			ServiceController serviceController = new ServiceController();
+			allSaved = serviceController.newService(student, courses, packages, paymentType, paymentForm, installments);
+		}
+		else{
+			allSaved = false;
+		}
+		
+		return allSaved;
 	}
 
 	/**
