@@ -13,7 +13,7 @@ public class M007_CreatingPaymentTable extends Migration {
 		
 		String query = "";
 		query+= "CREATE TABLE IF NOT EXISTS Payment (";
-		query+= "id_payment int NOT NULL PRIMARY KEY,";
+		query+= "id_payment int NOT NULL PRIMARY KEY AUTO_INCREMENT,";
 		query+= "installments int NOT NULL,";
 		query+= "payment_type varchar(10) NOT NULL,";
 		query+= "payment_form varchar(10) NOT NULL,";

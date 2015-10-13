@@ -13,7 +13,7 @@ public class M008_CreatingServiceTable extends Migration {
 		
 		String query = "";
 		query+= "CREATE TABLE IF NOT EXISTS Service (";
-		query+= "id_service int NOT NULL PRIMARY KEY,";
+		query+= "id_service int NOT NULL PRIMARY KEY AUTO_INCREMENT,";
 		query+= "contract_date Date NOT NULL,";
 		query+= "id_payment int NOT NULL NOT NULL,";
 		query+= "cpf varchar(11) NOT NULL,";
