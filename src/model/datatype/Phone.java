@@ -67,6 +67,13 @@ public class Phone extends Model{
 		
 	}
 	
+	public String getWholePhone(){
+		
+		String wholeNumber = getDDD() + getNumber();
+		
+		return wholeNumber;
+	}
+	
 	public String getDDD(){
 		return DDD;
 	}

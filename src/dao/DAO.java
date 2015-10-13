@@ -34,6 +34,25 @@ public abstract class DAO {
 		return queryResult;
 	}
 	
+	protected int getNextId(String table, String idColumn) throws SQLException{
+		
+		int nextId = 0;
+		String query = "SELECT " + idColumn + " FROM " + table + " ORDER BY ";
+		query += idColumn + " DESC LIMIT 1 ";
+		ResultSet result;
+		
+		result = this.search(query);
+		
+		if(result.first()){
+			nextId = Integer.parseInt(result.getString(idColumn)) + 1;
+		}
+		else{
+			nextId = 1;
+		}
+			
+		return nextId;
+	}
+	
 	private Connection connectToDB() throws SQLException{
 		
 		FactoryConnection factoryConnection = new FactoryConnection();

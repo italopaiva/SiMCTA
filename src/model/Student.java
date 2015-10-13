@@ -69,7 +69,6 @@ public class Student extends Model{
 		setServiceOfStudent(servicesOfStudent);
 	}
 
-
 	private void setFatherName(String fatherName) throws StudentException {
 		
 		if(fatherName != null && fatherName != ""){

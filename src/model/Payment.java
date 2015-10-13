@@ -4,8 +4,9 @@ import exception.PaymentException;
 
 public class Payment extends Model{
 	
-	private static final String PAYMENT_SERVICE_CANT_BE_NULL = "O serviço que gerou o pagamento não pode ser nulo.";
-	private static final String INVALID_INSTALLMENT = "A quantidade de parcelas devem ser maiores ou iguais a zero.";
+	public static final String PAYMENT_SERVICE_CANT_BE_NULL = "O serviço que gerou o pagamento não pode ser nulo.";
+	public static final String INVALID_INSTALLMENT = "A quantidade de parcelas devem ser maiores ou iguais a zero.";
+	public static final String PAYMENT_ID_CANT_BE_ZERO = "O ID do pagamento deve ser maior que zero.";
 	
 	private static final int MIN_INSTALLMENT = 0;
 	
@@ -17,6 +18,14 @@ public class Payment extends Model{
 	
 	public Payment(Service service, int paymentType, int paymentForm, Integer installments) throws PaymentException{
 		
+		setService(service);
+		setDescription(paymentType, paymentForm);
+		setInstallments(installments);
+	}
+	
+	public Payment(int paymentId, Service service, int paymentType, int paymentForm, Integer installments) throws PaymentException{
+		
+		setPaymentId(paymentId);
 		setService(service);
 		setDescription(paymentType, paymentForm);
 		setInstallments(installments);
@@ -59,8 +68,14 @@ public class Payment extends Model{
 		this.description = paymentDescription;
 	}
 	
-	private void setPaymentId(Integer paymentId){
-		this.paymentId = paymentId;
+	private void setPaymentId(Integer paymentId) throws PaymentException{
+		
+		if(paymentId > 0){
+			this.paymentId = paymentId;
+		}
+		else{
+			throw new PaymentException(PAYMENT_ID_CANT_BE_ZERO);
+		}
 	}
 
 	public Integer getPaymentId(){

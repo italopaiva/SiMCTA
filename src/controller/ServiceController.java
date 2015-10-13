@@ -14,22 +14,32 @@ import model.datatype.CPF;
 
 public class ServiceController {
 	
-	public void newService(Student student, ArrayList<String> courses, ArrayList<String> packages,
+	private ServiceDAO serviceDAO;
+	
+	public ServiceController(){
+		serviceDAO = new ServiceDAO();
+	}
+	
+	public boolean newService(Student student, ArrayList<String> courses, ArrayList<String> packages,
 						   int paymentType, int paymentForm, Integer installments){
+		
+		boolean serviceWasSaved = false;
 		
 		try{
 			Service service = new Service(student, courses, packages);
-			
+						
 			PaymentController paymentController = new PaymentController();
 			Payment payment = paymentController.newPayment(service, paymentType, paymentForm, installments);
 			
 			service.addPayment(payment);
-		}
-		catch(ServiceException e){
 			
+			serviceWasSaved = serviceDAO.save(service);
 		}
-		catch(PaymentException e){
+		catch(ServiceException | PaymentException e){
+			serviceWasSaved = false;
 		}
+		
+		return serviceWasSaved;
 	}
 
 	public ArrayList<Service> searchService(Student basicDataOfStudent) throws CourseException, DateException, ServiceException {

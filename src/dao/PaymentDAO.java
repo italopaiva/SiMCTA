@@ -1,41 +1,47 @@
 package dao;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import exception.PaymentException;
 import model.Payment;
 
 public class PaymentDAO extends DAO{
 	
 	private static final String PAYMENT_TABLE_NAME = "Payment";
+	private static final String ID_COLUMN = "id_payment";
 	private static final String INSTALLMENT_COLUMN = "installments";
 	private static final String VALUE_COLUMN = "value";
 	private static final String PAYMENT_DESCRIPTION_COLUMN = "payment_description";
 	
 	public PaymentDAO(){}
 	
-	public boolean savePayment(Payment payment){
+	public int save(Payment payment) throws PaymentException{
 		
-		boolean wasSaved = false;
+		int savedPaymentId = 0;
 		
 		if(payment != null){
 			
-			String query = "INSERT INTO "+ PAYMENT_TABLE_NAME; 
-				   query += "(" + INSTALLMENT_COLUMN + ", " + VALUE_COLUMN + ", " + PAYMENT_DESCRIPTION_COLUMN + ") ";
-				   query += "VALUES ('" + payment.getInstallments() + "', '" + payment.getValue();
+			try{
+				int paymentId = this.getNextId(PAYMENT_TABLE_NAME, ID_COLUMN);
+								
+				String query = "INSERT INTO "+ PAYMENT_TABLE_NAME; 
+				   query += "(" + ID_COLUMN + "," + INSTALLMENT_COLUMN + ", " + VALUE_COLUMN + ", " + PAYMENT_DESCRIPTION_COLUMN + ") ";
+				   query += "VALUES ('" + paymentId + "', '" + payment.getInstallments() + "', '" + payment.getValue();
 				   query += "', '" + payment.getDescription().getPaymentDescriptionId() + "')";
-			
-		    try{
+				   
 				this.execute(query);
-				wasSaved = true;
+				savedPaymentId = paymentId;
+			    
 			}
-		    catch(SQLException e){
-		    	wasSaved = false;
+			catch(SQLException e){
+				throw new PaymentException(Payment.PAYMENT_ID_CANT_BE_ZERO);
 			}
 		}
 		else{
-			wasSaved = false;
+			throw new PaymentException(Payment.PAYMENT_ID_CANT_BE_ZERO);
 		}
 			   
-		return wasSaved;
+		return savedPaymentId;
 	}
 }

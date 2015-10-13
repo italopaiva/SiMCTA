@@ -392,7 +392,7 @@ public class SearchStudent extends View {
 			
 			// Birthdate
 			Date date = student.getBirthdate();
-			String birthdate = date.getFormattedDate();
+			String birthdate = date.getSlashFormattedDate();
 			birthdateField.setText(birthdate);
 			
 			//Address
