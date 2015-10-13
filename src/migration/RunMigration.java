@@ -8,7 +8,7 @@ public class RunMigration {
 
 	public static void main(String[] args) {
 		
-		M005_AddingStatusColumnToPackageTable m = new M005_AddingStatusColumnToPackageTable();
+		M010_CreatingPaymentDescriptionTable m = new M010_CreatingPaymentDescriptionTable();
 		
 		String message = "";
 		try {

@@ -15,13 +15,13 @@ import model.datatype.CPF;
 public class ServiceController {
 	
 	public void newService(Student student, ArrayList<String> courses, ArrayList<String> packages,
-						   int paymentType, int paymentForm){
+						   int paymentType, int paymentForm, Integer installments){
 		
 		try{
 			Service service = new Service(student, courses, packages);
 			
 			PaymentController paymentController = new PaymentController();
-			Payment payment = paymentController.newPayment(service, paymentType, paymentForm);
+			Payment payment = paymentController.newPayment(service, paymentType, paymentForm, installments);
 			
 			service.addPayment(payment);
 		}

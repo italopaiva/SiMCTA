@@ -73,10 +73,11 @@ public class EnrollStudent extends View {
 					
 					int paymentType = 1;
 					int paymentForm = 3;
+					Integer installments = new Integer(0);
 					
 					StudentController studentController = new StudentController();
 					studentController.newStudent(studentName, studentCpf, studentRg, birthdate, email, address,
-												 principalPhone, secondaryPhone, motherName, fatherName, courses, packages, paymentType, paymentForm);
+												 principalPhone, secondaryPhone, motherName, fatherName, courses, packages, paymentType, paymentForm, installments);
 					
 					message = "Aluno matriculado com sucesso."; 
 				}
