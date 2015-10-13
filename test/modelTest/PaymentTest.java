@@ -72,7 +72,7 @@ public class PaymentTest{
 	public void testValidServicePayment(){
 		
 		try{
-			payment = new Payment(service, 1, 1);
+			payment = new Payment(service, 1, 1, 0);
 			assertEquals(service, payment.getService());
 		}
 		catch (PaymentException e){
@@ -83,14 +83,14 @@ public class PaymentTest{
 	@Test(expected = PaymentException.class)
 	public void testNullServicePayment() throws PaymentException{
 		
-		payment = new Payment(null, 1, 1);
+		payment = new Payment(null, 1, 1, 0);
 	}
 	
 	@Test
 	public void testValueOfServicePayment(){
 		
 		try{
-			payment = new Payment(service, 1, 1);
+			payment = new Payment(service, 1, 1, 0);
 			assertEquals(SERVICE_VALUE, payment.getValue());
 		}
 		catch (PaymentException e){
@@ -103,12 +103,73 @@ public class PaymentTest{
 		
 		try{
 			PaymentDescription description = new PaymentDescription(1, 1);
-			payment = new Payment(service, 1, 1);
+			payment = new Payment(service, 1, 1, 0);
 			assertEquals(description.getPaymentType(), payment.getDescription().getPaymentType());
 			assertEquals(description.getPaymentForm(), payment.getDescription().getPaymentForm());
 		}
 		catch (PaymentException e){
 			fail("Should not throw this exception: "+ e.getMessage());
 		}
+	}
+	
+	/** Tests for payment installments*/
+	@Test
+	public void testInstallmentsOfPayment(){
+		
+		try{
+			payment = new Payment(service, 1, 1, 0);
+			assertEquals(new Integer(0), payment.getInstallments());
+		}
+		catch (PaymentException e){
+			fail("Should not throw this exception: "+ e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testInstallments1OfPayment(){
+		
+		try{
+			payment = new Payment(service, 1, 1, 1);
+			assertEquals(new Integer(1), payment.getInstallments());
+		}
+		catch (PaymentException e){
+			fail("Should not throw this exception: "+ e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testInstallments10OfPayment(){
+		
+		try{
+			payment = new Payment(service, 1, 1, 10);
+			assertEquals(new Integer(10), payment.getInstallments());
+		}
+		catch (PaymentException e){
+			fail("Should not throw this exception: "+ e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testValidNullInstallmentsOfPayment(){
+		
+		try{
+			payment = new Payment(service, 1, 1, null);
+			assertEquals(new Integer(0), payment.getInstallments());
+		}
+		catch (PaymentException e){
+			fail("Should not throw this exception: "+ e.getMessage());
+		}
+	}
+	
+	@Test(expected = PaymentException.class)
+	public void testNegativeInstallmentsOfPayment() throws PaymentException{
+		
+		payment = new Payment(service, 1, 1, -1);
+	}
+	
+	@Test(expected = PaymentException.class)
+	public void testNegative10InstallmentsOfPayment() throws PaymentException{
+		
+		payment = new Payment(service, 1, 1, -10);
 	}
 }
