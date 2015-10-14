@@ -9,7 +9,12 @@ import model.Service;
 
 public class PaymentController{
 	
-	private PaymentDAO paymentDAO = new PaymentDAO();
+	private PaymentDAO paymentDAO;
+	
+	public PaymentController(){
+		paymentDAO = new PaymentDAO();
+	}
+	
 	
 	/**
 	 * Create a new payment for the given service
@@ -42,14 +47,23 @@ public class PaymentController{
 		PaymentDAO paymentDAO = new PaymentDAO();
 		
 		if(payment != null){
+			
 			int paymentId = payment.getPaymentId();
 			payment = paymentDAO.get(paymentId);
+			
+			if(payment == null){
+				throw new PaymentException(payment.PAYMENT_SERVICE_CANT_BE_NULL);
+			}
 		}
 		else{
 			throw new PaymentException(payment.PAYMENT_SERVICE_CANT_BE_NULL);
 		}
-		
 		return payment;
+		
+	}
+
+	public void setPaymentDAO(PaymentDAO paymentDAO) {
+		this.paymentDAO = paymentDAO;
 		
 	}
 }

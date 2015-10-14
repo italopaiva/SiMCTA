@@ -64,18 +64,19 @@ public class PaymentDAO extends DAO{
 	
 		try{
 			payments = this.search(query);
-			
+
 			while(payments.next()){
 
 				int paymentDescriptionId = payments.getInt(PAYMENT_DESCRIPTION_COLUMN);
 				int installments = payments.getInt(INSTALLMENT_COLUMN);
 
 				PaymentDescription paymentDescription = getPaymentDescription(paymentDescriptionId);
-				
+
 				if(paymentDescription != null){
 						int paymentForm = paymentDescription.getPaymentForm();
 						int paymentType = paymentDescription.getPaymentType();
-						payment = new Payment(paymentType, paymentForm, installments);
+
+						payment = new Payment(paymentId, paymentType, paymentForm, installments);
 				}
 				else{
 					throw new PaymentException("Não foi possível encontrar a forma de pagamento");
@@ -88,7 +89,6 @@ public class PaymentDAO extends DAO{
 		catch(SQLException e){
 			
 		}
-		
 		
 		return payment;
 	}
