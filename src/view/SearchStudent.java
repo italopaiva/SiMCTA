@@ -27,6 +27,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import model.Course;
+import model.Payment;
+import model.PaymentDescription;
 import model.Service;
 import model.Student;
 import model.Package;
@@ -42,6 +44,7 @@ import exception.AddressException;
 import exception.CPFException;
 import exception.CourseException;
 import exception.DateException;
+import exception.PaymentException;
 import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
@@ -77,10 +80,15 @@ public class SearchStudent extends View {
 	private JButton backButton;
 	private JLabel firstListLabel;
 	private JLabel secondListLabel;
-	private JList<String> list;
 	private JList<String> firstList;
 	private JList<String> secondList;
 	private JLabel dateLabel;
+	private JTextField paymentFormField;
+	private JTextField paymentValueField;
+	private JLabel label;
+	private JTextField textField;
+	private JTextField installmentsValueField;
+	private JTextField paymentInstallmentsField;
 	
 	/**
 	 * Launch the application.
@@ -150,23 +158,28 @@ public class SearchStudent extends View {
 		contentPane.setLayout(null);
 		
 		searchedStudentField = new JTextField();
-		searchedStudentField.setBounds(140, 56, 446, 30);
+		searchedStudentField.setBounds(141, 24, 446, 30);
 		contentPane.add(searchedStudentField);
 		searchedStudentField.setColumns(10);
 		
 		searchButtton = new JButton("Pesquisar");
-		searchButtton.setBounds(598, 53, 117, 25);
+		searchButtton.setBounds(599, 26, 117, 25);
 		contentPane.add(searchButtton);
 		
 		internalFrame = new JInternalFrame();
-		internalFrame.setBounds(112, 124, 900, 560);
+		internalFrame.setBounds(113, 64, 882, 618);
 		contentPane.add(internalFrame);
 			
 		studentNameLbl = new JLabel("New label");
 		studentNameLbl.setBounds(176, 12, 348, 23);
-		setFont(new Font("Dialog", Font.BOLD, 14));
+		studentNameLbl.setFont(new Font("Dialog", Font.BOLD, 14));
 		internalFrame.getContentPane().setLayout(null);
 		internalFrame.getContentPane().add(studentNameLbl);
+		
+		JLabel dataOfStudentLbl = new JLabel("DADOS DO ALUNO");
+		dataOfStudentLbl.setFont(new Font("Dialog", Font.BOLD, 12));
+		dataOfStudentLbl.setBounds(186, 53, 150, 17);
+		internalFrame.getContentPane().add(dataOfStudentLbl);
 		
 		JLabel nameLbl = new JLabel("Nome");
 		nameLbl.setBounds(30, 73, 70, 17);
@@ -238,47 +251,47 @@ public class SearchStudent extends View {
 		emailField.setEditable(false);
 
 		JLabel addressLabel = new JLabel("Endereço");
-		addressLabel.setBounds(30, 308, 70, 17);
+		addressLabel.setBounds(30, 282, 70, 17);
 		internalFrame.getContentPane().add(addressLabel);
 		
 		addressField = new JTextField();
-		addressField.setBounds(105, 303, 434, 27);
+		addressField.setBounds(105, 277, 434, 27);
 		internalFrame.getContentPane().add(addressField);
 		addressField.setEditable(false);
 
 		JLabel cepLabel = new JLabel("CEP");
-		cepLabel.setBounds(319, 368, 70, 17);
+		cepLabel.setBounds(319, 321, 70, 17);
 		internalFrame.getContentPane().add(cepLabel);
 		
 		cepField = new JTextField();
-		cepField.setBounds(354, 363, 105, 27);
+		cepField.setBounds(354, 316, 105, 27);
 		internalFrame.getContentPane().add(cepField);
 		cepField.setEditable(false);
 
 		JLabel cityLabel = new JLabel("Cidade");
-		cityLabel.setBounds(30, 368, 70, 17);
+		cityLabel.setBounds(30, 321, 70, 17);
 		internalFrame.getContentPane().add(cityLabel);
 		
 		cityField = new JTextField();
-		cityField.setBounds(85, 368, 106, 27);
+		cityField.setBounds(85, 321, 106, 27);
 		internalFrame.getContentPane().add(cityField);
 		cityField.setEditable(false);
 
 		JLabel motherLabel = new JLabel("Nome da mãe");
-		motherLabel.setBounds(30, 436, 95, 17);
+		motherLabel.setBounds(30, 369, 95, 17);
 		internalFrame.getContentPane().add(motherLabel);
 		
 		motherField = new JTextField();
-		motherField.setBounds(137, 431, 402, 27);
+		motherField.setBounds(137, 364, 402, 27);
 		internalFrame.getContentPane().add(motherField);
 		motherField.setEditable(false);
 
 		JLabel fatherLabel = new JLabel("Nome do pai");
-		fatherLabel.setBounds(30, 476, 95, 17);
+		fatherLabel.setBounds(30, 409, 95, 17);
 		internalFrame.getContentPane().add(fatherLabel);
 		
 		fatherField = new JTextField();
-		fatherField.setBounds(137, 471, 402, 27);
+		fatherField.setBounds(137, 404, 402, 27);
 		internalFrame.getContentPane().add(fatherField);
 		fatherField.setEditable(false);
 		
@@ -288,17 +301,16 @@ public class SearchStudent extends View {
 		
 		secondListLabel = new JLabel("Pacotes");
 		secondListLabel.setBounds(576, 308, 70, 17);
-		secondListLabel.setBackground(Color.LIGHT_GRAY);
 		internalFrame.getContentPane().add(secondListLabel);
 		
 		firstList = new JList<String>();
-		firstList.setBackground(Color.LIGHT_GRAY);
-		firstList.setBounds(574, 112, 286, 153);
+		firstList.setBackground(Color.WHITE);
+		firstList.setBounds(574, 112, 240, 153);
 		internalFrame.getContentPane().add(firstList);
 		
 		secondList = new JList<String>();
-		secondList.setBackground(Color.LIGHT_GRAY);
-		secondList.setBounds(576, 337, 286, 153);
+		secondList.setBackground(Color.WHITE);
+		secondList.setBounds(576, 337, 238, 153);
 		internalFrame.getContentPane().add(secondList);
 		
 		JLabel lblDataDaMatrcula = new JLabel("Data da matrícula");
@@ -308,7 +320,49 @@ public class SearchStudent extends View {
 		dateLabel = new JLabel("New label");
 		dateLabel.setBounds(718, 44, 100, 17);
 		internalFrame.getContentPane().add(dateLabel);
+		
+		JLabel dataOfPaymentLbl = new JLabel("DADOS DO PAGAMENTO");
+		dataOfPaymentLbl.setFont(new Font("Dialog", Font.BOLD, 12));
+		dataOfPaymentLbl.setBounds(189, 443, 200, 17);
+		internalFrame.getContentPane().add(dataOfPaymentLbl);
+		
+		JLabel paymentForm = new JLabel("Forma de pagamento");
+		paymentForm.setBounds(30, 473, 200, 17);
+		internalFrame.getContentPane().add(paymentForm);
+		
+		paymentFormField = new JTextField();
+		paymentFormField.setBounds(182, 472, 380, 27);
+		internalFrame.getContentPane().add(paymentFormField);
+		paymentFormField.setEditable(false);
 
+		JLabel paymentValue = new JLabel("Valor total");
+		paymentValue.setBounds(30, 517, 200, 17);
+		internalFrame.getContentPane().add(paymentValue);
+			
+		paymentValueField = new JTextField();
+		paymentValueField.setBounds(105, 511, 120, 27);
+		internalFrame.getContentPane().add(paymentValueField);
+		paymentValueField.setEditable(false);
+		
+		JLabel paymentInstallments = new JLabel("Quantidade de Parcelas");
+		paymentInstallments.setBounds(229, 511, 165, 17);
+		internalFrame.getContentPane().add(paymentInstallments);
+		
+		paymentInstallmentsField = new JTextField();
+		paymentInstallmentsField.setBounds(404, 511, 27, 27);
+		internalFrame.getContentPane().add(paymentInstallmentsField);
+		paymentInstallmentsField.setEditable(false);
+		
+		JLabel valueInstallments = new JLabel("Valor das Parcelas");
+		valueInstallments.setBounds(443, 511, 165, 17);
+		internalFrame.getContentPane().add(valueInstallments);
+		
+		installmentsValueField = new JTextField();
+		installmentsValueField.setBounds(576, 511, 120, 27);
+		internalFrame.getContentPane().add(installmentsValueField);
+		installmentsValueField.setEditable(false);
+
+		
 		internalFrame.setVisible(false);
 		
 		scrollPane = new JScrollPane();
@@ -332,15 +386,18 @@ public class SearchStudent extends View {
 				
 				String cpfSelectedStudent  = table.getModel().getValueAt(selectedRow,2).toString();
 				CPF selectedStudent;
-				try {
+				try{
 					selectedStudent = new CPF(cpfSelectedStudent);
 					visualizeStudent(selectedStudent);
-				} 
-				catch(CPFException | SQLException | StudentException | PhoneException | DateException |
-						AddressException | RGException | CourseException | ServiceException e1){
-					
 				}
-				
+				catch(CPFException | StudentException | PhoneException | DateException |
+						AddressException | RGException | CourseException | ServiceException |PaymentException e1){
+					
+					showInfoMessage(e1.getMessage());
+				}
+				catch(SQLException e2){
+					e2.printStackTrace();
+				}
 			}
 
 		};
@@ -350,7 +407,7 @@ public class SearchStudent extends View {
 		((JScrollPane) scrollPane).setViewportView(tableOfStudents);
 		
 		backButton = new JButton("Voltar");
-		backButton.setBounds(727, 51, 117, 25);
+		backButton.setBounds(727, 26, 117, 25);
 		contentPane.add(backButton);
 		backButton.setVisible(false);
 
@@ -398,14 +455,16 @@ public class SearchStudent extends View {
 	 * @throws PhoneException 
 	 * @throws ServiceException 
 	 * @throws CourseException 
+	 * @throws PaymentException 
 	 */
 	private void visualizeStudent(CPF studentCPF) throws SQLException, StudentException, PhoneException, 
-												CPFException, DateException, AddressException, RGException, CourseException, ServiceException {
+												CPFException, DateException, AddressException, RGException, CourseException, ServiceException, PaymentException {
 		
 		StudentController studentController = new StudentController();
-		Student student = studentController.searchStudent(studentCPF);	
+		ArrayList<Service> servicesOfStudent = new ArrayList<Service>();
+		servicesOfStudent = studentController.searchStudent(studentCPF);	
 
-		if(student != null){
+		if(servicesOfStudent != null){
 			
 			internalFrame.setVisible(true);
 			tableOfStudents.setVisible(false);
@@ -413,55 +472,66 @@ public class SearchStudent extends View {
 
 			/**
 			 * Basic data of student
-			 */
-			String studentName = student.getStudentName();		
-			String email = student.getStudentEmail();
-			String motherName = student.getMotherName();
-			String fatherName = student.getFatherName();
+			 */			
+			int i = 0;
+			
+			while(i < servicesOfStudent.size()){
+				
+				Service service = servicesOfStudent.get(i);
+				
+				Student student = service.getStudent();
+				
+				String studentName = student.getStudentName();		
+				String email = student.getStudentEmail();
+				String motherName = student.getMotherName();
+				String fatherName = student.getFatherName();
 
-			studentNameLbl.setText(studentName);
-			nameField.setText(studentName);
-			emailField.setText(email);
-			motherField.setText(motherName);
-			fatherField.setText(fatherName);
+				studentNameLbl.setText(studentName);
+				nameField.setText(studentName);
+				emailField.setText(email);
+				motherField.setText(motherName);
+				fatherField.setText(fatherName);
 
-			//CPF
-			CPF cpf = student.getStudentCpf();
-			String studentCpf  = cpf.getCpf();
-			cpfField.setText(studentCpf);
-			
-			//RG
-			
-			RG rg = student.getStudentRg();
-			String studentRg = rg.getFormattedRg();
-			rgField.setText(studentRg);
-			
-			// Birthdate
-			Date date = student.getBirthdate();
-			String birthdate = date.getSlashFormattedDate();
-			birthdateField.setText(birthdate);
-			
-			//Address
-			Address address = student.getAddress();
-			String city = address.getCity();
-			String cep = address.getCep();
-			String completeAddress = address.getCompleteAddress();
-			
-			addressField.setText(completeAddress);
-			cepField.setText(cep);
-			cityField.setText(city);
-			
-			//Phones
-			Phone principalPhone = student.getPrincipalPhone();
-			Phone secondaryPhone = student.getSecondaryPhone();
+				//CPF
+				CPF cpf = student.getStudentCpf();
+				String studentCpf  = cpf.getFormattedCpf();
+				cpfField.setText(studentCpf);
+				
+				//RG
+				
+				RG rg = student.getStudentRg();
+				String studentRg = rg.getFormattedRg();
+				rgField.setText(studentRg);
+				
+				// Birthdate
+				Date date = student.getBirthdate();
+				String birthdate = date.getSlashFormattedDate();
+				birthdateField.setText(birthdate);
+				
+				//Address
+				Address address = student.getAddress();
+				String city = address.getCity();
+				String cep = address.getCep();
+				String completeAddress = address.getCompleteAddress();
+				
+				addressField.setText(completeAddress);
+				cepField.setText(cep);
+				cityField.setText(city);
+				
+				//Phones
+				Phone principalPhone = student.getPrincipalPhone();
+				Phone secondaryPhone = student.getSecondaryPhone();
 
-			String cellPhone = principalPhone.getFormattedPhone();
-			String residencePhone = secondaryPhone.getFormattedPhone();
+				String cellPhone = principalPhone.getFormattedPhone();
+				String residencePhone = secondaryPhone.getFormattedPhone();
+				
+				cellField.setText(cellPhone);
+				phoneField.setText(residencePhone);
+				
+				visualizeServicesAndPayments(service);
+				i++;
+			}
 			
-			cellField.setText(cellPhone);
-			phoneField.setText(residencePhone);
-			
-			visualizeServices(student);
 			
 			backButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -482,97 +552,102 @@ public class SearchStudent extends View {
 
 	/**
 	 * Show the data of the services contracts by the selected student
-	 * @param student
+	 * @param service
 	 * @param onlyHasPackages 
 	 */
-	private void visualizeServices(Student student) {
+	private void visualizeServicesAndPayments(Service service) {
 		
-		ArrayList<Service> services = student.getServicesOfStudent();
-		int servicesIndex = 0;			
 		boolean onlyHasPackages = false;
 		
-		while(servicesIndex < services.size()){
-			
-			Date date = services.get(servicesIndex).getContractsDate();
-			String contractsDate = date.getSlashFormattedDate();
-			dateLabel.setText(contractsDate);
-			
-			/**
-			 * Courses and packages of a student
-			 */
-			ArrayList<Course> courses = services.get(servicesIndex).getCourses();			
-			if(!courses.isEmpty()){
-				DefaultListModel<String> courseListModel = new DefaultListModel<String>();
-				ArrayList<String> coursesName = new ArrayList<String>();
+		Date date = service.getContractsDate();
+		String contractsDate = date.getSlashFormattedDate();
+		dateLabel.setText(contractsDate);
+		
+		Payment payment = service.getPayment();
+		PaymentDescription paymentDescription = payment.getDescription();
+		String paymentFormAndType = paymentDescription.getDescription();
+		paymentFormField.setText(paymentFormAndType);
+		
+		String totalValue = service.getTotalValueFormatted();
+		paymentValueField.setText(totalValue);
+		
+		Integer installments = payment.getInstallments();
+		paymentInstallmentsField.setText(installments.toString());
+		
+		String installmentsValue = service.getInstallmentsValue();
+		installmentsValueField.setText(installmentsValue);
+		
+		/**
+		 * Courses and packages of a student
+		 */
+		ArrayList<Course> courses = service.getCourses();			
+		if(!courses.isEmpty()){
+			DefaultListModel<String> courseListModel = new DefaultListModel<String>();
+			ArrayList<String> coursesName = new ArrayList<String>();
 
-				int i = 0;
-				
-				// Building the arraylist with the courses name
-				while (i < courses.size()){
-					String courseName = courses.get(i).getCourseName();
-					coursesName.add(courseName);
-					i++;
-				}
-				
-				// Adding the courses name to the list
-				i = 0;
-				while (i < coursesName.size()){
-					courseListModel.addElement(coursesName.get(i));
-					i++;
-				}
-				
-				firstListLabel.setText("Cursos");
-				firstListLabel.setVisible(true);
-				firstList.setVisible(true);
-				firstList.setModel(courseListModel);
-				
-			}
-			else{
-				onlyHasPackages = true;
+			int i = 0;
+			
+			// Building the arraylist with the courses name
+			while (i < courses.size()){
+				String courseName = courses.get(i).getCourseName();
+				coursesName.add(courseName);
+				i++;
 			}
 			
-			ArrayList<Package> packages = services.get(servicesIndex).getPackages();
-			if(!packages.isEmpty()){
-				
-				DefaultListModel<String> packageListModel = new DefaultListModel<String>();
-				ArrayList<String> packagesName = new ArrayList<String>();
-				
-				int i = 0;
-				
-				// Building the arraylist with the courses name
-				while (i < packages.size()){
-					String packageName = packages.get(i).getPackageName();
-					packagesName.add(packageName);
-					i++;
-				}
-				
-				// Adding the courses name to the list
-				i = 0;
-				while (i < packagesName.size()){
-					packageListModel.addElement(packagesName.get(i));
-					i++;
-				}
-
-				if(onlyHasPackages){
-					firstListLabel.setText("Pacotes");
-					firstListLabel.setVisible(true);
-					firstList.setVisible(true);
-					firstList.setModel(packageListModel);
-					secondListLabel.setVisible(false);
-					secondList.setVisible(false);
-				}
-				else{
-					secondListLabel.setVisible(true);
-					secondList.setVisible(true);
-					secondList.setModel(packageListModel);
-				}
-
+			// Adding the courses name to the list
+			i = 0;
+			while (i < coursesName.size()){
+				courseListModel.addElement(coursesName.get(i));
+				i++;
 			}
-
-			servicesIndex++;
+			
+			firstListLabel.setText("Cursos");
+			firstListLabel.setVisible(true);
+			firstList.setVisible(true);
+			firstList.setModel(courseListModel);
+			
+		}
+		else{
+			onlyHasPackages = true;
 		}
 		
+		ArrayList<Package> packages = service.getPackages();
+		if(!packages.isEmpty()){
+			
+			DefaultListModel<String> packageListModel = new DefaultListModel<String>();
+			ArrayList<String> packagesName = new ArrayList<String>();
+			
+			int i = 0;
+			
+			// Building the arraylist with the courses name
+			while (i < packages.size()){
+				String packageName = packages.get(i).getPackageName();
+				packagesName.add(packageName);
+				i++;
+			}
+			
+			// Adding the courses name to the list
+			i = 0;
+			while (i < packagesName.size()){
+				packageListModel.addElement(packagesName.get(i));
+				i++;
+			}
 
+			if(onlyHasPackages){
+				firstListLabel.setText("Pacotes");
+				firstListLabel.setVisible(true);
+				firstList.setVisible(true);
+				firstList.setModel(packageListModel);
+				secondListLabel.setVisible(false);
+				secondList.setVisible(false);
+			}
+			else{
+				secondListLabel.setVisible(true);
+				secondList.setVisible(true);
+				secondList.setModel(packageListModel);
+			}
+
+		}
 		
 	}
 }

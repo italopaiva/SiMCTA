@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.ArrayList;
+
 import dao.PaymentDAO;
 import exception.PaymentException;
 import model.Payment;
@@ -27,5 +29,27 @@ public class PaymentController{
 		Payment savedPayment = new Payment(savedPaymentId, service, paymentType, paymentForm, installments);
 		
 		return savedPayment;
+	}
+
+	/**
+	 * Gets the payment of the service 
+	 * @param payment - an Payment object that contains the payment id
+	 * @return the payment
+	 * @throws PaymentException 
+	 */
+	public Payment searchPayment(Payment payment) throws PaymentException {
+		
+		PaymentDAO paymentDAO = new PaymentDAO();
+		
+		if(payment != null){
+			int paymentId = payment.getPaymentId();
+			payment = paymentDAO.get(paymentId);
+		}
+		else{
+			throw new PaymentException(payment.PAYMENT_SERVICE_CANT_BE_NULL);
+		}
+		
+		return payment;
+		
 	}
 }

@@ -10,6 +10,7 @@ import exception.AddressException;
 import exception.CPFException;
 import exception.CourseException;
 import exception.DateException;
+import exception.PaymentException;
 import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
@@ -81,29 +82,26 @@ public class StudentController {
 	 * @throws RGException
 	 * @throws CourseException
 	 * @throws ServiceException
+	 * @throws PaymentException 
 	 */
-	public Student searchStudent(CPF studentCPF) throws SQLException, StudentException, PhoneException, CPFException, DateException, AddressException, RGException, CourseException, ServiceException {
+	public ArrayList<Service> searchStudent(CPF studentCPF) throws SQLException, StudentException, PhoneException, CPFException, DateException, AddressException, RGException, CourseException, ServiceException, PaymentException {
 		
 		Student basicDataOfStudent = studentDAO.get(studentCPF);
-		Student student = null;
-		
+		ArrayList<Service> servicesOfStudent = new ArrayList<Service>();
+		servicesOfStudent = null;
 		if(basicDataOfStudent != null){
 			
-			ArrayList<Service> servicesOfStudent = new ArrayList<Service>();
 			ServiceController serviceController = new ServiceController(); 
 			
-			servicesOfStudent = serviceController.searchService(basicDataOfStudent);
-			
-			student = new Student(basicDataOfStudent, servicesOfStudent);
-
+			servicesOfStudent = serviceController.searchService(basicDataOfStudent);		
 			
 		}
-		else{
+		else{	
 			throw new StudentException(STUDENT_WITHOUT_SERVICE);
 		}
 				
 		
 		
-		return student;
+		return servicesOfStudent;
 	}
 }

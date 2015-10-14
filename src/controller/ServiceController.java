@@ -49,15 +49,31 @@ public class ServiceController {
 	 * @throws CourseException
 	 * @throws DateException
 	 * @throws ServiceException
+	 * @throws PaymentException 
 	 */
-	public ArrayList<Service> searchService(Student basicDataOfStudent) throws CourseException, DateException, ServiceException {
+	public ArrayList<Service> searchService(Student basicDataOfStudent) throws CourseException, DateException, ServiceException, PaymentException{
 		
 		ArrayList<Service> services = new ArrayList<Service>();
+		ArrayList<Service> servicesWithPayments = new ArrayList<Service>();
 		ServiceDAO serviceDao = new ServiceDAO();
-		
+
 		services = serviceDao.get(basicDataOfStudent);
 		
-		return services;
+		int i = 0;
+		while(i < services.size()){
+			
+			Service service = services.get(i);
+			
+			Payment payment = service.getPayment();
+			
+			PaymentController paymentController = new PaymentController();
+			payment = paymentController.searchPayment(payment);
+
+			service = new Service(services.get(i), payment);
+			servicesWithPayments.add(service);
+			i++;
+		}
+		return servicesWithPayments;
 	
 	}
 	

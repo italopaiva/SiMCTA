@@ -67,7 +67,7 @@ public class EnrollStudent extends View {
 					ArrayList<String> courses = new ArrayList<String>();
 					courses.add("1");
 					ArrayList<String> packages = new ArrayList<String>();
-					packages.add("7");
+					packages.add("1");
 					
 					int paymentType = 1;
 					int paymentForm = 1;

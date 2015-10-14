@@ -55,20 +55,6 @@ public class Student extends Model{
 		setStudentCpf(studentCpf);
 	}
 
-	public Student(Student student, ArrayList<Service> servicesOfStudent) throws StudentException {
-		setStudentName(student.getStudentName());
-		setStudentCpf(student.getStudentCpf());
-		setStudentRg(student.getStudentRg());
-		setBirthdate(student.getBirthdate());
-		setStudentEmail(student.getStudentEmail());
-		setAddress(student.getAddress());
-		setPrincipalPhone(student.getPrincipalPhone());
-		setSecondaryPhone(student.getSecondaryPhone());
-		setMotherName(student.getMotherName());
-		setFatherName(student.getFatherName());
-		setServiceOfStudent(servicesOfStudent);
-	}
-
 	private void setFatherName(String fatherName) throws StudentException {
 		
 		if(fatherName != null && fatherName != ""){

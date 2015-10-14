@@ -6,8 +6,10 @@ import java.util.ArrayList;
 
 import exception.CourseException;
 import exception.DateException;
+import exception.PaymentException;
 import exception.ServiceException;
 import model.Course;
+import model.Payment;
 import model.Service;
 import model.Student;
 import model.Package;
@@ -26,6 +28,7 @@ public class ServiceDAO extends DAO {
 	private static final String ID_COURSE_COLUMN = "id_course";
 	private static final String ID_PACKAGE_COLUMN = "id_package";
 	private static final String PAYMENT_ID_COLUMN = "id_payment";
+	private static final String PAYMENT_TABLE = "Payment";
 	
 	public boolean save(Service service){
 		
@@ -93,8 +96,9 @@ public class ServiceDAO extends DAO {
 	 * @throws CourseException
 	 * @throws DateException
 	 * @throws ServiceException
+	 * @throws PaymentException 
 	 */
-	public ArrayList<Service> get(Student student) throws CourseException, DateException, ServiceException {
+	public ArrayList<Service> get(Student student) throws CourseException, DateException, ServiceException, PaymentException {
 		
 		ResultSet services = null;
 		ResultSet coursesOfService = null;
@@ -154,8 +158,9 @@ public class ServiceDAO extends DAO {
 	 * @throws SQLException
 	 * @throws DateException
 	 * @throws ServiceException
+	 * @throws PaymentException 
 	 */
-	private Service getDataFromService(ResultSet services, Student student, ArrayList<String> courses, ArrayList<String> packages) throws SQLException, DateException, ServiceException {
+	private Service getDataFromService(ResultSet services, Student student, ArrayList<String> courses, ArrayList<String> packages) throws SQLException, DateException, ServiceException, PaymentException {
 		
 		Service service = null;
 	
@@ -178,7 +183,10 @@ public class ServiceDAO extends DAO {
 			// Nothing to do
 		}
 
-		service  = new Service(student, courses, packages, contractsDate);
+		int paymentId = services.getInt(PAYMENT_ID_COLUMN);
+		Payment payment = new Payment(paymentId);
+				
+		service  = new Service(student, courses, packages, contractsDate,payment);
 		
 		return service;
 	}

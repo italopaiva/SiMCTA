@@ -31,6 +31,17 @@ public class Payment extends Model{
 		setInstallments(installments);
 	}
 	
+	public Payment(int paymentType, int paymentForm, Integer installments) throws PaymentException{
+		
+		setDescription(paymentType, paymentForm);
+		setInstallments(installments);
+	}
+	
+	public Payment(int paymentId) throws PaymentException{
+		
+		setPaymentId(paymentId);
+	}
+	
 	private void setInstallments(Integer installments) throws PaymentException{
 		
 		if(installments != null){

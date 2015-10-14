@@ -59,7 +59,7 @@ public class Service extends Model{
 		}
 	}
 	
-	public Service(Student student, ArrayList<String> courses, ArrayList<String> packages, Date contractsDate) throws ServiceException{
+	public Service(Student student, ArrayList<String> courses, ArrayList<String> packages, Date contractsDate, Payment payment) throws ServiceException, PaymentException{
 		
 		boolean thereIsCourses = courses != null && !courses.isEmpty();
 		boolean thereIsPackages = packages != null && !packages.isEmpty(); 
@@ -69,6 +69,7 @@ public class Service extends Model{
 			setStudent(student);
 			addCoursesToService(courses);
 			addPackagesToService(packages);
+			setPayment(payment);
 		}
 		else{
 			throw new ServiceException(SERVICE_MUST_CONTAIN_AT_LEAST_A_COURSE_OR_PACKAGE);
@@ -76,6 +77,25 @@ public class Service extends Model{
 
 	}
 	
+	
+	public Service(Service service, Payment payment) throws ServiceException, PaymentException{
+		
+		boolean thereIsCourses = service.getCourses() != null && !service.getCourses().isEmpty();
+		boolean thereIsPackages = service.getPackages() != null && !service.getPackages().isEmpty(); 
+		
+		if(thereIsCourses || thereIsPackages){
+			setContractsDate(service.getContractsDate());
+			setStudent(service.getStudent());
+			addCoursesToService(getIdCourses(service.getCourses()));
+			addPackagesToService(getIdPackages(service.getPackages()));
+			setPayment(payment);
+		}
+		else{
+			throw new ServiceException(SERVICE_MUST_CONTAIN_AT_LEAST_A_COURSE_OR_PACKAGE);
+		}
+
+	}
+
 	public void addPayment(Payment payment) throws PaymentException{
 		
 		if(payment != null){
@@ -110,8 +130,8 @@ public class Service extends Model{
 
 					if(currentPackage != null){
 						this.packages.add(currentPackage);
-					}else{
-						System.out.print("veio pacote não");
+					}
+					else{
 						// Nothing to do because the package is invalid
 					}
 				}
@@ -230,6 +250,41 @@ public class Service extends Model{
 		return packagesTotalValue;
 	}
 	
+	
+	private ArrayList<String> getIdPackages(ArrayList<Package> packages) {
+		
+		ArrayList<String> packagesId = new ArrayList<String>();
+		
+		int i = 0;
+		
+		while(i < packages.size()){
+			
+			Integer packageId = packages.get(i).getPackageId();
+			packagesId.add(packageId.toString());
+			i++;
+		}
+		
+		return packagesId;
+	}
+
+	private ArrayList<String> getIdCourses(ArrayList<Course> courses) {
+		
+
+		ArrayList<String> coursesId = new ArrayList<String>();
+		
+		int i = 0;
+		
+		while(i < courses.size()){
+			
+			Integer courseId = courses.get(i).getCourseId();
+			coursesId.add(courseId.toString());
+			i++;
+		}
+		
+		return coursesId;
+	}
+
+	
 	public Integer getServiceId(){
 		return this.serviceId;
 	}
@@ -252,5 +307,41 @@ public class Service extends Model{
 	
 	public Date getContractsDate(){
 		return this.contractsDate;
+	}
+
+	public String getTotalValueFormatted() {
+				
+		String formattedValue = null;
+		Integer value = getTotalValue();
+		formattedValue = value.toString();
+		int lastIndex = formattedValue.length();
+		
+		String entireValue = formattedValue.substring(0,(lastIndex - 2));
+		String decimalValue = formattedValue.substring((lastIndex - 2),lastIndex);
+		
+		formattedValue  = "R$ " + entireValue + "," + decimalValue;
+		
+		return formattedValue;
+	}
+	
+	public String getInstallmentsValue() {
+		
+		String formattedInstallmentsValue = null;
+		Integer value = getTotalValue();
+
+		int installments = getPayment().getInstallments();
+		
+		Integer installmentsValue = value/installments;
+		
+		formattedInstallmentsValue = installmentsValue.toString();
+		int lastIndex = formattedInstallmentsValue.length();
+		
+		String entireValue = formattedInstallmentsValue.substring(0,(lastIndex - 2));
+		String decimalValue = formattedInstallmentsValue.substring((lastIndex - 2),lastIndex);
+		
+		
+		formattedInstallmentsValue  = "R$ " + entireValue + "," + decimalValue;
+		
+		return formattedInstallmentsValue;
 	}
 }
