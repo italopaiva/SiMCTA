@@ -90,29 +90,13 @@ public class SearchStudent extends View {
 	private JTextField installmentsValueField;
 	private JTextField paymentInstallmentsField;
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SearchStudent frame = new SearchStudent();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
 	public SearchStudent(){
 		
 		super();
 		
 		createLabelsAndFields();
 		
-		showStudent();		
+		showStudent();
 		
 	}
 
