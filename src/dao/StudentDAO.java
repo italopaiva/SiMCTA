@@ -36,7 +36,7 @@ public class StudentDAO extends DAO {
 	private static final String CITY_COLUMN	= "city";
 	private static final String CEP_COLUMN	= "cep";
 	private static final String ADDRESS_COLUMN	= "address_info";
-	
+	private static final String STATUS_COLUMN	= "status";
 
 	public boolean save(Student student){
 		
@@ -195,8 +195,11 @@ public class StudentDAO extends DAO {
 		String day = date.substring(8,10);
 		Date birthdate = new Date(new Integer(day),new Integer(month),new Integer(year));
 		
+		//Status
+		int status = resultOfTheSearch.getInt(STATUS_COLUMN);
+		
 		Student student = new Student(studentName, studentCpf, studentRg, birthdate, email, address,
-									 principalPhone, secondaryPhone, motherName, fatherName);
+									 principalPhone, secondaryPhone, motherName, fatherName, status);
 	
 		return student;
 	}
