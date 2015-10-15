@@ -203,4 +203,34 @@ public class StudentDAO extends DAO {
 	
 		return student;
 	}
+
+	public boolean update(Student student) {
+		
+		int studentStatus = student.getStatus();
+		CPF cpf = student.getStudentCpf();
+		String studentCPF = cpf.getCpf();
+		int newStatus = -1;
+		
+		if(studentStatus == student.STUDENT_ACTIVE){
+			newStatus = student.STUDENT_INACTIVE;
+		}
+		else{
+			newStatus = student.STUDENT_ACTIVE;
+		}
+		
+		boolean wasUpdate = false;
+		String query = "UPDATE "+ STUDENT_TABLE_NAME + " SET "
+				   + STATUS_COLUMN + "=" + newStatus 
+				   + " WHERE " + CPF_COLUMN + "='" + studentCPF + "'";
+		
+		try {
+			this.execute(query);
+			wasUpdate = true;
+		} catch (SQLException e) {
+			wasUpdate = false;
+		}
+		
+		
+		return wasUpdate;
+	}
 }

@@ -107,8 +107,10 @@ public class StudentController {
 	}
 
 	public boolean alterStatusOfTheStudent(Student student) {
-		return false;
-		// TODO Auto-generated method stub
+
+		boolean wasAltered = studentDAO.update(student);
+		
+		return wasAltered;
 		
 	}
 }
