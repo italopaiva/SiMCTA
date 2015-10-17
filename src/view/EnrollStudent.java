@@ -48,10 +48,7 @@ public class EnrollStudent extends View {
 	private JTextField birthdateField;
 	private JTextField motherField;
 	private JTextField fatherField;
-	private JLabel firstListLabel;
-	private JLabel secondListLabel;
-	private JList<String> firstList;
-	private JList<String> secondList;
+	private JList<String> coursesToAddList;
 	private JTextField paymentValueField;
 	private JTextField paymentInstallmentsField;
 	private JLabel paymentTypeLbl;
@@ -187,23 +184,15 @@ public class EnrollStudent extends View {
         fatherField.setBounds(137, 404, 402, 27);
         contentPane.add(fatherField);
         
-        firstListLabel = new JLabel();
-        firstListLabel.setBounds(576, 73, 120, 17);
-        contentPane.add(firstListLabel);
+        coursesToAddList = new JList<String>();
+        coursesToAddList.setBackground(Color.WHITE);
+        coursesToAddList.setBounds(574, 112, 190, 153);
+        contentPane.add(coursesToAddList);
         
-        secondListLabel = new JLabel("Pacotes");
-        secondListLabel.setBounds(576, 308, 70, 17);
-        contentPane.add(secondListLabel);
-        
-        firstList = new JList<String>();
-        firstList.setBackground(Color.WHITE);
-        firstList.setBounds(574, 112, 240, 153);
-        contentPane.add(firstList);
-        
-        secondList = new JList<String>();
-        secondList.setBackground(Color.WHITE);
-        secondList.setBounds(576, 337, 238, 153);
-        contentPane.add(secondList);
+        JList<String> list = new JList<String>();
+        list.setBackground(Color.WHITE);
+        list.setBounds(804, 112, 186, 153);
+        contentPane.add(list);
         
         JLabel dataOfPaymentLbl = new JLabel("DADOS DO PAGAMENTO");
         dataOfPaymentLbl.setFont(new Font("Dialog", Font.BOLD, 12));
@@ -321,8 +310,51 @@ public class EnrollStudent extends View {
 		enrollBtn.setBounds(422, 631, 117, 25);
 		contentPane.add(enrollBtn);
 		
-		JLabel coursesLabel = new JLabel("Cursos");
-		coursesLabel.setBounds(574, 83, 70, 17);
+		JLabel coursesLabel = new JLabel("Cursos disponíveis");
+		coursesLabel.setBounds(599, 78, 150, 17);
 		contentPane.add(coursesLabel);
+		
+		JLabel lblCursosAdicionados = new JLabel("Cursos adicionados");
+		lblCursosAdicionados.setBounds(829, 78, 150, 17);
+		contentPane.add(lblCursosAdicionados);
+		
+		JButton addCourseBtn = new JButton("Adicionar Curso");
+		addCourseBtn.setBounds(576, 278, 188, 25);
+		contentPane.add(addCourseBtn);
+		
+		JButton removeCourseBtn = new JButton("Remover Curso");
+		removeCourseBtn.setBounds(804, 278, 190, 25);
+		contentPane.add(removeCourseBtn);
+		
+		JLabel packagesToAddLbl = new JLabel("Pacotes disponíveis");
+		packagesToAddLbl.setBounds(599, 347, 150, 17);
+		contentPane.add(packagesToAddLbl);
+		
+		JList<String> packagesToAddList = new JList<String>();
+		packagesToAddList.setBackground(Color.WHITE);
+		packagesToAddList.setBounds(574, 381, 190, 153);
+		contentPane.add(packagesToAddList);
+		
+		JButton addPackagesBtn = new JButton("Adicionar Pacotes");
+		addPackagesBtn.setBounds(576, 547, 188, 25);
+		contentPane.add(addPackagesBtn);
+		
+		JLabel packagesAddedLbl = new JLabel("Pacotes adicionados");
+		packagesAddedLbl.setBounds(829, 347, 150, 17);
+		contentPane.add(packagesAddedLbl);
+		
+		JList<String> packagesAddedList = new JList<String>();
+		packagesAddedList.setBackground(Color.WHITE);
+		packagesAddedList.setBounds(804, 381, 186, 153);
+		contentPane.add(packagesAddedList);
+		
+		JButton removePackageBtn = new JButton("Remover Pacote");
+		removePackageBtn.setBounds(804, 547, 190, 25);
+		contentPane.add(removePackageBtn);
+		
+		JLabel coursesAndPackagesLbl = new JLabel("CURSOS E PACOTES PARA MATRÍCULA");
+		coursesAndPackagesLbl.setFont(new Font("Dialog", Font.BOLD, 12));
+		coursesAndPackagesLbl.setBounds(643, 49, 275, 17);
+		contentPane.add(coursesAndPackagesLbl);
 	}
 }
