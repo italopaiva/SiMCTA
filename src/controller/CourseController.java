@@ -9,11 +9,9 @@ import model.Course;
 public class CourseController {
 	
 	private CourseDAO courseDAO;
-	private Course course;
 	
 	public CourseController(){
 		courseDAO = new CourseDAO();
-		course = new Course();
 	}
 
 	/**
@@ -51,7 +49,7 @@ public class CourseController {
 							 Integer courseDuration, Integer courseValue)
 							 throws CourseException{
 		
-		course = new Course(courseId, courseName, courseDescription, courseDuration, courseValue);
+		Course course = new Course(courseId, courseName, courseDescription, courseDuration, courseValue);
 		
 		boolean hasId = true;
 		boolean wasSaved = saveCourse(course, hasId);
@@ -88,7 +86,7 @@ public class CourseController {
 								 Integer courseDuration, Integer courseValue)
 								 throws CourseException{
 		
-		course = new Course(courseName, courseDescription, courseDuration, courseValue);
+		Course course = new Course(courseName, courseDescription, courseDuration, courseValue);
 		
 		boolean wasSaved = false;
 		wasSaved = courseDAO.update(courseId, course);
@@ -104,7 +102,7 @@ public class CourseController {
 	 */
 	public ArrayList<Course> showCourse(String searchedCourse) throws CourseException{
 		
-		course = new Course(searchedCourse);
+		Course course = new Course(searchedCourse);
 		ArrayList<Course> courses = new ArrayList<Course>();
 
 		courses = courseDAO.get(course);
@@ -149,8 +147,9 @@ public class CourseController {
 	 */
 	public Course showCourse(int idCourse) throws CourseException{
 		
+		Course course = new Course(idCourse);
 		boolean hasId = true;
-		
+
 		course = courseDAO.get(course, hasId);
 	
 		return course;
@@ -181,8 +180,5 @@ public class CourseController {
 	public void setCourseDAO(CourseDAO courseDAO) {
 		this.courseDAO = courseDAO;
 	}
-	
-	public void setCourse(Course course){
-		this.course = course;
-	}
+
 }

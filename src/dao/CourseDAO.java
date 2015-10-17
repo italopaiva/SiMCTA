@@ -109,18 +109,19 @@ public class CourseDAO extends DAO {
 		if(hasId){
 			int courseId = course.getCourseId();
 			query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + ID_COLUMN + " = " + courseId);
-			
+
 			try{
 				resultOfTheSearch = this.search(query);
 				
 				while(resultOfTheSearch.next()){
-					courseId = resultOfTheSearch.getInt("id_course");
-					String courseName = resultOfTheSearch.getString("course_name");
-					String courseDescription = resultOfTheSearch.getString("description");
-					Integer courseValue = resultOfTheSearch.getInt("value");
-					Integer courseDuration = resultOfTheSearch.getInt("duration");
-						
-					course = new Course(courseId, courseName, courseDescription, courseDuration, courseValue);
+					courseId = resultOfTheSearch.getInt(ID_COLUMN);
+					String courseName = resultOfTheSearch.getString(NAME_COLUMN);
+					String courseDescription = resultOfTheSearch.getString(DESCRIPTION_COLUMN);
+					Integer courseValue = resultOfTheSearch.getInt(VALUE_COLUMN);
+					Integer courseDuration = resultOfTheSearch.getInt(DURATION_COLUMN);
+					Integer courseStatus = 	resultOfTheSearch.getInt(STATUS_COLUMN);
+					
+					course = new Course(courseId, courseName, courseDescription, courseDuration, courseValue, courseStatus);
 				}
 			}
 			catch(SQLException caughtException){
@@ -152,15 +153,15 @@ public class CourseDAO extends DAO {
 			resultOfTheSearch = this.search(query);
 			
 			while(resultOfTheSearch.next()){
-				int courseId = resultOfTheSearch.getInt("id_course");
-				courseName = resultOfTheSearch.getString("course_name");
-				String courseDescription = resultOfTheSearch.getString("description");
-				Integer courseValue = resultOfTheSearch.getInt("value");
-				Integer courseDuration = resultOfTheSearch.getInt("duration");
-
-				course = new Course(courseId, courseName, courseDescription, courseDuration, courseValue);
-
-				courses.add(course);
+				int courseId = resultOfTheSearch.getInt(ID_COLUMN);
+				courseName = resultOfTheSearch.getString(NAME_COLUMN);
+				String courseDescription = resultOfTheSearch.getString(DESCRIPTION_COLUMN);
+				Integer courseValue = resultOfTheSearch.getInt(VALUE_COLUMN);
+				Integer courseDuration = resultOfTheSearch.getInt(DURATION_COLUMN);
+				Integer courseStatus = 	resultOfTheSearch.getInt(STATUS_COLUMN);
+				
+				course = new Course(courseId, courseName, courseDescription, courseDuration, courseValue, courseStatus);
+				courses.add(course);		
 			}
 		}
 		catch(SQLException caughtException){
@@ -185,21 +186,20 @@ public class CourseDAO extends DAO {
 		Course course = new Course();
 		ArrayList<Course> courses = new ArrayList<Course>();
 
-		query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + STATUS_COLUMN + " = 1");
+		query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + STATUS_COLUMN + "=" + 1);
 		try{
-			resultOfTheSearch = search(query);
+			resultOfTheSearch = this.search(query);
 			while(resultOfTheSearch.next()){
-				int courseId = resultOfTheSearch.getInt("id_course");
-				String courseName = resultOfTheSearch.getString("course_name");
-				String courseDescription = resultOfTheSearch.getString("description");
-				Integer courseValue = resultOfTheSearch.getInt("value");
-				Integer courseDuration = resultOfTheSearch.getInt("duration");
-
-				course = new Course(courseId, courseName, courseDescription, courseDuration, courseValue);
-
-				courses.add(course);
+				int courseStatus = resultOfTheSearch.getInt(STATUS_COLUMN);
+				int courseId = resultOfTheSearch.getInt(ID_COLUMN);
+				String courseName = resultOfTheSearch.getString(NAME_COLUMN);
+				String courseDescription = resultOfTheSearch.getString(DESCRIPTION_COLUMN);
+				Integer courseValue = resultOfTheSearch.getInt(VALUE_COLUMN);
+				Integer courseDuration = resultOfTheSearch.getInt(DURATION_COLUMN);
+				
+				course = new Course(courseId, courseName, courseDescription, courseDuration, courseValue, courseStatus);
+				courses.add(course);		
 			}
-			
 		}
 		catch(SQLException caughtException){
 			
