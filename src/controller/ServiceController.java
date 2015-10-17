@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 
+import dao.PackageDAO;
 import dao.ServiceDAO;
 import exception.CourseException;
 import exception.DateException;
@@ -77,5 +78,9 @@ public class ServiceController {
 	
 	}
 	
+	public void setServiceDAO(ServiceDAO serviceDao) {
+		this.serviceDAO = serviceDao;
+	}
+
 	
 }

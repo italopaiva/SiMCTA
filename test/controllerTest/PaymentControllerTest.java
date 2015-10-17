@@ -77,7 +77,7 @@ public class PaymentControllerTest {
 		int paymentForm = 1;
 		int installments = 0;
 		
-		Payment payment = new Payment(paymentId, service, paymentType, paymentForm, installments);
+		Payment payment = new Payment(paymentId);
 		
 		when(paymentDAOMock.get(paymentId)).thenReturn(payment);
 		paymentController.setPaymentDAO(paymentDAOMock);
@@ -85,11 +85,25 @@ public class PaymentControllerTest {
 		Payment receivedPayment = paymentController.searchPayment(payment);
 
 		assertEquals(payment.getPaymentId(),receivedPayment.getPaymentId());
-		
+
 	}
 	
 	@Test(expected = PaymentException.class)
-	public void testInexistentPaymentId() throws PaymentException, StudentException, ServiceException {
+	public void testIfGetsThePaymentForTheIdWithNoPayment() throws PaymentException, StudentException, ServiceException {
+		
+		int paymentId = 3;
+		
+		Payment payment = null;
+		
+		when(paymentDAOMock.get(paymentId)).thenReturn(payment);
+		paymentController.setPaymentDAO(paymentDAOMock);
+		
+		Payment receivedPayment = paymentController.searchPayment(payment);
+	
+	}
+	
+	@Test(expected = PaymentException.class)
+	public void testIfGetsThePaymentForTheIdInexistentPaymentId() throws PaymentException, StudentException, ServiceException {
 		
 		int paymentId = 1;
 		Student student = new Student("Jacó Mário Souza", cpf, rg, date, email, address, phone1, phone2, 
@@ -110,8 +124,6 @@ public class PaymentControllerTest {
 		paymentController.setPaymentDAO(paymentDAOMock);
 		
 		Payment receivedPayment = paymentController.searchPayment(payment);
-
-		assertEquals(payment.getPaymentId(),receivedPayment.getPaymentId());
 	
 	}
 
