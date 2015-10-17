@@ -2,6 +2,7 @@ package controller;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import dao.CourseDAO;
 import exception.CourseException;
@@ -9,14 +10,14 @@ import model.Course;
 
 public class CourseController {
 	
-	private CourseDAO courseDAO1;
+	private CourseDAO courseDAO;
 	
 	public CourseController(){
-		courseDAO1 = new CourseDAO();
+		courseDAO = new CourseDAO();
 	}
 
 	public void setCourseDAO(CourseDAO courseDAO) {
-		this.courseDAO1 = courseDAO;
+		this.courseDAO = courseDAO;
 	}
 
 	/**
@@ -71,10 +72,8 @@ public class CourseController {
 	private boolean saveCourse(Course course, boolean hasId){
 		
 		boolean wasSaved =  false;
-		
-		//CourseDAO courseDao = new CourseDAO();
-		
-		wasSaved = courseDAO1.save(course, hasId);
+				
+		wasSaved = courseDAO.save(course, hasId);
 		
 		return wasSaved;
 	}
@@ -96,10 +95,8 @@ public class CourseController {
 		Course course = new Course(courseName, courseDescription, courseDuration, courseValue);
 		
 		boolean wasSaved = false;
-		
-		CourseDAO courseDao = new CourseDAO();
-		
-		wasSaved = courseDao.update(courseId, course);
+				
+		wasSaved = courseDAO.update(courseId, course);
 		
 		return wasSaved;
 	}
@@ -107,31 +104,31 @@ public class CourseController {
 	/**
 	 * Show the information of a course searched by user
 	 * @param searchedCourse - The name of course to be searched
-	 * @return the data produced by the given query
+	 * @return 
 	 * @throws CourseException
 	 */
-	public ResultSet showCourse(String searchedCourse) throws CourseException{
+	public ArrayList<Course> showCourse(String searchedCourse) throws CourseException{
 		
-		//CourseDAO courseDao = new CourseDAO();
 		Course course = new Course(searchedCourse);
-		boolean hasId = false;
+		ArrayList<Course> courses = new ArrayList<Course>();
 
-		ResultSet resultOfSearch = courseDAO1.get(course, hasId);
+		courses = courseDAO.get(course);
 			
-		return resultOfSearch;
+		return courses;
 	}
 	
 	/**
 	 * Show the name and the status of all courses registered
 	 * @return the data produced by the given query
+	 * @throws CourseException 
 	 */
-	public ResultSet showCourse(){
+	public ArrayList<Course> showCourse() throws CourseException{
 		
-		ResultSet resultOfTheSelect;
-		CourseDAO courseDao = new CourseDAO();		
-		resultOfTheSelect = courseDao.getAll();
+		ArrayList<Course> courses = new ArrayList<Course>();
+
+		courses = courseDAO.get();
 		
-		return resultOfTheSelect;
+		return courses;
 		
 	}
 
@@ -140,25 +137,9 @@ public class CourseController {
 		Course foundCourse = null;
 		
 		try{
-			
-			ResultSet result = showCourse(courseId);
-			
-			if(result.first()){
-				
-				foundCourse = new Course(result.getInt(CourseDAO.ID_COLUMN),
-										 result.getString(CourseDAO.NAME_COLUMN),
-										 result.getString(CourseDAO.DESCRIPTION_COLUMN),
-										 result.getInt(CourseDAO.DURATION_COLUMN),
-										 result.getInt(CourseDAO.VALUE_COLUMN),
-										 result.getInt(CourseDAO.STATUS_COLUMN));
-			}
-			else{
-				// Nothing to do
-			}
+			foundCourse = showCourse(courseId);
 		}
-		catch(SQLException e){
-			// Nothing to do
-		}catch (CourseException e){
+		catch (CourseException e){
 			// Nothing to do
 		}
 		
@@ -171,14 +152,14 @@ public class CourseController {
 	 * @return the data produced by the given query
 	 * @throws CourseException
 	 */
-	public ResultSet showCourse(int idCourse) throws CourseException{
+	public Course showCourse(int idCourse) throws CourseException{
 		
-		CourseDAO courseDao = new CourseDAO();
 		Course course = new Course(idCourse);
 		boolean hasId = true;
-		ResultSet resultOfSearch = courseDao.get(course, hasId);
-				
-		return resultOfSearch;
+		
+		course = courseDAO.get(course, hasId);
+	
+		return course;
 	}
 	
 	/**
@@ -190,14 +171,13 @@ public class CourseController {
 		
 		boolean statusWasAltered;
 		
-		//CourseDAO courseDao = new CourseDAO();
-		int teste = courseDAO1.returnStatusCourse(idCourse);
+		int teste = courseDAO.returnStatusCourse(idCourse);
 	
 		
 		if (teste == 1){
-			statusWasAltered = courseDAO1.alterCourseStatus(idCourse, 0);
+			statusWasAltered = courseDAO.alterCourseStatus(idCourse, 0);
 		} else {
-			statusWasAltered = courseDAO1.alterCourseStatus(idCourse, 1);
+			statusWasAltered = courseDAO.alterCourseStatus(idCourse, 1);
 		}
 		
 		return statusWasAltered;

@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
@@ -24,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import model.Course;
 import util.ButtonColumn;
 import controller.CourseController;
 import exception.CourseException;
@@ -73,8 +75,9 @@ public class SearchCourse extends View {
 	/**
 	 * Create the frame.
 	 * @throws SQLException 
+	 * @throws CourseException 
 	 */
-	public SearchCourse() throws SQLException{
+	public SearchCourse() throws SQLException, CourseException{
 		
 		super();
 		
@@ -235,19 +238,12 @@ public class SearchCourse extends View {
 		CourseController courseController = new CourseController();
 		
 		try {
-			ResultSet resultOfTheSearch = courseController.showCourse(idCourse);
-			String currentId = "";
-			
-			while(resultOfTheSearch.next()){
-				currentId = resultOfTheSearch.getString("id_course");
-				int idToCompare = Integer.parseInt(currentId);
-				if(idToCompare == idCourse){
-					showDataOfCourse(resultOfTheSearch);
-				}
-			}
-			
-		} catch (CourseException e1) {
-			e1.printStackTrace();
+			Course course = courseController.showCourse(idCourse);
+			showDataOfCourse(course);
+
+		} 
+		catch(CourseException e1){
+			showInfoMessage(e1.getMessage());
 		}
 		
 	}
@@ -262,16 +258,23 @@ public class SearchCourse extends View {
 		CourseController courseController = new CourseController();
 		tableModel.setRowCount(0);
 		try {
-			ResultSet resultOfTheSearch = courseController.showCourse(searchedCourse);
+			ArrayList<Course> courses = courseController.showCourse(searchedCourse);
 			
-			
-			while(resultOfTheSearch.next()){
+			int indexOfCourses = 0;
+			while(indexOfCourses < courses.size()){
+				
 				String[] allCourses = new String[4];
-				allCourses[0] = (resultOfTheSearch.getString("course_name"));
-				allCourses[1] = (showsAtivoOrInativo(resultOfTheSearch.getInt("status")));
+				Course course = courses.get(indexOfCourses);
+				Integer courseId = course.getCourseId();
+				
+				allCourses[0] = (course.getCourseName());
+				allCourses[1] = (showsAtivoOrInativo(course.getCourseStatus()));
 				allCourses[2] = ("Ver");
-				allCourses[3] = (resultOfTheSearch.getString("id_course"));
+				allCourses[3] = (courseId.toString());
+				
 				tableModel.addRow(allCourses);
+				
+				indexOfCourses++;
 			}
 						
 		} 
@@ -304,10 +307,10 @@ public class SearchCourse extends View {
 	}
 	/**
 	 * Method used to show the information about the found course
-	 * @param resultOfTheSearch - Receives the result of the search from database
+	 * @param course - Receives the result of the search from database
 	 * @throws SQLException
 	 */
-	public void showDataOfCourse(final ResultSet resultOfTheSearch) throws SQLException {
+	public void showDataOfCourse(final Course course) throws SQLException {
 		
 		internalFrame_1.dispose();
 		internalFrame.setVisible(true);
@@ -317,12 +320,12 @@ public class SearchCourse extends View {
 		String valueText = "";
 		String durationString = "";
 		
-		courseId = resultOfTheSearch.getInt("id_course");
-		courseName = resultOfTheSearch.getString("course_name");
-		courseDescription = resultOfTheSearch.getString("description");
-		courseValue = resultOfTheSearch.getInt("value");
-		courseDuration = resultOfTheSearch.getInt("duration");
-		courseStatus = resultOfTheSearch.getInt("status");
+		courseId = course.getCourseId();
+		courseName = course.getCourseName();
+		courseDescription = course.getCourseDescription();
+		courseValue = course.getCourseValue();
+		courseDuration = course.getCourseDuration();
+		courseStatus = course.getCourseStatus();
 		
 		valueText = passValueToMonetaryForm(courseValue);
 		durationString = courseDuration.toString() + " semanas";
@@ -360,7 +363,7 @@ public class SearchCourse extends View {
 			}
 		});
 		
-		btnAtivarOrDesativar.setText(showsAtivarOrDesativar(resultOfTheSearch.getInt("status")));
+		btnAtivarOrDesativar.setText(showsAtivarOrDesativar(courseStatus));
 		
 		btnAtivarOrDesativar.addActionListener(new ActionListener() {
 			
@@ -393,20 +396,34 @@ public class SearchCourse extends View {
 	 *  Method used to show all existing courses
 	 * @param courses - Receives an instance of the class CourseController 
 	 * @throws SQLException
+	 * @throws CourseException 
 	 */
-	public void getAllCourses(CourseController courses) throws SQLException{
+	public void getAllCourses(CourseController courses) throws SQLException, CourseException{
 					
-		ResultSet resultOfTheSelect = courses.showCourse();		
-
-	
-		while(resultOfTheSelect.next()){
-			String[] allCourses = new String[4];
-			allCourses[0] = (resultOfTheSelect.getString("course_name"));
-			allCourses[1] = (showsAtivoOrInativo(resultOfTheSelect.getInt("status")));
-			allCourses[2] = ("Ver");
-			allCourses[3] = (resultOfTheSelect.getString("id_course"));
-			tableModel.addRow(allCourses);
-		}				
+		ArrayList<Course> foundCourses = courses.showCourse();		
+		
+		int indexOfCourses = 0;
+		if(foundCourses != null){
+			while(indexOfCourses < foundCourses.size()){
+				
+				String[] allCourses = new String[4];
+				Course course = foundCourses.get(indexOfCourses);
+				Integer courseId = course.getCourseId();
+				
+				allCourses[0] = (course.getCourseName());
+				allCourses[1] = (showsAtivoOrInativo(course.getCourseStatus()));
+				allCourses[2] = ("Ver");
+				allCourses[3] = (courseId.toString());
+				
+				tableModel.addRow(allCourses);
+				
+				indexOfCourses++;
+			}
+		}
+		else{
+			showInfoMessage("Nenhum curso cadastrado ainda");
+		}
+				
 	}
 
 	private String showsAtivarOrDesativar(int status){
