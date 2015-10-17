@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 
+import dao.PackageDAO;
 import dao.ServiceDAO;
 import exception.CourseException;
 import exception.DateException;
@@ -15,9 +16,11 @@ import model.datatype.CPF;
 public class ServiceController {
 	
 	private ServiceDAO serviceDAO;
+	private PaymentController paymentController;
 	
 	public ServiceController(){
 		serviceDAO = new ServiceDAO();
+		paymentController = new PaymentController();
 	}
 	
 	public boolean newService(Student student, ArrayList<String> courses, ArrayList<String> packages,
@@ -55,9 +58,8 @@ public class ServiceController {
 		
 		ArrayList<Service> services = new ArrayList<Service>();
 		ArrayList<Service> servicesWithPayments = new ArrayList<Service>();
-		ServiceDAO serviceDao = new ServiceDAO();
 
-		services = serviceDao.get(basicDataOfStudent);
+		services = serviceDAO.get(basicDataOfStudent);
 		
 		int i = 0;
 		while(i < services.size()){
@@ -66,7 +68,6 @@ public class ServiceController {
 			
 			Payment payment = service.getPayment();
 			
-			PaymentController paymentController = new PaymentController();
 			payment = paymentController.searchPayment(payment);
 
 			service = new Service(services.get(i), payment);
@@ -77,5 +78,13 @@ public class ServiceController {
 	
 	}
 	
+	public void setServiceDAO(ServiceDAO serviceDao) {
+		this.serviceDAO = serviceDao;
+	}
+	
+	public void setPaymentController(PaymentController paymentController){
+		this.paymentController = paymentController;
+	}
+
 	
 }

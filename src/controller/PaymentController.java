@@ -44,13 +44,11 @@ public class PaymentController{
 	 */
 	public Payment searchPayment(Payment payment) throws PaymentException {
 		
-		PaymentDAO paymentDAO = new PaymentDAO();
-		
 		if(payment != null){
 			
 			int paymentId = payment.getPaymentId();
 			payment = paymentDAO.get(paymentId);
-			
+
 			if(payment == null){
 				throw new PaymentException(payment.PAYMENT_SERVICE_CANT_BE_NULL);
 			}

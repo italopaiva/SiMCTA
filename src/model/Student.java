@@ -24,7 +24,7 @@ public class Student extends Model{
 	public static final int STUDENT_INACTIVE = 0;
 	public static final int STUDENT_ACTIVE = 1;
 	private static final String STATUS_INVALID = "O status deve ser 0 ou 1";
-	
+
 	private String studentName;
 	private CPF studentCpf;
 	private RG studentRg;
@@ -36,7 +36,6 @@ public class Student extends Model{
 	private String motherName;
 	private String fatherName;
 	private int status;
-	
 
 	public Student(String studentName, CPF studentCpf, RG studentRg,
 			Date birthdate, String studentEmail, Address address, Phone principalPhone,
@@ -174,7 +173,6 @@ public class Student extends Model{
 		}
 	}
 	
-
 	public void setStatus(int status) throws StudentException {
 		
 		if(status == STUDENT_INACTIVE || status == STUDENT_ACTIVE){
@@ -228,7 +226,7 @@ public class Student extends Model{
 	public String getFatherName(){
 		return fatherName;
 	}
-	
+
 }
 
 	
