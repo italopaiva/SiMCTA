@@ -26,6 +26,7 @@ import model.datatype.CPF;
 public class StudentController {
 	
 	private static final String STUDENT_WITHOUT_SERVICE = "Um aluno deve possuir um serviço associado";
+	private static final String STUDENT_NULL = "Não foi possível encontrar o estudante para mudar o status";
 	private static final int ACTIVE_STATUS	= 1;
 	private StudentDAO studentDAO;
 	private ServiceController serviceController;
@@ -109,9 +110,16 @@ public class StudentController {
 		return servicesOfStudent;
 	}
 
-	public boolean alterStatusOfTheStudent(Student student) {
+	public boolean alterStatusOfTheStudent(Student student) throws StudentException {
 
-		boolean wasAltered = studentDAO.update(student);
+		boolean wasAltered = false;
+		
+		if(student != null){
+			wasAltered = studentDAO.update(student);
+		}
+		else{
+			throw new StudentException(STUDENT_NULL);
+		}
 		
 		return wasAltered;
 		

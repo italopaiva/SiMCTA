@@ -18,6 +18,7 @@ import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -56,9 +57,10 @@ public class StudentControllerTest {
 	private RG rg;
 	private String email;
 	private ServiceController serviceControllerMock;
+	private Student student;
 	
 	@Before
-	public void setUp() throws DateException, AddressException, PhoneException, CPFException, RGException{
+	public void setUp() throws DateException, AddressException, PhoneException, CPFException, RGException, StudentException{
 		
 		MockitoAnnotations.initMocks(this);
 		studentDAOMock = mock(StudentDAO.class);
@@ -73,6 +75,10 @@ public class StudentControllerTest {
 		cpf = new CPF("51464638403");
 		rg = new RG("8598298", "SSP", "DF");
 		email = "jacoma@gmail.com";
+		
+		student = new Student("Jacó Mário Souza", cpf, rg, date, email,
+				address, phone1, phone2, "Milene Souza Medeiros",
+				"Mário Souza Filho", 1);
 	}
 	
 	@Test
@@ -96,9 +102,7 @@ public class StudentControllerTest {
 	public void testIfFoundTheDataOfAStudentWithACourse() throws StudentException, CPFException, PhoneException, 
 													DateException, AddressException, RGException, SQLException, CourseException, ServiceException, PaymentException {
 		
-		Student student = new Student("Jacó Mário Souza", cpf, rg, date, email,
-								address, phone1, phone2, "Milene Souza Medeiros",
-								"Mário Souza Filho", 1);
+		
 		 
 		ArrayList <String> courses = new ArrayList<String>();
 		
@@ -213,5 +217,28 @@ public class StudentControllerTest {
 		Service receivedService = receivedServices.get(0);
 		
 		assertEquals(serviceWithPayment.getStudent(),receivedService.getStudent());
+	}
+	
+	@Test
+	public void testIfAlterStatusOfTheStudent() throws StudentException{
+		
+		when(studentDAOMock.update(student)).thenReturn(true);
+		
+		boolean wasUpdate = studentController.alterStatusOfTheStudent(student);
+		
+		assertTrue(wasUpdate);
+		
+	}
+	
+	@Test(expected = StudentException.class)
+	public void testIfNotAlterStatusWithANullStudent() throws StudentException{
+		
+		student = null;
+		when(studentDAOMock.update(student)).thenReturn(true);
+		
+		boolean wasUpdate = studentController.alterStatusOfTheStudent(student);
+		
+		assertTrue(wasUpdate);
+		
 	}
 }
