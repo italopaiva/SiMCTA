@@ -20,6 +20,7 @@ import model.datatype.CPF;
 import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
+import controller.PaymentController;
 import controller.ServiceController;
 import controller.StudentController;
 import dao.CourseDAO;
@@ -50,7 +51,7 @@ public class ServiceControllerTest {
 	private String email;
 	private Student student;
 	private Date contractsDate;
-	private Payment payment;
+	private PaymentController paymentControllerMock;
 	
 	@Before
 	public void setUp() throws DateException, AddressException, PhoneException, CPFException, RGException, StudentException, PaymentException{
@@ -58,7 +59,8 @@ public class ServiceControllerTest {
 		MockitoAnnotations.initMocks(this);
 		serviceDAOMock = mock(ServiceDAO.class);
 		paymentDAOMock = mock(PaymentDAO.class);
-		
+		paymentControllerMock = mock(PaymentController.class);
+
 		serviceController = new ServiceController();
 		
 		date = new Date(05, 06, 1996);
@@ -75,10 +77,6 @@ public class ServiceControllerTest {
 		 
 		contractsDate = new Date(17,10,2015);
 		
-		int paymentId = 1;
-		payment = new Payment(paymentId,1,1,1);
-		when(paymentDAOMock.get(paymentId)).thenReturn(payment);
-
 	}
 
 	@Test
@@ -90,7 +88,8 @@ public class ServiceControllerTest {
 
 		courses.add("1");
 		
-		Service service = new Service(student, courses, packages, contractsDate, payment);
+		Payment payment1 = new Payment(1);
+		Service service = new Service(student, courses, packages, contractsDate, payment1);
 
 		ArrayList<Service> services = new ArrayList<Service>();
 		services.add(service);
@@ -98,12 +97,17 @@ public class ServiceControllerTest {
 		when(serviceDAOMock.get(student)).thenReturn(services);
 		serviceController.setServiceDAO(serviceDAOMock);
 	
+		int paymentId = 1;
+		Payment paymentID = new Payment(paymentId);
+		Payment payment = new Payment(paymentId,1,1,1);
+		when(paymentControllerMock.searchPayment(paymentID)).thenReturn(payment);
+		serviceController.setPaymentController(paymentControllerMock);
+
 		ArrayList<Service> servicesWithPayment = new ArrayList<Service>();
 		Service serviceWithPayment = new Service(service, payment);
 		servicesWithPayment.add(serviceWithPayment);
 
 		ArrayList<Service> receivedServices = new ArrayList<Service>();
-
 		receivedServices = serviceController.searchService(student);
 
 		serviceWithPayment = servicesWithPayment.get(0);

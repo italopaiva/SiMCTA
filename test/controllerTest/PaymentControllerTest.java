@@ -123,7 +123,8 @@ public class PaymentControllerTest {
 		when(paymentDAOMock.get(paymentId)).thenReturn(payment);
 		paymentController.setPaymentDAO(paymentDAOMock);
 		
-		Payment receivedPayment = paymentController.searchPayment(payment);
+		Payment payment2 = new Payment(2);
+		Payment receivedPayment = paymentController.searchPayment(payment2);
 	
 	}
 
