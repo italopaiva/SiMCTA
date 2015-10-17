@@ -37,6 +37,7 @@ import model.datatype.CPF;
 import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
+import controller.CourseController;
 import controller.ServiceController;
 import controller.StudentController;
 import util.ButtonColumn;
@@ -89,6 +90,10 @@ public class SearchStudent extends View {
 	private JTextField textField;
 	private JTextField installmentsValueField;
 	private JTextField paymentInstallmentsField;
+	private JButton deactivateOrActivateButton;
+	private Student student;
+	private int status;
+	private String action;
 	
 	public SearchStudent(){
 		
@@ -345,6 +350,11 @@ public class SearchStudent extends View {
 		installmentsValueField.setBounds(576, 511, 120, 27);
 		internalFrame.getContentPane().add(installmentsValueField);
 		installmentsValueField.setEditable(false);
+		
+		deactivateOrActivateButton = new JButton("Desativar matrícula");
+		deactivateOrActivateButton.setBounds(576, 11, 208, 25);
+		internalFrame.getContentPane().add(deactivateOrActivateButton);
+		deactivateOrActivateButton.setVisible(false);
 
 		
 		internalFrame.setVisible(false);
@@ -394,7 +404,6 @@ public class SearchStudent extends View {
 		backButton.setBounds(727, 26, 117, 25);
 		contentPane.add(backButton);
 		backButton.setVisible(false);
-
 	}
 
 	/**
@@ -444,7 +453,7 @@ public class SearchStudent extends View {
 	private void visualizeStudent(CPF studentCPF) throws SQLException, StudentException, PhoneException, 
 												CPFException, DateException, AddressException, RGException, CourseException, ServiceException, PaymentException {
 		
-		StudentController studentController = new StudentController();
+		final StudentController studentController = new StudentController();
 		ArrayList<Service> servicesOfStudent = new ArrayList<Service>();
 		servicesOfStudent = studentController.searchStudent(studentCPF);	
 
@@ -463,7 +472,7 @@ public class SearchStudent extends View {
 				
 				Service service = servicesOfStudent.get(i);
 				
-				Student student = service.getStudent();
+				student = service.getStudent();
 				
 				String studentName = student.getStudentName();		
 				String email = student.getStudentEmail();
@@ -511,8 +520,51 @@ public class SearchStudent extends View {
 				
 				cellField.setText(cellPhone);
 				phoneField.setText(residencePhone);
-				
+
 				visualizeServicesAndPayments(service);
+				
+				status = student.getStatus();
+				
+				action = setTextToTheDeactiveOrActiveButton(status);
+								
+				deactivateOrActivateButton.setVisible(true);
+				deactivateOrActivateButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {						
+						
+						int confirm = 0;				
+						
+						confirm = JOptionPane.showConfirmDialog(internalFrame, "Tem certeza que deseja que a matrícula seja " + action + "?", action, JOptionPane.YES_NO_OPTION);
+						
+						if (confirm == JOptionPane.YES_OPTION) {
+							
+							boolean wasAltered = studentController.alterStatusOfTheStudent(student);	
+							if(wasAltered){
+								showInfoMessage("A matrícula do aluno está " + action + "!");	
+								changeStatus();
+								action = setTextToTheDeactiveOrActiveButton(status);
+							}
+							else{
+								showInfoMessage("Um erro ocorreu, a matrícula não foi " + action);
+							}
+						}
+						else{
+							// Nothing to do
+						}
+					
+					}
+
+					private void changeStatus() {
+						
+						if(status == student.STUDENT_ACTIVE){
+							status = 0;
+						}
+						else{
+							status = 1;
+						}
+						
+					}
+				});
+				
 				i++;
 			}
 			
@@ -527,10 +579,28 @@ public class SearchStudent extends View {
 					tableOfStudents.setVisible(true);
 				}
 			});
+			
+			
 		}
 		else{
 			showInfoMessage("Não foi possível mostrar os dados do aluno");
 		}
+		
+	}
+
+	private String setTextToTheDeactiveOrActiveButton(int status) {
+		
+		String enrollmentStatus = "";
+		if(status == student.STUDENT_ACTIVE){
+			deactivateOrActivateButton.setText("Desativar matrícula");
+			enrollmentStatus = "desativada";
+		}
+		else{
+			deactivateOrActivateButton.setText("Ativar matrícula");
+			enrollmentStatus = "ativada";
+		}
+		
+		return enrollmentStatus;
 		
 	}
 

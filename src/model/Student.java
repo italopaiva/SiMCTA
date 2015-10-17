@@ -21,6 +21,9 @@ public class Student extends Model{
 	private static final String CPF_CANT_BE_NULL = "O CPF não pode estar em branco.";
 	private static final String EMAIL_INVALID = "O e-mail informado é inválido.";
 	private static final String STUDENT_WITHOUT_SERVICE = "Um aluno deve possuir um serviço associado";
+	public static final int STUDENT_INACTIVE = 0;
+	public static final int STUDENT_ACTIVE = 1;
+	private static final String STATUS_INVALID = "O status deve ser 0 ou 1";
 	
 	private String studentName;
 	private CPF studentCpf;
@@ -32,11 +35,12 @@ public class Student extends Model{
 	private Phone secondaryPhone;
 	private String motherName;
 	private String fatherName;
-	private ArrayList<Service> servicesOfAStudent;
+	private int status;
 	
+
 	public Student(String studentName, CPF studentCpf, RG studentRg,
 			Date birthdate, String studentEmail, Address address, Phone principalPhone,
-			Phone secondaryPhone, String motherName, String fatherName) throws StudentException {
+			Phone secondaryPhone, String motherName, String fatherName, int status) throws StudentException {
 			
 		setStudentName(studentName);
 		setStudentCpf(studentCpf);
@@ -48,6 +52,7 @@ public class Student extends Model{
 		setSecondaryPhone(secondaryPhone);
 		setMotherName(motherName);
 		setFatherName(fatherName);
+		setStatus(status);
 	}
 	
 	public Student(String studentName, CPF studentCpf) throws StudentException {
@@ -170,13 +175,18 @@ public class Student extends Model{
 	}
 	
 
-	private void setServiceOfStudent(ArrayList<Service> servicesOfStudent) throws StudentException {
-		if(!servicesOfStudent.isEmpty()){
-			this.servicesOfAStudent = servicesOfStudent;
+	public void setStatus(int status) throws StudentException {
+		
+		if(status == STUDENT_INACTIVE || status == STUDENT_ACTIVE){
+			this.status = status;
 		}
 		else{
-			throw new StudentException(STUDENT_WITHOUT_SERVICE);
+			throw new StudentException(STATUS_INVALID);
 		}
+	}
+	
+	public int getStatus() {
+		return status;
 	}
 
 	public String getStudentName(){
@@ -219,9 +229,6 @@ public class Student extends Model{
 		return fatherName;
 	}
 	
-	public ArrayList<Service> getServicesOfStudent(){
-		return servicesOfAStudent;
-	}
 }
 
 	

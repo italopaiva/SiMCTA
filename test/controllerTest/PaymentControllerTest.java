@@ -66,7 +66,7 @@ public class PaymentControllerTest {
 		
 		int paymentId = 3;
 		Student student = new Student("Jacó Mário Souza", cpf, rg, date, email, address, phone1, phone2, 
-				  "Milene Souza Medeiros", "Mário Souza Filho");		
+				  "Milene Souza Medeiros", "Mário Souza Filho", 1);		
 		ArrayList <String> courses = new ArrayList<String>();
 		ArrayList <String> packages = new ArrayList<String>();
 		
@@ -93,7 +93,7 @@ public class PaymentControllerTest {
 		
 		int paymentId = 1;
 		Student student = new Student("Jacó Mário Souza", cpf, rg, date, email, address, phone1, phone2, 
-				  "Milene Souza Medeiros", "Mário Souza Filho");		
+				  "Milene Souza Medeiros", "Mário Souza Filho", 1);		
 		ArrayList <String> courses = new ArrayList<String>();
 		ArrayList <String> packages = new ArrayList<String>();
 		

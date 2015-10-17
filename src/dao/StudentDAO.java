@@ -36,7 +36,7 @@ public class StudentDAO extends DAO {
 	private static final String CITY_COLUMN	= "city";
 	private static final String CEP_COLUMN	= "cep";
 	private static final String ADDRESS_COLUMN	= "address_info";
-	
+	private static final String STATUS_COLUMN	= "status";
 
 	public boolean save(Student student){
 		
@@ -195,9 +195,42 @@ public class StudentDAO extends DAO {
 		String day = date.substring(8,10);
 		Date birthdate = new Date(new Integer(day),new Integer(month),new Integer(year));
 		
+		//Status
+		int status = resultOfTheSearch.getInt(STATUS_COLUMN);
+		
 		Student student = new Student(studentName, studentCpf, studentRg, birthdate, email, address,
-									 principalPhone, secondaryPhone, motherName, fatherName);
+									 principalPhone, secondaryPhone, motherName, fatherName, status);
 	
 		return student;
+	}
+
+	public boolean update(Student student) {
+		
+		int studentStatus = student.getStatus();
+		CPF cpf = student.getStudentCpf();
+		String studentCPF = cpf.getCpf();
+		int newStatus = -1;
+		
+		if(studentStatus == student.STUDENT_ACTIVE){
+			newStatus = student.STUDENT_INACTIVE;
+		}
+		else{
+			newStatus = student.STUDENT_ACTIVE;
+		}
+		
+		boolean wasUpdate = false;
+		String query = "UPDATE "+ STUDENT_TABLE_NAME + " SET "
+				   + STATUS_COLUMN + "=" + newStatus 
+				   + " WHERE " + CPF_COLUMN + "='" + studentCPF + "'";
+		
+		try {
+			this.execute(query);
+			wasUpdate = true;
+		} catch (SQLException e) {
+			wasUpdate = false;
+		}
+		
+		
+		return wasUpdate;
 	}
 }

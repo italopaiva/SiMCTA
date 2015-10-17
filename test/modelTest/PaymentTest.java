@@ -58,7 +58,7 @@ public class PaymentTest{
 		email = "jacoma@gmail.com";
 		
 		student = new Student("Jacó Mário Souza", cpf, rg, date, email, address, phone1,
-							  phone2, "Milene Souza Medeiros", "Mário Souza Filho");
+							  phone2, "Milene Souza Medeiros", "Mário Souza Filho", 1);
 		
 		courses.add(0, "1");
 		courses.add(1, "2");
