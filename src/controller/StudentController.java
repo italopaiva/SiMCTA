@@ -27,13 +27,19 @@ public class StudentController {
 	
 	private static final String STUDENT_WITHOUT_SERVICE = "Um aluno deve possuir um serviço associado";
 	private StudentDAO studentDAO;
+	private ServiceController serviceController;
 	
 	public StudentController(){
 		studentDAO = new StudentDAO();
+		serviceController = new ServiceController();
 	}
 
 	public void setStudentDAO(StudentDAO studentDAO) {
 		this.studentDAO = studentDAO;
+	}
+	
+	public void setServiceController(ServiceController serviceController) {
+		this.serviceController = serviceController;
 	}
 	
 	public boolean newStudent(String studentName, CPF studentCpf, RG studentRg, Date birthdate, String email, Address address,
@@ -45,7 +51,6 @@ public class StudentController {
 		
 		boolean allSaved = false;
 		if(studentWasSaved){
-			ServiceController serviceController = new ServiceController();
 			allSaved = serviceController.newService(student, courses, packages, paymentType, paymentForm, installments);
 		}
 		else{
@@ -90,9 +95,7 @@ public class StudentController {
 		ArrayList<Service> servicesOfStudent = new ArrayList<Service>();
 		servicesOfStudent = null;
 		if(basicDataOfStudent != null){
-			
-			ServiceController serviceController = new ServiceController(); 
-			
+						
 			servicesOfStudent = serviceController.searchService(basicDataOfStudent);		
 			
 		}

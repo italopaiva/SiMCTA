@@ -20,7 +20,6 @@ public class Student extends Model{
 	private static final String RG_CANT_BE_NULL = "O RG não pode estar em branco.";
 	private static final String CPF_CANT_BE_NULL = "O CPF não pode estar em branco.";
 	private static final String EMAIL_INVALID = "O e-mail informado é inválido.";
-	private static final String STUDENT_WITHOUT_SERVICE = "Um aluno deve possuir um serviço associado";
 	
 	private String studentName;
 	private CPF studentCpf;
@@ -32,7 +31,6 @@ public class Student extends Model{
 	private Phone secondaryPhone;
 	private String motherName;
 	private String fatherName;
-	private ArrayList<Service> servicesOfAStudent;
 	
 	public Student(String studentName, CPF studentCpf, RG studentRg,
 			Date birthdate, String studentEmail, Address address, Phone principalPhone,
@@ -169,16 +167,6 @@ public class Student extends Model{
 		}
 	}
 	
-
-	private void setServiceOfStudent(ArrayList<Service> servicesOfStudent) throws StudentException {
-		if(!servicesOfStudent.isEmpty()){
-			this.servicesOfAStudent = servicesOfStudent;
-		}
-		else{
-			throw new StudentException(STUDENT_WITHOUT_SERVICE);
-		}
-	}
-
 	public String getStudentName(){
 		return studentName;
 	}
@@ -218,10 +206,7 @@ public class Student extends Model{
 	public String getFatherName(){
 		return fatherName;
 	}
-	
-	public ArrayList<Service> getServicesOfStudent(){
-		return servicesOfAStudent;
-	}
+
 }
 
 	
