@@ -73,7 +73,7 @@ public class ServiceControllerTest {
 		
 		 student = new Student("Jacó Mário Souza", cpf, rg, date, email,
 				address, phone1, phone2, "Milene Souza Medeiros",
-				"Mário Souza Filho");
+				"Mário Souza Filho", 1);
 		 
 		contractsDate = new Date(17,10,2015);
 		
