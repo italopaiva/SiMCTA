@@ -22,8 +22,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
+import model.Course;
 import controller.CourseController;
 import controller.PackageController;
+import exception.CourseException;
 import exception.PackageException;
 
 public class NewPackage extends View{
@@ -43,8 +45,9 @@ public class NewPackage extends View{
 	/**
 	 * Create the frame.
 	 * @throws SQLException 
+	 * @throws CourseException 
 	 */
-	public NewPackage() throws SQLException {
+	public NewPackage() throws SQLException, CourseException {
 		
 		super();
 		
@@ -67,7 +70,8 @@ public class NewPackage extends View{
 			
 			createAPackage();
 						
-		}catch(ParseException e){
+		}
+		catch(ParseException e){
 			e.printStackTrace();
 		}
 		
@@ -382,19 +386,29 @@ public class NewPackage extends View{
 	/**
 	 *  Method used to show all available courses 
 	 * @throws SQLException
+	 * @throws CourseException 
 	 */
-	private void getAllCoursesToSelect() throws SQLException {
+	private void getAllCoursesToSelect() throws SQLException, CourseException {
 		
-		CourseController courses = new CourseController();
-		ResultSet resultOfTheSelect = courses.showCourse();		
+		CourseController courseController = new CourseController();
+		ArrayList<Course> courses = courseController.showCourse();		
 		
-		while(resultOfTheSelect.next()){
+		int indexOfCourses = 0;
+		while(indexOfCourses < courses.size()){
+			
+			Course course = courses.get(indexOfCourses);
+			Integer courseId = course.getCourseId();
+			Integer courseDuration = course.getCourseDuration();
+
 			String[] allCourses = new String[3];
-			allCourses[0] = (resultOfTheSelect.getString("course_name"));
-			allCourses[1] = (resultOfTheSelect.getString("id_course"));
-			allCourses[2] = (resultOfTheSelect.getString("duration"));
+	
+			allCourses[0] = (course.getCourseName());
+			allCourses[1] = (courseId.toString());
+			allCourses[2] = (courseDuration.toString());
+			
 			tableModel.addRow(allCourses);
-		}	
-		
+			
+			indexOfCourses++;
+		}
 	}
 }

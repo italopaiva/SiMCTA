@@ -103,9 +103,12 @@ public class View extends JFrame {
 					try {
 						NewPackage newPackageFrame = new NewPackage();
 						newPackageFrame.setVisible(true);
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					}
+					catch (SQLException e) {
+
+					} 
+					catch (CourseException e) {
+						
 					}
 
 				}

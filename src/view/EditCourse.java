@@ -170,7 +170,8 @@ public class EditCourse extends View{
 						String message = "";
 						if(courseWasUpdated){
 							message = "Curso alterado com sucesso.";
-						}else{
+						}
+						else{
 							message = "Não foi possível aletar o curso informado. Tente novamente.";
 						}
 						
@@ -203,9 +204,13 @@ public class EditCourse extends View{
 						
 						searchCourseFrame = new SearchCourse();
 						searchCourseFrame.setVisible(true);
-					}catch (SQLException e){
+					}
+					catch(SQLException e){
 						
 						e.printStackTrace();
+					}
+					catch(CourseException e){
+
 					}
 				}
 			});
