@@ -51,7 +51,7 @@ public class PackageControllerTest {
 		//courseControllerMock.newCourse(1, "Aplicação de película", "Curso bom", 3, 500000);
 		//courseControllerMock.newCourse(2, "Instalação de Som", "Curso bom", 3, 500000);
 	}
-
+	/*
 	@Test
 	public void testNewPackageMethodWithValidPackage() throws PackageException, SQLException{
 		
@@ -88,7 +88,7 @@ public class PackageControllerTest {
 		boolean wasSaved = packageController.newPackage("PelSom", 500000, 3, coursesID);
 
 	}
-	
+	*/
 	@Test
 	public void testSearchPackageByNamePackageNotFound() throws PackageException{
 		

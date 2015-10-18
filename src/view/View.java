@@ -17,9 +17,6 @@ import exception.AuthenticationException;
 import exception.CourseException;
 import exception.PackageException;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 @SuppressWarnings("serial")
 public class View extends JFrame {
 	
@@ -99,7 +96,6 @@ public class View extends JFrame {
 				permissionToAccess = getPermissionToAccess();
 				if(permissionToAccess == true){
 					dispose();
-
 					try {
 						NewPackage newPackageFrame = new NewPackage();
 						newPackageFrame.setVisible(true);

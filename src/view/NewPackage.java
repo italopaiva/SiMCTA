@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -81,8 +80,12 @@ public class NewPackage extends View{
 	 * Creates a new package
 	 */
 	private void createAPackage() {
+		
 		JButton registerPackageButton = new JButton("Cadastrar");
 		registerPackageButton.setBackground(Color.WHITE);
+		registerPackageButton.setBounds(456, 525, 114, 25);
+		contentPane.add(registerPackageButton);
+		
 		registerPackageButton.addMouseListener(new MouseAdapter(){
 			
 			@Override
@@ -93,7 +96,7 @@ public class NewPackage extends View{
 				Integer packageValue;
 				Object packageValueField = valueField.getValue(); 
 				
-				if(!(packageValueField == null)){
+				if(packageValueField != null){
 					
 					String value = packageValueField.toString();
 					packageValue = new Integer(value);
@@ -106,32 +109,22 @@ public class NewPackage extends View{
 											
 					PackageController packageController = new PackageController();
 					
-					boolean packageWasSaved = packageController.newPackage(packageName, packageValue, 
+					packageController.newPackage(packageName, packageValue, 
 																		   packageDuration, coursesId);
-					
-					String message = "";
-					
-					if(packageWasSaved){
-						message = "Pacote cadastrado com sucesso.";
-					}else{
-						message = "Não foi possível cadastrar o pacote informado. Tente novamente.";
-					}
-					
-					showInfoMessage(message);
-					
+
+					showInfoMessage("Pacote cadastrado com sucesso.");
+					dispose();
+					SimCta mainframe = new SimCta();
+					mainframe.setVisible(true);
 				}
 				catch(PackageException caughtException){
 					
 					showInfoMessage(caughtException.getMessage());
-				} catch (SQLException e1) {
-					
-					e1.printStackTrace();
-				}
+				} 
 			}
 
 		});
-		registerPackageButton.setBounds(456, 525, 114, 25);
-		contentPane.add(registerPackageButton);
+
 	}
 
 	/**
@@ -380,7 +373,6 @@ public class NewPackage extends View{
 		tableModel.getColumn(2).setPreferredWidth(0);  
 		tableModel.getColumn(2).setMaxWidth(0);
 					
-		
 	}
 
 	/**
@@ -388,12 +380,12 @@ public class NewPackage extends View{
 	 * @throws SQLException
 	 * @throws CourseException 
 	 */
-	private void getAllCoursesToSelect() throws SQLException, CourseException {
+	public boolean getAllCoursesToSelect() throws SQLException, CourseException {
 		
 		CourseController courseController = new CourseController();
 		ArrayList<Course> courses = courseController.showCourse();		
-		
 		int indexOfCourses = 0;
+		boolean isEmpty = courses.isEmpty();
 		while(indexOfCourses < courses.size()){
 			
 			Course course = courses.get(indexOfCourses);
@@ -409,6 +401,8 @@ public class NewPackage extends View{
 			tableModel.addRow(allCourses);
 			
 			indexOfCourses++;
+			
 		}
+		return isEmpty;
 	}
 }
