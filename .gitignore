@@ -24,3 +24,5 @@ src/dao/DatabaseConfig.java
 #Manager Migration file
 src/migration/ManagerMigrations.java
 /bin/
+
+.settings/
