@@ -1,24 +1,23 @@
 package view;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JInternalFrame;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JComboBox;
+import javax.swing.table.TableColumnModel;
 
 import model.datatype.Address;
 import model.datatype.CPF;
@@ -50,11 +49,16 @@ public class EnrollStudent extends View {
 	private JTextField fatherField;
 	private JLabel firstListLabel;
 	private JLabel secondListLabel;
-	private JList<String> firstList;
-	private JList<String> secondList;
 	private JTextField paymentValueField;
 	private JTextField paymentInstallmentsField;
 	private JLabel paymentTypeLbl;
+	private DefaultTableModel tableModel;
+	private DefaultTableModel tableSecondModel;
+	private DefaultTableModel tableModelPackages;
+	private DefaultTableModel tableSecondModelPackages;
+	private JTextField ddCellField;
+	private JTextField ddPhoneField;
+	private JTextField textField;
 
 	public EnrollStudent(){
 		
@@ -99,7 +103,7 @@ public class EnrollStudent extends View {
         contentPane.add(cpfLabel);
         
         JLabel rgLabel = new JLabel("RG");
-        rgLabel.setBounds(319, 128, 70, 17);
+        rgLabel.setBounds(319, 104, 70, 17);
         contentPane.add(rgLabel);
         
         cpfField = new JTextField();
@@ -108,7 +112,7 @@ public class EnrollStudent extends View {
         cpfField.setColumns(10);
         
         rgField = new JTextField();
-        rgField.setBounds(359, 123, 140, 27);
+        rgField.setBounds(359, 99, 140, 27);
         contentPane.add(rgField);
         rgField.setColumns(10);
 
@@ -124,18 +128,28 @@ public class EnrollStudent extends View {
         JLabel cellLabel = new JLabel("Celular");
         cellLabel.setBounds(285, 171, 70, 17);
         contentPane.add(cellLabel);
-        
+               
         JLabel phoneLabel = new JLabel("Telefone");
         phoneLabel.setBounds(285, 205, 70, 17);
         contentPane.add(phoneLabel);
         
+        ddCellField = new JTextField();
+        ddCellField.setBounds(359, 166, 40, 27);
+        contentPane.add(ddCellField);
+        ddCellField.setColumns(10);
+        
         cellField = new JTextField();
-        cellField.setBounds(359, 166, 140, 27);
+        cellField.setBounds(399, 166, 100, 27);
         contentPane.add(cellField);
         cellField.setColumns(10);
         
+        ddPhoneField = new JTextField();
+        ddPhoneField.setBounds(359, 200, 40, 27);
+        contentPane.add(ddPhoneField);
+        ddPhoneField.setColumns(10);
+        
         phoneField = new JTextField();
-        phoneField.setBounds(359, 200, 140, 27);
+        phoneField.setBounds(399, 200, 100, 27);
         contentPane.add(phoneField);
         phoneField.setColumns(10);
         
@@ -188,22 +202,16 @@ public class EnrollStudent extends View {
         contentPane.add(fatherField);
         
         firstListLabel = new JLabel();
-        firstListLabel.setBounds(576, 73, 120, 17);
+        firstListLabel.setBounds(562, 73, 120, 17);
         contentPane.add(firstListLabel);
-        
-        secondListLabel = new JLabel("Pacotes");
-        secondListLabel.setBounds(576, 308, 70, 17);
+        		
+		JLabel coursesLabel = new JLabel("Cursos");
+		coursesLabel.setBounds(546, 73, 70, 17);
+		contentPane.add(coursesLabel);
+		
+		secondListLabel = new JLabel("Pacotes");
+        secondListLabel.setBounds(546, 308, 70, 17);
         contentPane.add(secondListLabel);
-        
-        firstList = new JList<String>();
-        firstList.setBackground(Color.WHITE);
-        firstList.setBounds(574, 112, 240, 153);
-        contentPane.add(firstList);
-        
-        secondList = new JList<String>();
-        secondList.setBackground(Color.WHITE);
-        secondList.setBounds(576, 337, 238, 153);
-        contentPane.add(secondList);
         
         JLabel dataOfPaymentLbl = new JLabel("DADOS DO PAGAMENTO");
         dataOfPaymentLbl.setFont(new Font("Dialog", Font.BOLD, 12));
@@ -254,6 +262,43 @@ public class EnrollStudent extends View {
         paymentFormsModel.addElement("Cheque");
         
         paymentForms.setModel(paymentFormsModel);
+        
+        JComboBox<String> courses = new JComboBox<String>();
+        courses.setBounds(553, 97, 251, 31);
+        contentPane.add(courses);
+        DefaultComboBoxModel<String> coursesSelectModel = new DefaultComboBoxModel<String>();
+		
+        courses.setModel(coursesSelectModel);
+        
+		JScrollPane scrollPaneAddedCourses = new JScrollPane();
+		scrollPaneAddedCourses.setBounds(553, 130, 251, 169);
+		contentPane.add(scrollPaneAddedCourses);
+		scrollPaneAddedCourses.setBackground(Color.WHITE);
+		
+        JComboBox<String> packages = new JComboBox<String>();
+		packages.setBounds(553, 337, 251, 31);
+		contentPane.add(packages);
+		
+		JScrollPane scrollPaneAddedPackages = new JScrollPane();
+		scrollPaneAddedPackages.setBounds(553, 370, 251, 169);
+		contentPane.add(scrollPaneAddedPackages);
+		scrollPaneAddedPackages.setBackground(Color.WHITE);
+					
+		String [] columnsAddedCourses = {"Cursos adicionados", "ID"};
+		
+		tableSecondModel = new DefaultTableModel(null, columnsAddedCourses);			
+
+		final JTable tableOfAddedCourses = new JTable(tableSecondModel);
+		scrollPaneAddedCourses.setViewportView(tableOfAddedCourses);
+		disposeColumns(tableOfAddedCourses);
+			
+		String [] columnsAddedPackages = {"Pacotes adicionados", "ID"};
+		
+		tableSecondModelPackages = new DefaultTableModel(null, columnsAddedPackages);			
+
+		final JTable tableOfAddedPackages = new JTable(tableSecondModelPackages);
+		scrollPaneAddedPackages.setViewportView(tableOfAddedPackages);
+		disposeColumns(tableOfAddedPackages);
         
         JButton enrollBtn = new JButton("Matricular");
 		enrollBtn.addMouseListener(new MouseAdapter() {
@@ -321,8 +366,40 @@ public class EnrollStudent extends View {
 		enrollBtn.setBounds(422, 631, 117, 25);
 		contentPane.add(enrollBtn);
 		
-		JLabel coursesLabel = new JLabel("Cursos");
-		coursesLabel.setBounds(574, 83, 70, 17);
-		contentPane.add(coursesLabel);
+		JButton addCourseBtn = new JButton("Adicionar Curso");
+		addCourseBtn.setBounds(835, 97, 151, 31);
+		contentPane.add(addCourseBtn);
+		
+		JButton removeCourseBtn = new JButton("Remover Curso");
+		removeCourseBtn.setBounds(835, 137, 151, 31);
+		contentPane.add(removeCourseBtn);
+		
+		JButton addPackageBtn = new JButton("Adicionar Pacote");
+		addPackageBtn.setBounds(835, 337, 151, 31);
+		contentPane.add(addPackageBtn);
+		
+		JButton removePackageBtn = new JButton("Remover Pacote");
+		removePackageBtn.setBounds(835, 377, 151, 31);
+		contentPane.add(removePackageBtn);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(359, 123, 140, 27);
+		contentPane.add(textField);
+
+	}
+
+
+	/**
+	 * Dispose the id and duration columns
+	 * @param table - Receives the table to dispose columns
+	 */
+	private void disposeColumns(JTable table) {
+		
+		TableColumnModel tableModel = table.getColumnModel();
+		
+		tableModel.getColumn(1).setMinWidth(0);     
+		tableModel.getColumn(1).setPreferredWidth(0);  
+		tableModel.getColumn(1).setMaxWidth(0);    
 	}
 }
