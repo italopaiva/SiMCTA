@@ -1,20 +1,17 @@
 package dao;
 
-import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.mysql.jdbc.ResultSetMetaData;
-
 import exception.PackageException;
-import model.Course;
 import model.Package;
 
 public class PackageDAO extends DAO{
 	
 	private static final String PACKAGE_COURSES_WASNT_SAVED = "Não foi possível associar os cursos ao pacote. Tente novamente.";
 	private static final String COULD_NOT_DISASSOCIATE_PACKAGE_COURSES = "Não foi possível desassociar os cursos do pacote.";
+	private static final String PACKAGE_WASNT_SAVED = "Não foi possível cadastrar o pacote. Tente novamente";
 	
 	private static final String TABLE_NAME = "Package";
 	private static final String NAME_COLUMN = "name";
@@ -35,7 +32,7 @@ public class PackageDAO extends DAO{
 	 * @return TRUE if the package was saved or FALSE if it does not
 	 * @throws PackageException 
 	 */
-	public boolean save(Package packageInstance) throws PackageException {
+	public void save(Package packageInstance) throws PackageException {
 		
 		String packageName = packageInstance.getPackageName();
 		Integer packageValue = packageInstance.getPackageValue();
@@ -45,29 +42,25 @@ public class PackageDAO extends DAO{
 								+ VALUE_COLUMN +  ", " + DURATION_COLUMN + ")";
 		
 		query += "VALUES('" + packageName + "','" + packageValue + "','" + packageDuration + "')";
-		
-		boolean packageWasSaved = false;
-		
+				
 		try{
 			
 			this.execute(query);
-			packageWasSaved = true;
 			
 			try{
-				
 				saveDataOfPackageCourse(packageInstance);
-			}catch(SQLException caughtException){
+			}
+			catch(SQLException caughtException){
 				
 				throw new PackageException(PACKAGE_COURSES_WASNT_SAVED);
 			}
 			
-		}catch(SQLException caughtException){
+		}
+		catch(SQLException caughtException){
 			
-			packageWasSaved = false;
+			throw new PackageException(PACKAGE_WASNT_SAVED);
 		}
 		
-		
-		return packageWasSaved;
 	}
 	
 	/**
@@ -118,7 +111,7 @@ public class PackageDAO extends DAO{
 	 * @return the last ID
 	 * @throws SQLException
 	 */
-	public int getTheLastId() throws SQLException {
+	public int getTheLastId(){
 		
 		int lastId = 0;
 		String query = "SELECT " + ID_COLUMN + " FROM " + TABLE_NAME + " ORDER BY ";
@@ -131,9 +124,13 @@ public class PackageDAO extends DAO{
 			result = null;
 		}
 		
-		while(result.next()){
-			lastId = Integer.parseInt(result.getString(ID_COLUMN));
-		}
+		try {
+			while(result.next()){
+				lastId = Integer.parseInt(result.getString(ID_COLUMN));
+			}
+		} 
+		catch (NumberFormatException | SQLException e) {
+		} 
 			
 		return lastId;
 	}

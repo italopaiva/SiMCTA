@@ -7,25 +7,35 @@ import static org.mockito.Mockito.when;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import model.Course;
 import model.Package;
 import model.Student;
+import model.Service;
+import model.Payment;
 import model.datatype.Address;
 import model.datatype.CPF;
 import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.Answer;
 
+import controller.PaymentController;
+import controller.ServiceController;
 import controller.StudentController;
+import dao.PaymentDAO;
+import dao.ServiceDAO;
 import dao.StudentDAO;
 import exception.AddressException;
 import exception.CPFException;
 import exception.CourseException;
 import exception.DateException;
+import exception.PaymentException;
 import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
@@ -46,12 +56,15 @@ public class StudentControllerTest {
 	private CPF cpf;
 	private RG rg;
 	private String email;
-
+	private ServiceController serviceControllerMock;
+	private Student student;
+	
 	@Before
-	public void setUp() throws DateException, AddressException, PhoneException, CPFException, RGException{
+	public void setUp() throws DateException, AddressException, PhoneException, CPFException, RGException, StudentException{
 		
 		MockitoAnnotations.initMocks(this);
 		studentDAOMock = mock(StudentDAO.class);
+		serviceControllerMock = mock(ServiceController.class);
 		
 		studentController = new StudentController();
 		
@@ -62,6 +75,10 @@ public class StudentControllerTest {
 		cpf = new CPF("51464638403");
 		rg = new RG("8598298", "SSP", "DF");
 		email = "jacoma@gmail.com";
+		
+		student = new Student("Jacó Mário Souza", cpf, rg, date, email,
+				address, phone1, phone2, "Milene Souza Medeiros",
+				"Mário Souza Filho", 1);
 	}
 	
 	@Test
@@ -80,21 +97,148 @@ public class StudentControllerTest {
 				
 		assertEquals(students, studentName);
 	}
-	/*
+	
 	@Test
-	public void testIfFoundTheBasicDataOfAStudent() throws StudentException, CPFException, PhoneException, 
-													DateException, AddressException, RGException, SQLException, CourseException, ServiceException {
+	public void testIfFoundTheDataOfAStudentWithACourse() throws StudentException, CPFException, PhoneException, 
+													DateException, AddressException, RGException, SQLException, CourseException, ServiceException, PaymentException {
 		
-		Student student = new Student("Jacó Mário Souza", cpf);
 		
+		 
+		ArrayList <String> courses = new ArrayList<String>();
+		
+		courses.add("1");
+			
 		when(studentDAOMock.get(cpf)).thenReturn(student);
 		studentController.setStudentDAO(studentDAOMock);
 		
-		Student receivedStudent = new Student("Jacó Mário Souza", cpf, rg, date, email, address, phone1, phone2, 
-				  "Milene Souza Medeiros", "Mário Souza Filho");
-		receivedStudent = studentController.searchStudent(cpf);
-				
-		assertEquals(receivedStudent, student);
-	}*/
+		Date contractsDate = new Date(17,10,2015);
+			
+		int paymentId = 1;
+		Payment payment = new Payment(paymentId);
+		
+		Service service = new Service(student, courses, null, contractsDate, payment);
+		
+		ArrayList<Service> services = new ArrayList<Service>();
+		services.add(service);
+		
+		when(serviceControllerMock.searchService(student)).thenReturn(services);
+		studentController.setServiceController(serviceControllerMock);
+		
+		ArrayList<Service> receivedServices = studentController.searchStudent(cpf);
+		
+		ArrayList<Service> servicesWithPayments = new ArrayList<Service>();
+		Service serviceWithPayment = new Service(service, payment);
+		servicesWithPayments.add(serviceWithPayment);
+		
+		serviceWithPayment = servicesWithPayments.get(0);
+		Service receivedService = receivedServices.get(0);
+		
+		assertEquals(serviceWithPayment.getStudent(),receivedService.getStudent());
+	}
+	
+	@Test
+	public void testIfFoundTheDataOfAStudentWithAPackage() throws StudentException, CPFException, PhoneException, 
+													DateException, AddressException, RGException, SQLException, CourseException, ServiceException, PaymentException {
+		
+		Student student = new Student("Jacó Mário Souza", cpf, rg, date, email,
+				address, phone1, phone2, "Milene Souza Medeiros",
+				"Mário Souza Filho",1);
+		 
+		ArrayList <String> packages = new ArrayList<String>();
+		
+		packages.add("7");
+			
+		when(studentDAOMock.get(cpf)).thenReturn(student);
+		studentController.setStudentDAO(studentDAOMock);
+		
+		Date contractsDate = new Date(17,10,2015);
+			
+		int paymentId = 1;
+		Payment payment = new Payment(paymentId);
+		
+		Service service = new Service(student, null, packages, contractsDate, payment);
+		
+		ArrayList<Service> services = new ArrayList<Service>();
+		services.add(service);
+		
+		when(serviceControllerMock.searchService(student)).thenReturn(services);
+		studentController.setServiceController(serviceControllerMock);
+		
+		ArrayList<Service> receivedServices = studentController.searchStudent(cpf);
+		
+		ArrayList<Service> servicesWithPayments = new ArrayList<Service>();
+		Service serviceWithPayment = new Service(service, payment);
+		servicesWithPayments.add(serviceWithPayment);
+		
+		serviceWithPayment = servicesWithPayments.get(0);
+		Service receivedService = receivedServices.get(0);
+		
+		assertEquals(serviceWithPayment.getStudent(),receivedService.getStudent());
+	}
 
+	
+	@Test
+	public void testIfFoundTheDataOfAStudentWithAPackageAndCourse() throws StudentException, CPFException, PhoneException, 
+													DateException, AddressException, RGException, SQLException, CourseException, ServiceException, PaymentException {
+		
+		Student student = new Student("Jacó Mário Souza", cpf, rg, date, email,
+				address, phone1, phone2, "Milene Souza Medeiros",
+				"Mário Souza Filho",1);
+		 
+		ArrayList <String> courses = new ArrayList<String>();
+		ArrayList <String> packages = new ArrayList<String>();
+
+		courses.add("1");
+		packages.add("1");
+			
+		when(studentDAOMock.get(cpf)).thenReturn(student);
+		studentController.setStudentDAO(studentDAOMock);
+		
+		Date contractsDate = new Date(17,10,2015);
+			
+		int paymentId = 1;
+		Payment payment = new Payment(paymentId);
+		
+		Service service = new Service(student, courses, packages, contractsDate, payment);
+		
+		ArrayList<Service> services = new ArrayList<Service>();
+		services.add(service);
+		
+		when(serviceControllerMock.searchService(student)).thenReturn(services);
+		studentController.setServiceController(serviceControllerMock);
+		
+		ArrayList<Service> receivedServices = studentController.searchStudent(cpf);
+		
+		ArrayList<Service> servicesWithPayments = new ArrayList<Service>();
+		Service serviceWithPayment = new Service(service, payment);
+		servicesWithPayments.add(serviceWithPayment);
+		
+		serviceWithPayment = servicesWithPayments.get(0);
+		Service receivedService = receivedServices.get(0);
+		
+		assertEquals(serviceWithPayment.getStudent(),receivedService.getStudent());
+	}
+	
+	@Test
+	public void testIfAlterStatusOfTheStudent() throws StudentException{
+		
+		when(studentDAOMock.update(student)).thenReturn(true);
+		
+		boolean wasUpdate = studentController.alterStatusOfTheStudent(student);
+		
+		assertTrue(wasUpdate);
+		
+	}
+	
+	@Test(expected = StudentException.class)
+	public void testIfNotAlterStatusWithANullStudent() throws StudentException{
+		
+		student = null;
+		when(studentDAOMock.update(student)).thenReturn(true);
+		
+		boolean wasUpdate = studentController.alterStatusOfTheStudent(student);
+		
+		assertTrue(wasUpdate);
+		
+	}
 }

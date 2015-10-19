@@ -537,7 +537,13 @@ public class SearchStudent extends View {
 						
 						if (confirm == JOptionPane.YES_OPTION) {
 							
-							boolean wasAltered = studentController.alterStatusOfTheStudent(student);	
+							boolean wasAltered = false;
+							try {
+								wasAltered = studentController.alterStatusOfTheStudent(student);
+							} 
+							catch(StudentException e1) {
+
+							}	
 							if(wasAltered){
 								showInfoMessage("A matrícula do aluno está " + action + "!");	
 								changeStatus();

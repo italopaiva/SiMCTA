@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import exception.CourseException;
 import model.Course;
@@ -97,51 +98,115 @@ public class CourseDAO extends DAO {
 	/**
 	 * Searches the informations of a course 
 	 * @param course - Course object with the course to be searched 
-	 * @return the data produced by the given query
+	 * @return the found course
+	 * @throws CourseException 
 	 */
-	public ResultSet get(Course course, boolean hasId){
+	public Course get(Course course, boolean hasId) throws CourseException{
 		
-		ResultSet result;
+		ResultSet resultOfTheSearch = null;
 		String query = null;
 				
 		if(hasId){
 			int courseId = course.getCourseId();
 			query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + ID_COLUMN + " = " + courseId);
+
+			try{
+				resultOfTheSearch = this.search(query);
+				
+				while(resultOfTheSearch.next()){
+					courseId = resultOfTheSearch.getInt(ID_COLUMN);
+					String courseName = resultOfTheSearch.getString(NAME_COLUMN);
+					String courseDescription = resultOfTheSearch.getString(DESCRIPTION_COLUMN);
+					Integer courseValue = resultOfTheSearch.getInt(VALUE_COLUMN);
+					Integer courseDuration = resultOfTheSearch.getInt(DURATION_COLUMN);
+					Integer courseStatus = 	resultOfTheSearch.getInt(STATUS_COLUMN);
+					
+					course = new Course(courseId, courseName, courseDescription, courseDuration, courseValue, courseStatus);
+				}
+			}
+			catch(SQLException caughtException){
+				
+				course = null;
+			}
 		}
 		else{
-			String courseName = course.getCourseName();
-			query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + NAME_COLUMN + " LIKE \"%" + courseName + "%\"");
+			// Nothing to do
 		}
-		try{
-			
-			result = this.search(query);
-		}catch(SQLException caughtException){
-			
-			result = null;
-		}
-		
-		return result;
+		return course;
 	}
 	
+	/**
+	 * Searches the informations of a course 
+	 * @param course - Course object with the course to be searched 
+	 * @return an array with the found courses
+	 * @throws CourseException 
+	 */
+	public ArrayList<Course> get(Course course) throws CourseException{
+	
+		ResultSet resultOfTheSearch = null;
+		String query = null;
+		String courseName = course.getCourseName();
+		ArrayList<Course> courses = new ArrayList<Course>();
+		
+		query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + NAME_COLUMN + " LIKE \"%" + courseName + "%\"");
+		try{
+			resultOfTheSearch = this.search(query);
+			
+			while(resultOfTheSearch.next()){
+				int courseId = resultOfTheSearch.getInt(ID_COLUMN);
+				courseName = resultOfTheSearch.getString(NAME_COLUMN);
+				String courseDescription = resultOfTheSearch.getString(DESCRIPTION_COLUMN);
+				Integer courseValue = resultOfTheSearch.getInt(VALUE_COLUMN);
+				Integer courseDuration = resultOfTheSearch.getInt(DURATION_COLUMN);
+				Integer courseStatus = 	resultOfTheSearch.getInt(STATUS_COLUMN);
+				
+				course = new Course(courseId, courseName, courseDescription, courseDuration, courseValue, courseStatus);
+				courses.add(course);		
+			}
+		}
+		catch(SQLException caughtException){
+			
+			courses = null;
+		}
+		
+		return courses;
+		
+		
+	}
 
 	/**
 	 * Gets all courses from database
 	 * @return the data produced by the given query
+	 * @throws CourseException 
 	 */
-	public ResultSet getAll(){
+	public ArrayList<Course> get() throws CourseException{
 		
-		ResultSet result;
+		ResultSet resultOfTheSearch = null;
+		String query = null;
+		Course course = new Course();
+		ArrayList<Course> courses = new ArrayList<Course>();
 
-			String query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + STATUS_COLUMN + " = 1");
-			try{
-				result = search(query);
+		query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + STATUS_COLUMN + "=" + 1);
+		try{
+			resultOfTheSearch = this.search(query);
+			while(resultOfTheSearch.next()){
+				int courseStatus = resultOfTheSearch.getInt(STATUS_COLUMN);
+				int courseId = resultOfTheSearch.getInt(ID_COLUMN);
+				String courseName = resultOfTheSearch.getString(NAME_COLUMN);
+				String courseDescription = resultOfTheSearch.getString(DESCRIPTION_COLUMN);
+				Integer courseValue = resultOfTheSearch.getInt(VALUE_COLUMN);
+				Integer courseDuration = resultOfTheSearch.getInt(DURATION_COLUMN);
 				
-			}catch(SQLException caughtException){
-				
-				result = null;
-			}		
+				course = new Course(courseId, courseName, courseDescription, courseDuration, courseValue, courseStatus);
+				courses.add(course);		
+			}
+		}
+		catch(SQLException caughtException){
+			
+			courses = null;
+		}		
 
-			return result;
+		return courses;
 	}
 
 	/**

@@ -28,20 +28,16 @@ public class PackageController {
 	 * @param coursesId - the Id of the courses contained in the package
 	 * @return - TRUE if the package was created or FALSE if it does not
 	 * @throws PackageException
-	 * @throws SQLException 
 	 */
-	public boolean newPackage(String packageName, Integer packageValue, Integer packageDuration, ArrayList<String> coursesId) throws PackageException, SQLException{
+	public void newPackage(String packageName, Integer packageValue, Integer packageDuration, ArrayList<String> coursesId) throws PackageException{
 		
-		boolean packageCreated = false;
-
 		int packageID = packageDAO.getTheLastId() + 1;
 		
 		Package packageInstance = new Package(packageID, packageName, packageValue,
 				                              packageDuration, coursesId);
 		
-		packageCreated = packageDAO.save(packageInstance);
+		packageDAO.save(packageInstance);
 
-		return packageCreated;
 	}
 	
 	/**

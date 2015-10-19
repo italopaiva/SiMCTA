@@ -24,6 +24,7 @@ import javax.swing.text.MaskFormatter;
 
 import controller.CourseController;
 import controller.PackageController;
+import model.Course;
 import model.Package;
 import exception.CourseException;
 import exception.PackageException;
@@ -279,11 +280,11 @@ public class EditPackage extends View{
 			
 			int courseId = Integer.parseInt(coursesId.get(index));
 			
-			ResultSet dataOfCourse = courseController.showCourse(courseId);
-			while(dataOfCourse.next()){
-				courseName = dataOfCourse.getString("course_name");
-				courseDuration = dataOfCourse.getString("duration");
-			}
+			Course dataOfCourse = courseController.showCourse(courseId);
+			
+			courseName = dataOfCourse.getCourseName();
+			Integer duration = dataOfCourse.getCourseDuration();
+			courseDuration = duration.toString();
 
 			coursesName.add(courseName);
 			coursesDuration.add(courseDuration);
@@ -462,19 +463,30 @@ public class EditPackage extends View{
 	/**
 	 *  Method used to show all available courses 
 	 * @throws SQLException
+	 * @throws CourseException 
 	 */
-	private void getAllCoursesToSelect() throws SQLException {
+	private void getAllCoursesToSelect() throws SQLException, CourseException {
 		
-		CourseController courses = new CourseController();
-		ResultSet resultOfTheSelect = courses.showCourse();		
+		CourseController courseController = new CourseController();
+		ArrayList<Course> courses = courseController.showCourse();		
 		
-		while(resultOfTheSelect.next()){
+		int indexOfCourses = 0;
+		while(indexOfCourses < courses.size()){
+			
+			Course course = courses.get(indexOfCourses);
+			Integer courseId = course.getCourseId();
+			Integer courseDuration = course.getCourseDuration();
+
 			String[] allCourses = new String[3];
-			allCourses[0] = (resultOfTheSelect.getString("course_name"));
-			allCourses[1] = (resultOfTheSelect.getString("id_course"));
-			allCourses[2] = (resultOfTheSelect.getString("duration"));
+	
+			allCourses[0] = (course.getCourseName());
+			allCourses[1] = (courseId.toString());
+			allCourses[2] = (courseDuration.toString());
+		
 			tableModel.addRow(allCourses);
-		}	
+			
+			indexOfCourses++;
+		}
 		
 	}
 }

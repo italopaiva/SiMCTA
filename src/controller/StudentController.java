@@ -26,15 +26,22 @@ import model.datatype.CPF;
 public class StudentController {
 	
 	private static final String STUDENT_WITHOUT_SERVICE = "Um aluno deve possuir um serviço associado";
+	private static final String STUDENT_NULL = "Não foi possível encontrar o estudante para mudar o status";
 	private static final int ACTIVE_STATUS	= 1;
 	private StudentDAO studentDAO;
+	private ServiceController serviceController;
 	
 	public StudentController(){
 		studentDAO = new StudentDAO();
+		serviceController = new ServiceController();
 	}
 
 	public void setStudentDAO(StudentDAO studentDAO) {
 		this.studentDAO = studentDAO;
+	}
+	
+	public void setServiceController(ServiceController serviceController) {
+		this.serviceController = serviceController;
 	}
 	
 	public boolean newStudent(String studentName, CPF studentCpf, RG studentRg, Date birthdate, String email, Address address,
@@ -46,7 +53,6 @@ public class StudentController {
 		
 		boolean allSaved = false;
 		if(studentWasSaved){
-			ServiceController serviceController = new ServiceController();
 			allSaved = serviceController.newService(student, courses, packages, paymentType, paymentForm, installments);
 		}
 		else{
@@ -91,9 +97,7 @@ public class StudentController {
 		ArrayList<Service> servicesOfStudent = new ArrayList<Service>();
 		servicesOfStudent = null;
 		if(basicDataOfStudent != null){
-			
-			ServiceController serviceController = new ServiceController(); 
-			
+						
 			servicesOfStudent = serviceController.searchService(basicDataOfStudent);		
 			
 		}
@@ -106,9 +110,16 @@ public class StudentController {
 		return servicesOfStudent;
 	}
 
-	public boolean alterStatusOfTheStudent(Student student) {
+	public boolean alterStatusOfTheStudent(Student student) throws StudentException {
 
-		boolean wasAltered = studentDAO.update(student);
+		boolean wasAltered = false;
+		
+		if(student != null){
+			wasAltered = studentDAO.update(student);
+		}
+		else{
+			throw new StudentException(STUDENT_NULL);
+		}
 		
 		return wasAltered;
 		

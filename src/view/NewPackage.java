@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -22,8 +21,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
+import model.Course;
 import controller.CourseController;
 import controller.PackageController;
+import exception.CourseException;
 import exception.PackageException;
 
 public class NewPackage extends View{
@@ -43,8 +44,9 @@ public class NewPackage extends View{
 	/**
 	 * Create the frame.
 	 * @throws SQLException 
+	 * @throws CourseException 
 	 */
-	public NewPackage() throws SQLException {
+	public NewPackage() throws SQLException, CourseException {
 		
 		super();
 		
@@ -67,7 +69,8 @@ public class NewPackage extends View{
 			
 			createAPackage();
 						
-		}catch(ParseException e){
+		}
+		catch(ParseException e){
 			e.printStackTrace();
 		}
 		
@@ -77,8 +80,12 @@ public class NewPackage extends View{
 	 * Creates a new package
 	 */
 	private void createAPackage() {
+		
 		JButton registerPackageButton = new JButton("Cadastrar");
 		registerPackageButton.setBackground(Color.WHITE);
+		registerPackageButton.setBounds(456, 525, 114, 25);
+		contentPane.add(registerPackageButton);
+		
 		registerPackageButton.addMouseListener(new MouseAdapter(){
 			
 			@Override
@@ -89,7 +96,7 @@ public class NewPackage extends View{
 				Integer packageValue;
 				Object packageValueField = valueField.getValue(); 
 				
-				if(!(packageValueField == null)){
+				if(packageValueField != null){
 					
 					String value = packageValueField.toString();
 					packageValue = new Integer(value);
@@ -102,32 +109,22 @@ public class NewPackage extends View{
 											
 					PackageController packageController = new PackageController();
 					
-					boolean packageWasSaved = packageController.newPackage(packageName, packageValue, 
+					packageController.newPackage(packageName, packageValue, 
 																		   packageDuration, coursesId);
-					
-					String message = "";
-					
-					if(packageWasSaved){
-						message = "Pacote cadastrado com sucesso.";
-					}else{
-						message = "Não foi possível cadastrar o pacote informado. Tente novamente.";
-					}
-					
-					showInfoMessage(message);
-					
+
+					showInfoMessage("Pacote cadastrado com sucesso.");
+					dispose();
+					SimCta mainframe = new SimCta();
+					mainframe.setVisible(true);
 				}
 				catch(PackageException caughtException){
 					
 					showInfoMessage(caughtException.getMessage());
-				} catch (SQLException e1) {
-					
-					e1.printStackTrace();
-				}
+				} 
 			}
 
 		});
-		registerPackageButton.setBounds(456, 525, 114, 25);
-		contentPane.add(registerPackageButton);
+
 	}
 
 	/**
@@ -376,25 +373,36 @@ public class NewPackage extends View{
 		tableModel.getColumn(2).setPreferredWidth(0);  
 		tableModel.getColumn(2).setMaxWidth(0);
 					
-		
 	}
 
 	/**
 	 *  Method used to show all available courses 
 	 * @throws SQLException
+	 * @throws CourseException 
 	 */
-	private void getAllCoursesToSelect() throws SQLException {
+	public boolean getAllCoursesToSelect() throws SQLException, CourseException {
 		
-		CourseController courses = new CourseController();
-		ResultSet resultOfTheSelect = courses.showCourse();		
-		
-		while(resultOfTheSelect.next()){
+		CourseController courseController = new CourseController();
+		ArrayList<Course> courses = courseController.showCourse();		
+		int indexOfCourses = 0;
+		boolean isEmpty = courses.isEmpty();
+		while(indexOfCourses < courses.size()){
+			
+			Course course = courses.get(indexOfCourses);
+			Integer courseId = course.getCourseId();
+			Integer courseDuration = course.getCourseDuration();
+
 			String[] allCourses = new String[3];
-			allCourses[0] = (resultOfTheSelect.getString("course_name"));
-			allCourses[1] = (resultOfTheSelect.getString("id_course"));
-			allCourses[2] = (resultOfTheSelect.getString("duration"));
+	
+			allCourses[0] = (course.getCourseName());
+			allCourses[1] = (courseId.toString());
+			allCourses[2] = (courseDuration.toString());
+			
 			tableModel.addRow(allCourses);
-		}	
-		
+			
+			indexOfCourses++;
+			
+		}
+		return isEmpty;
 	}
 }

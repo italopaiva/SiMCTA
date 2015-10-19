@@ -14,10 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
 import exception.AuthenticationException;
+import exception.CourseException;
 import exception.PackageException;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 @SuppressWarnings("serial")
 public class View extends JFrame {
@@ -75,8 +73,12 @@ public class View extends JFrame {
 				try {
 					SearchCourse searchCourseFrame = new SearchCourse();
 					searchCourseFrame.setVisible(true);
-				} catch (SQLException e) {
+				} 
+				catch(SQLException e){
 					e.printStackTrace();
+				}
+				catch(CourseException e){
+					
 				}
 			}
 		});
@@ -94,13 +96,15 @@ public class View extends JFrame {
 				permissionToAccess = getPermissionToAccess();
 				if(permissionToAccess == true){
 					dispose();
-
 					try {
 						NewPackage newPackageFrame = new NewPackage();
 						newPackageFrame.setVisible(true);
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					}
+					catch (SQLException e) {
+
+					} 
+					catch (CourseException e) {
+						
 					}
 
 				}
