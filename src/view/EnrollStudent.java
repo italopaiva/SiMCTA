@@ -4,11 +4,17 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -17,12 +23,14 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.text.MaskFormatter;
 
 import model.datatype.Address;
 import model.datatype.CPF;
 import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
+import controller.CourseController;
 import controller.StudentController;
 import exception.AddressException;
 import exception.CPFException;
@@ -43,7 +51,7 @@ public class EnrollStudent extends View {
 	private JTextField cepField;
 	private JTextField cityField;
 	private JTextField emailField;
-	private JTextField birthdateField;
+	private JFormattedTextField birthdateField;
 	private JTextField motherField;
 	private JTextField fatherField;
 	private JLabel firstListLabel;
@@ -57,7 +65,12 @@ public class EnrollStudent extends View {
 	private DefaultTableModel tableSecondModelPackages;
 	private JTextField ddCellField;
 	private JTextField ddPhoneField;
-	private JTextField textField;
+	private JTextField issuingInstitutionField;
+	private JTextField ufField;
+	private JTextField numberField;
+	private JTextField complementField;
+	private JComboBox<String> paymentForms;
+	private JComboBox<String> paymentTypes;
 
 	public EnrollStudent(){
 		
@@ -85,33 +98,33 @@ public class EnrollStudent extends View {
         
         JLabel dataOfStudentLbl = new JLabel("DADOS DO ALUNO");
         dataOfStudentLbl.setFont(new Font("Dialog", Font.BOLD, 12));
-        dataOfStudentLbl.setBounds(189, 39, 150, 17);
+        dataOfStudentLbl.setBounds(189, 36, 150, 17);
         contentPane.add(dataOfStudentLbl);
         
         JLabel nameLbl = new JLabel("Nome");
-        nameLbl.setBounds(30, 73, 70, 17);
+        nameLbl.setBounds(40, 60, 70, 17);
         contentPane.add(nameLbl);
         
         nameField = new JTextField();
-        nameField.setBounds(85, 68, 434, 27);
+        nameField.setBounds(85, 55, 434, 27);
         contentPane.add(nameField);
         nameField.setColumns(10);
         
         JLabel cpfLabel = new JLabel("CPF");
-        cpfLabel.setBounds(30, 128, 70, 17);
+        cpfLabel.setBounds(40, 102, 70, 17);
         contentPane.add(cpfLabel);
         
-        JLabel rgLabel = new JLabel("RG");
-        rgLabel.setBounds(319, 104, 70, 17);
+        JLabel rgLabel = new JLabel("Número RG");
+        rgLabel.setBounds(213, 97, 85, 17);
         contentPane.add(rgLabel);
         
         cpfField = new JTextField();
-        cpfField.setBounds(85, 123, 140, 27);
+        cpfField.setBounds(72, 97, 129, 27);
         contentPane.add(cpfField);
         cpfField.setColumns(10);
         
         rgField = new JTextField();
-        rgField.setBounds(359, 99, 140, 27);
+        rgField.setBounds(297, 92, 100, 27);
         contentPane.add(rgField);
         rgField.setColumns(10);
 
@@ -119,7 +132,18 @@ public class EnrollStudent extends View {
         birthdateLabel.setBounds(30, 171, 200, 17);
         contentPane.add(birthdateLabel);
         
-        birthdateField = new JTextField();
+        MaskFormatter birthdateMask;
+		try{
+			birthdateMask = new MaskFormatter("##/##/####");
+			birthdateMask.setValidCharacters("0123456789");
+			birthdateMask.setValueContainsLiteralCharacters(true);
+	        
+	        birthdateField = new JFormattedTextField(birthdateMask);
+		}
+		catch(ParseException e2){
+			e2.printStackTrace();
+		}
+
         birthdateField.setBounds(30, 195, 190, 27);
         contentPane.add(birthdateField);
         birthdateField.setColumns(10);
@@ -165,23 +189,23 @@ public class EnrollStudent extends View {
         contentPane.add(addressLabel);
         
         addressField = new JTextField();
-        addressField.setBounds(105, 277, 434, 27);
+        addressField.setBounds(105, 277, 344, 27);
         contentPane.add(addressField);
 
         JLabel cepLabel = new JLabel("CEP");
-        cepLabel.setBounds(319, 321, 70, 17);
+        cepLabel.setBounds(416, 321, 33, 17);
         contentPane.add(cepLabel);
         
         cepField = new JTextField();
-        cepField.setBounds(354, 316, 105, 27);
+        cepField.setBounds(455, 316, 84, 27);
         contentPane.add(cepField);
 
         JLabel cityLabel = new JLabel("Cidade");
-        cityLabel.setBounds(30, 321, 70, 17);
+        cityLabel.setBounds(266, 321, 70, 17);
         contentPane.add(cityLabel);
         
         cityField = new JTextField();
-        cityField.setBounds(85, 321, 106, 27);
+        cityField.setBounds(326, 316, 85, 27);
         contentPane.add(cityField);
 
         JLabel motherLabel = new JLabel("Nome da mãe");
@@ -241,7 +265,7 @@ public class EnrollStudent extends View {
         paymentInstallments.setBounds(229, 580, 190, 17);
         contentPane.add(paymentInstallments);
         
-        JComboBox<String> paymentTypes = new JComboBox<String>();
+        paymentTypes = new JComboBox<String>();
         paymentTypes.setBounds(221, 472, 151, 24);
         contentPane.add(paymentTypes);
         
@@ -251,7 +275,7 @@ public class EnrollStudent extends View {
         
         paymentTypes.setModel(paymentTypesModel);
         
-        JComboBox<String> paymentForms = new JComboBox<String>();
+        paymentForms = new JComboBox<String>();
         paymentForms.setBounds(221, 516, 151, 24);
         contentPane.add(paymentForms);
         
@@ -307,25 +331,82 @@ public class EnrollStudent extends View {
 				String message = "";
 				try{
 					
-					String studentName = "Emilie Morais";
-					CPF studentCpf = new CPF("59418933535");
-					RG studentRg = new RG("13454343", "SSP", "BA");
-					Date birthdate = new Date(15, 10, 1998);
-					String email = "italo@gmail.com";
-					Address address = new Address("QS 122 Conjunto 9", "22", "", "72331009", "Samambaia");
-					Phone principalPhone = new Phone("61", "85675434");
-					Phone secondaryPhone = new Phone("61", "88672335");
-					String motherName = "Vaneide Paiva";
-					String fatherName = "ALtamir Batista";
+					String studentName = nameField.getText();
+					
+					String cpf = cpfField.getText();
+					CPF studentCpf = new CPF(cpf);
+					
+					String rgNumber = rgField.getText();
+					String rgIssuingInstitution = issuingInstitutionField.getText();
+					String rgUf = ufField.getText();
+					
+					RG studentRg = new RG(rgNumber, rgIssuingInstitution, rgUf);					
+					
+					String date = birthdateField.getText();
+					String day = date.substring(0, 2);
+					String month = date.substring(3, 5);
+					String year = date.substring(6, 10);
+					
+					Date birthdate = new Date(Integer.parseInt(day), Integer.parseInt(month), Integer.parseInt(year));
+					
+					String email = emailField.getText();
+					
+					String addressInfo = addressField.getText();
+					String addressNumber = numberField.getText();
+					String addressComplement = complementField.getText();
+					String addressCity = cityField.getText();
+					String addressCep = cepField.getText();
+					
+					Address address = new Address(addressInfo, addressNumber, addressComplement, addressCep, addressCity);
+					
+					String ddCell = ddCellField.getText();
+					String cellNumber = cellField.getText();
+					String ddPhone = ddPhoneField.getText();
+					String phoneNumber = phoneField.getText();
+					
+					Phone principalPhone = new Phone(ddCell, cellNumber);
+					Phone secondaryPhone = new Phone(ddPhone, phoneNumber);
+					
+					String motherName = motherField.getText();
+					String fatherName = fatherField.getText();
+					
+					int paymentType = paymentTypes.getSelectedIndex();
+					
+					switch(paymentType){
+						case 0:
+							paymentType = 1;
+							break;
+						case 1:
+							paymentType = 2;
+							break;
+						default:
+							showInfoMessage("Tipo de pagamento inválido.");
+							break;
+					}
+					
+					int paymentForm = paymentForms.getSelectedIndex();
+					
+					switch(paymentForm){
+						case 0:
+							paymentForm = 1;
+							break;
+						case 1:
+							paymentForm = 2;
+							break;
+						case 2:
+							paymentForm = 3;
+							break;
+						default:
+							showInfoMessage("Forma de pagamento inválida.");
+							break;
+					}
+					
+					Integer installments = new Integer(paymentInstallmentsField.getText());
 					
 					ArrayList<String> courses = new ArrayList<String>();
 					courses.add("1");
 					ArrayList<String> packages = new ArrayList<String>();
 					packages.add("7");
-					
-					int paymentType = 1;
-					int paymentForm = 1;
-					Integer installments = new Integer(1);
 					
 					StudentController studentController = new StudentController();
 					boolean wasSaved = studentController.newStudent(studentName, studentCpf, studentRg, birthdate, email, address,
@@ -353,7 +434,6 @@ public class EnrollStudent extends View {
 				catch(PhoneException e1){
 					message = e1.getMessage();
 				} catch (StudentException e1) {
-					// TODO Auto-generated catch block
 					message = e1.getMessage();
 				}
 				finally{
@@ -381,10 +461,39 @@ public class EnrollStudent extends View {
 		removePackageBtn.setBounds(835, 377, 151, 31);
 		contentPane.add(removePackageBtn);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(359, 123, 140, 27);
-		contentPane.add(textField);
+		issuingInstitutionField = new JTextField();
+		issuingInstitutionField.setColumns(10);
+		issuingInstitutionField.setBounds(163, 131, 85, 27);
+		contentPane.add(issuingInstitutionField);
+		
+		JLabel issuingInstitutionLbl = new JLabel("Órgão expedidor");
+		issuingInstitutionLbl.setBounds(30, 137, 129, 15);
+		contentPane.add(issuingInstitutionLbl);
+		
+		ufField = new JTextField();
+		ufField.setColumns(10);
+		ufField.setBounds(297, 132, 100, 27);
+		contentPane.add(ufField);
+		
+		JLabel ufLbl = new JLabel("UF");
+		ufLbl.setBounds(266, 142, 27, 17);
+		contentPane.add(ufLbl);
+		
+		JLabel numberLbl = new JLabel("Nº");
+		numberLbl.setBounds(455, 282, 33, 17);
+		contentPane.add(numberLbl);
+		
+		numberField = new JTextField();
+		numberField.setBounds(482, 277, 57, 27);
+		contentPane.add(numberField);
+		
+		complementField = new JTextField();
+		complementField.setBounds(137, 316, 122, 27);
+		contentPane.add(complementField);
+		
+		JLabel complementLbl = new JLabel("Complemento");
+		complementLbl.setBounds(30, 321, 105, 17);
+		contentPane.add(complementLbl);
 
 	}
 
@@ -401,4 +510,5 @@ public class EnrollStudent extends View {
 		tableModel.getColumn(1).setPreferredWidth(0);  
 		tableModel.getColumn(1).setMaxWidth(0);    
 	}
+	
 }
