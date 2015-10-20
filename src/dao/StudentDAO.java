@@ -37,37 +37,57 @@ public class StudentDAO extends DAO {
 	private static final String CEP_COLUMN	= "cep";
 	private static final String ADDRESS_COLUMN	= "address_info";
 	private static final String STATUS_COLUMN	= "status";
+	private static final String CANT_SAVE_STUDENT = "Não foi possível salvar os dados do estudante informado.";
+	private static final String CPF_ALREADY_EXISTS = "O CPF informado já está cadastrado.";
+	private static final String COULDNT_CHECK_STUDENT = "Não foi possível checar se o estudante está cadastrado. Tente novamente.";
 
-	public boolean save(Student student){
-		
-		boolean wasSaved = false;
+	public void save(Student student) throws StudentException{
 		
 		try{
+			Student previousStudent = get(student.getStudentCpf());
 			
-			String query = "INSERT INTO "+ STUDENT_TABLE_NAME +" ("+ CPF_COLUMN +", "+ NAME_COLUMN +", "
-					   + BIRTHDATE_COLUMN +", "+ EMAIL_COLUMN +", "+ MOTHER_COLUMN +", "
-					   + FATHER_COLUMN +", "+ UF_COLUMN +", "+ ISSUING_INSTITUTION_COLUMN +", "
-					   + RG_NUMBER_COLUMN +", "+ PRINCIPAL_PHONE_COLUMN +", "+ SECONDARY_PHONE_COLUMN +", "
-					   + COMPLEMENT_COLUMN +", "+ NUMBER_COLUMN +", "+ CITY_COLUMN +", "+ CEP_COLUMN +", "
-					   + ADDRESS_COLUMN +")"
-					   + " VALUES ('"+ student.getStudentCpf().getCpf() +"', '"+ student.getStudentName() +"', '"
-					   + student.getBirthdate().getHyphenFormattedDate() +"', '"+ student.getStudentEmail() +"', '"
-					   + student.getMotherName() +"', '"+ student.getFatherName() +"', '"
-					   + student.getStudentRg().getUf() +"', '"
-					   + student.getStudentRg().getIssuingInstitution() +"', '"+ student.getStudentRg().getRgNumber() +"', '"
-					   + student.getPrincipalPhone().getWholePhone() +"', '"
-					   + student.getSecondaryPhone().getWholePhone() +"', '"+ student.getAddress().getComplement() +"','"
-					   + student.getAddress().getNumber() +"', '"+ student.getAddress().getCity() +"', '"
-					   + student.getAddress().getCep() +"', '"+ student.getAddress().getAddressInfo() +"')";
+			if(previousStudent == null){
+				try{
+					String secondaryPhone;
+					if(student.getSecondaryPhone() != null){
+						secondaryPhone = student.getSecondaryPhone().getWholePhone();
+					}
+					else{
+						secondaryPhone = "";
+					}
+					
+					String query = "INSERT INTO "+ STUDENT_TABLE_NAME +" ("+ CPF_COLUMN +", "+ NAME_COLUMN +", "
+							   + BIRTHDATE_COLUMN +", "+ EMAIL_COLUMN +", "+ MOTHER_COLUMN +", "
+							   + FATHER_COLUMN +", "+ UF_COLUMN +", "+ ISSUING_INSTITUTION_COLUMN +", "
+							   + RG_NUMBER_COLUMN +", "+ PRINCIPAL_PHONE_COLUMN +", "+ SECONDARY_PHONE_COLUMN +", "
+							   + COMPLEMENT_COLUMN +", "+ NUMBER_COLUMN +", "+ CITY_COLUMN +", "+ CEP_COLUMN +", "
+							   + ADDRESS_COLUMN +")"
+							   + " VALUES ('"+ student.getStudentCpf().getCpf() +"', '"+ student.getStudentName() +"', '"
+							   + student.getBirthdate().getHyphenFormattedDate() +"', '"+ student.getStudentEmail() +"', '"
+							   + student.getMotherName() +"', '"+ student.getFatherName() +"', '"
+							   + student.getStudentRg().getUf() +"', '"
+							   + student.getStudentRg().getIssuingInstitution() +"', '"+ student.getStudentRg().getRgNumber() +"', '"
+							   + student.getPrincipalPhone().getWholePhone() +"', '"
+							   + secondaryPhone +"', '"+ student.getAddress().getComplement() +"','"
+							   + student.getAddress().getNumber() +"', '"+ student.getAddress().getCity() +"', '"
+							   + student.getAddress().getCep() +"', '"+ student.getAddress().getAddressInfo() +"')";
 
-			this.execute(query);
-			wasSaved = true;
+					this.execute(query);
+				}
+				catch(SQLException e){
+					System.out.println(e.getMessage());
+					throw new StudentException(CANT_SAVE_STUDENT);
+				}
+			}
+			else{
+				throw new StudentException(CPF_ALREADY_EXISTS);
+			}
 		}
-		catch(SQLException e){
-			wasSaved = false;
+		catch(PhoneException | CPFException | DateException |
+			  AddressException | RGException e1){
+			
+			throw new StudentException(COULDNT_CHECK_STUDENT );
 		}
-		
-		return wasSaved;
 	}
 	
 	/**
@@ -181,12 +201,22 @@ public class StudentDAO extends DAO {
 		String residencePhone = resultOfTheSearch.getString(SECONDARY_PHONE_COLUMN);
 		String DDDPrincipalPhone = cellPhone.substring(0,2);
 		String numberPrincipalPhone = cellPhone.substring(2,10);
-		String DDDSecondaryPhone = residencePhone.substring(0,2);
-		String numberSecondaryPhone = residencePhone.substring(2,10);
-
-		Phone principalPhone = new Phone(DDDPrincipalPhone,numberPrincipalPhone);
-		Phone secondaryPhone = new Phone(DDDSecondaryPhone,numberSecondaryPhone);
-
+		
+		String DDDSecondaryPhone;
+		String numberSecondaryPhone;
+		Phone principalPhone;
+		Phone secondaryPhone;
+		
+		if(!residencePhone.isEmpty()){
+			
+			DDDSecondaryPhone = residencePhone.substring(0,2);
+			numberSecondaryPhone = residencePhone.substring(2,10);
+			principalPhone = new Phone(DDDPrincipalPhone,numberPrincipalPhone);
+			secondaryPhone = new Phone(DDDSecondaryPhone,numberSecondaryPhone);
+		}else{
+			principalPhone = new Phone(DDDPrincipalPhone,numberPrincipalPhone);
+			secondaryPhone = null;
+		}
 
 		// Birthdate
 		String date = resultOfTheSearch.getString(BIRTHDATE_COLUMN);

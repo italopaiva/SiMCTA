@@ -29,10 +29,9 @@ public class ServiceDAO extends DAO {
 	private static final String ID_PACKAGE_COLUMN = "id_package";
 	private static final String PAYMENT_ID_COLUMN = "id_payment";
 	private static final String PAYMENT_TABLE = "Payment";
+	private static final String COULDNT_SAVE_SERVICE = "Não foi possível salvar os dados do serviço informado.";
 	
-	public boolean save(Service service){
-		
-		boolean wasSaved = false;
+	public void save(Service service) throws ServiceException{
 		
 		try{
 			
@@ -48,13 +47,10 @@ public class ServiceDAO extends DAO {
 	   	   	   	   
 	   	   saveServiceCourses(serviceId, service);
 	   	   saveServicePackages(serviceId, service);
-	   	   wasSaved = true;
 		}
 		catch(SQLException e){
-			wasSaved = false;
+			throw new ServiceException(COULDNT_SAVE_SERVICE); 
 		}
-		
-		return wasSaved;
 	}
 	
 	private void saveServiceCourses(Integer serviceId, Service service) throws SQLException{

@@ -44,22 +44,14 @@ public class StudentController {
 		this.serviceController = serviceController;
 	}
 	
-	public boolean newStudent(String studentName, CPF studentCpf, RG studentRg, Date birthdate, String email, Address address,
+	public void newStudent(String studentName, CPF studentCpf, RG studentRg, Date birthdate, String email, Address address,
 			 			   Phone principalPhone, Phone secondaryPhone, String motherName, String fatherName,
-			 			   ArrayList<String> courses, ArrayList<String> packages, int paymentType, int paymentForm, Integer installments) throws StudentException{
+			 			   ArrayList<String> courses, ArrayList<String> packages, int paymentType, int paymentForm, Integer installments) throws StudentException, ServiceException, PaymentException{
 		
 		Student student = new Student(studentName, studentCpf, studentRg, birthdate, email, address, principalPhone, secondaryPhone, motherName, fatherName, ACTIVE_STATUS);
-		boolean studentWasSaved = studentDAO.save(student);
+		studentDAO.save(student);
 		
-		boolean allSaved = false;
-		if(studentWasSaved){
-			allSaved = serviceController.newService(student, courses, packages, paymentType, paymentForm, installments);
-		}
-		else{
-			allSaved = false;
-		}
-		
-		return allSaved;
+		serviceController.newService(student, courses, packages, paymentType, paymentForm, installments);
 	}
 
 	/**

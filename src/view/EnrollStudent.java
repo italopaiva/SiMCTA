@@ -1,15 +1,15 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
+import model.Course;
 import model.datatype.Address;
 import model.datatype.CPF;
 import model.datatype.Date;
@@ -34,9 +35,12 @@ import controller.CourseController;
 import controller.StudentController;
 import exception.AddressException;
 import exception.CPFException;
+import exception.CourseException;
 import exception.DateException;
+import exception.PaymentException;
 import exception.PhoneException;
 import exception.RGException;
+import exception.ServiceException;
 import exception.StudentException;
 
 public class EnrollStudent extends View {
@@ -59,10 +63,8 @@ public class EnrollStudent extends View {
 	private JTextField paymentValueField;
 	private JTextField paymentInstallmentsField;
 	private JLabel paymentTypeLbl;
-	private DefaultTableModel tableModel;
-	private DefaultTableModel tableSecondModel;
-	private DefaultTableModel tableModelPackages;
-	private DefaultTableModel tableSecondModelPackages;
+	private DefaultTableModel courseTableModel;
+	private DefaultTableModel packageTableModel;
 	private JTextField ddCellField;
 	private JTextField ddPhoneField;
 	private JTextField issuingInstitutionField;
@@ -71,6 +73,17 @@ public class EnrollStudent extends View {
 	private JTextField complementField;
 	private JComboBox<String> paymentForms;
 	private JComboBox<String> paymentTypes;
+	private JComboBox<String> courses;
+	private JComboBox<String> packages;
+	private DefaultComboBoxModel<String> availableCourses;
+	private DefaultComboBoxModel<String> availablePackages;
+	private ArrayList<String> coursesId = new ArrayList<String>(); 
+	private ArrayList<String> coursesName = new ArrayList<String>();
+	private ArrayList<String> packagesId = new ArrayList<String>();;
+	private JTable tableOfAddedCourses;
+	private JTable tableOfAddedPackages;
+	private ArrayList<String> addedCoursesId = new ArrayList<String>(); 
+	private ArrayList<String> addedPackagesId = new ArrayList<String>(); 
 
 	public EnrollStudent(){
 		
@@ -79,6 +92,13 @@ public class EnrollStudent extends View {
 		getContentPane().setLayout(null);
 		
 		createLabelsAndFields();
+		
+		try{
+			getAllCoursesToSelect();
+		} 
+		catch(CourseException e){
+			showInfoMessage(e.getMessage());
+		}
 	}
 	
 	/**
@@ -286,21 +306,24 @@ public class EnrollStudent extends View {
         
         paymentForms.setModel(paymentFormsModel);
         
-        JComboBox<String> courses = new JComboBox<String>();
+        courses = new JComboBox<String>();
         courses.setBounds(553, 97, 251, 31);
         contentPane.add(courses);
-        DefaultComboBoxModel<String> coursesSelectModel = new DefaultComboBoxModel<String>();
+        availableCourses = new DefaultComboBoxModel<String>();
 		
-        courses.setModel(coursesSelectModel);
+        courses.setModel(availableCourses);
         
 		JScrollPane scrollPaneAddedCourses = new JScrollPane();
 		scrollPaneAddedCourses.setBounds(553, 130, 251, 169);
 		contentPane.add(scrollPaneAddedCourses);
 		scrollPaneAddedCourses.setBackground(Color.WHITE);
 		
-        JComboBox<String> packages = new JComboBox<String>();
+        packages = new JComboBox<String>();
 		packages.setBounds(553, 337, 251, 31);
 		contentPane.add(packages);
+        availablePackages = new DefaultComboBoxModel<String>();
+        
+        packages.setModel(availablePackages);
 		
 		JScrollPane scrollPaneAddedPackages = new JScrollPane();
 		scrollPaneAddedPackages.setBounds(553, 370, 251, 169);
@@ -309,22 +332,23 @@ public class EnrollStudent extends View {
 					
 		String [] columnsAddedCourses = {"Cursos adicionados", "ID"};
 		
-		tableSecondModel = new DefaultTableModel(null, columnsAddedCourses);			
+		courseTableModel = new DefaultTableModel(null, columnsAddedCourses);			
 
-		final JTable tableOfAddedCourses = new JTable(tableSecondModel);
+		tableOfAddedCourses = new JTable(courseTableModel);
 		scrollPaneAddedCourses.setViewportView(tableOfAddedCourses);
 		disposeColumns(tableOfAddedCourses);
 			
 		String [] columnsAddedPackages = {"Pacotes adicionados", "ID"};
 		
-		tableSecondModelPackages = new DefaultTableModel(null, columnsAddedPackages);			
+		packageTableModel = new DefaultTableModel(null, columnsAddedPackages);			
 
-		final JTable tableOfAddedPackages = new JTable(tableSecondModelPackages);
+		tableOfAddedPackages = new JTable(packageTableModel);
 		scrollPaneAddedPackages.setViewportView(tableOfAddedPackages);
 		disposeColumns(tableOfAddedPackages);
         
         JButton enrollBtn = new JButton("Matricular");
 		enrollBtn.addMouseListener(new MouseAdapter() {
+
 			@Override
 			public void mouseClicked(MouseEvent e){
 				
@@ -361,11 +385,21 @@ public class EnrollStudent extends View {
 					
 					String ddCell = ddCellField.getText();
 					String cellNumber = cellField.getText();
+										
 					String ddPhone = ddPhoneField.getText();
 					String phoneNumber = phoneField.getText();
 					
-					Phone principalPhone = new Phone(ddCell, cellNumber);
-					Phone secondaryPhone = new Phone(ddPhone, phoneNumber);
+					Phone principalPhone;
+					Phone secondaryPhone;
+					if(!phoneNumber.isEmpty() && !ddPhone.isEmpty()){
+						
+						principalPhone = new Phone(ddCell, cellNumber);
+						secondaryPhone = new Phone(ddPhone, phoneNumber);
+					}
+					else{
+						principalPhone = new Phone(ddCell, cellNumber);
+						secondaryPhone = null;
+					}
 					
 					String motherName = motherField.getText();
 					String fatherName = fatherField.getText();
@@ -401,23 +435,23 @@ public class EnrollStudent extends View {
 							break;
 					}
 					
-					Integer installments = new Integer(paymentInstallmentsField.getText());
 					
-					ArrayList<String> courses = new ArrayList<String>();
-					courses.add("1");
-					ArrayList<String> packages = new ArrayList<String>();
-					packages.add("7");
+					String paymentInstallments = paymentInstallmentsField.getText(); 
 					
-					StudentController studentController = new StudentController();
-					boolean wasSaved = studentController.newStudent(studentName, studentCpf, studentRg, birthdate, email, address,
-																	principalPhone, secondaryPhone, motherName, fatherName, courses, packages, paymentType, paymentForm, installments);
-					
-					if(wasSaved){
-						message = "Aluno matriculado com sucesso.";
+					Integer installments;
+					if(!paymentInstallments.isEmpty()){
+						installments = new Integer(paymentInstallments);
 					}
 					else{
-						message = "Não foi possível matricular o aluno informado.";
+						installments = 0;
 					}
+					
+					StudentController studentController = new StudentController();
+					studentController.newStudent(studentName, studentCpf, studentRg, birthdate, email, address,
+  												 principalPhone, secondaryPhone, motherName, fatherName,
+  												 addedCoursesId, addedPackagesId, paymentType, paymentForm, installments);
+					
+					message = "Aluno matriculado com sucesso.";
 				}
 				catch(CPFException e1){
 					message = e1.getMessage();
@@ -436,11 +470,18 @@ public class EnrollStudent extends View {
 				} catch (StudentException e1) {
 					message = e1.getMessage();
 				}
+				catch(ServiceException e1){
+					message = e1.getMessage();
+				}
+				catch(PaymentException e1){
+					message = e1.getMessage();
+				}
 				finally{
 					showInfoMessage(message);
 				}
 				
 			}
+
 		});
 		enrollBtn.setBounds(422, 631, 117, 25);
 		contentPane.add(enrollBtn);
@@ -448,12 +489,61 @@ public class EnrollStudent extends View {
 		JButton addCourseBtn = new JButton("Adicionar Curso");
 		addCourseBtn.setBounds(835, 97, 151, 31);
 		contentPane.add(addCourseBtn);
+		addCourseBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				int indexOfSelectedCourse = courses.getSelectedIndex();
+				addCourseToAddedCourses(indexOfSelectedCourse);
+				availableCourses.removeElementAt(indexOfSelectedCourse);
+				addedCoursesId.add(coursesId.get(indexOfSelectedCourse));
+				coursesId.remove(indexOfSelectedCourse);
+				coursesName.remove(indexOfSelectedCourse);
+				
+			}
+			
+			private void addCourseToAddedCourses(int indexOfSelectedCourse) {
+				
+				String courseId = coursesId.get(indexOfSelectedCourse);
+				String courseName = coursesName.get(indexOfSelectedCourse);
+
+				String[] allCourses = new String[2];
+		
+				allCourses[0] = (courseName);
+				allCourses[1] = (courseId.toString());
+				
+				courseTableModel.addRow(allCourses);
+				
+			}
+		});
 		
 		JButton removeCourseBtn = new JButton("Remover Curso");
 		removeCourseBtn.setBounds(835, 137, 151, 31);
 		contentPane.add(removeCourseBtn);
+		removeCourseBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				int selectedRow = tableOfAddedCourses.getSelectedRow();
+
+				String courseName = (String) courseTableModel.getValueAt(selectedRow, 0);
+				String courseId = (String) courseTableModel.getValueAt(selectedRow, 1);
+								
+				coursesId.add(courseId);
+				coursesName.add(courseName);
+				
+				addedCoursesId.remove(selectedRow);
+				
+				availableCourses.addElement(courseName);
+				
+				courseTableModel.removeRow(selectedRow);
+			}
+			
+		});
 		
 		JButton addPackageBtn = new JButton("Adicionar Pacote");
+		addPackageBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
 		addPackageBtn.setBounds(835, 337, 151, 31);
 		contentPane.add(addPackageBtn);
 		
@@ -497,7 +587,6 @@ public class EnrollStudent extends View {
 
 	}
 
-
 	/**
 	 * Dispose the id and duration columns
 	 * @param table - Receives the table to dispose columns
@@ -511,4 +600,30 @@ public class EnrollStudent extends View {
 		tableModel.getColumn(1).setMaxWidth(0);    
 	}
 	
+	/**
+	 *  Method used to show all available courses 
+	 * @throws SQLException
+	 * @throws CourseException 
+	 */
+	private void getAllCoursesToSelect() throws CourseException {
+		
+		CourseController courseController = new CourseController();
+		ArrayList<Course> courses = courseController.showCourse();		
+		int indexOfCourses = 0;
+		
+		while(indexOfCourses < courses.size()){
+			
+			Course course = courses.get(indexOfCourses);
+			Integer courseId = course.getCourseId();
+			String courseName = (course.getCourseName());
+
+			coursesId.add(courseId.toString());
+			coursesName.add(courseName);
+			
+			availableCourses.addElement(courseName);
+			
+			indexOfCourses++;
+			
+		}
+	}	
 }

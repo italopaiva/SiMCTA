@@ -23,26 +23,17 @@ public class ServiceController {
 		paymentController = new PaymentController();
 	}
 	
-	public boolean newService(Student student, ArrayList<String> courses, ArrayList<String> packages,
-						   int paymentType, int paymentForm, Integer installments){
+	public void newService(Student student, ArrayList<String> courses, ArrayList<String> packages,
+						   int paymentType, int paymentForm, Integer installments) throws ServiceException, PaymentException{
 		
-		boolean serviceWasSaved = false;
+		Service service = new Service(student, courses, packages);
+					
+		PaymentController paymentController = new PaymentController();
+		Payment payment = paymentController.newPayment(service, paymentType, paymentForm, installments);
 		
-		try{
-			Service service = new Service(student, courses, packages);
-						
-			PaymentController paymentController = new PaymentController();
-			Payment payment = paymentController.newPayment(service, paymentType, paymentForm, installments);
-			
-			service.addPayment(payment);
-			
-			serviceWasSaved = serviceDAO.save(service);
-		}
-		catch(ServiceException | PaymentException e){
-			serviceWasSaved = false;
-		}
+		service.addPayment(payment);
 		
-		return serviceWasSaved;
+		serviceDAO.save(service);
 	}
 
 	/**
