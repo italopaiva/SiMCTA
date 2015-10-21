@@ -3,6 +3,8 @@ package dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import exception.PackageException;
 import model.Package;
@@ -23,6 +25,7 @@ public class PackageDAO extends DAO{
 	private static final String COURSE_TABLE = "Course";
 	private static final String COURSE_NAME_COLUMN = "course_name";
 	private static final String STATUS_COLUMN = "status";
+	private static final String COULDNT_GET_PACKAGE_COURSES = "Não foi possível pegar os dados dos cursos do pacote.";
 	
 	public PackageDAO(){ }
 	
@@ -271,6 +274,60 @@ public class PackageDAO extends DAO{
 		}
 		
 		return foundPackage;
+	}
+	
+	public ArrayList<Package> get() throws PackageException{
+		
+		String query = "SELECT * FROM " + TABLE_NAME;
+		
+		ArrayList<Package> packages = new ArrayList<Package>();
+		
+		try{
+			
+			ResultSet result = this.search(query);
+			
+			while(result.next()){
+				
+				Integer packageId = result.getInt(ID_COLUMN);
+				String packageName = result.getString(NAME_COLUMN);
+				Integer packageValue = result.getInt(VALUE_COLUMN);
+				Integer packageDuration = result.getInt(DURATION_COLUMN);
+				
+				ArrayList<String> packageCourses = getPackageCourses(packageId);
+				
+				System.out.println(packageId);
+				System.out.println();
+				
+				Package currentPackage = new Package(packageId, packageName, packageValue,
+													 packageDuration, packageCourses);
+				
+				packages.add(currentPackage);
+			}
+		}
+		catch(SQLException e){
+			throw new PackageException(COULDNT_GET_PACKAGE_COURSES);
+		}
+		
+		return packages;
+	}
+	
+	private ArrayList<String> getPackageCourses(Integer packageId) throws SQLException{
+		
+		String query = "SELECT * FROM "+ ASSOCIATION_TABLE_NAME 
+					 + " WHERE "+ ID_COLUMN +" = "+ packageId;
+		
+		ResultSet result = this.search(query);
+		
+		ArrayList<String> packageCourses = new ArrayList<String>();
+		
+		while(result.next()){
+			
+			String course = result.getString(ID_COURSE_COLUMN);
+		
+			packageCourses.add(course);
+		}
+		
+		return packageCourses;
 	}
 	
 	/**

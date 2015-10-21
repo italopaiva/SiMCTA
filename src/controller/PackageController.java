@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import dao.PackageDAO;
+import exception.CourseException;
 import exception.PackageException;
+import model.Course;
 import model.Package;
 
 public class PackageController {
@@ -139,5 +141,18 @@ public class PackageController {
 		
 		return packageToShow;
 
+	}
+	
+	/**
+	 * Get all registered packages
+	 * @return An ArrayList with the packages found
+	 * @throws CourseException 
+	 * @throws PackageException 
+	 */
+	public ArrayList<Package> getPackages() throws CourseException, PackageException{
+		
+		ArrayList<Package> packages = packageDAO.get();
+		
+		return packages;
 	}
 }

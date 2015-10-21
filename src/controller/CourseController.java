@@ -122,7 +122,6 @@ public class CourseController {
 		courses = courseDAO.get();
 		
 		return courses;
-		
 	}
 
 	public Course get(int courseId){

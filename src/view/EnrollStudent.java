@@ -26,17 +26,20 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
 import model.Course;
+import model.Package;
 import model.datatype.Address;
 import model.datatype.CPF;
 import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
 import controller.CourseController;
+import controller.PackageController;
 import controller.StudentController;
 import exception.AddressException;
 import exception.CPFException;
 import exception.CourseException;
 import exception.DateException;
+import exception.PackageException;
 import exception.PaymentException;
 import exception.PhoneException;
 import exception.RGException;
@@ -73,13 +76,13 @@ public class EnrollStudent extends View {
 	private JTextField complementField;
 	private JComboBox<String> paymentForms;
 	private JComboBox<String> paymentTypes;
-	private JComboBox<String> courses;
 	private JComboBox<String> packages;
 	private DefaultComboBoxModel<String> availableCourses;
 	private DefaultComboBoxModel<String> availablePackages;
 	private ArrayList<String> coursesId = new ArrayList<String>(); 
 	private ArrayList<String> coursesName = new ArrayList<String>();
-	private ArrayList<String> packagesId = new ArrayList<String>();;
+	private ArrayList<String> packagesId = new ArrayList<String>();
+	private ArrayList<String> packagesName = new ArrayList<String>();
 	private JTable tableOfAddedCourses;
 	private JTable tableOfAddedPackages;
 	private ArrayList<String> addedCoursesId = new ArrayList<String>(); 
@@ -95,8 +98,10 @@ public class EnrollStudent extends View {
 		
 		try{
 			getAllCoursesToSelect();
+			
+			getAllPackagesToSelect();
 		} 
-		catch(CourseException e){
+		catch(CourseException | PackageException e){
 			showInfoMessage(e.getMessage());
 		}
 	}
@@ -306,12 +311,12 @@ public class EnrollStudent extends View {
         
         paymentForms.setModel(paymentFormsModel);
         
-        courses = new JComboBox<String>();
-        courses.setBounds(553, 97, 251, 31);
-        contentPane.add(courses);
+        packages = new JComboBox<String>();
+        packages.setBounds(553, 97, 251, 31);
+        contentPane.add(packages);
         availableCourses = new DefaultComboBoxModel<String>();
 		
-        courses.setModel(availableCourses);
+        packages.setModel(availableCourses);
         
 		JScrollPane scrollPaneAddedCourses = new JScrollPane();
 		scrollPaneAddedCourses.setBounds(553, 130, 251, 169);
@@ -321,7 +326,8 @@ public class EnrollStudent extends View {
         packages = new JComboBox<String>();
 		packages.setBounds(553, 337, 251, 31);
 		contentPane.add(packages);
-        availablePackages = new DefaultComboBoxModel<String>();
+        
+		availablePackages = new DefaultComboBoxModel<String>();
         
         packages.setModel(availablePackages);
 		
@@ -492,13 +498,12 @@ public class EnrollStudent extends View {
 		addCourseBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				int indexOfSelectedCourse = courses.getSelectedIndex();
+				int indexOfSelectedCourse = packages.getSelectedIndex();
 				addCourseToAddedCourses(indexOfSelectedCourse);
 				availableCourses.removeElementAt(indexOfSelectedCourse);
 				addedCoursesId.add(coursesId.get(indexOfSelectedCourse));
 				coursesId.remove(indexOfSelectedCourse);
 				coursesName.remove(indexOfSelectedCourse);
-				
 			}
 			
 			private void addCourseToAddedCourses(int indexOfSelectedCourse) {
@@ -512,7 +517,6 @@ public class EnrollStudent extends View {
 				allCourses[1] = (courseId.toString());
 				
 				courseTableModel.addRow(allCourses);
-				
 			}
 		});
 		
@@ -542,6 +546,28 @@ public class EnrollStudent extends View {
 		JButton addPackageBtn = new JButton("Adicionar Pacote");
 		addPackageBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				int indexOfSelectedPackage = packages.getSelectedIndex();
+				
+				addPackageToAddedCourses(indexOfSelectedPackage);
+				
+				availablePackages.removeElementAt(indexOfSelectedPackage);
+				addedPackagesId.add(packagesId.get(indexOfSelectedPackage));
+				packagesId.remove(indexOfSelectedPackage);
+				packagesName.remove(indexOfSelectedPackage);
+			}
+			
+			private void addPackageToAddedCourses(int indexOfSelectedPackage){
+				
+				String packageId = packagesId.get(indexOfSelectedPackage);
+				String packageName = packagesName.get(indexOfSelectedPackage);
+
+				String[] allPackages = new String[2];
+		
+				allPackages[0] = (packageName);
+				allPackages[1] = (packageId.toString());
+				
+				packageTableModel.addRow(allPackages);
 			}
 		});
 		addPackageBtn.setBounds(835, 337, 151, 31);
@@ -549,6 +575,25 @@ public class EnrollStudent extends View {
 		
 		JButton removePackageBtn = new JButton("Remover Pacote");
 		removePackageBtn.setBounds(835, 377, 151, 31);
+		removePackageBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				int selectedRow = tableOfAddedPackages.getSelectedRow();
+
+				String packageName = (String) packageTableModel.getValueAt(selectedRow, 0);
+				String packageId = (String) packageTableModel.getValueAt(selectedRow, 1);
+								
+				packagesId.add(packageId);
+				packagesName.add(packageName);
+				
+				addedPackagesId.remove(selectedRow);
+				
+				availablePackages.addElement(packageName);
+					
+				packageTableModel.removeRow(selectedRow);
+			}
+			
+		});
 		contentPane.add(removePackageBtn);
 		
 		issuingInstitutionField = new JTextField();
@@ -598,6 +643,32 @@ public class EnrollStudent extends View {
 		tableModel.getColumn(1).setMinWidth(0);     
 		tableModel.getColumn(1).setPreferredWidth(0);  
 		tableModel.getColumn(1).setMaxWidth(0);    
+	}
+	
+	/**
+	 * Method used to get the available packages
+	 * @throws CourseException 
+	 * @throws PackageException 
+	 */
+	private void getAllPackagesToSelect() throws CourseException, PackageException {
+		
+		PackageController packageController = new PackageController();
+		ArrayList<Package> packages = packageController.getPackages();		
+		int indexOfPackages = 0;
+		
+		while(indexOfPackages < packages.size()){
+			
+			Package currentPackage = packages.get(indexOfPackages);
+			Integer packageId = currentPackage.getPackageId();
+			String packageName = (currentPackage.getPackageName());
+
+			packagesId.add(packageId.toString());
+			packagesName.add(packageName);
+			
+			availablePackages.addElement(packageName);
+			
+			indexOfPackages++;
+		}
 	}
 	
 	/**
