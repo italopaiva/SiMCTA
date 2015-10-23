@@ -13,6 +13,20 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
+import model.datatype.Address;
+import model.datatype.CPF;
+import model.datatype.Date;
+import model.datatype.Phone;
+import model.datatype.RG;
+import controller.StudentController;
+import controller.TeacherController;
+import exception.AddressException;
+import exception.CPFException;
+import exception.DateException;
+import exception.PhoneException;
+import exception.RGException;
+import exception.TeacherException;
+
 public class NewTeacher extends View {
 
 	private JPanel contentPane;
@@ -230,13 +244,77 @@ public class NewTeacher extends View {
 		registerTeacherBtn.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e){			
-					/*try{
+					newTeacher();
+				}
+
+				private void newTeacher() {
+					String message = "";
+					
+					try{
+					
+						String teacherName = nameField.getText();
+					
+						String cpf = cpfField.getText();
+						CPF teacherCpf = new CPF(cpf);
+					
+						String rgNumber = rgField.getText();
+						String rgIssuingInstitution = issuingInstitutionField.getText();
+						String rgUf = ufField.getText();
+					
+						RG teacherRg = new RG(rgNumber, rgIssuingInstitution, rgUf);					
+					
+						String date = birthdateField.getText();
+						String day = date.substring(0, 2);
+						String month = date.substring(3, 5);
+						String year = date.substring(6, 10);
+						
+						Date birthdate = new Date(Integer.parseInt(day), Integer.parseInt(month), Integer.parseInt(year));
+						
+						String email = emailField.getText();
+						
+						String addressInfo = addressField.getText();
+						String addressNumber = numberField.getText();
+						String addressComplement = complementField.getText();
+						String addressCity = cityField.getText();
+						String addressCep = cepField.getText();
+						
+						Address address = new Address(addressInfo, addressNumber, addressComplement, addressCep, addressCity);
+						
+						String ddCell = dddCellField.getText();
+						String cellNumber = cellField.getText();
+											
+						String ddPhone = dddPhoneField.getText();
+						String phoneNumber = phoneField.getText();
+						
+						Phone principalPhone;
+						Phone secondaryPhone;
+						if(!phoneNumber.isEmpty() && !ddPhone.isEmpty()){
+							
+							principalPhone = new Phone(ddCell, cellNumber);
+							secondaryPhone = new Phone(ddPhone, phoneNumber);
+						}
+						else{
+							principalPhone = new Phone(ddCell, cellNumber);
+							secondaryPhone = null;
+						}
+						
+						String motherName = motherField.getText();
+						String fatherName = fatherField.getText();
+						
 						TeacherController teacherController = new TeacherController();
-						teacherController.newTeacher();				
+						teacherController.newTeacher(teacherName, teacherCpf, teacherRg, birthdate, email, address,
+								 					 principalPhone, secondaryPhone, motherName, fatherName);
+						
+						message = "Professor cadastrado com sucesso.";
 					}
-					catch(TeacherException e){
-						showInfoMessage(e.getMessage());
-					}*/
+					catch(DateException | PhoneException | CPFException | RGException | AddressException e2){
+						message = e2.getMessage();
+					}
+					
+					finally{
+						showInfoMessage(message);
+					}
+					
 				}
 		});
 		

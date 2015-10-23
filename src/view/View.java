@@ -63,7 +63,7 @@ public class View extends JFrame {
 		
 	}
 	
-	private void addTeacherOptionsToMenu() {
+	private void addTeacherOptionsToMenu(){
 		JMenu teacherMenu = new JMenu("Professores");
 		menuBar.add(teacherMenu);
 		
@@ -80,7 +80,7 @@ public class View extends JFrame {
 		
 	}
 
-	private void addStudentsOptionsToMenu() {
+	private void addStudentsOptionsToMenu(){
 		JMenu studentMenu = new JMenu("Alunos");
 		menuBar.add(studentMenu);
 		
@@ -107,7 +107,7 @@ public class View extends JFrame {
 		
 	}
 
-	private void addPackageOptionsToMenu() {
+	private void addPackageOptionsToMenu(){
 
 		JMenu packageMenu = new JMenu("Pacotes");
 		menuBar.add(packageMenu);
@@ -162,7 +162,7 @@ public class View extends JFrame {
 		packageMenu.add(searchPackage);		
 	}
 
-	private void addCourseOptionsToMenu() {
+	private void addCourseOptionsToMenu(){
 		JMenu courseMenu = new JMenu("Cursos");
 		menuBar.add(courseMenu);
 		
@@ -207,7 +207,7 @@ public class View extends JFrame {
 		
 	}
 
-	protected void createLabelsAndFields() {
+	protected void createLabelsAndFields(){
 		// Nothing to do
 	}
 	
@@ -215,7 +215,7 @@ public class View extends JFrame {
 		// Nothing to do
 	}
 	
-	protected void createButtons() {
+	protected void createButtons(){
 		// Nothing to do
 	}
 
