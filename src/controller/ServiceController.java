@@ -23,6 +23,17 @@ public class ServiceController {
 		paymentController = new PaymentController();
 	}
 	
+	/**
+	 * Creates a new service with the requested courses and packages by a student
+	 * @param student - The student that requested the services
+	 * @param courses - The courses requested
+	 * @param packages - The packages requested
+	 * @param paymentType - The payment type of the chosen payment
+	 * @param paymentForm - The payment form of the chosen payment
+	 * @param installments - Quantity of installments of the payment
+	 * @throws ServiceException
+	 * @throws PaymentException
+	 */
 	public void newService(Student student, ArrayList<String> courses, ArrayList<String> packages,
 						   int paymentType, int paymentForm, Integer installments) throws ServiceException, PaymentException{
 		

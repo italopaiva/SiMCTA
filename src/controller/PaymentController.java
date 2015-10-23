@@ -18,7 +18,7 @@ public class PaymentController{
 	
 	/**
 	 * Create a new payment for the given service
-	 * @param service - Service tha generated the payment
+	 * @param service - Service that generated the payment
 	 * @param paymentType - Type of payment
 	 * @param paymentForm - Form of payment
 	 * @param installments - Quantity of installments

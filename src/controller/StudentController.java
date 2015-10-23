@@ -44,6 +44,27 @@ public class StudentController {
 		this.serviceController = serviceController;
 	}
 	
+	/**
+	 * Creates a new student with the given information of the student and its service
+	 * @param studentName - Name of the student
+	 * @param studentCpf - CPF of the student
+	 * @param studentRg - RG of the student
+	 * @param birthdate - Birthdate of the student
+	 * @param email - Email of the student (optional)
+	 * @param address - Address of the student
+	 * @param principalPhone - The principal phone number of the student
+	 * @param secondaryPhone - The secondary phone number of the student (optional)
+	 * @param motherName - The name of the student's mother
+	 * @param fatherName - The name of the student's father
+	 * @param courses - The courses ids contracted by the student 
+	 * @param packages - The packages ids contracted by the student 
+	 * @param paymentType - The payment type of the chosen payment by the student
+	 * @param paymentForm- The payment form of the chosen payment by the student
+	 * @param installments - Quantity of installments requested by the student
+	 * @throws StudentException
+	 * @throws ServiceException
+	 * @throws PaymentException
+	 */
 	public void newStudent(String studentName, CPF studentCpf, RG studentRg, Date birthdate, String email, Address address,
 			 			   Phone principalPhone, Phone secondaryPhone, String motherName, String fatherName,
 			 			   ArrayList<String> courses, ArrayList<String> packages, int paymentType, int paymentForm, Integer installments) throws StudentException, ServiceException, PaymentException{

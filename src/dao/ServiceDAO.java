@@ -31,6 +31,11 @@ public class ServiceDAO extends DAO {
 	private static final String PAYMENT_TABLE = "Payment";
 	private static final String COULDNT_SAVE_SERVICE = "Não foi possível salvar os dados do serviço informado.";
 	
+	/**
+	 * Save a given service on the database
+	 * @param service - The service to be saved
+	 * @throws ServiceException
+	 */
 	public void save(Service service) throws ServiceException{
 		
 		try{
@@ -53,6 +58,12 @@ public class ServiceDAO extends DAO {
 		}
 	}
 	
+	/**
+	 * Save the courses associated with the service
+	 * @param serviceId - The service to associate the courses with
+	 * @param service - The service with the courses to be associated
+	 * @throws SQLException
+	 */
 	private void saveServiceCourses(Integer serviceId, Service service) throws SQLException{
 		
 		int i = 0;
@@ -68,7 +79,13 @@ public class ServiceDAO extends DAO {
 			this.execute(query);
 		}		
 	}
-
+	
+	/**
+	 * Save the packages associated with the service
+	 * @param serviceId - The service to associate the packages with
+	 * @param service - The service with the packages to be associated
+	 * @throws SQLException
+	 */
 	private void saveServicePackages(Integer serviceId, Service service) throws SQLException{
 		
 		int i = 0;

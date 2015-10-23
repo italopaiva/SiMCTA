@@ -25,6 +25,12 @@ public class PaymentDAO extends DAO{
 	
 	public PaymentDAO(){}
 	
+	/**
+	 * Save a given payment on the database
+	 * @param payment - The payment to be saved
+	 * @return the saved payment id 
+	 * @throws PaymentException
+	 */
 	public int save(Payment payment) throws PaymentException{
 		
 		int savedPaymentId = 0;

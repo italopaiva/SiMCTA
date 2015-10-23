@@ -358,133 +358,7 @@ public class EnrollStudent extends View {
 			@Override
 			public void mouseClicked(MouseEvent e){
 				
-				String message = "";
-				try{
-					
-					String studentName = nameField.getText();
-					
-					String cpf = cpfField.getText();
-					CPF studentCpf = new CPF(cpf);
-					
-					String rgNumber = rgField.getText();
-					String rgIssuingInstitution = issuingInstitutionField.getText();
-					String rgUf = ufField.getText();
-					
-					RG studentRg = new RG(rgNumber, rgIssuingInstitution, rgUf);					
-					
-					String date = birthdateField.getText();
-					String day = date.substring(0, 2);
-					String month = date.substring(3, 5);
-					String year = date.substring(6, 10);
-					
-					Date birthdate = new Date(Integer.parseInt(day), Integer.parseInt(month), Integer.parseInt(year));
-					
-					String email = emailField.getText();
-					
-					String addressInfo = addressField.getText();
-					String addressNumber = numberField.getText();
-					String addressComplement = complementField.getText();
-					String addressCity = cityField.getText();
-					String addressCep = cepField.getText();
-					
-					Address address = new Address(addressInfo, addressNumber, addressComplement, addressCep, addressCity);
-					
-					String ddCell = ddCellField.getText();
-					String cellNumber = cellField.getText();
-										
-					String ddPhone = ddPhoneField.getText();
-					String phoneNumber = phoneField.getText();
-					
-					Phone principalPhone;
-					Phone secondaryPhone;
-					if(!phoneNumber.isEmpty() && !ddPhone.isEmpty()){
-						
-						principalPhone = new Phone(ddCell, cellNumber);
-						secondaryPhone = new Phone(ddPhone, phoneNumber);
-					}
-					else{
-						principalPhone = new Phone(ddCell, cellNumber);
-						secondaryPhone = null;
-					}
-					
-					String motherName = motherField.getText();
-					String fatherName = fatherField.getText();
-					
-					int paymentType = paymentTypes.getSelectedIndex();
-					
-					switch(paymentType){
-						case 0:
-							paymentType = 1;
-							break;
-						case 1:
-							paymentType = 2;
-							break;
-						default:
-							showInfoMessage("Tipo de pagamento inválido.");
-							break;
-					}
-					
-					int paymentForm = paymentForms.getSelectedIndex();
-					
-					switch(paymentForm){
-						case 0:
-							paymentForm = 1;
-							break;
-						case 1:
-							paymentForm = 2;
-							break;
-						case 2:
-							paymentForm = 3;
-							break;
-						default:
-							showInfoMessage("Forma de pagamento inválida.");
-							break;
-					}
-					
-					
-					String paymentInstallments = paymentInstallmentsField.getText(); 
-					
-					Integer installments;
-					if(!paymentInstallments.isEmpty()){
-						installments = new Integer(paymentInstallments);
-					}
-					else{
-						installments = 0;
-					}
-					
-					StudentController studentController = new StudentController();
-					studentController.newStudent(studentName, studentCpf, studentRg, birthdate, email, address,
-  												 principalPhone, secondaryPhone, motherName, fatherName,
-  												 addedCoursesId, addedPackagesId, paymentType, paymentForm, installments);
-					
-					message = "Aluno matriculado com sucesso.";
-				}
-				catch(CPFException e1){
-					message = e1.getMessage();
-				}
-				catch(RGException e1){
-					message = e1.getMessage();
-				}
-				catch(DateException e1){
-					message = e1.getMessage();
-				}
-				catch(AddressException e1){
-					message = e1.getMessage();
-				}
-				catch(PhoneException e1){
-					message = e1.getMessage();
-				} catch (StudentException e1) {
-					message = e1.getMessage();
-				}
-				catch(ServiceException e1){
-					message = e1.getMessage();
-				}
-				catch(PaymentException e1){
-					message = e1.getMessage();
-				}
-				finally{
-					showInfoMessage(message);
-				}
+				prepareData();
 				
 			}
 
@@ -696,5 +570,136 @@ public class EnrollStudent extends View {
 			indexOfCourses++;
 			
 		}
-	}	
+	}
+	
+	private void prepareData(){
+		
+		String message = "";
+		try{
+			
+			String studentName = nameField.getText();
+			
+			String cpf = cpfField.getText();
+			CPF studentCpf = new CPF(cpf);
+			
+			String rgNumber = rgField.getText();
+			String rgIssuingInstitution = issuingInstitutionField.getText();
+			String rgUf = ufField.getText();
+			
+			RG studentRg = new RG(rgNumber, rgIssuingInstitution, rgUf);					
+			
+			String date = birthdateField.getText();
+			String day = date.substring(0, 2);
+			String month = date.substring(3, 5);
+			String year = date.substring(6, 10);
+			
+			Date birthdate = new Date(Integer.parseInt(day), Integer.parseInt(month), Integer.parseInt(year));
+			
+			String email = emailField.getText();
+			
+			String addressInfo = addressField.getText();
+			String addressNumber = numberField.getText();
+			String addressComplement = complementField.getText();
+			String addressCity = cityField.getText();
+			String addressCep = cepField.getText();
+			
+			Address address = new Address(addressInfo, addressNumber, addressComplement, addressCep, addressCity);
+			
+			String ddCell = ddCellField.getText();
+			String cellNumber = cellField.getText();
+								
+			String ddPhone = ddPhoneField.getText();
+			String phoneNumber = phoneField.getText();
+			
+			Phone principalPhone;
+			Phone secondaryPhone;
+			if(!phoneNumber.isEmpty() && !ddPhone.isEmpty()){
+				
+				principalPhone = new Phone(ddCell, cellNumber);
+				secondaryPhone = new Phone(ddPhone, phoneNumber);
+			}
+			else{
+				principalPhone = new Phone(ddCell, cellNumber);
+				secondaryPhone = null;
+			}
+			
+			String motherName = motherField.getText();
+			String fatherName = fatherField.getText();
+			
+			int paymentType = paymentTypes.getSelectedIndex();
+			
+			switch(paymentType){
+				case 0:
+					paymentType = 1;
+					break;
+				case 1:
+					paymentType = 2;
+					break;
+				default:
+					showInfoMessage("Tipo de pagamento inválido.");
+					break;
+			}
+			
+			int paymentForm = paymentForms.getSelectedIndex();
+			
+			switch(paymentForm){
+				case 0:
+					paymentForm = 1;
+					break;
+				case 1:
+					paymentForm = 2;
+					break;
+				case 2:
+					paymentForm = 3;
+					break;
+				default:
+					showInfoMessage("Forma de pagamento inválida.");
+					break;
+			}
+			
+			
+			String paymentInstallments = paymentInstallmentsField.getText(); 
+			
+			Integer installments;
+			if(!paymentInstallments.isEmpty()){
+				installments = new Integer(paymentInstallments);
+			}
+			else{
+				installments = 0;
+			}
+			
+			StudentController studentController = new StudentController();
+			studentController.newStudent(studentName, studentCpf, studentRg, birthdate, email, address,
+											 principalPhone, secondaryPhone, motherName, fatherName,
+											 addedCoursesId, addedPackagesId, paymentType, paymentForm, installments);
+			
+			message = "Aluno matriculado com sucesso.";
+		}
+		catch(CPFException e1){
+			message = e1.getMessage();
+		}
+		catch(RGException e1){
+			message = e1.getMessage();
+		}
+		catch(DateException e1){
+			message = e1.getMessage();
+		}
+		catch(AddressException e1){
+			message = e1.getMessage();
+		}
+		catch(PhoneException e1){
+			message = e1.getMessage();
+		} catch (StudentException e1) {
+			message = e1.getMessage();
+		}
+		catch(ServiceException e1){
+			message = e1.getMessage();
+		}
+		catch(PaymentException e1){
+			message = e1.getMessage();
+		}
+		finally{
+			showInfoMessage(message);
+		}
+	}
 }

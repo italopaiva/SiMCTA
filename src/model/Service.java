@@ -95,7 +95,12 @@ public class Service extends Model{
 		}
 
 	}
-
+	
+	/**
+	 * Adds a payment to the service
+	 * @param payment - the payment to be added
+	 * @throws PaymentException
+	 */
 	public void addPayment(Payment payment) throws PaymentException{
 		
 		if(payment != null){
