@@ -147,17 +147,24 @@ public class EditPackage extends View{
 
 	/**
 	 * Creates the masks of value and duration fields
-	 * @throws ParseException
 	 */
-	private void createMasks() throws ParseException {
-		MaskFormatter durationMask = new MaskFormatter("## semanas");
-		durationMask.setValidCharacters("0123456789");
-		durationMask.setValueContainsLiteralCharacters(false);
+	protected void createMasks() {
 		
-		MaskFormatter valueMask = new MaskFormatter("R$ ####,##");
-		valueMask.setValidCharacters("0123456789");
-		valueMask.setValueContainsLiteralCharacters(false);
-		
+		MaskFormatter durationMask = null;
+		MaskFormatter valueMask = null;
+		try {
+			durationMask = new MaskFormatter("## semanas");
+			durationMask.setValidCharacters("0123456789");
+			durationMask.setValueContainsLiteralCharacters(false);
+			
+			valueMask = new MaskFormatter("R$ ####,##");
+			valueMask.setValidCharacters("0123456789");
+			valueMask.setValueContainsLiteralCharacters(false);
+		} 
+		catch (ParseException e) {
+			
+		}
+	
 		valueField = new JFormattedTextField(valueMask);
 		valueField.setBounds(276, 147, 124, 28);
 		contentPane.add(valueField);
@@ -173,7 +180,7 @@ public class EditPackage extends View{
 	/**
 	 * Creates all labels and fields on frame
 	 */
-	private void createLabelsAndFields() {
+	protected void createLabelsAndFields() {
 		packageNameField = new JTextField();
 		packageNameField.setBounds(276, 74, 346, 30);
 		contentPane.add(packageNameField);

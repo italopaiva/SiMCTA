@@ -140,7 +140,7 @@ public class SearchStudent extends View {
 	/**
 	 * Creates the labels and fields of the frame
 	 */
-	private void createLabelsAndFields() {
+	protected void createLabelsAndFields() {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -37,53 +38,77 @@ public class View extends JFrame {
 		});
 	}
 	
+	/**
+	 * Defines the order of creation of the screen elements  
+	 */
+	protected void buildScreen(){
+		instantiateMenuBar();
+		createLabelsAndFields();
+		createMasks();
+		createButtons();
+	}
+
 	protected void instantiateMenuBar(){
 		
-		JMenuBar menuBar = new JMenuBar();
+		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu courseMenu = new JMenu("Cursos");
-		menuBar.add(courseMenu);
+		addCourseOptionsToMenu();
 		
-		JMenuItem registerCourse = new JMenuItem("Cadastrar Curso");
-		registerCourse.addActionListener(new ActionListener() {
+		addPackageOptionsToMenu();
+		
+		addStudentsOptionsToMenu();
+		
+		addTeacherOptionsToMenu();
+		
+	}
+	
+	private void addTeacherOptionsToMenu() {
+		JMenu teacherMenu = new JMenu("Professores");
+		menuBar.add(teacherMenu);
+		
+		JMenuItem newTeacher = new JMenuItem("Cadastrar professor");
+		newTeacher.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				boolean permissionToAccess = false;
-				
-				permissionToAccess = getPermissionToAccess();
-				if(permissionToAccess == true){
-					dispose();
-					NewCourse newCourseFrame = new NewCourse();
-					newCourseFrame.setVisible(true);
-				}
-				else{
-					View frame = new View();
-					frame.setVisible(true);
-				}
+				dispose();
+				NewTeacher newTeacherFrame = new NewTeacher();
+				newTeacherFrame.setVisible(true);
 			}
 		});
-		courseMenu.add(registerCourse);
+		teacherMenu.add(newTeacher);
 		
-		JMenuItem searchCourse = new JMenuItem("Visualizar Curso");
-		searchCourse.addActionListener(new ActionListener() {
+	}
+
+	private void addStudentsOptionsToMenu() {
+		JMenu studentMenu = new JMenu("Alunos");
+		menuBar.add(studentMenu);
+		
+		JMenuItem newStudent = new JMenuItem("Cadastrar aluno");
+		newStudent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				dispose();			
-				try {
-					SearchCourse searchCourseFrame = new SearchCourse();
-					searchCourseFrame.setVisible(true);
-				} 
-				catch(SQLException e){
-					e.printStackTrace();
-				}
-				catch(CourseException e){
-					
-				}
+				dispose();
+				EnrollStudent newStudentFrame = new EnrollStudent();
+				newStudentFrame.setVisible(true);
 			}
 		});
-		courseMenu.add(searchCourse);
+		studentMenu.add(newStudent);
+
+		JMenuItem searchStudent = new JMenuItem("Visualizar Aluno");
+		searchStudent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				SearchStudent searchStudentFrame = new SearchStudent();
+				searchStudentFrame.setVisible(true);
+			}
+		});
+		studentMenu.add(searchStudent);
 		
+	}
+
+	private void addPackageOptionsToMenu() {
+
 		JMenu packageMenu = new JMenu("Pacotes");
 		menuBar.add(packageMenu);
 		
@@ -134,33 +159,66 @@ public class View extends JFrame {
 				}				
 			}
 		});
-		packageMenu.add(searchPackage);
+		packageMenu.add(searchPackage);		
+	}
+
+	private void addCourseOptionsToMenu() {
+		JMenu courseMenu = new JMenu("Cursos");
+		menuBar.add(courseMenu);
 		
-		JMenu studentMenu = new JMenu("Alunos");
-		menuBar.add(studentMenu);
-		
-		JMenuItem newStudent = new JMenuItem("Cadastrar aluno");
-		newStudent.addActionListener(new ActionListener() {
+		JMenuItem registerCourse = new JMenuItem("Cadastrar Curso");
+		registerCourse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				dispose();
-				EnrollStudent newStudentFrame = new EnrollStudent();
-				newStudentFrame.setVisible(true);
+				boolean permissionToAccess = false;
+				
+				permissionToAccess = getPermissionToAccess();
+				if(permissionToAccess == true){
+					dispose();
+					NewCourse newCourseFrame = new NewCourse();
+					newCourseFrame.setVisible(true);
+				}
+				else{
+					View frame = new View();
+					frame.setVisible(true);
+				}
 			}
 		});
-		studentMenu.add(newStudent);
-
-		JMenuItem searchStudent = new JMenuItem("Visualizar Aluno");
-		searchStudent.addActionListener(new ActionListener() {
+		courseMenu.add(registerCourse);
+		
+		JMenuItem searchCourse = new JMenuItem("Visualizar Curso");
+		searchCourse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-				SearchStudent searchStudentFrame = new SearchStudent();
-				searchStudentFrame.setVisible(true);
+				
+				dispose();			
+				try {
+					SearchCourse searchCourseFrame = new SearchCourse();
+					searchCourseFrame.setVisible(true);
+				} 
+				catch(SQLException e){
+					e.printStackTrace();
+				}
+				catch(CourseException e){
+					
+				}
 			}
 		});
-		studentMenu.add(searchStudent);
+		courseMenu.add(searchCourse);
+		
+	}
+
+	protected void createLabelsAndFields() {
+		// Nothing to do
 	}
 	
+	protected void createMasks(){
+		// Nothing to do
+	}
+	
+	protected void createButtons() {
+		// Nothing to do
+	}
+
 	protected boolean getPermissionToAccess(){
 		
 		boolean canAccess = false;
