@@ -21,6 +21,7 @@ import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
 import exception.PaymentException;
+import exception.PersonException;
 import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
@@ -47,7 +48,7 @@ public class PaymentTest{
 	
 	@Before
 	public void setUp() throws DateException, AddressException, PhoneException,
-						CPFException, RGException, StudentException, ServiceException{
+						CPFException, RGException, StudentException, ServiceException, PersonException{
 		
 		date = new Date(05, 06, 1996);
 		address = new Address("Rua 3 ", "6B", "", "72323411", "Brasília");
