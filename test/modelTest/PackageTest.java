@@ -101,8 +101,8 @@ public class PackageTest {
 			Course course1 = courseController.get(Integer.parseInt(coursesID.get(0)));
 			Course course2 = courseController.get(Integer.parseInt(coursesID.get(1)));
 			
-			assertEquals(course1.getCourseId(), packageInstance.getPackageCourses().get(0).getCourseId());
-			assertEquals(course2.getCourseId(), packageInstance.getPackageCourses().get(1).getCourseId());
+			assertEquals(course1.getId(), packageInstance.getPackageCourses().get(0).getId());
+			assertEquals(course2.getId(), packageInstance.getPackageCourses().get(1).getId());
 			
 		}
 		catch(PackageException e){

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import controller.CourseController;
 import controller.PackageController;
+import model.ServiceItem;
 import exception.PaymentException;
 import exception.ServiceException;
 import model.Package;
@@ -16,84 +17,48 @@ public class Service extends Model{
 	private static final String PAYMENT_CANT_BE_NULL = "O pagamento do serviço não pode estar em branco.";
 	private static final String DATE_CANT_BE_NULL = "A data da matrícula não pode estar em branco.";
 	private static final String SERVICE_ID_CANT_BE_ZERO = "O ID do serviço deve ser maior que zero.";
+	private static final String CANT_ADD_NULL_ITEM_TO_SERVICE = "Não é possível adicionar um item nulo ao serviço.";
 	
 	private Integer serviceId; 
-	private Student student;
-	private ArrayList<Course> courses = new ArrayList<Course>();
-	private ArrayList<Package> packages = new ArrayList<Package>();
+	private Student student;	
 	private Payment payment;
 	private Date contractsDate;
+	private ArrayList<ServiceItem> itens = new ArrayList<ServiceItem>();
 	
-	public Service(Student student, ArrayList<String> courses, ArrayList<String> packages) throws ServiceException{
-		
-		boolean thereIsCourses = courses != null && !courses.isEmpty();
-		boolean thereIsPackages = packages != null && !packages.isEmpty(); 
-		
-		// At least one of it must contains something
-		if(thereIsCourses || thereIsPackages){
-		
-			setStudent(student);
-			addCoursesToService(courses);
-			addPackagesToService(packages);
-		}
-		else{
-			throw new ServiceException(SERVICE_MUST_CONTAIN_AT_LEAST_A_COURSE_OR_PACKAGE);
-		}
-	}
-	
-	public Service(Integer serviceId, Student student, ArrayList<String> courses, ArrayList<String> packages) throws ServiceException{
-		
-		boolean thereIsCourses = courses != null && !courses.isEmpty();
-		boolean thereIsPackages = packages != null && !packages.isEmpty(); 
-		
-		// At least one of it must contains something
-		if(thereIsCourses || thereIsPackages){
-			
-			setServiceId(serviceId);
-			setStudent(student);
-			addCoursesToService(courses);
-			addPackagesToService(packages);
-		}
-		else{
-			throw new ServiceException(SERVICE_MUST_CONTAIN_AT_LEAST_A_COURSE_OR_PACKAGE);
-		}
-	}
-	
-	public Service(Student student, ArrayList<String> courses, ArrayList<String> packages, Date contractsDate, Payment payment) throws ServiceException, PaymentException{
-		
-		boolean thereIsCourses = courses != null && !courses.isEmpty();
-		boolean thereIsPackages = packages != null && !packages.isEmpty(); 
-		
-		if(thereIsCourses || thereIsPackages){
-			setContractsDate(contractsDate);
-			setStudent(student);
-			addCoursesToService(courses);
-			addPackagesToService(packages);
-			setPayment(payment);
-		}
-		else{
-			throw new ServiceException(SERVICE_MUST_CONTAIN_AT_LEAST_A_COURSE_OR_PACKAGE);
-		}
+	public Service(Student student) throws ServiceException{
 
+		setStudent(student);
+	}
+	
+	public Service(Integer serviceId, Student student) throws ServiceException{
+		
+		setServiceId(serviceId);
+		setStudent(student);
+	}
+	
+	public Service(Student student, Date contractsDate, Payment payment) throws ServiceException, PaymentException{
+		
+		setContractsDate(contractsDate);
+		setStudent(student);
+		setPayment(payment);
 	}
 	
 	
 	public Service(Service service, Payment payment) throws ServiceException, PaymentException{
+				
+		setContractsDate(service.getContractsDate());
+		setStudent(service.getStudent());
+		setPayment(payment);
+	}
+	
+	public void addItem(ServiceItem item) throws ServiceException{
 		
-		boolean thereIsCourses = service.getCourses() != null && !service.getCourses().isEmpty();
-		boolean thereIsPackages = service.getPackages() != null && !service.getPackages().isEmpty(); 
-		
-		if(thereIsCourses || thereIsPackages){
-			setContractsDate(service.getContractsDate());
-			setStudent(service.getStudent());
-			addCoursesToService(getIdCourses(service.getCourses()));
-			addPackagesToService(getIdPackages(service.getPackages()));
-			setPayment(payment);
+		if(item != null){
+			this.itens.add(item);
 		}
 		else{
-			throw new ServiceException(SERVICE_MUST_CONTAIN_AT_LEAST_A_COURSE_OR_PACKAGE);
+			throw new ServiceException(CANT_ADD_NULL_ITEM_TO_SERVICE);
 		}
-
 	}
 	
 	/**
@@ -113,74 +78,6 @@ public class Service extends Model{
 	
 	private void setPayment(Payment payment){
 		this.payment = payment;
-	}
-	
-	private void addPackagesToService(ArrayList<String> packages){
-		
-		if(packages != null){
-		
-			boolean isNotEmpty = !packages.isEmpty(); 
-			
-			if(isNotEmpty){
-				
-				PackageController packageController = new PackageController();
-				
-				int i = 0;
-				for(i = 0; i < packages.size(); i++){
-					
-					int packageId = Integer.parseInt(packages.get(i));
-					Package currentPackage;
-
-					currentPackage = packageController.getPackage(packageId);
-
-					if(currentPackage != null){
-						this.packages.add(currentPackage);
-					}
-					else{
-						// Nothing to do because the package is invalid
-					}
-				}
-			}
-			else{
-				// Nothing to do because there is no packages contracted
-			}
-		}
-		else{
-			// Nothing to do because the packages array is already empty
-		}
-	}
-	
-	private void addCoursesToService(ArrayList<String> courses){
-		
-		if(courses != null){
-			
-			boolean isNotEmpty = !courses.isEmpty(); 
-			
-			if(isNotEmpty){
-				
-				CourseController courseController = new CourseController();
-				
-				int i = 0;
-				for(i = 0; i < courses.size(); i++){
-					
-					int courseId = Integer.parseInt(courses.get(i));
-					Course course;
-					
-					course = courseController.get(courseId);
-					
-					if(course != null){
-						this.courses.add(course);
-					}else{
-						// Nothing to do because the course is invalid
-					}
-				}
-			}else{
-				// Nothing to do because there is no courses contracted
-			}
-		}
-		else{
-			// Nothing to do because the course array is already empty
-		}
 	}
 	
 	private void setServiceId(Integer serviceId) throws ServiceException{
@@ -215,80 +112,13 @@ public class Service extends Model{
 	
 	public Integer getTotalValue(){
 		
-		Integer coursesTotalValue = getCoursesValue();
-		Integer packagesTotalValue = getPackagesValue();
-		
-		Integer serviceTotal = coursesTotalValue + packagesTotalValue;
+		Integer serviceTotal = 0;
+		for(ServiceItem item : getItens()){
+			serviceTotal += item.getValue();
+		}
 		
 		return serviceTotal;
 	}
-	
-	private Integer getCoursesValue(){
-		
-		ArrayList<Course> courses = this.courses;
-		
-		Integer coursesTotalValue = 0;
-		
-		int i = 0;
-		for(i = 0; i < courses.size(); i++){
-			
-			Integer courseValue = courses.get(i).getCourseValue();
-			coursesTotalValue += courseValue;
-		}
-		
-		return coursesTotalValue;
-	}
-	
-	private Integer getPackagesValue(){
-		
-		ArrayList<Package> packages = this.packages;
-		
-		Integer packagesTotalValue = 0;
-		
-		int i = 0;
-		for(i = 0; i < packages.size(); i++){
-			
-			Integer packageValue = packages.get(i).getPackageValue();
-			packagesTotalValue += packageValue;
-		}
-		
-		return packagesTotalValue;
-	}
-	
-	
-	private ArrayList<String> getIdPackages(ArrayList<Package> packages) {
-		
-		ArrayList<String> packagesId = new ArrayList<String>();
-		
-		int i = 0;
-		
-		while(i < packages.size()){
-			
-			Integer packageId = packages.get(i).getPackageId();
-			packagesId.add(packageId.toString());
-			i++;
-		}
-		
-		return packagesId;
-	}
-
-	private ArrayList<String> getIdCourses(ArrayList<Course> courses) {
-		
-
-		ArrayList<String> coursesId = new ArrayList<String>();
-		
-		int i = 0;
-		
-		while(i < courses.size()){
-			
-			Integer courseId = courses.get(i).getCourseId();
-			coursesId.add(courseId.toString());
-			i++;
-		}
-		
-		return coursesId;
-	}
-
 	
 	public Integer getServiceId(){
 		return this.serviceId;
@@ -297,14 +127,6 @@ public class Service extends Model{
 	public Student getStudent(){
 		return this.student;
 	}
-
-	public ArrayList<Course> getCourses(){
-		return this.courses;
-	}
-
-	public ArrayList<Package> getPackages(){
-		return this.packages;
-	}
 	
 	public Payment getPayment(){
 		return this.payment;
@@ -312,6 +134,10 @@ public class Service extends Model{
 	
 	public Date getContractsDate(){
 		return this.contractsDate;
+	}
+	
+	public ArrayList<ServiceItem> getItens(){
+		return this.itens;
 	}
 
 	public String getTotalValueFormatted() {

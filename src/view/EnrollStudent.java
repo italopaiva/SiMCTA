@@ -560,8 +560,8 @@ public class EnrollStudent extends View {
 		while(indexOfCourses < courses.size()){
 			
 			Course course = courses.get(indexOfCourses);
-			Integer courseId = course.getCourseId();
-			String courseName = (course.getCourseName());
+			Integer courseId = course.getId();
+			String courseName = (course.getName());
 
 			coursesId.add(courseId.toString());
 			coursesName.add(courseName);

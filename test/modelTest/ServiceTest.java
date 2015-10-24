@@ -88,7 +88,7 @@ public class ServiceTest {
 		
 		try{
 			service = new Service(student, courses, packages);
-			assertEquals(1, service.getCourses().get(0).getCourseId());
+			assertEquals(1, service.getCourses().get(0).getId());
 		}
 		catch(ServiceException e){
 			fail("Should not throw this exception:" + e.getMessage());
@@ -100,7 +100,7 @@ public class ServiceTest {
 		
 		try{
 			service = new Service(student, courses, packages);
-			assertEquals(2, service.getCourses().get(1).getCourseId());
+			assertEquals(2, service.getCourses().get(1).getId());
 		}
 		catch(ServiceException e){
 			fail("Should not throw this exception:" + e.getMessage());

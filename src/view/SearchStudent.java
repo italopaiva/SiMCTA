@@ -649,7 +649,7 @@ public class SearchStudent extends View {
 			
 			// Building the arraylist with the courses name
 			while (i < courses.size()){
-				String courseName = courses.get(i).getCourseName();
+				String courseName = courses.get(i).getName();
 				coursesName.add(courseName);
 				i++;
 			}

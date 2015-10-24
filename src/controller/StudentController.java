@@ -1,10 +1,8 @@
 package controller;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import dao.PackageDAO;
 import dao.StudentDAO;
 import exception.AddressException;
 import exception.CPFException;

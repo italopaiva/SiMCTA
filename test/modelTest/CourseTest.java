@@ -44,7 +44,7 @@ public class CourseTest {
 			newCourse("Instalação de som", "Curso para aprender instalar som",
 						3, 150000);
 			
-			assertEquals("Instalação de som", course.getCourseName());
+			assertEquals("Instalação de som", course.getName());
 			assertEquals("Curso para aprender instalar som", course.getCourseDescription());
 		}catch (CourseException e){
 			
@@ -62,7 +62,7 @@ public class CourseTest {
 			newCourse("Aplicação de película", "Curso para aprender a aplicar película",
 						MIN_DURATION, 150000);
 			
-			assertEquals(1, course.getCourseDuration().intValue());
+			assertEquals(1, course.getDuration().intValue());
 		}catch (CourseException e){
 			
 			fail("Should not throw exception.");
@@ -77,7 +77,7 @@ public class CourseTest {
 			newCourse("Aplicação de película", "Curso para aprender a aplicar película",
 						MAX_DURATION, 150000);
 			
-			assertEquals(99, course.getCourseDuration().intValue());
+			assertEquals(99, course.getDuration().intValue());
 		}catch (CourseException e){
 			
 			fail("Should not throw exception.");
@@ -95,7 +95,7 @@ public class CourseTest {
 			newCourse("Aplicação de película", "Curso para aprender a aplicar película",
 						randomDuration, 150000);
 			
-			assertEquals(randomDuration, course.getCourseDuration().intValue());
+			assertEquals(randomDuration, course.getDuration().intValue());
 		}catch (CourseException e){
 			
 			fail("Should not throw exception.");
@@ -113,7 +113,7 @@ public class CourseTest {
 			newCourse("Aplicação de película", "Curso para aprender a aplicar película",
 						3, MIN_VALUE);
 			
-			assertEquals(MIN_VALUE, course.getCourseValue().intValue());
+			assertEquals(MIN_VALUE, course.getValue().intValue());
 		}catch (CourseException e){
 			
 			fail("Should not throw exception.");
@@ -128,7 +128,7 @@ public class CourseTest {
 			newCourse("Aplicação de película", "Curso para aprender a aplicar película",
 						3, MAX_VALUE);
 			
-			assertEquals(MAX_VALUE, course.getCourseValue().intValue());
+			assertEquals(MAX_VALUE, course.getValue().intValue());
 		}catch (CourseException e){
 			
 			fail("Should not throw exception.");
@@ -146,7 +146,7 @@ public class CourseTest {
 			newCourse("Aplicação de película", "Curso para aprender a aplicar película",
 						3, randomValue);
 			
-			assertEquals(randomValue, course.getCourseValue().intValue());
+			assertEquals(randomValue, course.getValue().intValue());
 		}catch (CourseException e){
 			
 			fail("Should not throw exception.");

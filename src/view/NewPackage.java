@@ -389,12 +389,12 @@ public class NewPackage extends View{
 		while(indexOfCourses < courses.size()){
 			
 			Course course = courses.get(indexOfCourses);
-			Integer courseId = course.getCourseId();
-			Integer courseDuration = course.getCourseDuration();
+			Integer courseId = course.getId();
+			Integer courseDuration = course.getDuration();
 
 			String[] allCourses = new String[3];
 	
-			allCourses[0] = (course.getCourseName());
+			allCourses[0] = (course.getName());
 			allCourses[1] = (courseId.toString());
 			allCourses[2] = (courseDuration.toString());
 			

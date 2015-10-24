@@ -1,6 +1,6 @@
 package exception;
 
-public class PackageException extends Exception {
+public class PackageException extends ServiceItemException{
 
 	public PackageException(String message){
 		super(message);

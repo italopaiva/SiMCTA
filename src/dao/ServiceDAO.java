@@ -72,7 +72,7 @@ public class ServiceDAO extends DAO {
 		
 		for(i = 0; i < quantityOfCourses; i++){
 			
-			int currentCourseId = courses.get(i).getCourseId();
+			int currentCourseId = courses.get(i).getId();
 			String query = "INSERT INTO "+ TABLE_SERVICE_COURSE_NAME +" ("+ ID_COLUMN +", "+ ID_COURSE_COLUMN +") ";
 				   query += "VALUES ('"+ serviceId +"', '"+ currentCourseId +"')";
 				   
