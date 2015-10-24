@@ -248,9 +248,9 @@ public class EditPackage extends View{
 	 */
 	private void setFieldValues(Package currentPackage) throws CourseException, SQLException {
 		
-		String packageName = currentPackage.getPackageName();
-		String packageDuration = currentPackage.getPackageDuration().toString();
-		String packageValue = currentPackage.getPackageValue().toString();
+		String packageName = currentPackage.getName();
+		String packageDuration = currentPackage.getDuration().toString();
+		String packageValue = currentPackage.getValue().toString();
 				
 		packageNameField.setText(packageName);
 		packageDurationField.setText(packageDuration);

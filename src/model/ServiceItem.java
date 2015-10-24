@@ -27,7 +27,7 @@ public abstract class ServiceItem extends Model{
 	protected static final int MAX_VALUE = 999999;
 	protected static final int MIN_VALUE = 1;
 	
-	protected int id;
+	protected Integer id;
 	protected String name;
 	protected int status;
 
@@ -83,7 +83,7 @@ public abstract class ServiceItem extends Model{
 		}
 	}
 	
-	protected void setId(int id) throws ServiceItemException{
+	protected void setId(Integer id) throws ServiceItemException{
 		
 		boolean courseIdIsValid = id > 0;
 		
@@ -116,7 +116,7 @@ public abstract class ServiceItem extends Model{
 		return this.value;
 	}
 	
-	public int getId(){
+	public Integer getId(){
 		return this.id;
 	}
 	

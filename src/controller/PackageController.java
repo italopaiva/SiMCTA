@@ -26,17 +26,30 @@ public class PackageController {
 	 * Create a new course with the given information
 	 * @param packageName - the name of the Package
 	 * @param packageValue - the price of the Package
-	 * @param packageDuration - the duration of the Package
 	 * @param coursesId - the Id of the courses contained in the package
 	 * @return - TRUE if the package was created or FALSE if it does not
 	 * @throws PackageException
 	 */
-	public void newPackage(String packageName, Integer packageValue, Integer packageDuration, ArrayList<String> coursesId) throws PackageException{
+	public void newPackage(String packageName, Integer packageValue, ArrayList<String> coursesId) throws PackageException{
 		
-		int packageID = packageDAO.getTheLastId() + 1;
+		Integer packageId = packageDAO.getTheLastId() + 1; 
 		
-		Package packageInstance = new Package(packageID, packageName, packageValue,
-				                              packageDuration, coursesId);
+		Package packageInstance = new Package(packageId, packageName, packageValue);
+		
+		CourseController courseController = new CourseController();
+		
+		for(String courseId : coursesId){
+			
+			Integer id = new Integer(courseId);
+			Course course = courseController.get(id);
+			
+			if(course != null){
+				packageInstance.addServiceItem(course);
+			}
+			else{
+				// Nothing to do because the course is invalid
+			}
+		}
 		
 		packageDAO.save(packageInstance);
 
@@ -110,8 +123,8 @@ public class PackageController {
 		
 		packageAux = packageDAO.showPackage(idPackage);
 		
-		packageToShow = new Package(packageAux.getPackageId(), packageAux.getPackageName(),
-				packageAux.getPackageValue(), packageAux.getPackageDuration(), packageAux.getPackageStatus(),
+		packageToShow = new Package(packageAux.getId(), packageAux.getName(),
+				packageAux.getValue(), packageAux.getDuration(), packageAux.getStatus(),
 				coursesName);
 		
 		return packageToShow;

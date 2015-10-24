@@ -2,13 +2,9 @@ package model;
 
 import java.util.ArrayList;
 
-import controller.CourseController;
-import controller.PackageController;
-import model.ServiceItem;
+import model.datatype.Date;
 import exception.PaymentException;
 import exception.ServiceException;
-import model.Package;
-import model.datatype.Date;
 
 public class Service extends Model{
 	

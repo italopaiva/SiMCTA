@@ -109,8 +109,7 @@ public class NewPackage extends View{
 											
 					PackageController packageController = new PackageController();
 					
-					packageController.newPackage(packageName, packageValue, 
-																		   packageDuration, coursesId);
+					packageController.newPackage(packageName, packageValue, coursesId);
 
 					showInfoMessage("Pacote cadastrado com sucesso.");
 					dispose();

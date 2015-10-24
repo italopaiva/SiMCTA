@@ -16,16 +16,20 @@ public class Package extends ServiceItem{
 	private static final String CANT_ADD_NULL_ITEM = "Não é possível adicionar um curso vazio ao pacote.";
 	private static final String ERROR_CALCULATING_PACKAGE_DURATION = "A duração do pacote não está dentro dos limites inferior e superior.";
 	
+	private static final int PACKAGE_ACTIVE = 1;
+	
 	private ArrayList<ServiceItem> serviceItens = new ArrayList<ServiceItem>();
 	
 	/** Constructors */
 	public Package(){}
 	
-	public Package(String packageName, Integer packageValue) throws PackageException{
+	public Package(Integer packageId, String packageName, Integer packageValue) throws PackageException{
 		
-		try {
+		try{
+			setId(packageId);
 			setName(packageName);
 			setValue(packageValue);
+			setStatus(PACKAGE_ACTIVE);
 		}
 		catch (ServiceItemException e){
 			throw new PackageException(e.getMessage());
@@ -93,6 +97,20 @@ public class Package extends ServiceItem{
 		}
 		
 		return totalDuration;
+	}
+	
+	public ArrayList<String> getCourses(){
+		
+		ArrayList<ServiceItem> itens = getServiceItens();
+		
+		ArrayList<String> courses = new ArrayList<String>();
+		
+		for(ServiceItem item : itens){
+			
+			courses.add(item.getId().toString());
+		}
+		
+		return courses;
 	}
 	
 	public ArrayList<ServiceItem> getServiceItens(){

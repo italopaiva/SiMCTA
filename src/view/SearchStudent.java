@@ -681,7 +681,7 @@ public class SearchStudent extends View {
 			
 			// Building the arraylist with the courses name
 			while (i < packages.size()){
-				String packageName = packages.get(i).getPackageName();
+				String packageName = packages.get(i).getName();
 				packagesName.add(packageName);
 				i++;
 			}

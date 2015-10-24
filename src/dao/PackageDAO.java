@@ -8,6 +8,7 @@ import java.util.Map;
 
 import exception.PackageException;
 import model.Package;
+import model.ServiceItem;
 
 public class PackageDAO extends DAO{
 	
@@ -37,9 +38,9 @@ public class PackageDAO extends DAO{
 	 */
 	public void save(Package packageInstance) throws PackageException {
 		
-		String packageName = packageInstance.getPackageName();
-		Integer packageValue = packageInstance.getPackageValue();
-		Integer packageDuration = packageInstance.getPackageDuration();
+		String packageName = packageInstance.getName();
+		Integer packageValue = packageInstance.getValue();
+		Integer packageDuration = packageInstance.getDuration();
 		
 		String query = "INSERT INTO "+ TABLE_NAME + "(" + NAME_COLUMN + ", "
 								+ VALUE_COLUMN +  ", " + DURATION_COLUMN + ")";
@@ -73,41 +74,24 @@ public class PackageDAO extends DAO{
 	 * @throws SQLException 
 	 */
 	private void saveDataOfPackageCourse(Package packageInstance) throws SQLException {
-
-		int indexOfCourses = 0;
-		int quantityOfCourses = packageInstance.getCourses().size();
 		
-		Integer packageId = packageInstance.getPackageId();
-		Integer courseId = 0;
-		String courseIdString = null;
-		String query = null;
-		ArrayList<String> coursesId = new ArrayList<String>();
+		Integer packageId = packageInstance.getId();
+		ArrayList<ServiceItem> itens = new ArrayList<ServiceItem>();
 		
-		coursesId = packageInstance.getCourses();
+		itens = packageInstance.getServiceItens();
 
-		try{
-			while(indexOfCourses < quantityOfCourses){
-				
-				query = "INSERT INTO "+ ASSOCIATION_TABLE_NAME + "(" + ID_COLUMN + ", "
-						+ ID_COURSE_COLUMN + ")";
-				
-				courseIdString = coursesId.get(indexOfCourses);
-				
-				courseId = Integer.parseInt(courseIdString);
-
-				query += "VALUES('" + packageId + "','" + courseId + "')";
-
-				this.execute(query);
-				indexOfCourses++;
-			}						
-		}
-		catch(SQLException caughtException){
+		for(ServiceItem item : itens){
 			
-			throw caughtException;
+			String query = "INSERT INTO "+ ASSOCIATION_TABLE_NAME + "(" + ID_COLUMN + ", "
+					+ ID_COURSE_COLUMN + ")";
+			
+			Integer courseId = item.getId();
+			
+			query += "VALUES('" + packageId + "','" + courseId + "')";
+			
+			this.execute(query);
 		}
 	}
-
-	
 
 	/**
 	 * Gets the last package id from database
@@ -147,9 +131,9 @@ public class PackageDAO extends DAO{
 	 */
 	public boolean update(Integer packageId, Package newPackage) throws PackageException{
 		
-		String newPackageName = newPackage.getPackageName();
-		Integer newPackageValue = newPackage.getPackageValue();
-		Integer newPackageDuration = newPackage.getPackageDuration();
+		String newPackageName = newPackage.getName();
+		Integer newPackageValue = newPackage.getValue();
+		Integer newPackageDuration = newPackage.getDuration();
 		ArrayList<String> newPackageCourses = newPackage.getCourses(); 
 		
 		String query = "UPDATE "+ TABLE_NAME + " SET "

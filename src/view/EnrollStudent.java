@@ -534,8 +534,8 @@ public class EnrollStudent extends View {
 		while(indexOfPackages < packages.size()){
 			
 			Package currentPackage = packages.get(indexOfPackages);
-			Integer packageId = currentPackage.getPackageId();
-			String packageName = (currentPackage.getPackageName());
+			Integer packageId = currentPackage.getId();
+			String packageName = (currentPackage.getName());
 
 			packagesId.add(packageId.toString());
 			packagesName.add(packageName);
