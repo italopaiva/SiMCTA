@@ -1,7 +1,14 @@
 package controller;
 
+import java.util.ArrayList;
+
 import dao.TeacherDAO;
+import exception.AddressException;
+import exception.CPFException;
+import exception.DateException;
 import exception.PersonException;
+import exception.PhoneException;
+import exception.RGException;
 import exception.TeacherException;
 import model.Teacher;
 import model.datatype.Address;
@@ -51,6 +58,22 @@ public class TeacherController {
 	
 		}
 
+	}
+	
+	public ArrayList<Teacher> getTeachers() throws TeacherException{
+		
+		ArrayList<Teacher> teachers = new ArrayList<Teacher>();
+		
+		try {
+			teachers = teacherDAO.get();
+		} 
+		catch(PhoneException | CPFException | DateException
+				| AddressException | RGException | TeacherException e){
+			
+			throw new TeacherException(e.getMessage());
+		}
+		
+		return teachers;
 	}
 
 	public void setTeacherDAO(TeacherDAO teacherDAO){

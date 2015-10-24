@@ -29,6 +29,11 @@ public class Teacher extends Person{
 		setQualification(qualification);
 	}	
 
+	public Teacher(String teacherName, CPF teacherCpf) throws PersonException {
+		setName(teacherName);
+		setCpf(teacherCpf);
+	}
+
 	private void setQualification(String qualification) throws TeacherException{
 		
 		if(containsOnlyLettersAndSpaces(qualification)){

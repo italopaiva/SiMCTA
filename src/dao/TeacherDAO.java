@@ -2,7 +2,14 @@ package dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
+import model.Teacher;
+import model.datatype.Address;
+import model.datatype.CPF;
+import model.datatype.Date;
+import model.datatype.Phone;
+import model.datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
@@ -11,12 +18,6 @@ import exception.PhoneException;
 import exception.RGException;
 import exception.StudentException;
 import exception.TeacherException;
-import model.Teacher;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 
 public class TeacherDAO extends DAO{
 	
@@ -42,6 +43,7 @@ public class TeacherDAO extends DAO{
 	private static final String CANT_SAVE_TEACHER = "Não foi possível salvar os dados do professor informado.";
 	private static final String CPF_ALREADY_EXISTS = "O CPF informado já está cadastrado.";
 	private static final String COULDNT_CHECK_TEACHER = "Não foi possível checar se o professor está cadastrado. Tente novamente.";
+	private static final String CANT_FOUND_TEACHERS = "Não foi possível encontrar os professores cadastrados";
 	
 	public void save(Teacher teacher) throws TeacherException{
 		try{
@@ -101,6 +103,48 @@ public class TeacherDAO extends DAO{
 			throw new TeacherException(COULDNT_CHECK_TEACHER);
 		}
 		
+	}
+	
+	/**
+	 * Gets all teachers from database
+	 * @return an array with all teachers 
+	 * @throws PhoneException
+	 * @throws CPFException
+	 * @throws DateException
+	 * @throws AddressException
+	 * @throws RGException
+	 * @throws StudentException
+	 */
+	public ArrayList<Teacher> get() throws PhoneException, CPFException, DateException, AddressException,
+												RGException, TeacherException {
+		
+		ResultSet resultOfTheSearch = null;
+		
+		String query = ("SELECT * FROM "+ TEACHER_TABLE_NAME + " WHERE " + STATUS_COLUMN + "=" + 1);
+		ArrayList<Teacher> teachers = null;
+		Teacher teacher = null;
+		CPF teacherCpf = null;
+		
+		try{
+			resultOfTheSearch = this.search(query);
+			
+			while(resultOfTheSearch.next()){
+				String teacherName = (resultOfTheSearch.getString(NAME_COLUMN));
+				String cpf = (resultOfTheSearch.getString(CPF_COLUMN));
+				teacherCpf = new CPF(cpf);
+				teacher = new Teacher(teacherName, teacherCpf);
+				teachers.add(teacher);
+			}
+			
+		}
+		catch(SQLException e){
+			throw new TeacherException(CANT_FOUND_TEACHERS);
+		} 
+		catch (PersonException e) {
+			throw new TeacherException(CANT_FOUND_TEACHERS);
+		}
+
+		return teachers;
 	}
 
 	/**
