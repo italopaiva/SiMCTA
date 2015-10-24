@@ -1,5 +1,6 @@
 package model;
 
+import exception.PersonException;
 import exception.StudentException;
 import model.datatype.CPF;
 import model.datatype.RG;
@@ -11,13 +12,13 @@ public class Student extends Person{
 	
 	public Student(String studentName, CPF studentCpf, RG studentRg,
 			Date birthdate, String studentEmail, Address address, Phone principalPhone,
-			Phone secondaryPhone, String motherName, String fatherName, int status) throws StudentException {
+			Phone secondaryPhone, String motherName, String fatherName, int status) throws PersonException {
 			
-		setStudentName(studentName);
-		setStudentCpf(studentCpf);
-		setStudentRg(studentRg);
+		setName(studentName);
+		setCpf(studentCpf);
+		setRg(studentRg);
 		setBirthdate(birthdate);
-		setStudentEmail(studentEmail);
+		setEmail(studentEmail);
 		setAddress(address);
 		setPrincipalPhone(principalPhone);
 		setSecondaryPhone(secondaryPhone);
@@ -26,9 +27,9 @@ public class Student extends Person{
 		setStatus(status);
 	}
 	
-	public Student(String studentName, CPF studentCpf) throws StudentException {
-		setStudentName(studentName);
-		setStudentCpf(studentCpf);
+	public Student(String studentName, CPF studentCpf) throws PersonException {
+		setName(studentName);
+		setCpf(studentCpf);
 	}
 
 

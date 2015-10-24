@@ -3,7 +3,7 @@ package model;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import exception.StudentException;
+import exception.PersonException;
 import model.datatype.Address;
 import model.datatype.CPF;
 import model.datatype.Date;
@@ -12,7 +12,7 @@ import model.datatype.RG;
 
 public class Person extends Model{
 
-	private static final String NAMES_MUST_BE_ALPHA_CHARACTERS = "O nomes devem conter apenas caractares alfabéticos.";
+	protected static final String NAMES_MUST_BE_ALPHA_CHARACTERS = "O nomes devem conter apenas caractares alfabéticos.";
 	private static final String PHONE_CANT_BE_NULL = "Os telefones não podem ficar em branco.";
 	private static final String ADDRESS_CANT_BE_NULL = "O endereço não pode estar em braco.";
 	private static final String BIRTHDATE_CANT_BE_NULL = "A data de aniversário não pode estar em branco.";
@@ -35,16 +35,15 @@ public class Person extends Model{
 	private String fatherName;
 	private int status;
 	
-	protected void setFatherName(String fatherName) throws StudentException {
-		
-		if(fatherName != null && fatherName != ""){
+	protected void setFatherName(String fatherName) throws PersonException {
+		if(isNotEmpty(fatherName)){
 			
 			if(containsOnlyLettersAndSpaces(fatherName)){
 				
 				this.fatherName = fatherName;
 			}
 			else{
-				throw new StudentException(NAMES_MUST_BE_ALPHA_CHARACTERS);
+				throw new PersonException(NAMES_MUST_BE_ALPHA_CHARACTERS);
 			}
 		}
 		else{
@@ -52,83 +51,82 @@ public class Person extends Model{
 		}
 	}
 
-	protected void setMotherName(String motherName) throws StudentException {
-		
+	protected void setMotherName(String motherName) throws PersonException {
 		if(containsOnlyLettersAndSpaces(motherName)){
 			
 			this.motherName = motherName;
 		}
 		else{
-			throw new StudentException(NAMES_MUST_BE_ALPHA_CHARACTERS);
+			throw new PersonException(NAMES_MUST_BE_ALPHA_CHARACTERS);
 		}
 	}
 	
-	protected void setStudentName(String studentName) throws StudentException{
+	protected void setName(String studentName) throws PersonException{
 		
 		if(containsOnlyLettersAndSpaces(studentName)){
 			this.name = studentName;
 		}
 		else{
-			throw new StudentException(NAMES_MUST_BE_ALPHA_CHARACTERS);
+			throw new PersonException(NAMES_MUST_BE_ALPHA_CHARACTERS);
 		}
 	}
 
-	protected void setSecondaryPhone(Phone secondaryPhone) throws StudentException{
+	protected void setSecondaryPhone(Phone secondaryPhone) throws PersonException{
 		
 		this.secondaryPhone = secondaryPhone;
 	}
 
-	protected void setPrincipalPhone(Phone principalPhone) throws StudentException{
+	protected void setPrincipalPhone(Phone principalPhone) throws PersonException{
 		
 		if(principalPhone != null){
 			this.principalPhone = principalPhone;
 		}
 		else{
-			throw new StudentException(PHONE_CANT_BE_NULL);
+			throw new PersonException(PHONE_CANT_BE_NULL);
 		}
 	}
 
-	protected void setAddress(Address address) throws StudentException{
+	protected void setAddress(Address address) throws PersonException{
 		
 		if(address != null){
 			this.address = address;
 		}
 		else{
-			throw new StudentException(ADDRESS_CANT_BE_NULL);
+			throw new PersonException(ADDRESS_CANT_BE_NULL);
 		}
 	}
 
-	protected void setStudentRg(RG studentRg) throws StudentException{
+	protected void setRg(RG studentRg) throws PersonException{
 		
 		if(studentRg != null){
 			this.rg = studentRg;
 		}
 		else{
-			throw new StudentException(RG_CANT_BE_NULL);
+			throw new PersonException(RG_CANT_BE_NULL);
 		}
 	}
 
-	protected void setStudentCpf(CPF studentCpf) throws StudentException{
+	protected void setCpf(CPF studentCpf) throws PersonException{
 		
 		if(studentCpf != null){
 			this.cpf = studentCpf;
 		}
 		else{
-			throw new StudentException(CPF_CANT_BE_NULL);
+			throw new PersonException(CPF_CANT_BE_NULL);
 		}
 	}
 
-	protected void setBirthdate(Date birthdate) throws StudentException{
+	protected void setBirthdate(Date birthdate) throws PersonException{
 		
 		if(birthdate != null){
 			this.birthdate = birthdate;
 		}
 		else{
-			throw new StudentException(BIRTHDATE_CANT_BE_NULL);
+			throw new PersonException(BIRTHDATE_CANT_BE_NULL);
 		}
 	}
 	
-	protected void setStudentEmail(String studentEmail) throws StudentException{
+	protected void setEmail(String studentEmail) throws PersonException{
 		
 		if(isNotEmpty(studentEmail)){
 			
@@ -141,7 +139,7 @@ public class Person extends Model{
 	        	this.email = studentEmail;
 	        }
 	        else{
-	        	throw new StudentException(EMAIL_INVALID);
+	        	throw new PersonException(EMAIL_INVALID);
 	        }
 		}
 		else{
@@ -149,13 +147,13 @@ public class Person extends Model{
 		}
 	}
 	
-	protected void setStatus(int status) throws StudentException {
+	protected void setStatus(int status) throws PersonException {
 		
 		if(status == INACTIVE || status == ACTIVE){
 			this.status = status;
 		}
 		else{
-			throw new StudentException(STATUS_INVALID);
+			throw new PersonException(STATUS_INVALID);
 		}
 	}
 	
@@ -163,15 +161,15 @@ public class Person extends Model{
 		return status;
 	}
 
-	public String getStudentName(){
+	public String getName(){
 		return name;
 	}
 
-	public CPF getStudentCpf(){
+	public CPF getCpf(){
 		return cpf;
 	}
 
-	public RG getStudentRg(){
+	public RG getRg(){
 		return rg;
 	}
 
@@ -179,7 +177,7 @@ public class Person extends Model{
 		return birthdate;
 	}
 	
-	public String getStudentEmail(){
+	public String getEmail(){
 		return email;
 	}
 

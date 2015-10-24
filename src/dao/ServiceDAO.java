@@ -45,7 +45,7 @@ public class ServiceDAO extends DAO {
 			String query = "INSERT INTO " + SERVICE_TABLE_NAME;
 			   	   query += "("+ ID_COLUMN +"," + CPF_COLUMN + ", " + PAYMENT_ID_COLUMN + ", "; 
 			   	   query += VALUE_COLUMN +", "+ DATE_COLUMN +") ";
-			   	   query += "VALUES('"+ serviceId +"', '"+ service.getStudent().getStudentCpf().getCpf() +"', '";
+			   	   query += "VALUES('"+ serviceId +"', '"+ service.getStudent().getCpf().getCpf() +"', '";
 			   	   query += service.getPayment().getPaymentId() +"', '"+ service.getTotalValue() +"', CURRENT_DATE())";
 			
 	   	   this.execute(query);
@@ -116,7 +116,7 @@ public class ServiceDAO extends DAO {
 		ResultSet services = null;
 		ResultSet coursesOfService = null;
 		ResultSet packagesOfService = null;
-		CPF cpf = student.getStudentCpf();
+		CPF cpf = student.getCpf();
 		String studentCPF = cpf.getCpf();
 		ArrayList<Service> foundServices = new ArrayList<Service>();
 		Service service = null;

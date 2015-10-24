@@ -41,6 +41,7 @@ import exception.CourseException;
 import exception.DateException;
 import exception.PackageException;
 import exception.PaymentException;
+import exception.PersonException;
 import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
@@ -696,6 +697,9 @@ public class EnrollStudent extends View {
 			message = e1.getMessage();
 		}
 		catch(PaymentException e1){
+			message = e1.getMessage();
+		} 
+		catch(PersonException e1){
 			message = e1.getMessage();
 		}
 		finally{

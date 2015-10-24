@@ -1,7 +1,8 @@
 package controller;
 
 import dao.TeacherDAO;
-import exception.StudentException;
+import exception.PersonException;
+import exception.TeacherException;
 import model.Teacher;
 import model.datatype.Address;
 import model.datatype.CPF;
@@ -18,20 +19,35 @@ public class TeacherController {
 		teacherDAO = new TeacherDAO();
 	}
 	
-	
+	/**
+	 * Receives the data of the teacher to be registered
+	 * @param teacherName - name of the teacher to be registered
+	 * @param teacherCpf - cpf of the teacher to be registered
+	 * @param teacherRg - rg of the teacher to be registered
+	 * @param birthdate - birth date of the teacher to be registered
+	 * @param email - email of the teacher to be registered (optional)
+	 * @param address - address of the teacher to be registered
+	 * @param principalPhone - principal phone of the teacher to be registered
+	 * @param secondaryPhone - secondary phone of the teacher to be registered (optional)
+	 * @param motherName - mother of the teacher to be registered
+	 * @param fatherName - father of the teacher to be registered
+	 * @param qualification 
+	 * @throws PersonException
+	 * @throws TeacherException 
+	 */
 	public void newTeacher(String teacherName, CPF teacherCpf, RG teacherRg, Date birthdate, 
 							String email, Address address, Phone principalPhone, Phone secondaryPhone, 
-							String motherName, String fatherName) throws StudentException{
+							String motherName, String fatherName, String qualification) throws PersonException, TeacherException{
 		
 		Teacher teacher;
 		try {
 			teacher = new Teacher(teacherName, teacherCpf, teacherRg, birthdate, email, address,
-					 					  principalPhone, secondaryPhone, motherName, fatherName);
+					 					  principalPhone, secondaryPhone, motherName, fatherName, qualification);
 			teacherDAO.save(teacher);
 		} 
-		catch (StudentException e) {
+		catch (PersonException e) {
 			
-			throw new StudentException(COULDNT_SAVE_TEACHER);
+			throw new PersonException(COULDNT_SAVE_TEACHER);
 	
 		}
 

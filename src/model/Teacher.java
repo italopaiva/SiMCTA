@@ -1,6 +1,7 @@
 package model;
 
-import exception.StudentException;
+import exception.PersonException;
+import exception.TeacherException;
 import model.datatype.Address;
 import model.datatype.CPF;
 import model.datatype.Date;
@@ -9,24 +10,38 @@ import model.datatype.RG;
 
 public class Teacher extends Person{
 
+	private String qualification;
+	
 	public Teacher(String teacherName, CPF teacherCpf, RG teacherRg,
 				   Date birthdate, String email, Address address,
 			       Phone principalPhone, Phone secondaryPhone, String motherName,
-			       String fatherName) throws StudentException{
-		setStudentName(teacherName);
-		setStudentCpf(teacherCpf);
-		setStudentRg(teacherRg);
+			       String fatherName, String qualification) throws PersonException, TeacherException{
+		setName(teacherName);
+		setCpf(teacherCpf);
+		setRg(teacherRg);
 		setBirthdate(birthdate);
-		setStudentEmail(email);
+		setEmail(email);
 		setAddress(address);
 		setPrincipalPhone(principalPhone);
 		setSecondaryPhone(secondaryPhone);
 		setMotherName(motherName);
 		setFatherName(fatherName);
+		setQualification(qualification);
+	}	
+
+	private void setQualification(String qualification) throws TeacherException{
+		
+		if(containsOnlyLettersAndSpaces(qualification)){
+			
+			this.qualification = qualification;
+		}
+		else{
+			throw new TeacherException(NAMES_MUST_BE_ALPHA_CHARACTERS);
+		}
 	}
 	
-	
-	
-	
+	public String getQualification(){
+		return qualification;
+	}
 
 }

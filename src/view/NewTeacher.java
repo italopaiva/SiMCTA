@@ -18,14 +18,13 @@ import model.datatype.CPF;
 import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
-import controller.StudentController;
 import controller.TeacherController;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
+import exception.PersonException;
 import exception.PhoneException;
 import exception.RGException;
-import exception.StudentException;
 import exception.TeacherException;
 
 public class NewTeacher extends View {
@@ -50,6 +49,7 @@ public class NewTeacher extends View {
 	private JTextField ufField;
 	private JTextField numberField;
 	private JTextField complementField;
+	private JTextField qualificationField;
 	
 	public NewTeacher(){
 		buildScreen();
@@ -83,13 +83,29 @@ public class NewTeacher extends View {
         JLabel rgLabel = new JLabel("Número RG");
         rgLabel.setBounds(243, 97, 85, 17);
         contentPane.add(rgLabel);
-        
-
-        
+                
         rgField = new JTextField();
         rgField.setBounds(327, 92, 100, 27);
         contentPane.add(rgField);
         rgField.setColumns(10);
+        
+        issuingInstitutionField = new JTextField();
+		issuingInstitutionField.setColumns(10);
+		issuingInstitutionField.setBounds(203, 131, 85, 27);
+		contentPane.add(issuingInstitutionField);
+		
+		JLabel issuingInstitutionLbl = new JLabel("Órgão expedidor");
+		issuingInstitutionLbl.setBounds(70, 137, 129, 15);
+		contentPane.add(issuingInstitutionLbl);
+		
+		ufField = new JTextField();
+		ufField.setColumns(10);
+		ufField.setBounds(417, 132, 100, 27);
+		contentPane.add(ufField);
+		
+		JLabel ufLbl = new JLabel("UF");
+		ufLbl.setBounds(306, 132, 27, 17);
+		contentPane.add(ufLbl);
 
         JLabel birthdateLabel = new JLabel("Data de Nascimento");
         birthdateLabel.setBounds(70, 171, 200, 17);
@@ -155,6 +171,22 @@ public class NewTeacher extends View {
         cityField.setBounds(385, 316, 105, 27);
         contentPane.add(cityField);
 
+		JLabel numberLbl = new JLabel("Nº");
+		numberLbl.setBounds(495, 282, 33, 17);
+		contentPane.add(numberLbl);
+		
+		numberField = new JTextField();
+		numberField.setBounds(522, 277, 57, 27);
+		contentPane.add(numberField);
+		
+		complementField = new JTextField();
+		complementField.setBounds(177, 316, 122, 27);
+		contentPane.add(complementField);
+		
+		JLabel complementLbl = new JLabel("Complemento");
+		complementLbl.setBounds(70, 321, 105, 17);
+		contentPane.add(complementLbl);
+        
         JLabel motherLabel = new JLabel("Nome da mãe");
         motherLabel.setBounds(70, 369, 95, 17);
         contentPane.add(motherLabel);
@@ -171,47 +203,32 @@ public class NewTeacher extends View {
         fatherField.setBounds(177, 404, 402, 27);
         contentPane.add(fatherField);
         
-        issuingInstitutionField = new JTextField();
-		issuingInstitutionField.setColumns(10);
-		issuingInstitutionField.setBounds(203, 131, 85, 27);
-		contentPane.add(issuingInstitutionField);
-		
-		JLabel issuingInstitutionLbl = new JLabel("Órgão expedidor");
-		issuingInstitutionLbl.setBounds(70, 137, 129, 15);
-		contentPane.add(issuingInstitutionLbl);
-		
-		ufField = new JTextField();
-		ufField.setColumns(10);
-		ufField.setBounds(417, 132, 100, 27);
-		contentPane.add(ufField);
-		
-		JLabel ufLbl = new JLabel("UF");
-		ufLbl.setBounds(306, 132, 27, 17);
-		contentPane.add(ufLbl);
-		
-		JLabel numberLbl = new JLabel("Nº");
-		numberLbl.setBounds(495, 282, 33, 17);
-		contentPane.add(numberLbl);
-		
-		numberField = new JTextField();
-		numberField.setBounds(522, 277, 57, 27);
-		contentPane.add(numberField);
-		
-		complementField = new JTextField();
-		complementField.setBounds(177, 316, 122, 27);
-		contentPane.add(complementField);
-		
-		JLabel complementLbl = new JLabel("Complemento");
-		complementLbl.setBounds(70, 321, 105, 17);
-		contentPane.add(complementLbl);
+        JLabel qualificationLabel = new JLabel("Qualificação");
+        qualificationLabel.setBounds(70, 444, 105, 17);
+        contentPane.add(qualificationLabel);
+        
+        qualificationField = new JTextField();
+        qualificationField.setBounds(177, 444, 402, 127);
+        contentPane.add(qualificationField);		
+
 	}
 	
 	@Override
 	protected void createMasks(){
 	       
-        MaskFormatter birthdateMask;
-        MaskFormatter cpfMask;
+        MaskFormatter birthdateMask = null;
+        MaskFormatter cpfMask = null;
 		try{
+	        // Mask for cpf
+	        cpfMask = new MaskFormatter("###########");
+	        cpfMask.setValidCharacters("0123456789");
+	        cpfMask.setValueContainsLiteralCharacters(false);
+
+	        cpfField = new JFormattedTextField(cpfMask);
+	        cpfField.setBounds(102, 97, 129, 27);
+	        contentPane.add(cpfField);
+	        cpfField.setColumns(10);
+	        
 			// Mask for birthdate
 			birthdateMask = new MaskFormatter("##/##/####");
 			birthdateMask.setValidCharacters("0123456789");
@@ -221,16 +238,7 @@ public class NewTeacher extends View {
 	        birthdateField.setBounds(70, 195, 190, 27);
 	        contentPane.add(birthdateField);
 	        birthdateField.setColumns(10);
-	        
-	        // Mask for cpf
-	        cpfMask = new MaskFormatter("###.###.###-##");
-	        cpfMask.setValidCharacters("0123456789");
-	        cpfMask.setValueContainsLiteralCharacters(true);
-	        
-	        cpfField = new JFormattedTextField(cpfMask);
-	        cpfField.setBounds(102, 97, 129, 27);
-	        contentPane.add(cpfField);
-	        cpfField.setColumns(10);
+
 		}
 		catch(ParseException e2){
 			e2.printStackTrace();
@@ -241,14 +249,19 @@ public class NewTeacher extends View {
 	protected void createButtons(){
 		registerTeacherBtn = new JButton("Cadastrar");
 		contentPane.add(registerTeacherBtn);
-		registerTeacherBtn.setBounds(422, 491, 117, 25);
+		registerTeacherBtn.setBounds(422, 581, 117, 25);
 		registerTeacherBtn.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e){			
-					newTeacher();
+					try {
+						newTeacher();
+					} 
+					catch (TeacherException e1) {
+	
+					}
 				}
 
-				private void newTeacher() {
+				private void newTeacher() throws TeacherException {
 					String message = "";
 					
 					try{
@@ -257,7 +270,7 @@ public class NewTeacher extends View {
 					
 						String cpf = cpfField.getText();
 						CPF teacherCpf = new CPF(cpf);
-					
+
 						String rgNumber = rgField.getText();
 						String rgIssuingInstitution = issuingInstitutionField.getText();
 						String rgUf = ufField.getText();
@@ -302,13 +315,15 @@ public class NewTeacher extends View {
 						String motherName = motherField.getText();
 						String fatherName = fatherField.getText();
 						
+						String qualification = qualificationField.getText();
+						
 						TeacherController teacherController = new TeacherController();
 						teacherController.newTeacher(teacherName, teacherCpf, teacherRg, birthdate, email, address,
-								 					 principalPhone, secondaryPhone, motherName, fatherName);
+								 					 principalPhone, secondaryPhone, motherName, fatherName, qualification);
 						
 						message = "Professor cadastrado com sucesso.";
 					}
-					catch(DateException | PhoneException | CPFException | RGException | AddressException |StudentException e2){
+					catch(DateException | PhoneException | CPFException | RGException | AddressException | PersonException e2){
 						message = e2.getMessage();
 					} 					
 					finally{
