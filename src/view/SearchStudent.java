@@ -516,11 +516,16 @@ public class SearchStudent extends View {
 				Phone secondaryPhone = student.getSecondaryPhone();
 
 				String cellPhone = principalPhone.getFormattedPhone();
-				String residencePhone = secondaryPhone.getFormattedPhone();
-				
 				cellField.setText(cellPhone);
-				phoneField.setText(residencePhone);
 
+				if(secondaryPhone != null){
+					String residencePhone = secondaryPhone.getFormattedPhone();
+					phoneField.setText(residencePhone);
+				}
+				else{
+					phoneField.setText("");
+				}
+				
 				visualizeServicesAndPayments(service);
 				
 				status = student.getStatus();
@@ -561,7 +566,7 @@ public class SearchStudent extends View {
 
 					private void changeStatus() {
 						
-						if(status == student.STUDENT_ACTIVE){
+						if(status == student.ACTIVE){
 							status = 0;
 						}
 						else{
@@ -597,7 +602,7 @@ public class SearchStudent extends View {
 	private String setTextToTheDeactiveOrActiveButton(int status) {
 		
 		String enrollmentStatus = "";
-		if(status == student.STUDENT_ACTIVE){
+		if(status == student.ACTIVE){
 			deactivateOrActivateButton.setText("Desativar matrícula");
 			enrollmentStatus = "desativada";
 		}
