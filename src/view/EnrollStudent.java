@@ -33,6 +33,7 @@ import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
 import controller.CourseController;
+import controller.EnrollController;
 import controller.PackageController;
 import controller.StudentController;
 import exception.AddressException;
@@ -668,8 +669,8 @@ public class EnrollStudent extends View {
 				installments = 0;
 			}
 			
-			StudentController studentController = new StudentController();
-			studentController.newStudent(studentName, studentCpf, studentRg, birthdate, email, address,
+			EnrollController enroll = new EnrollController();
+			enroll.enrollStudent(studentName, studentCpf, studentRg, birthdate, email, address,
 											 principalPhone, secondaryPhone, motherName, fatherName,
 											 addedCoursesId, addedPackagesId, paymentType, paymentForm, installments);
 			

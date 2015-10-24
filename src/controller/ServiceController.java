@@ -15,6 +15,7 @@ import model.datatype.CPF;
 
 public class ServiceController {
 	
+	private static final String CANT_SAVE_NULL_SERVICE = "Não é possível salvar um serviço nulo";
 	private ServiceDAO serviceDAO;
 	private PaymentController paymentController;
 	
@@ -28,23 +29,28 @@ public class ServiceController {
 	 * @param student - The student that requested the services
 	 * @param courses - The courses requested
 	 * @param packages - The packages requested
-	 * @param paymentType - The payment type of the chosen payment
-	 * @param paymentForm - The payment form of the chosen payment
-	 * @param installments - Quantity of installments of the payment
 	 * @throws ServiceException
-	 * @throws PaymentException
-	 */
-	public void newService(Student student, ArrayList<String> courses, ArrayList<String> packages,
-						   int paymentType, int paymentForm, Integer installments) throws ServiceException, PaymentException{
-		
+	 */	
+	public Service newService(Student student, ArrayList<String> courses, ArrayList<String> packages) throws ServiceException{
+
 		Service service = new Service(student, courses, packages);
-					
-		PaymentController paymentController = new PaymentController();
-		Payment payment = paymentController.newPayment(service, paymentType, paymentForm, installments);
+				
+		return service;
+	}
+	
+	/**
+	 * Try to save the given service
+	 * @param service
+	 * @throws ServiceException
+	 */
+	public void saveService(Service service) throws ServiceException{
 		
-		service.addPayment(payment);
-		
-		serviceDAO.save(service);
+		if(service != null){
+			serviceDAO.save(service);
+		}
+		else{
+			throw new ServiceException(CANT_SAVE_NULL_SERVICE);
+		}
 	}
 
 	/**
