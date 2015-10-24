@@ -25,6 +25,7 @@ import exception.CPFException;
 import exception.DateException;
 import exception.PhoneException;
 import exception.RGException;
+import exception.StudentException;
 import exception.TeacherException;
 
 public class NewTeacher extends View {
@@ -307,10 +308,9 @@ public class NewTeacher extends View {
 						
 						message = "Professor cadastrado com sucesso.";
 					}
-					catch(DateException | PhoneException | CPFException | RGException | AddressException e2){
+					catch(DateException | PhoneException | CPFException | RGException | AddressException |StudentException e2){
 						message = e2.getMessage();
-					}
-					
+					} 					
 					finally{
 						showInfoMessage(message);
 					}

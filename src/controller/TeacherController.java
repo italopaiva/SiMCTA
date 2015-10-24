@@ -1,6 +1,7 @@
 package controller;
 
 import dao.TeacherDAO;
+import exception.StudentException;
 import model.Teacher;
 import model.datatype.Address;
 import model.datatype.CPF;
@@ -10,6 +11,7 @@ import model.datatype.RG;
 
 public class TeacherController {
 
+	private static final String COULDNT_SAVE_TEACHER = "Não foi possível cadastrar o professor";
 	TeacherDAO teacherDAO;
 	
 	public TeacherController(){
@@ -17,11 +19,21 @@ public class TeacherController {
 	}
 	
 	
-	public void newTeacher(String teacherName, CPF teacherCpf, RG teacherRg, Date birthdate, String email, Address address, Phone principalPhone, Phone secondaryPhone, String motherName, String fatherName){
+	public void newTeacher(String teacherName, CPF teacherCpf, RG teacherRg, Date birthdate, 
+							String email, Address address, Phone principalPhone, Phone secondaryPhone, 
+							String motherName, String fatherName) throws StudentException{
 		
-		Teacher teacher = new Teacher(teacherName, teacherCpf, teacherRg, birthdate, email, address,
-				 					  principalPhone, secondaryPhone, motherName, fatherName);
-		teacherDAO.save(teacher);
+		Teacher teacher;
+		try {
+			teacher = new Teacher(teacherName, teacherCpf, teacherRg, birthdate, email, address,
+					 					  principalPhone, secondaryPhone, motherName, fatherName);
+			teacherDAO.save(teacher);
+		} 
+		catch (StudentException e) {
+			
+			throw new StudentException(COULDNT_SAVE_TEACHER);
+	
+		}
 
 	}
 

@@ -75,7 +75,6 @@ public class PaymentDAO extends DAO{
 
 				int paymentDescriptionId = payments.getInt(PAYMENT_DESCRIPTION_COLUMN);
 				int installments = payments.getInt(INSTALLMENT_COLUMN);
-
 				PaymentDescription paymentDescription = getPaymentDescription(paymentDescriptionId);
 
 				if(paymentDescription != null){

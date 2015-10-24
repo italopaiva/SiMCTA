@@ -241,11 +241,11 @@ public class StudentDAO extends DAO {
 		String studentCPF = cpf.getCpf();
 		int newStatus = -1;
 		
-		if(studentStatus == student.STUDENT_ACTIVE){
-			newStatus = student.STUDENT_INACTIVE;
+		if(studentStatus == student.ACTIVE){
+			newStatus = student.INACTIVE;
 		}
 		else{
-			newStatus = student.STUDENT_ACTIVE;
+			newStatus = student.ACTIVE;
 		}
 		
 		boolean wasUpdate = false;

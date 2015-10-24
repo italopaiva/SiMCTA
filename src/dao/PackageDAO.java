@@ -295,9 +295,6 @@ public class PackageDAO extends DAO{
 				
 				ArrayList<String> packageCourses = getPackageCourses(packageId);
 				
-				System.out.println(packageId);
-				System.out.println();
-				
 				Package currentPackage = new Package(packageId, packageName, packageValue,
 													 packageDuration, packageCourses);
 				
