@@ -162,7 +162,7 @@ public class SearchStudent extends View {
 		contentPane.add(internalFrame);
 			
 		studentNameLbl = new JLabel("New label");
-		studentNameLbl.setBounds(176, 12, 348, 23);
+		studentNameLbl.setBounds(60, 12, 348, 23);
 		studentNameLbl.setFont(new Font("Dialog", Font.BOLD, 14));
 		internalFrame.getContentPane().setLayout(null);
 		internalFrame.getContentPane().add(studentNameLbl);
@@ -356,6 +356,10 @@ public class SearchStudent extends View {
 		deactivateOrActivateButton = new JButton("Desativar matrícula");
 		deactivateOrActivateButton.setBounds(576, 11, 208, 25);
 		internalFrame.getContentPane().add(deactivateOrActivateButton);
+		
+		JButton btnAddMoreCourses = new JButton("+ Cursos/Pacotes");
+		btnAddMoreCourses.setBounds(404, 11, 158, 25);
+		internalFrame.getContentPane().add(btnAddMoreCourses);
 		deactivateOrActivateButton.setVisible(false);
 
 		
