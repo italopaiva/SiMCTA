@@ -280,11 +280,11 @@ public class PackageDAO extends DAO{
 				Integer packageId = result.getInt(ID_COLUMN);
 				String packageName = result.getString(NAME_COLUMN);
 				Integer packageValue = result.getInt(VALUE_COLUMN);
-				Integer packageDuration = result.getInt(DURATION_COLUMN);
+				Integer status = result.getInt(STATUS_COLUMN);
 				
 				ArrayList<Course> packageCourses = getPackageCourses(packageId);
 								
-				Package currentPackage = new Package(packageId, packageName, packageValue, packageDuration);
+				Package currentPackage = new Package(packageId, packageName, packageValue, status);
 				
 				for(Course item : packageCourses){
 					currentPackage.addServiceItem(item);

@@ -11,6 +11,7 @@ import exception.ServiceException;
 import model.Course;
 import model.Payment;
 import model.Service;
+import model.ServiceItem;
 import model.Student;
 import model.Package;
 import model.datatype.CPF;
@@ -50,8 +51,7 @@ public class ServiceDAO extends DAO {
 			
 	   	   this.execute(query);
 	   	   	   	   
-	   	   saveServiceCourses(serviceId, service);
-	   	   saveServicePackages(serviceId, service);
+	   	   saveServiceItens(serviceId, service);
 		}
 		catch(SQLException e){
 			throw new ServiceException(COULDNT_SAVE_SERVICE); 
@@ -59,49 +59,41 @@ public class ServiceDAO extends DAO {
 	}
 	
 	/**
-	 * Save the courses associated with the service
+	 * Save the courses and packages associated with the service
 	 * @param serviceId - The service to associate the courses with
-	 * @param service - The service with the courses to be associated
+	 * @param service - The service with the courses and packagese to be associated
 	 * @throws SQLException
 	 */
-	private void saveServiceCourses(Integer serviceId, Service service) throws SQLException{
+	private void saveServiceItens(Integer serviceId, Service service) throws SQLException{
 		
-		int i = 0;
-		ArrayList<Course> courses = service.getCourses();
-		int quantityOfCourses = courses.size();
+		ArrayList<ServiceItem> itens = service.getItens();
 		
-		for(i = 0; i < quantityOfCourses; i++){
+		for(ServiceItem item : itens){	
 			
-			int currentCourseId = courses.get(i).getId();
-			String query = "INSERT INTO "+ TABLE_SERVICE_COURSE_NAME +" ("+ ID_COLUMN +", "+ ID_COURSE_COLUMN +") ";
-				   query += "VALUES ('"+ serviceId +"', '"+ currentCourseId +"')";
-				   
+			String query = "";
+			
+			boolean isCourse = item.getClass().equals(Course.class);
+			if(isCourse){
+
+				Integer currentCourseId = item.getId();
+				
+				query = "INSERT INTO "+ TABLE_SERVICE_COURSE_NAME +" ("+ ID_COLUMN +", "+ ID_COURSE_COLUMN +") ";
+				query += "VALUES ('"+ serviceId +"', '"+ currentCourseId +"')";
+				
+			}
+			// If it is not a course, is a package
+			else{
+				
+				Integer currentPackageId = item.getId();
+				
+				query = "INSERT INTO "+ TABLE_SERVICE_PACKAGE_NAME +" ("+ ID_COLUMN +", "+ ID_PACKAGE_COLUMN +") ";
+			    query += "VALUES ('"+ serviceId +"', '"+ currentPackageId +"')";
+			}
+							   
 			this.execute(query);
 		}		
 	}
 	
-	/**
-	 * Save the packages associated with the service
-	 * @param serviceId - The service to associate the packages with
-	 * @param service - The service with the packages to be associated
-	 * @throws SQLException
-	 */
-	private void saveServicePackages(Integer serviceId, Service service) throws SQLException{
-		
-		int i = 0;
-		ArrayList<Package> packages = service.getPackages();
-		int quantityOfPackages = packages.size();
-		
-		for(i = 0; i < quantityOfPackages; i++){
-			
-			int currentPackageId = packages.get(i).getPackageId();
-			String query = "INSERT INTO "+ TABLE_SERVICE_PACKAGE_NAME +" ("+ ID_COLUMN +", "+ ID_PACKAGE_COLUMN +") ";
-				   query += "VALUES ('"+ serviceId +"', '"+ currentPackageId +"')";
-				   
-			this.execute(query);
-		}	
-	}
-
 	/**
 	 * Gets the services of a selected student
 	 * @param student - an object with the data of the selected student

@@ -44,7 +44,6 @@ public class Package extends ServiceItem{
 			setName(packageName);
 			setValue(packageValue);
 			setStatus(status);
-			setDuration();
 		}
 		catch (ServiceItemException e){
 			throw new PackageException(e.getMessage());

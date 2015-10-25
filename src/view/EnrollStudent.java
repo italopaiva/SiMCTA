@@ -525,7 +525,7 @@ public class EnrollStudent extends View {
 	 * @throws CourseException 
 	 * @throws PackageException 
 	 */
-	private void getAllPackagesToSelect() throws CourseException, PackageException {
+	private void getAllPackagesToSelect() throws CourseException, PackageException  {
 		
 		PackageController packageController = new PackageController();
 		ArrayList<Package> packages = packageController.getPackages();		
