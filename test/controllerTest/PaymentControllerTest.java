@@ -27,6 +27,7 @@ import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
 import exception.PaymentException;
+import exception.PersonException;
 import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
@@ -62,7 +63,7 @@ public class PaymentControllerTest {
 	}
 	
 	@Test
-	public void testIfGetsThePaymentForTheId() throws PaymentException, StudentException, ServiceException {
+	public void testIfGetsThePaymentForTheId() throws PaymentException, StudentException, ServiceException, PersonException {
 		
 		int paymentId = 3;
 		Student student = new Student("Jacó Mário Souza", cpf, rg, date, email, address, phone1, phone2, 
@@ -103,7 +104,7 @@ public class PaymentControllerTest {
 	}
 	
 	@Test(expected = PaymentException.class)
-	public void testIfGetsThePaymentForTheIdInexistentPaymentId() throws PaymentException, StudentException, ServiceException {
+	public void testIfGetsThePaymentForTheIdInexistentPaymentId() throws PaymentException, StudentException, ServiceException, PersonException {
 		
 		int paymentId = 1;
 		Student student = new Student("Jacó Mário Souza", cpf, rg, date, email, address, phone1, phone2, 

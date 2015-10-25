@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
+import exception.PersonException;
 import exception.PhoneException;
 import exception.RGException;
 import exception.StudentException;
@@ -41,10 +42,10 @@ public class StudentDAO extends DAO {
 	private static final String CPF_ALREADY_EXISTS = "O CPF informado já está cadastrado.";
 	private static final String COULDNT_CHECK_STUDENT = "Não foi possível checar se o estudante está cadastrado. Tente novamente.";
 
-	public void save(Student student) throws StudentException{
+	public void save(Student student) throws StudentException, PersonException{
 		
 		try{
-			Student previousStudent = get(student.getStudentCpf());
+			Student previousStudent = get(student.getCpf());
 			
 			if(previousStudent == null){
 				try{
@@ -62,11 +63,11 @@ public class StudentDAO extends DAO {
 							   + RG_NUMBER_COLUMN +", "+ PRINCIPAL_PHONE_COLUMN +", "+ SECONDARY_PHONE_COLUMN +", "
 							   + COMPLEMENT_COLUMN +", "+ NUMBER_COLUMN +", "+ CITY_COLUMN +", "+ CEP_COLUMN +", "
 							   + ADDRESS_COLUMN +")"
-							   + " VALUES ('"+ student.getStudentCpf().getCpf() +"', '"+ student.getStudentName() +"', '"
-							   + student.getBirthdate().getHyphenFormattedDate() +"', '"+ student.getStudentEmail() +"', '"
+							   + " VALUES ('"+ student.getCpf().getCpf() +"', '"+ student.getName() +"', '"
+							   + student.getBirthdate().getHyphenFormattedDate() +"', '"+ student.getEmail() +"', '"
 							   + student.getMotherName() +"', '"+ student.getFatherName() +"', '"
-							   + student.getStudentRg().getUf() +"', '"
-							   + student.getStudentRg().getIssuingInstitution() +"', '"+ student.getStudentRg().getRgNumber() +"', '"
+							   + student.getRg().getUf() +"', '"
+							   + student.getRg().getIssuingInstitution() +"', '"+ student.getRg().getRgNumber() +"', '"
 							   + student.getPrincipalPhone().getWholePhone() +"', '"
 							   + secondaryPhone +"', '"+ student.getAddress().getComplement() +"','"
 							   + student.getAddress().getNumber() +"', '"+ student.getAddress().getCity() +"', '"
@@ -75,7 +76,6 @@ public class StudentDAO extends DAO {
 					this.execute(query);
 				}
 				catch(SQLException e){
-					System.out.println(e.getMessage());
 					throw new StudentException(CANT_SAVE_STUDENT);
 				}
 			}
@@ -96,8 +96,9 @@ public class StudentDAO extends DAO {
 	 * @return an arraylist with the found students
 	 * @throws StudentException
 	 * @throws CPFException
+	 * @throws PersonException 
 	 */
-	public ArrayList<Student> get(String searchedStudentName) throws StudentException, CPFException {
+	public ArrayList<Student> get(String searchedStudentName) throws StudentException, CPFException, PersonException {
 		
 		ResultSet resultOfTheSearch = null;
 		String query = "SELECT * FROM " + STUDENT_TABLE_NAME + " WHERE " + NAME_COLUMN + " LIKE \"%" + searchedStudentName + "%\""; 
@@ -134,9 +135,10 @@ public class StudentDAO extends DAO {
 	 * @throws AddressException
 	 * @throws RGException
 	 * @throws StudentException
+	 * @throws PersonException 
 	 */
 	public Student get(CPF studentCpf) throws PhoneException, CPFException, DateException, AddressException,
-												RGException, StudentException {
+												RGException, StudentException, PersonException {
 		
 		ResultSet resultOfTheSearch = null;
 		String receivedCPF = studentCpf.getCpf();
@@ -167,9 +169,10 @@ public class StudentDAO extends DAO {
 	 * @throws AddressException
 	 * @throws RGException
 	 * @throws StudentException
+	 * @throws PersonException 
 	 */
 	private Student getFoundStudent(ResultSet resultOfTheSearch) throws PhoneException, SQLException, 
-	CPFException, DateException, AddressException, RGException, StudentException {
+	CPFException, DateException, AddressException, RGException, StudentException, PersonException {
 
 		// Get the data from database
 		String studentName = resultOfTheSearch.getString(NAME_COLUMN);
@@ -237,15 +240,15 @@ public class StudentDAO extends DAO {
 	public boolean update(Student student) {
 		
 		int studentStatus = student.getStatus();
-		CPF cpf = student.getStudentCpf();
+		CPF cpf = student.getCpf();
 		String studentCPF = cpf.getCpf();
 		int newStatus = -1;
 		
-		if(studentStatus == student.STUDENT_ACTIVE){
-			newStatus = student.STUDENT_INACTIVE;
+		if(studentStatus == student.ACTIVE){
+			newStatus = student.INACTIVE;
 		}
 		else{
-			newStatus = student.STUDENT_ACTIVE;
+			newStatus = student.ACTIVE;
 		}
 		
 		boolean wasUpdate = false;

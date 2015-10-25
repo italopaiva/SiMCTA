@@ -36,9 +36,11 @@ import exception.CPFException;
 import exception.CourseException;
 import exception.DateException;
 import exception.PaymentException;
+import exception.PersonException;
 import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
+import exception.PersonException;
 import exception.StudentException;
 
 public class StudentControllerTest {
@@ -60,7 +62,7 @@ public class StudentControllerTest {
 	private Student student;
 	
 	@Before
-	public void setUp() throws DateException, AddressException, PhoneException, CPFException, RGException, StudentException{
+	public void setUp() throws DateException, AddressException, PhoneException, CPFException, RGException, PersonException, PersonException{
 		
 		MockitoAnnotations.initMocks(this);
 		studentDAOMock = mock(StudentDAO.class);
@@ -82,7 +84,7 @@ public class StudentControllerTest {
 	}
 	
 	@Test
-	public void testIfFoundTheListOfStudents() throws StudentException, CPFException {
+	public void testIfFoundTheListOfStudents() throws PersonException, CPFException, PersonException, StudentException {
 		
 		ArrayList<Student> students = new ArrayList<Student>();
 		
@@ -99,8 +101,8 @@ public class StudentControllerTest {
 	}
 	
 	@Test
-	public void testIfFoundTheDataOfAStudentWithACourse() throws StudentException, CPFException, PhoneException, 
-													DateException, AddressException, RGException, SQLException, CourseException, ServiceException, PaymentException {
+	public void testIfFoundTheDataOfAStudentWithACourse() throws PersonException, CPFException, PhoneException, 
+													DateException, AddressException, RGException, SQLException, CourseException, ServiceException, PaymentException, StudentException {
 		
 		
 		 
@@ -137,8 +139,8 @@ public class StudentControllerTest {
 	}
 	
 	@Test
-	public void testIfFoundTheDataOfAStudentWithAPackage() throws StudentException, CPFException, PhoneException, 
-													DateException, AddressException, RGException, SQLException, CourseException, ServiceException, PaymentException {
+	public void testIfFoundTheDataOfAStudentWithAPackage() throws PersonException, CPFException, PhoneException, 
+													DateException, AddressException, RGException, SQLException, CourseException, ServiceException, PaymentException, StudentException {
 		
 		Student student = new Student("Jacó Mário Souza", cpf, rg, date, email,
 				address, phone1, phone2, "Milene Souza Medeiros",
@@ -178,8 +180,8 @@ public class StudentControllerTest {
 
 	
 	@Test
-	public void testIfFoundTheDataOfAStudentWithAPackageAndCourse() throws StudentException, CPFException, PhoneException, 
-													DateException, AddressException, RGException, SQLException, CourseException, ServiceException, PaymentException {
+	public void testIfFoundTheDataOfAStudentWithAPackageAndCourse() throws PersonException, CPFException, PhoneException, 
+													DateException, AddressException, RGException, SQLException, CourseException, ServiceException, PaymentException, StudentException {
 		
 		Student student = new Student("Jacó Mário Souza", cpf, rg, date, email,
 				address, phone1, phone2, "Milene Souza Medeiros",
@@ -220,7 +222,7 @@ public class StudentControllerTest {
 	}
 	
 	@Test
-	public void testIfAlterStatusOfTheStudent() throws StudentException{
+	public void testIfAlterStatusOfTheStudent() throws PersonException, StudentException{
 		
 		when(studentDAOMock.update(student)).thenReturn(true);
 		
@@ -230,8 +232,8 @@ public class StudentControllerTest {
 		
 	}
 	
-	@Test(expected = StudentException.class)
-	public void testIfNotAlterStatusWithANullStudent() throws StudentException{
+	@Test(expected = PersonException.class)
+	public void testIfNotAlterStatusWithANullStudent() throws PersonException, StudentException{
 		
 		student = null;
 		when(studentDAOMock.update(student)).thenReturn(true);

@@ -18,6 +18,7 @@ import org.junit.Test;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
+import exception.PersonException;
 import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
@@ -40,7 +41,7 @@ public class ServiceTest {
 	
 	@Before
 	public void setUp() throws DateException, AddressException, PhoneException,
-						CPFException, RGException, StudentException{
+						CPFException, RGException, StudentException, PersonException{
 		
 		date = new Date(05, 06, 1996);
 		address = new Address("Rua 3 ", "6B", "", "72323411", "Brasília");
@@ -69,7 +70,7 @@ public class ServiceTest {
 		
 		try{
 			service = new Service(student, courses, packages);
-			assertEquals(service.getStudent().getStudentCpf(), cpf);
+			assertEquals(service.getStudent().getCpf(), cpf);
 		}
 		catch(ServiceException e){
 			fail("Should not throw this exception:" + e.getMessage());

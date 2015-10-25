@@ -32,6 +32,7 @@ import exception.CPFException;
 import exception.CourseException;
 import exception.DateException;
 import exception.PaymentException;
+import exception.PersonException;
 import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
@@ -54,7 +55,7 @@ public class ServiceControllerTest {
 	private PaymentController paymentControllerMock;
 	
 	@Before
-	public void setUp() throws DateException, AddressException, PhoneException, CPFException, RGException, StudentException, PaymentException{
+	public void setUp() throws DateException, AddressException, PhoneException, CPFException, RGException, StudentException, PaymentException, PersonException{
 		
 		MockitoAnnotations.initMocks(this);
 		serviceDAOMock = mock(ServiceDAO.class);

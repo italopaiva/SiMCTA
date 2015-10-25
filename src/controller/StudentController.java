@@ -11,6 +11,7 @@ import exception.CPFException;
 import exception.CourseException;
 import exception.DateException;
 import exception.PaymentException;
+import exception.PersonException;
 import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
@@ -62,7 +63,13 @@ public class StudentController {
 	public Student newStudent(String studentName, CPF studentCpf, RG studentRg, Date birthdate, String email, Address address,
 			   Phone principalPhone, Phone secondaryPhone, String motherName, String fatherName) throws StudentException{
 
-		Student student = new Student(studentName, studentCpf, studentRg, birthdate, email, address, principalPhone, secondaryPhone, motherName, fatherName, ACTIVE_STATUS);
+		Student student;
+		try{
+			student = new Student(studentName, studentCpf, studentRg, birthdate, email, address, principalPhone, secondaryPhone, motherName, fatherName, ACTIVE_STATUS);
+		}
+		catch(PersonException e){
+			throw new StudentException(e.getMessage());
+		}
 		
 		return student;
 	}
@@ -75,7 +82,12 @@ public class StudentController {
 	public void saveStudent(Student student) throws StudentException{
 		
 		if(student != null){
-			studentDAO.save(student);
+			try{
+				studentDAO.save(student);
+			}
+			catch(PersonException e){
+				throw new StudentException(e.getMessage());
+			}
 		}
 		else{
 			throw new StudentException(CANT_SAVE_NULL_STUDENT);
@@ -89,7 +101,7 @@ public class StudentController {
 	 * @throws StudentException
 	 * @throws CPFException
 	 */
-	public ArrayList<Student> searchStudent(String studentName) throws StudentException, CPFException {
+	public ArrayList<Student> searchStudent(String studentName) throws PersonException, CPFException, StudentException {
 			
 		ArrayList <Student> foundStudents = studentDAO.get(studentName);
 		
@@ -110,8 +122,9 @@ public class StudentController {
 	 * @throws CourseException
 	 * @throws ServiceException
 	 * @throws PaymentException 
+	 * @throws PersonException 
 	 */
-	public ArrayList<Service> searchStudent(CPF studentCPF) throws SQLException, StudentException, PhoneException, CPFException, DateException, AddressException, RGException, CourseException, ServiceException, PaymentException {
+	public ArrayList<Service> searchStudent(CPF studentCPF) throws SQLException, StudentException, PhoneException, CPFException, DateException, AddressException, RGException, CourseException, ServiceException, PaymentException, PersonException {
 		
 		Student basicDataOfStudent = studentDAO.get(studentCPF);
 		ArrayList<Service> servicesOfStudent = new ArrayList<Service>();

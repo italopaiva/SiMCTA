@@ -46,6 +46,7 @@ import exception.CPFException;
 import exception.CourseException;
 import exception.DateException;
 import exception.PaymentException;
+import exception.PersonException;
 import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
@@ -122,9 +123,10 @@ public class SearchStudent extends View {
 					}
 					catch(StudentException e1){
 						
-					} catch (CPFException e1) {
+					} 
+					catch(CPFException| PersonException e1){
 
-					}	
+					} 
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "Digite o nome de um aluno");
@@ -140,7 +142,7 @@ public class SearchStudent extends View {
 	/**
 	 * Creates the labels and fields of the frame
 	 */
-	private void createLabelsAndFields() {
+	protected void createLabelsAndFields() {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -391,6 +393,9 @@ public class SearchStudent extends View {
 				}
 				catch(SQLException e2){
 					e2.printStackTrace();
+				} 
+				catch(PersonException e1){
+					e1.printStackTrace();
 				}
 			}
 
@@ -411,8 +416,9 @@ public class SearchStudent extends View {
 	 * @param searchedStudent - Name of the searched student
 	 * @throws StudentException 
 	 * @throws CPFException 
+	 * @throws PersonException 
 	 */
-	private void buildTableWithSearchedStudent(String searchedStudent) throws StudentException, CPFException {
+	private void buildTableWithSearchedStudent(String searchedStudent) throws StudentException, CPFException, PersonException {
 
 		StudentController studentController = new StudentController();
 		tableModel.setRowCount(0);
@@ -422,9 +428,9 @@ public class SearchStudent extends View {
 		if(!resultOfTheSearch.isEmpty()){
 			while(arrayIndex < resultOfTheSearch.size()){
 				String[] student = new String[4];
-				student[0] = resultOfTheSearch.get(arrayIndex).getStudentName();
+				student[0] = resultOfTheSearch.get(arrayIndex).getName();
 				student[1] = ("Ver");
-				CPF cpf = resultOfTheSearch.get(arrayIndex).getStudentCpf();
+				CPF cpf = resultOfTheSearch.get(arrayIndex).getCpf();
 				student[2] = cpf.getCpf();
 				tableModel.addRow(student);
 				arrayIndex++;
@@ -449,9 +455,10 @@ public class SearchStudent extends View {
 	 * @throws ServiceException 
 	 * @throws CourseException 
 	 * @throws PaymentException 
+	 * @throws PersonException 
 	 */
 	private void visualizeStudent(CPF studentCPF) throws SQLException, StudentException, PhoneException, 
-												CPFException, DateException, AddressException, RGException, CourseException, ServiceException, PaymentException {
+												CPFException, DateException, AddressException, RGException, CourseException, ServiceException, PaymentException, PersonException {
 		
 		final StudentController studentController = new StudentController();
 		ArrayList<Service> servicesOfStudent = new ArrayList<Service>();
@@ -474,8 +481,8 @@ public class SearchStudent extends View {
 				
 				student = service.getStudent();
 				
-				String studentName = student.getStudentName();		
-				String email = student.getStudentEmail();
+				String studentName = student.getName();		
+				String email = student.getEmail();
 				String motherName = student.getMotherName();
 				String fatherName = student.getFatherName();
 
@@ -486,13 +493,13 @@ public class SearchStudent extends View {
 				fatherField.setText(fatherName);
 
 				//CPF
-				CPF cpf = student.getStudentCpf();
+				CPF cpf = student.getCpf();
 				String studentCpf  = cpf.getFormattedCpf();
 				cpfField.setText(studentCpf);
 				
 				//RG
 				
-				RG rg = student.getStudentRg();
+				RG rg = student.getRg();
 				String studentRg = rg.getFormattedRg();
 				rgField.setText(studentRg);
 				
@@ -516,11 +523,16 @@ public class SearchStudent extends View {
 				Phone secondaryPhone = student.getSecondaryPhone();
 
 				String cellPhone = principalPhone.getFormattedPhone();
-				String residencePhone = secondaryPhone.getFormattedPhone();
-				
 				cellField.setText(cellPhone);
-				phoneField.setText(residencePhone);
 
+				if(secondaryPhone != null){
+					String residencePhone = secondaryPhone.getFormattedPhone();
+					phoneField.setText(residencePhone);
+				}
+				else{
+					phoneField.setText("");
+				}
+				
 				visualizeServicesAndPayments(service);
 				
 				status = student.getStatus();
@@ -561,7 +573,7 @@ public class SearchStudent extends View {
 
 					private void changeStatus() {
 						
-						if(status == student.STUDENT_ACTIVE){
+						if(status == student.ACTIVE){
 							status = 0;
 						}
 						else{
@@ -597,7 +609,7 @@ public class SearchStudent extends View {
 	private String setTextToTheDeactiveOrActiveButton(int status) {
 		
 		String enrollmentStatus = "";
-		if(status == student.STUDENT_ACTIVE){
+		if(status == student.ACTIVE){
 			deactivateOrActivateButton.setText("Desativar matrícula");
 			enrollmentStatus = "desativada";
 		}

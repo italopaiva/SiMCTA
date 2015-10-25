@@ -42,6 +42,7 @@ import exception.CourseException;
 import exception.DateException;
 import exception.PackageException;
 import exception.PaymentException;
+import exception.PersonException;
 import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
@@ -110,7 +111,7 @@ public class EnrollStudent extends View {
 	/**
 	 * Creates the labels and fields of the frame
 	 */
-	private void createLabelsAndFields(){
+	protected void createLabelsAndFields(){
 		
 		contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
