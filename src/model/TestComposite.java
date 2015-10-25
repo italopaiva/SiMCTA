@@ -28,7 +28,7 @@ public class TestComposite {
 		Course course2 = new Course("Curso Y", "Aulas chatas", 5, 50000);
 		Course course3 = new Course("Curso Z", "Aulas massa", 2, 75049);
 		
-		Package pkg = new Package("Pacote YZ", 145000);
+		Package pkg = new Package(1, "Pacote YZ", 145000);
 		pkg.addServiceItem(course2);
 		pkg.addServiceItem(course3);
 		

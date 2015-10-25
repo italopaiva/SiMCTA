@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import controller.CourseController;
 import exception.PackageException;
+import model.Course;
 import model.Package;
 import model.ServiceItem;
 
@@ -28,7 +30,11 @@ public class PackageDAO extends DAO{
 	private static final String STATUS_COLUMN = "status";
 	private static final String COULDNT_GET_PACKAGE_COURSES = "Não foi possível pegar os dados dos cursos do pacote.";
 	
-	public PackageDAO(){ }
+	private CourseController courseController;
+	
+	public PackageDAO(){
+		courseController = new CourseController();
+	}
 	
 	/**
 	 * Saves the data of package without the courses
@@ -126,32 +132,28 @@ public class PackageDAO extends DAO{
 	 * Update a package on the database 
 	 * @param packageId - Id of the package to be updated
 	 * @param newPackage - Package object with the data of the new package
-	 * @return TRUE if the package was updated or FALSE if it does not
 	 * @throws PackageException
 	 */
-	public boolean update(Integer packageId, Package newPackage) throws PackageException{
+	public void update(Package newPackage) throws PackageException{
 		
+		Integer packageId = newPackage.getId();
 		String newPackageName = newPackage.getName();
 		Integer newPackageValue = newPackage.getValue();
-		Integer newPackageDuration = newPackage.getDuration();
-		ArrayList<String> newPackageCourses = newPackage.getCourses(); 
+		Integer newPackageDuration = newPackage.getDuration(); 
 		
 		String query = "UPDATE "+ TABLE_NAME + " SET "
 				   + NAME_COLUMN + "='" + newPackageName + "', "
 				   + VALUE_COLUMN + "='" + newPackageValue + "', "
 				   + DURATION_COLUMN + "='" + newPackageDuration + "' "
 				   + "WHERE " + ID_COLUMN + "='" + packageId + "'";
-	
-		boolean wasUpdated = false;
 		
 		try{
 			
 			this.execute(query);
-			wasUpdated  = true;
 			
 			try{
 				
-				updatePackageCourses(packageId, newPackageCourses);
+				updatePackageCourses(newPackage);
 			}catch(SQLException caughtException){
 				
 				throw new PackageException(PACKAGE_COURSES_WASNT_SAVED);
@@ -161,32 +163,29 @@ public class PackageDAO extends DAO{
 			}
 			
 		}catch(SQLException caughtException){
-			
-			wasUpdated = false;
-		}
 		
-		return wasUpdated;
+		}
 	}
 	
 	/**
 	 * Update the courses of a package on the database
-	 * @param packageId - Id of the package to get the courses updated
 	 * @param packageCourses - Array with the courses to be associated with the package
 	 * @throws SQLException
 	 * @throws PackageException
 	 */
-	private void updatePackageCourses(Integer packageId, ArrayList<String> packageCourses) throws SQLException, PackageException{
+	private void updatePackageCourses(Package newPackage) throws SQLException, PackageException{
+		
+		Integer packageId = newPackage.getId();
 		
 		boolean wasDisassociated = disassociateAllCoursesOfPackage(packageId);
 		
 		if(wasDisassociated){
 			
-			int i = 0;
-			for(i=0; i < packageCourses.size(); i++){
-				
-				String currentCourse = packageCourses.get(i);
-				
-				Integer courseId = Integer.parseInt(currentCourse);
+			ArrayList<ServiceItem> itens = newPackage.getServiceItens();
+
+			for(ServiceItem item : itens){
+								
+				Integer courseId = item.getId();
 				
 				String associateCoursesToPackage = "INSERT INTO "+ ASSOCIATION_TABLE_NAME + "(" + ID_COLUMN + ", "+ ID_COURSE_COLUMN + ")";
 				associateCoursesToPackage += "VALUES('" + packageId + "','" + courseId + "')";
@@ -221,39 +220,45 @@ public class PackageDAO extends DAO{
 	
 	public Package get(int packageId){
 		
-		String query = "SELECT "+ TABLE_NAME +".* , " + ASSOCIATION_TABLE_NAME + ". " + ID_COURSE_COLUMN;
+		String query = "SELECT "+ TABLE_NAME +".* , " + ASSOCIATION_TABLE_NAME + "." + ID_COURSE_COLUMN;
 			   query += " FROM " + TABLE_NAME + " JOIN " + ASSOCIATION_TABLE_NAME;
 			   query += " ON " + TABLE_NAME + "." + ID_COLUMN +" = " + ASSOCIATION_TABLE_NAME + "." + ID_COLUMN;
 			   query += " WHERE " + TABLE_NAME + "." + ID_COLUMN + "=" + packageId;
-				
+		
 		Package foundPackage = null;
 		try{
 			
 			ResultSet result = this.search(query);
-			
 			if(result.first()){
 				
 				Integer idPackage = result.getInt(ID_COLUMN);
 				String packageName = result.getString(NAME_COLUMN);
-				Integer packageDuration = result.getInt(DURATION_COLUMN);
 				Integer packageValue = result.getInt(VALUE_COLUMN);
-				ArrayList<String> packageCourses = new ArrayList<String>();
 				
-				// Get back to first tuple and add each id_course to packageCourses 
+				Integer courseId = result.getInt(ID_COURSE_COLUMN);
+
+				Course course = courseController.get(courseId);
+								
+				foundPackage = new Package(idPackage, packageName, packageValue);
+				foundPackage.addServiceItem(course);
+				
 				result.first();
 				while(result.next()){
-					packageCourses.add(result.getString(ID_COURSE_COLUMN));
+					
+					courseId = result.getInt(ID_COURSE_COLUMN);
+					course = courseController.get(courseId);
+					
+					foundPackage.addServiceItem(course);
 				}
-				
-				foundPackage = new Package(idPackage, packageName, packageValue, packageDuration, packageCourses);
 			}
 			else{
 				foundPackage = null;
-			}
+			}			
 		}
 		catch(SQLException e){
 			foundPackage = null;
 		}catch(PackageException e){
+			System.out.println(e.getMessage());
 			foundPackage = null;
 		}
 		
@@ -277,13 +282,13 @@ public class PackageDAO extends DAO{
 				Integer packageValue = result.getInt(VALUE_COLUMN);
 				Integer packageDuration = result.getInt(DURATION_COLUMN);
 				
-				ArrayList<String> packageCourses = getPackageCourses(packageId);
+				ArrayList<Course> packageCourses = getPackageCourses(packageId);
+								
+				Package currentPackage = new Package(packageId, packageName, packageValue, packageDuration);
 				
-				System.out.println(packageId);
-				System.out.println();
-				
-				Package currentPackage = new Package(packageId, packageName, packageValue,
-													 packageDuration, packageCourses);
+				for(Course item : packageCourses){
+					currentPackage.addServiceItem(item);
+				}
 				
 				packages.add(currentPackage);
 			}
@@ -295,19 +300,21 @@ public class PackageDAO extends DAO{
 		return packages;
 	}
 	
-	private ArrayList<String> getPackageCourses(Integer packageId) throws SQLException{
+	private ArrayList<Course> getPackageCourses(Integer packageId) throws SQLException{
 		
 		String query = "SELECT * FROM "+ ASSOCIATION_TABLE_NAME 
 					 + " WHERE "+ ID_COLUMN +" = "+ packageId;
 		
 		ResultSet result = this.search(query);
 		
-		ArrayList<String> packageCourses = new ArrayList<String>();
+		ArrayList<Course> packageCourses = new ArrayList<Course>();
 		
 		while(result.next()){
 			
-			String course = result.getString(ID_COURSE_COLUMN);
-		
+			Integer courseId = result.getInt(ID_COURSE_COLUMN);
+			
+			Course course = courseController.get(courseId);
+			
 			packageCourses.add(course);
 		}
 		
@@ -327,34 +334,43 @@ public class PackageDAO extends DAO{
 				+ " WHERE " + NAME_COLUMN 
 				+ " LIKE \"%" + package_name + "%\"";
 		
+		ArrayList<Package> foundPackages = null;
+		
 		try{
 			
 			resultSet = this.search(query);
+				
+			foundPackages = new ArrayList<Package>();
 			
-			//test if there was return to resultSet
-			//if (!resultSet.isBeforeFirst() ) { 
+			while(resultSet.next()){          
 				
-				//return null;
+				Integer packageId = resultSet.getInt(ID_COLUMN);
 				
-			//} else {
+				Package currentPackage = new Package(
+					packageId, 
+					resultSet.getString(NAME_COLUMN), 
+					resultSet.getInt(VALUE_COLUMN), 
+					resultSet.getInt(DURATION_COLUMN),
+					resultSet.getInt(STATUS_COLUMN)
+				);
 				
-				ArrayList<Package> arrayListPackage = new ArrayList<Package>();
+				ArrayList<Course> packageCourses = new ArrayList<Course>();
+				packageCourses = getPackageCourses(packageId);
 				
-				while (resultSet.next()) {              
-			       arrayListPackage.add(returnAPackageOfResultSet(resultSet));
+				for(Course course : packageCourses){
+					currentPackage.addServiceItem(course);
 				}
 				
-				return arrayListPackage;
-				
-			//}
-
+		       foundPackages.add(currentPackage);
+			}
 		
 		}catch(SQLException caughtException){
 			
 			caughtException.printStackTrace();
-			return null;
+			foundPackages = null;
 		}
 		
+		return foundPackages;		
 	}
 	/**
 	 * Get a package by a idPackage informed
@@ -366,25 +382,41 @@ public class PackageDAO extends DAO{
 		ResultSet resultSet;
 		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID_COLUMN + " = " + idPackage;
 		
+		Package foundPackage = null;
+		
 		try{
 			resultSet = search(query);
 			
 			if(!resultSet.isBeforeFirst()){ 
-				
-				return null;
-				
+				foundPackage = null;				
 			}else{
 				
+				Integer packageId = resultSet.getInt(ID_COLUMN);
+				
 				resultSet.next();
-				return returnAPackageOfResultSet(resultSet);
+				foundPackage = new Package(
+					packageId, 
+					resultSet.getString(NAME_COLUMN), 
+					resultSet.getInt(VALUE_COLUMN), 
+					resultSet.getInt(DURATION_COLUMN),
+					resultSet.getInt(STATUS_COLUMN)
+				);
+				
+				ArrayList<Course> packageCourses = new ArrayList<Course>();
+				packageCourses = getPackageCourses(packageId);
+				
+				for(Course course : packageCourses){
+					foundPackage.addServiceItem(course);
+				}
 			}
 			
 		} catch (SQLException | PackageException caughtException){
 			
 			caughtException.printStackTrace();
-			return null;
+			foundPackage = null;
 		}
 		
+		return foundPackage;
 	}
 	
 	/**
@@ -427,42 +459,7 @@ public class PackageDAO extends DAO{
 			return null;
 		}
 	}
-	
-	/**
-	 * Returns a package to the resulSet received without a ArrayList<String> of courses' name
-	 * @param resultSet
-	 * @return new package from a resultSet received
-	 * @throws PackageException
-	 * @throws SQLException
-	 */
-	private Package returnAPackageOfResultSet(ResultSet resultSet) throws PackageException, SQLException{
-		
-		/**
-		 * GET THE PACKAGE COURSES TO SET ON THIS ARRAY LIST
-		 */
-		ArrayList<String> packageCourses = new ArrayList<String>();
-		/**
-		 * THIS IS A RANDOM COURSE
-		 * TAKE THIS OUT OF HERE
-		 */
-		packageCourses.add("5");
-		
-		Package newPackage = new Package(
-			resultSet.getInt(ID_COLUMN), 
-			resultSet.getString(NAME_COLUMN), 
-			resultSet.getInt(VALUE_COLUMN), 
-			resultSet.getInt(DURATION_COLUMN),
-			resultSet.getInt(STATUS_COLUMN),
-		
-			/**
-			 * GET THE PACKAGE COURSES TO SET ON THIS ARRAY LIST
-			 */
-			packageCourses
-		);
-		
-		return newPackage;
-	}
-	
+
 	/**
 	 * Returns a package to the resulSet received with a ArrayList<String> of courses' name
 	 * @param resultSet
@@ -473,16 +470,17 @@ public class PackageDAO extends DAO{
 
 	public Package returnACompletePackageOfResultSet(ResultSet resultSet) throws PackageException, SQLException{
 		
+		// FIX THIS METHOD - IS NOT LOADING THE COURSES OF THE PACKAGE
 		ArrayList<String> arraylist;
 		arraylist = getNameCoursesInPackages(resultSet.getInt(1));
 		
 		Package newPackage = new Package(
-				resultSet.getInt(1), 
-				resultSet.getString(2), 
-				resultSet.getInt(3), 
-				resultSet.getInt(4), 
-				resultSet.getInt(5),
-				arraylist);
+			resultSet.getInt(1), 
+			resultSet.getString(2), 
+			resultSet.getInt(3), 
+			resultSet.getInt(4), 
+			resultSet.getInt(5)
+		);
 		
 		return newPackage;
 	}

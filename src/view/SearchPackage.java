@@ -28,6 +28,7 @@ import javax.swing.table.DefaultTableModel;
 import util.ButtonColumn;
 import controller.PackageController;
 import dao.PackageDAO;
+import model.Package;
 import exception.CourseException;
 import exception.PackageException;
 
@@ -379,17 +380,15 @@ public class SearchPackage extends View {
 	}
 	
 	public void getPackageById(final int idPackage) throws PackageException{
-		
 		this.packageId = idPackage;
 		
 		PackageController packageController = new PackageController();
-		model.Package packageToShow;
+		Package packageToShow;
 		
 		DefaultListModel<String> courseListModel = new DefaultListModel<String>();
 		ArrayList<String> coursesName;
-		
 		packageToShow = packageController.showPackage(idPackage);
-		
+
 		jTxtPackageID.setText(packageToShow.getId().toString());
 		jLblPackageName.setText(packageToShow.getName());
 		jLblDuracao.setText(packageToShow.getDuration().toString() + " semanas");

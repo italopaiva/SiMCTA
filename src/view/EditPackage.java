@@ -70,7 +70,7 @@ public class EditPackage extends View{
 
 		
 		try {
-			Package currentPackage = packageController.searchCoursesOfAPackage(packageId);
+			Package currentPackage = packageController.showPackage(packageId);
 			createLabelsAndFields();
 			createMasks();				
 			setFieldValues(currentPackage);
@@ -116,16 +116,9 @@ public class EditPackage extends View{
 											
 					PackageController packageController = new PackageController();
 					
-					boolean packageWasSaved = packageController.updatePackage(packageId, packageName, packageValue, 
-																		   packageDuration, coursesId);
+					packageController.updatePackage(packageId, packageName, packageValue, coursesId);
 					
-					String message = "";
-					
-					if(packageWasSaved){
-						message = "Pacote alterado com sucesso.";
-					}else{
-						message = "Não foi possível alterar o pacote informado. Tente novamente.";
-					}
+					String message = "Pacote alterado com sucesso.";
 					
 					showInfoMessage(message);
 					dispose();
@@ -133,7 +126,6 @@ public class EditPackage extends View{
 					searchPackageFrame.setVisible(true);
 				}
 				catch(PackageException caughtException){
-					
 					showInfoMessage(caughtException.getMessage());
 				} catch (SQLException e1) {
 

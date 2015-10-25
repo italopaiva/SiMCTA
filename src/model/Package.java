@@ -65,6 +65,21 @@ public class Package extends ServiceItem{
 		}
 	}
 	
+	public Package(Integer packageId, String packageName, Integer packageValue, 
+		       Integer packageDuration, Integer status, ArrayList<ServiceItem> packageItens) throws PackageException{
+		
+		try{
+			setId(packageId);
+			setName(packageName);
+			setValue(packageValue);
+			setDuration(packageDuration);
+			setServiceItens(packageItens);
+		}
+		catch (ServiceItemException e){
+			throw new PackageException(e.getMessage());
+		}
+	}
+	
 	public void addServiceItem(ServiceItem item) throws PackageException{
 		
 		if(item != null){
@@ -106,11 +121,14 @@ public class Package extends ServiceItem{
 		ArrayList<String> courses = new ArrayList<String>();
 		
 		for(ServiceItem item : itens){
-			
 			courses.add(item.getId().toString());
 		}
 		
 		return courses;
+	}
+	
+	private void setServiceItens(ArrayList<ServiceItem> itens){
+		this.serviceItens = itens;
 	}
 	
 	public ArrayList<ServiceItem> getServiceItens(){

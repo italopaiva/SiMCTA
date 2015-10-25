@@ -1,21 +1,21 @@
 package controller;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
+import model.Course;
+import model.Package;
 import dao.PackageDAO;
 import exception.CourseException;
 import exception.PackageException;
-import model.Course;
-import model.Package;
 
 public class PackageController {
 
 	private PackageDAO packageDAO;
+	private CourseController courseController;
 	
 	public PackageController(){
 		packageDAO = new PackageDAO();
+		courseController = new CourseController();
 	}
 
 	public void setPackageDAO(PackageDAO packageDAO) {
@@ -35,9 +35,7 @@ public class PackageController {
 		Integer packageId = packageDAO.getTheLastId() + 1; 
 		
 		Package packageInstance = new Package(packageId, packageName, packageValue);
-		
-		CourseController courseController = new CourseController();
-		
+				
 		for(String courseId : coursesId){
 			
 			Integer id = new Integer(courseId);
@@ -65,14 +63,25 @@ public class PackageController {
 	 * @return TRUE if the package was updated or FALSE if it does not
 	 * @throws PackageException
 	 */
-	public boolean updatePackage(Integer packageId, String packageName, Integer packageValue, Integer packageDuration, ArrayList<String> packageCourses)
+	public void updatePackage(Integer packageId, String packageName, Integer packageValue, ArrayList<String> packageCourses)
 		throws PackageException{
 		
-		Package newPackage = new Package(packageId, packageName, packageValue, packageDuration, packageCourses);
+		Package newPackage = new Package(packageId, packageName, packageValue);
 		
-		boolean wasUpdated = packageDAO.update(packageId, newPackage);
+		for(String courseId : packageCourses){
+			
+			Integer id = new Integer(courseId);
+			Course course = courseController.get(id);
+			
+			if(course != null){
+				newPackage.addServiceItem(course);
+			}
+			else{
+				// Nothing to do because the course is invalid
+			}
+		}
 		
-		return wasUpdated;
+		packageDAO.update(newPackage);
 	}
 	
 	public Package getPackage(int packageId){
@@ -113,47 +122,12 @@ public class PackageController {
 	 * @throws PackageException
 	 */
 	public Package showPackage(int idPackage) throws PackageException{
-		
-		Package packageAux;
-		Package packageToShow;
-		
-		ArrayList<String> coursesName;
-		
-		coursesName = packageDAO.getNameCoursesInPackages(idPackage);
-		
-		packageAux = packageDAO.showPackage(idPackage);
-		
-		packageToShow = new Package(packageAux.getId(), packageAux.getName(),
-				packageAux.getValue(), packageAux.getDuration(), packageAux.getStatus(),
-				coursesName);
-		
-		return packageToShow;
+			
+		Package foundPackage;
 
-	}
-
-	/**
-	 * Get a package by idPackage to show
-	 * @param idPackage
-	 * @return a package that was founded by idPackage
-	 * @throws PackageException
-	 */
-	public Package searchCoursesOfAPackage(int idPackage) throws PackageException{
-		
-		Package packageAux;
-		Package packageToShow;
-		
-		ArrayList<String> coursesId;
-		
-		coursesId = packageDAO.getIdCourses(idPackage);
-
-		packageAux = packageDAO.showPackage(idPackage);
-		
-		packageToShow = new Package(packageAux.getPackageId(), packageAux.getPackageName(),
-				packageAux.getPackageValue(), packageAux.getPackageDuration(), packageAux.getPackageStatus(),
-				coursesId);
-		
-		return packageToShow;
-
+		foundPackage = packageDAO.get(idPackage);
+				
+		return foundPackage;
 	}
 	
 	/**
