@@ -26,15 +26,15 @@ public class CourseDAO extends DAO {
 	 */
 	public boolean save(Course course, boolean hasId){
 		
-		String courseName = course.getCourseName();
+		String courseName = course.getName();
 		String courseDescription = course.getCourseDescription();
-		Integer courseDuration = course.getCourseDuration();  
-		Integer courseValue = course.getCourseValue();
+		Integer courseDuration = course.getDuration();  
+		Integer courseValue = course.getValue();
 		
 		String query = "";
 		if(hasId){
 			
-			int courseId = course.getCourseId();
+			int courseId = course.getId();
 			query = "INSERT INTO "+ TABLE_NAME + "(" + ID_COLUMN + ", " + NAME_COLUMN + ", "
 					+ DESCRIPTION_COLUMN + ", " + DURATION_COLUMN + ", "
 					+ VALUE_COLUMN +")";
@@ -72,8 +72,8 @@ public class CourseDAO extends DAO {
 	public boolean update(Integer courseId, Course course){
 		
 		String courseDescription = course.getCourseDescription();
-		Integer courseDuration = course.getCourseDuration();  
-		Integer courseValue = course.getCourseValue();
+		Integer courseDuration = course.getDuration();  
+		Integer courseValue = course.getValue();
 		
 		String query = "UPDATE "+ TABLE_NAME + " SET "
 					   + DESCRIPTION_COLUMN + "='" + courseDescription + "', "
@@ -107,7 +107,7 @@ public class CourseDAO extends DAO {
 		String query = null;
 				
 		if(hasId){
-			int courseId = course.getCourseId();
+			int courseId = course.getId();
 			query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + ID_COLUMN + " = " + courseId);
 
 			try{
@@ -145,7 +145,7 @@ public class CourseDAO extends DAO {
 	
 		ResultSet resultOfTheSearch = null;
 		String query = null;
-		String courseName = course.getCourseName();
+		String courseName = course.getName();
 		ArrayList<Course> courses = new ArrayList<Course>();
 		
 		query = ("SELECT * FROM "+ TABLE_NAME + " WHERE " + NAME_COLUMN + " LIKE \"%" + courseName + "%\"");

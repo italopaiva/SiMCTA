@@ -30,6 +30,7 @@ import model.Course;
 import model.Payment;
 import model.PaymentDescription;
 import model.Service;
+import model.ServiceItem;
 import model.Student;
 import model.Package;
 import model.datatype.Address;
@@ -461,9 +462,9 @@ public class SearchStudent extends View {
 												CPFException, DateException, AddressException, RGException, CourseException, ServiceException, PaymentException, PersonException {
 		
 		final StudentController studentController = new StudentController();
-		ArrayList<Service> servicesOfStudent = new ArrayList<Service>();
-		servicesOfStudent = studentController.searchStudent(studentCPF);	
-
+		ServiceController serviceController = new ServiceController();
+		ArrayList<Service> servicesOfStudent = serviceController.searchService(new Student(studentCPF));
+		
 		if(servicesOfStudent != null){
 			
 			internalFrame.setVisible(true);
@@ -472,12 +473,8 @@ public class SearchStudent extends View {
 
 			/**
 			 * Basic data of student
-			 */			
-			int i = 0;
-			
-			while(i < servicesOfStudent.size()){
-				
-				Service service = servicesOfStudent.get(i);
+			 */				
+			for(Service service : servicesOfStudent){
 				
 				student = service.getStudent();
 				
@@ -523,6 +520,7 @@ public class SearchStudent extends View {
 				Phone secondaryPhone = student.getSecondaryPhone();
 
 				String cellPhone = principalPhone.getFormattedPhone();
+								
 				cellField.setText(cellPhone);
 
 				if(secondaryPhone != null){
@@ -583,7 +581,6 @@ public class SearchStudent extends View {
 					}
 				});
 				
-				i++;
 			}
 			
 			
@@ -651,8 +648,8 @@ public class SearchStudent extends View {
 		
 		/**
 		 * Courses and packages of a student
-		 */
-		ArrayList<Course> courses = service.getCourses();			
+		 */		
+		ArrayList<ServiceItem> courses = service.getCourses();			
 		if(!courses.isEmpty()){
 			DefaultListModel<String> courseListModel = new DefaultListModel<String>();
 			ArrayList<String> coursesName = new ArrayList<String>();
@@ -661,7 +658,7 @@ public class SearchStudent extends View {
 			
 			// Building the arraylist with the courses name
 			while (i < courses.size()){
-				String courseName = courses.get(i).getCourseName();
+				String courseName = courses.get(i).getName();
 				coursesName.add(courseName);
 				i++;
 			}
@@ -683,7 +680,7 @@ public class SearchStudent extends View {
 			onlyHasPackages = true;
 		}
 		
-		ArrayList<Package> packages = service.getPackages();
+		ArrayList<ServiceItem> packages = service.getPackages();
 		if(!packages.isEmpty()){
 			
 			DefaultListModel<String> packageListModel = new DefaultListModel<String>();
@@ -693,7 +690,7 @@ public class SearchStudent extends View {
 			
 			// Building the arraylist with the courses name
 			while (i < packages.size()){
-				String packageName = packages.get(i).getPackageName();
+				String packageName = packages.get(i).getName();
 				packagesName.add(packageName);
 				i++;
 			}

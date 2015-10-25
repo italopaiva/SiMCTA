@@ -28,6 +28,7 @@ import javax.swing.table.DefaultTableModel;
 import util.ButtonColumn;
 import controller.PackageController;
 import dao.PackageDAO;
+import model.Package;
 import exception.CourseException;
 import exception.PackageException;
 
@@ -362,11 +363,11 @@ public class SearchPackage extends View {
 		
 			while (lengthArray > i) {
 				String[] packages = new String[6];
-				packages[0] = arrayListPackage.get(i).getPackageName();
-				packages[1] = "R$ " + passValueToMonetaryForm(arrayListPackage.get(i).getPackageValue());
-				packages[2] = arrayListPackage.get(i).getPackageDuration().toString() + " semana(s)";
-				packages[3] = showsAtivoOrInativo(arrayListPackage.get(i).getPackageStatus());
-				packages[4] = arrayListPackage.get(i).getPackageId().toString();
+				packages[0] = arrayListPackage.get(i).getName();
+				packages[1] = "R$ " + passValueToMonetaryForm(arrayListPackage.get(i).getValue());
+				packages[2] = arrayListPackage.get(i).getDuration().toString() + " semana(s)";
+				packages[3] = showsAtivoOrInativo(arrayListPackage.get(i).getStatus());
+				packages[4] = arrayListPackage.get(i).getId().toString();
 				packages[5] = "Ver";
 				tableModel.addRow(packages);
 				i++;
@@ -379,21 +380,19 @@ public class SearchPackage extends View {
 	}
 	
 	public void getPackageById(final int idPackage) throws PackageException{
-		
 		this.packageId = idPackage;
 		
 		PackageController packageController = new PackageController();
-		model.Package packageToShow;
+		Package packageToShow;
 		
 		DefaultListModel<String> courseListModel = new DefaultListModel<String>();
 		ArrayList<String> coursesName;
-		
 		packageToShow = packageController.showPackage(idPackage);
-		
-		jTxtPackageID.setText(packageToShow.getPackageId().toString());
-		jLblPackageName.setText(packageToShow.getPackageName());
-		jLblDuracao.setText(packageToShow.getPackageDuration().toString() + " semanas");
-		jLblValor.setText(passValueToMonetaryForm(packageToShow.getPackageValue()));
+
+		jTxtPackageID.setText(packageToShow.getId().toString());
+		jLblPackageName.setText(packageToShow.getName());
+		jLblDuracao.setText(packageToShow.getDuration().toString() + " semanas");
+		jLblValor.setText(passValueToMonetaryForm(packageToShow.getValue()));
 		
 		coursesName = packageToShow.getCourses();
 		

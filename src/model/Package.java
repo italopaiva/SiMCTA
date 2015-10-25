@@ -2,249 +2,135 @@ package model;
 
 import java.util.ArrayList;
 
-import controller.CourseController;
-import exception.CourseException;
 import exception.PackageException;
+import exception.ServiceItemException;
 
-public class Package {
+public class Package extends ServiceItem{
 
 	/**
 	 * Error messages 
 	 */
-	private static final String PACKAGE_NAME_CANT_BE_NULL = "O nome do pacote deve ser preenchido";
-	private static final String PACKAGE_VALUE_CANT_BE_ZERO = "O pacote deve ter um valor";
-	private static final String PACKAGE_ID_MUST_BE_GREATER_THAN_ZERO = "O código do pacote deve ser maior que zero";
-	private static final String PACKAGE_DURATION_CANT_GREATHER_THAN_MAX = "O pacote não pode ter mais que 99 semanas, remova algum curso";
-	private static final String COURSES_OF_PACKAGE_CANT_BE_ZERO = "O pacote não pode ser criado sem cursos";
-	private static final String PACKAGE_VALUE_GREATHER_THAN_MAX = "O pacote não pode custar mais R$ 9999,99";
 	private static final String PACKAGE_DURATION_CANT_BE_ZERO = "O pacote deve durar pelo menos 1 semana";
 	private static final String PACKAGE_MUST_CONTAIN_COURSES = "Um pacote deve conter pelo menos um curso associado a ele.";
 	private static final String GIVEN_INVALID_COURSE_TO_PACKAGE = "O curso informado para adicionar ao pacote não é válido.";
-
-	/**
-	 * The max and min duration are these because the duration must have at least 1 digit and
-	 * no more than 2 digits
-	 * Ex.: 10 weeks -> 10 has two digits
-	 * So, the greater number with 2 digits is 99, and the minimun is 1 (because can't be zero)
-	 */
-	private static final int MIN_DURATION = 1;
-	private static final int MAX_DURATION = 99;
-	/**
-	 * The max and min value are these because the value must have no more than 6 digits
-	 * Ex.: R$ 2500,39 = 250039
-	 * So, the greater acceptable value is 999999 (R$ 9999,99) 
-	 */
-	private static final int MAX_VALUE = 999999;
-	private static final int MIN_VALUE = 1;
+	private static final String CANT_ADD_NULL_ITEM = "Não é possível adicionar um curso vazio ao pacote.";
+	private static final String ERROR_CALCULATING_PACKAGE_DURATION = "A duração do pacote não está dentro dos limites inferior e superior.";
 	
+	private static final int PACKAGE_ACTIVE = 1;
 	
-	private Integer packageId;
-	private String packageName;
-	private Integer packageDuration;
-	private Integer packageStatus;
-
-	/**
-	 * Courses contained in the package
-	 */
-	private ArrayList <String> courses = new ArrayList<String>();
-	private ArrayList<Course> packageCourses = new ArrayList<Course>();
-
+	private ArrayList<ServiceItem> serviceItens = new ArrayList<ServiceItem>();
 	
-	/**
-	 * Given in reals (R$)
-	 * Cannot have more than 6 digits (Ex.: R$ 1500,50 = 150050)
-	 */
-	private Integer packageValue;
-		
-		
 	/** Constructors */
 	public Package(){}
 	
-	public Package(Integer packageId, String packageName, Integer packageValue, 
-			       Integer packageDuration, ArrayList <String> courses) throws PackageException{
+	public Package(Integer packageId, String packageName, Integer packageValue) throws PackageException{
 		
-		setPackageId(packageId);
-		setPackageName(packageName);
-		setPackageValue(packageValue);
-		setPackageDuration(packageDuration);
-		setCourses(courses);
-		setPackageCourses(courses);
+		try{
+			setId(packageId);
+			setName(packageName);
+			setValue(packageValue);
+			setStatus(PACKAGE_ACTIVE);
+		}
+		catch (ServiceItemException e){
+			throw new PackageException(e.getMessage());
+		}
 	}
 	
 	public Package(Integer packageId, String packageName, Integer packageValue, 
-			       Integer packageDuration, Integer status, ArrayList <String> courses) throws PackageException{
+			       Integer status) throws PackageException{
 		
-		setPackageId(packageId);
-		setPackageName(packageName);
-		setPackageValue(packageValue);
-		setPackageDuration(packageDuration);
-		setPackageStatus(status);
-		setCourses(courses);
+		try{
+			setId(packageId);
+			setName(packageName);
+			setValue(packageValue);
+			setStatus(status);
+		}
+		catch (ServiceItemException e){
+			throw new PackageException(e.getMessage());
+		}
 	}
 	
 	public Package(Integer packageId, String packageName, Integer packageValue, 
 		       Integer packageDuration, Integer status) throws PackageException{
-	
-		setPackageId(packageId);
-		setPackageName(packageName);
-		setPackageValue(packageValue);
-		setPackageDuration(packageDuration);
-		setPackageStatus(status);
-	}
-	
-	/** Setters 
-	 * @throws PackageException */
-	
-	private void setPackageId(Integer packageId) throws PackageException {
 		
-		boolean packageIdIsValid = packageId != null && packageId > 0;
-		
-		if(packageIdIsValid){
-			
-			this.packageId = packageId;
-		}else{
-			
-			throw new PackageException(PACKAGE_ID_MUST_BE_GREATER_THAN_ZERO);
+		try{
+			setId(packageId);
+			setName(packageName);
+			setValue(packageValue);
+			setDuration(packageDuration);
 		}
-	}
-
-	private void setPackageName(String packageName) throws PackageException {
-		
-		boolean packageNameIsValid = ((packageName != null) && (!packageName.isEmpty()));  
-		
-		if(packageNameIsValid){
-			this.packageName = packageName;
-		}
-		else{
-			throw new PackageException(PACKAGE_NAME_CANT_BE_NULL);
+		catch (ServiceItemException e){
+			throw new PackageException(e.getMessage());
 		}
 	}
 	
-	private void setPackageValue(Integer packageValue) throws PackageException {
+	public Package(Integer packageId, String packageName, Integer packageValue, 
+		       Integer packageDuration, Integer status, ArrayList<ServiceItem> packageItens) throws PackageException{
 		
-		if(packageValue != null){
-			int value = packageValue.intValue();
+		try{
+			setId(packageId);
+			setName(packageName);
+			setValue(packageValue);
+			setDuration(packageDuration);
+			setServiceItens(packageItens);
+		}
+		catch (ServiceItemException e){
+			throw new PackageException(e.getMessage());
+		}
+	}
+	
+	public void addServiceItem(ServiceItem item) throws PackageException{
+		
+		if(item != null){
+	
+			serviceItens.add(item);
 			
-			boolean caseMin = value >= MIN_VALUE;
-			boolean caseMax = value <= MAX_VALUE;
-			
-			boolean packageValueIsValid = caseMin && caseMax;
-			if(packageValueIsValid){
-				
-				this.packageValue = packageValue;
+			try {
+				this.setDuration();
 			}
-			else{
-				if(!caseMin){
-					throw new PackageException(PACKAGE_VALUE_CANT_BE_ZERO);
-				}
-				else{
-					throw new PackageException(PACKAGE_VALUE_GREATHER_THAN_MAX);
-				}
+			catch(ServiceItemException e){
+				throw new PackageException(ERROR_CALCULATING_PACKAGE_DURATION);
 			}
 		}
 		else{
-			throw new PackageException(PACKAGE_VALUE_CANT_BE_ZERO);
-		}
-		
-	}
-	
-	private void setPackageDuration(Integer packageDuration) throws PackageException{
-		
-		if(packageDuration != null){
-			int duration = packageDuration.intValue();
-			
-			boolean caseMin = duration >= MIN_DURATION;
-			boolean caseMax = duration <= MAX_DURATION;
-			
-			boolean packageDurationIsValid = caseMin && caseMax;
-			
-			if(packageDurationIsValid){
-				
-				this.packageDuration = packageDuration;
-			}
-			else{
-				if(!caseMin){
-					throw new PackageException(PACKAGE_DURATION_CANT_BE_ZERO);
-				}
-				else{
-					throw new PackageException(PACKAGE_DURATION_CANT_GREATHER_THAN_MAX);
-				}
-			}
-		}
-		else{
-			throw new PackageException(PACKAGE_DURATION_CANT_BE_ZERO);
-		}
-		
-	}
-	
-	private void setCourses(ArrayList<String> courses) throws PackageException {
-		
-		boolean coursesAreValid = courses != null && !courses.isEmpty();
-		
-		if(coursesAreValid){		
-			this.courses = courses;
-		}else{
-			throw new PackageException(COURSES_OF_PACKAGE_CANT_BE_ZERO);
+			throw new PackageException(CANT_ADD_NULL_ITEM);
 		}
 	}
 	
-	private void setPackageStatus(Integer packageStatus) {
-		this.packageStatus = packageStatus;
+	private void setDuration() throws ServiceItemException{
+		Integer duration = calculateDuration(); 
+		setDuration(duration);
 	}
 	
-	private void setPackageCourses(ArrayList<String> packageCourses) throws PackageException{
+	private Integer calculateDuration(){
 		
-		if(packageCourses != null){
-			
-			CourseController courseController = new CourseController();
-			
-			int i = 0;
-			for(i = 0; i < packageCourses.size(); i++){
-				
-				int courseId = Integer.parseInt(packageCourses.get(i));
-				
-				Course course = courseController.get(courseId);
-				
-				if(course != null){
-				
-					this.packageCourses.add(course);
-				}
-				else{
-					throw new PackageException(GIVEN_INVALID_COURSE_TO_PACKAGE);
-				}
-			}
+		Integer totalDuration = 0;
+		
+		for(ServiceItem item : this.serviceItens){
+			totalDuration += item.getDuration();
 		}
-		else{
-			throw new PackageException(PACKAGE_MUST_CONTAIN_COURSES);
+		
+		return totalDuration;
+	}
+	
+	public ArrayList<String> getCourses(){
+		
+		ArrayList<ServiceItem> itens = getServiceItens();
+		
+		ArrayList<String> courses = new ArrayList<String>();
+		
+		for(ServiceItem item : itens){
+			courses.add(item.getId().toString());
 		}
-	}
-	
-	/** Getters */ 
-	public Integer getPackageId() {
-		return packageId;
-	}
-	
-	public String getPackageName() {
-		return packageName;
-	}
-	
-	public Integer getPackageValue() {
-		return packageValue;
-	}
-	
-	public Integer getPackageDuration() {
-		return packageDuration;
-	}
-	
-	public ArrayList<String> getCourses() {
+		
 		return courses;
 	}
 	
-	public Integer getPackageStatus() {
-		return packageStatus;
+	private void setServiceItens(ArrayList<ServiceItem> itens){
+		this.serviceItens = itens;
 	}
 	
-	public ArrayList<Course> getPackageCourses(){
-		return packageCourses;
+	public ArrayList<ServiceItem> getServiceItens(){
+		return this.serviceItens;
 	}
 }

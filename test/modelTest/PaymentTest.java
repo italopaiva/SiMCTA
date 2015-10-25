@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
+import model.Course;
 import model.Payment;
 import model.PaymentDescription;
 import model.Service;
@@ -19,6 +20,7 @@ import org.junit.Test;
 
 import exception.AddressException;
 import exception.CPFException;
+import exception.CourseException;
 import exception.DateException;
 import exception.PaymentException;
 import exception.PersonException;
@@ -44,11 +46,12 @@ public class PaymentTest{
 	private ArrayList<String> packages = new ArrayList<String>();
 	
 	// May change because the database. It is the sum of the courses and packages values.
-	private static final Integer SERVICE_VALUE = new Integer(455005);
+	private static final Integer SERVICE_VALUE = new Integer(100000);
 	
 	@Before
 	public void setUp() throws DateException, AddressException, PhoneException,
-						CPFException, RGException, StudentException, ServiceException, PersonException{
+						CPFException, RGException, StudentException, ServiceException, PersonException, CourseException{
+
 		
 		date = new Date(05, 06, 1996);
 		address = new Address("Rua 3 ", "6B", "", "72323411", "Brasília");
@@ -65,7 +68,8 @@ public class PaymentTest{
 		courses.add(1, "2");
 		packages.add(0, "7");
 		
-		service = new Service(student, courses, packages);
+		service = new Service(student);
+		service.addItem(new Course("Instalação de porta", "Instalar portas.", 5, 100000));
 	}
 	
 	/** Tests for payment service */
@@ -73,7 +77,7 @@ public class PaymentTest{
 	public void testValidServicePayment(){
 		
 		try{
-			payment = new Payment(service, 1, 1, 0);
+			payment = new Payment(service, 1, 1, 1);
 			assertEquals(service, payment.getService());
 		}
 		catch (PaymentException e){
@@ -91,7 +95,7 @@ public class PaymentTest{
 	public void testValueOfServicePayment(){
 		
 		try{
-			payment = new Payment(service, 1, 1, 0);
+			payment = new Payment(service, 1, 1, 1);
 			assertEquals(SERVICE_VALUE, payment.getValue());
 		}
 		catch (PaymentException e){
@@ -104,7 +108,7 @@ public class PaymentTest{
 		
 		try{
 			PaymentDescription description = new PaymentDescription(1, 1);
-			payment = new Payment(service, 1, 1, 0);
+			payment = new Payment(service, 1, 1, 1);
 			assertEquals(description.getPaymentType(), payment.getDescription().getPaymentType());
 			assertEquals(description.getPaymentForm(), payment.getDescription().getPaymentForm());
 		}
@@ -118,8 +122,8 @@ public class PaymentTest{
 	public void testInstallmentsOfPayment(){
 		
 		try{
-			payment = new Payment(service, 1, 1, 0);
-			assertEquals(new Integer(0), payment.getInstallments());
+			payment = new Payment(service, 1, 1, 1);
+			assertEquals(new Integer(1), payment.getInstallments());
 		}
 		catch (PaymentException e){
 			fail("Should not throw this exception: "+ e.getMessage());
@@ -155,7 +159,7 @@ public class PaymentTest{
 		
 		try{
 			payment = new Payment(service, 1, 1, null);
-			assertEquals(new Integer(0), payment.getInstallments());
+			assertEquals(new Integer(1), payment.getInstallments());
 		}
 		catch (PaymentException e){
 			fail("Should not throw this exception: "+ e.getMessage());

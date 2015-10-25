@@ -70,7 +70,7 @@ public class EditPackage extends View{
 
 		
 		try {
-			Package currentPackage = packageController.searchCoursesOfAPackage(packageId);
+			Package currentPackage = packageController.showPackage(packageId);
 			createLabelsAndFields();
 			createMasks();				
 			setFieldValues(currentPackage);
@@ -116,16 +116,9 @@ public class EditPackage extends View{
 											
 					PackageController packageController = new PackageController();
 					
-					boolean packageWasSaved = packageController.updatePackage(packageId, packageName, packageValue, 
-																		   packageDuration, coursesId);
+					packageController.updatePackage(packageId, packageName, packageValue, coursesId);
 					
-					String message = "";
-					
-					if(packageWasSaved){
-						message = "Pacote alterado com sucesso.";
-					}else{
-						message = "Não foi possível alterar o pacote informado. Tente novamente.";
-					}
+					String message = "Pacote alterado com sucesso.";
 					
 					showInfoMessage(message);
 					dispose();
@@ -133,7 +126,6 @@ public class EditPackage extends View{
 					searchPackageFrame.setVisible(true);
 				}
 				catch(PackageException caughtException){
-					
 					showInfoMessage(caughtException.getMessage());
 				} catch (SQLException e1) {
 
@@ -255,9 +247,9 @@ public class EditPackage extends View{
 	 */
 	private void setFieldValues(Package currentPackage) throws CourseException, SQLException {
 		
-		String packageName = currentPackage.getPackageName();
-		String packageDuration = currentPackage.getPackageDuration().toString();
-		String packageValue = currentPackage.getPackageValue().toString();
+		String packageName = currentPackage.getName();
+		String packageDuration = currentPackage.getDuration().toString();
+		String packageValue = currentPackage.getValue().toString();
 				
 		packageNameField.setText(packageName);
 		packageDurationField.setText(packageDuration);
@@ -289,8 +281,8 @@ public class EditPackage extends View{
 			
 			Course dataOfCourse = courseController.showCourse(courseId);
 			
-			courseName = dataOfCourse.getCourseName();
-			Integer duration = dataOfCourse.getCourseDuration();
+			courseName = dataOfCourse.getName();
+			Integer duration = dataOfCourse.getDuration();
 			courseDuration = duration.toString();
 
 			coursesName.add(courseName);
@@ -481,12 +473,12 @@ public class EditPackage extends View{
 		while(indexOfCourses < courses.size()){
 			
 			Course course = courses.get(indexOfCourses);
-			Integer courseId = course.getCourseId();
-			Integer courseDuration = course.getCourseDuration();
+			Integer courseId = course.getId();
+			Integer courseDuration = course.getDuration();
 
 			String[] allCourses = new String[3];
 	
-			allCourses[0] = (course.getCourseName());
+			allCourses[0] = (course.getName());
 			allCourses[1] = (courseId.toString());
 			allCourses[2] = (courseDuration.toString());
 		
