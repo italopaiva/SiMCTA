@@ -1,17 +1,27 @@
 package view;
 
 import java.awt.Font;
+import java.text.ParseException;
 
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.MaskFormatter;
+
+import model.Teacher;
+import model.datatype.Address;
+import model.datatype.CPF;
+import model.datatype.Date;
+import model.datatype.Phone;
+import model.datatype.RG;
 
 public class TeacherForm extends TeacherView {
 
 	@Override
-	public void createLabelsAndFields(JFrame frame, int fieldStatus) {
+	public void createLabelsAndFields(JFrame frame, int fieldStatus, Teacher teacher) {
 		contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         frame.setContentPane(contentPane);
@@ -21,11 +31,10 @@ public class TeacherForm extends TeacherView {
 		registerTeacherLbl.setFont(new Font("Dialog", Font.BOLD, 20));
 		frame.getContentPane().add(registerTeacherLbl);
   
-        JLabel nameLbl = new JLabel("Nome");
+		JLabel nameLbl = new JLabel("Nome");
         nameLbl.setBounds(70, 60, 70, 17);
         frame.getContentPane().add(nameLbl);
         
-        nameField = new JTextField();
         nameField.setBounds(115, 55, 434, 27);
         frame.getContentPane().add(nameField);
         nameField.setColumns(10);
@@ -38,12 +47,10 @@ public class TeacherForm extends TeacherView {
         rgLabel.setBounds(243, 97, 85, 17);
         frame.getContentPane().add(rgLabel);
                 
-        rgField = new JTextField();
         rgField.setBounds(327, 92, 100, 27);
         frame.getContentPane().add(rgField);
         rgField.setColumns(10);
         
-        issuingInstitutionField = new JTextField();
 		issuingInstitutionField.setColumns(10);
 		issuingInstitutionField.setBounds(203, 131, 85, 27);
 		frame.getContentPane().add(issuingInstitutionField);
@@ -52,7 +59,6 @@ public class TeacherForm extends TeacherView {
 		issuingInstitutionLbl.setBounds(70, 137, 129, 15);
 		frame.getContentPane().add(issuingInstitutionLbl);
 		
-		ufField = new JTextField();
 		ufField.setColumns(10);
 		ufField.setBounds(417, 132, 100, 27);
 		frame.getContentPane().add(ufField);
@@ -72,23 +78,19 @@ public class TeacherForm extends TeacherView {
         JLabel phoneLabel = new JLabel("Telefone");
         phoneLabel.setBounds(305, 205, 70, 17);
         frame.getContentPane().add(phoneLabel);
-        
-        dddCellField = new JTextField();
+
         dddCellField.setBounds(379, 166, 40, 27);
         frame.getContentPane().add(dddCellField);
         dddCellField.setColumns(10);
         
-        cellField = new JTextField();
         cellField.setBounds(429, 166, 100, 27);
         frame.getContentPane().add(cellField);
         cellField.setColumns(10);
         
-        dddPhoneField = new JTextField();
         dddPhoneField.setBounds(379, 200, 40, 27);
         frame.getContentPane().add(dddPhoneField);
         dddPhoneField.setColumns(10);
         
-        phoneField = new JTextField();
         phoneField.setBounds(429, 200, 100, 27);
         frame.getContentPane().add(phoneField);
         phoneField.setColumns(10);
@@ -97,15 +99,13 @@ public class TeacherForm extends TeacherView {
         emailLabel.setBounds(70, 248, 70, 17);
         frame.getContentPane().add(emailLabel);
         
-        emailField = new JTextField();
         emailField.setBounds(115, 243, 334, 27);
         frame.getContentPane().add(emailField);
 
         JLabel addressLabel = new JLabel("Endereço");
         addressLabel.setBounds(70, 282, 70, 17);
         frame.getContentPane().add(addressLabel);
-        
-        addressField = new JTextField();
+
         addressField.setBounds(145, 277, 344, 27);
         frame.getContentPane().add(addressField);
 
@@ -113,7 +113,6 @@ public class TeacherForm extends TeacherView {
         cepLabel.setBounds(495, 321, 33, 17);
         frame.getContentPane().add(cepLabel);
         
-        cepField = new JTextField();
         cepField.setBounds(545, 316, 84, 27);
         frame.getContentPane().add(cepField);
 
@@ -121,7 +120,6 @@ public class TeacherForm extends TeacherView {
         cityLabel.setBounds(317, 321, 70, 17);
         frame.getContentPane().add(cityLabel);
         
-        cityField = new JTextField();
         cityField.setBounds(385, 316, 105, 27);
         frame.getContentPane().add(cityField);
 
@@ -129,11 +127,9 @@ public class TeacherForm extends TeacherView {
 		numberLbl.setBounds(495, 282, 33, 17);
 		frame.getContentPane().add(numberLbl);
 		
-		numberField = new JTextField();
 		numberField.setBounds(522, 277, 57, 27);
 		frame.getContentPane().add(numberField);
 		
-		complementField = new JTextField();
 		complementField.setBounds(177, 316, 122, 27);
 		frame.getContentPane().add(complementField);
 		
@@ -145,7 +141,6 @@ public class TeacherForm extends TeacherView {
         motherLabel.setBounds(70, 369, 95, 17);
         frame.getContentPane().add(motherLabel);
         
-        motherField = new JTextField();
         motherField.setBounds(177, 364, 402, 27);
         frame.getContentPane().add(motherField);
 
@@ -153,7 +148,6 @@ public class TeacherForm extends TeacherView {
         fatherLabel.setBounds(70, 409, 95, 17);
         frame.getContentPane().add(fatherLabel);
         
-        fatherField = new JTextField();
         fatherField.setBounds(177, 404, 402, 27);
         frame.getContentPane().add(fatherField);
         
@@ -161,14 +155,66 @@ public class TeacherForm extends TeacherView {
         qualificationLabel.setBounds(70, 444, 105, 17);
         frame.getContentPane().add(qualificationLabel);
         
-        qualificationField = new JTextField();
         qualificationField.setBounds(177, 444, 402, 127);
         frame.getContentPane().add(qualificationField);	
         
+        MaskFormatter birthdateMask = null;
+        MaskFormatter cpfMask = null;
+		try{
+	        // Mask for cpf
+	        cpfMask = new MaskFormatter("###########");
+	        cpfMask.setValidCharacters("0123456789");
+	        cpfMask.setValueContainsLiteralCharacters(false);
+
+	        cpfField = new JFormattedTextField(cpfMask);
+	        cpfField.setBounds(102, 97, 129, 27);
+	        frame.getContentPane().add(cpfField);
+	        cpfField.setColumns(10);
+	        
+			// Mask for birthdate
+			birthdateMask = new MaskFormatter("##/##/####");
+			birthdateMask.setValidCharacters("0123456789");
+			birthdateMask.setValueContainsLiteralCharacters(true);
+	        
+	        birthdateField = new JFormattedTextField(birthdateMask);
+	        birthdateField.setBounds(70, 195, 190, 27);
+	        frame.getContentPane().add(birthdateField);
+	        birthdateField.setColumns(10);
+
+		}
+		catch(ParseException e2){
+			e2.printStackTrace();
+		}
+        
+        if(teacher == null){
+			 nameField.setText(" ");
+	         rgField.setText("");
+	         cellField.setText("");
+	         phoneField.setText("");
+	         addressField.setText("");
+	         cepField.setText("");
+	         cityField.setText("");
+	         emailField.setText("");
+	         motherField.setText("");
+	         fatherField.setText("");
+	         dddCellField.setText("");
+	         dddPhoneField.setText("");
+	         issuingInstitutionField.setText("");
+	         ufField.setText("");
+	         numberField.setText("");
+	         complementField.setText("");
+	         qualificationField.setText("");
+	         
+	         createMasks(frame, fieldStatus);
+		}
+		else{
+			fillTheFilds(teacher);
+		}
 
         switch(fieldStatus){
         	case BLANK_FIELDS:
         		registerTeacherLbl.setText("Cadastrar novo professor");
+        		setEditableAllFields();
         		break;
         	case NON_EDITABLE_FIELDS:
             	registerTeacherLbl.setText("Professor");
@@ -183,20 +229,111 @@ public class TeacherForm extends TeacherView {
 
 	}
 
+	private void fillTheFilds(Teacher teacher) {
+		String teacherName = teacher.getName();		
+		String email = teacher.getEmail();
+		String motherName = teacher.getMotherName();
+		String fatherName = teacher.getFatherName();
+
+		nameField.setText(teacherName);
+		emailField.setText(email);
+		motherField.setText(motherName);
+		fatherField.setText(fatherName);
+
+		//CPF
+		CPF cpf = teacher.getCpf();
+		String teacherCpf  = cpf.getCpf();
+		cpfField.setText(teacherCpf);
+		
+		//RG
+		
+		RG rg = teacher.getRg();
+		rgField.setText(rg.getRgNumber());
+		ufField.setText(rg.getUf());
+		issuingInstitutionField.setText(rg.getIssuingInstitution());
+		
+		// Birthdate
+		Date date = teacher.getBirthdate();
+		String birthdate = date.getSlashFormattedDate();
+		birthdateField.setText(birthdate);
+		
+		//Address
+		Address address = teacher.getAddress();
+		String city = address.getCity();
+		String cep = address.getCep();
+		
+		addressField.setText(address.getAddressInfo());
+		cepField.setText(cep);
+		cityField.setText(city);
+		numberField.setText(address.getNumber());
+		complementField.setText(address.getComplement());
+		
+		//Phones
+		Phone principalPhone = teacher.getPrincipalPhone();
+		Phone secondaryPhone = teacher.getSecondaryPhone();
+
+		dddCellField.setText(principalPhone.getDDD());
+		cellField.setText(principalPhone.getNumber());
+		
+		if(secondaryPhone != null){
+			dddPhoneField.setText(secondaryPhone.getDDD());
+			phoneField.setText(secondaryPhone.getNumber());
+		}
+		else{
+			dddPhoneField.setText("");
+			phoneField.setText("");
+		}
+		
+		String qualification = teacher.getQualification();
+		qualificationField.setText(qualification);
+	}
+
 	private void setEditableAllFields() {
-		// TODO Auto-generated method stub
+		 nameField.setEditable(true);
+         rgField.setEditable(true);
+         cellField.setEditable(true);
+         phoneField.setEditable(true);
+         addressField.setEditable(true);
+         cepField.setEditable(true);
+         cityField.setEditable(true);
+         emailField.setEditable(true);
+         motherField.setEditable(true);
+         fatherField.setEditable(true);
+         dddCellField.setEditable(true);
+         dddPhoneField.setEditable(true);
+         issuingInstitutionField.setEditable(true);
+         ufField.setEditable(true);
+         numberField.setEditable(true);
+         complementField.setEditable(true);
+         qualificationField.setEditable(true);
 		
 	}
 
 	private void setNonEditableAllFields() {
-		// TODO Auto-generated method stub
+		 nameField.setEditable(false);
+         rgField.setEditable(false);
+         cellField.setEditable(false);
+         phoneField.setEditable(false);
+         addressField.setEditable(false);
+         cepField.setEditable(false);
+         cityField.setEditable(false);
+         emailField.setEditable(false);
+         motherField.setEditable(false);
+         fatherField.setEditable(false);
+         dddCellField.setEditable(false);
+         dddPhoneField.setEditable(false);
+         issuingInstitutionField.setEditable(false);
+         ufField.setEditable(false);
+         numberField.setEditable(false);
+         complementField.setEditable(false);
+         qualificationField.setEditable(false);
 		
 	}
 
 	@Override
 	public void createMasks(JFrame frame, int fieldStatus) {
-		// TODO Auto-generated method stub
-
+		
+			
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package view.decorator;
+package view;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -11,64 +11,68 @@ import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import model.Student;
 import model.Teacher;
 import model.datatype.CPF;
 import util.ButtonColumn;
-import view.TeacherForm;
-import view.TeacherView;
+import view.decorator.ShowTeacherDecorator;
+import view.decorator.TeacherDecorator;
+import controller.StudentController;
 import controller.TeacherController;
 import exception.CPFException;
 import exception.PersonException;
 import exception.TeacherException;
 
-public class SearchTeacherDecorator extends TeacherDecorator {
+public class SearchTeacher extends TeacherView {
 
 	private JButton searchTeacherBtn;
 	private JTextField searchedTeacherField;
 	private JInternalFrame internalFrame;
 	private JTable tableOfTeachers;
 	private JScrollPane scrollPane;
-	private JButton backButton;
 	private DefaultTableModel tableModel;
 	private TeacherController teacherController;
 
-	public SearchTeacherDecorator(TeacherView viewToDecorate) {
-		super(viewToDecorate);
-	}
-
 	@Override
-	public void createLabelsAndFields(JFrame viewToDecorate, int fieldStatus) {
+	public void createLabelsAndFields(JFrame viewToDecorate, int fieldStatus, Teacher teacher) {
 		this.frame = viewToDecorate;
 		try {
 			addFields();
 			createButtons(frame);
 		} 
 		catch(TeacherException e){
-			
+
 		}
 	}
 
 	public void addFields() throws TeacherException{
 		
+		contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
+	
         searchedTeacherField = new JTextField();
 		searchedTeacherField.setBounds(141, 24, 446, 30);
-		frame.getContentPane().add(searchedTeacherField);
+		add(searchedTeacherField);
 		searchedTeacherField.setColumns(10);
 		
 		internalFrame = new JInternalFrame();
 		internalFrame.setBounds(113, 64, 882, 618);
-		frame.getContentPane().add(internalFrame);
+		add(internalFrame);
 		
 		internalFrame.setVisible(false);
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(227, 141, 557, 317);
-		frame.getContentPane().add(scrollPane);
+		add(scrollPane);
 		scrollPane.setBackground(Color.WHITE);
 		
 		String [] columns = { "Professor", "Ação", "CPF"};
@@ -93,7 +97,7 @@ public class SearchTeacherDecorator extends TeacherDecorator {
 					Teacher teacher = teacherController.getTeacher(selectedTeacher);
 					dispose();
 					TeacherView teacherFrame = new ShowTeacherDecorator(new TeacherForm());
-					teacherFrame.buildScreen(teacherFrame, NON_EDITABLE_FIELDS);
+					teacherFrame.buildScreen(teacherFrame, NON_EDITABLE_FIELDS, teacher);
 					teacherFrame.setVisible(true);
 				} 
 				catch (CPFException | TeacherException | PersonException e1) {
@@ -107,11 +111,7 @@ public class SearchTeacherDecorator extends TeacherDecorator {
 		ButtonColumn buttonColumn2 = new ButtonColumn(tableOfTeachers, visualizeTeacher, 1);
 		
 		((JScrollPane) scrollPane).setViewportView(tableOfTeachers);
-		
-		backButton = new JButton("Voltar");
-		backButton.setBounds(727, 26, 117, 25);
-		frame.getContentPane().add(backButton);
-		backButton.setVisible(false);
+
 	}
 
 	private void fillTableWithAllTeachers() throws TeacherException {
@@ -156,12 +156,41 @@ public class SearchTeacherDecorator extends TeacherDecorator {
 	@Override
 	public void createButtons(JFrame frame) {
 		searchTeacherBtn = new JButton("Pesquisar");
-		frame.getContentPane().add(searchTeacherBtn);
+		add(searchTeacherBtn);
 		searchTeacherBtn.setBounds(599, 26, 117, 25);
 		searchTeacherBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			
+				
+				String searchedTeacher = searchedTeacherField.getText();
+				
+				teacherController = new TeacherController();
+				tableModel.setRowCount(0);
+				ArrayList<Teacher> teachers;
+				try {
+					teachers = teacherController.getTeachers(searchedTeacher);
+					int arrayIndex = 0;
+					
+					if(!teachers.isEmpty()){
+						while(arrayIndex < teachers.size()){
+							String[] teacher = new String[3];
+							teacher[0] = teachers.get(arrayIndex).getName();
+							teacher[1] = ("Ver");
+							CPF cpf = teachers.get(arrayIndex).getCpf();
+							teacher[2] = cpf.getCpf();
+							tableModel.addRow(teacher);
+							arrayIndex++;
+						}
+					}
+					else{
+						showInfoMessage("Nenhum professor com esse nome foi encontrado");
+					}
+				} 
+				catch(TeacherException | PersonException e1){
 
+				}
+				
+				
 			}
 		});
 	}
