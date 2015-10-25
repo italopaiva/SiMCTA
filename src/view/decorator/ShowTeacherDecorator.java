@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JTextField;
 
 import model.Teacher;
 import view.SearchTeacher;
@@ -23,7 +24,18 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 	public void createLabelsAndFields(JFrame viewToDecorate, int fieldStatus, Teacher teacher) {
 		this.frame = viewToDecorate;
 		super.createLabelsAndFields(viewToDecorate, fieldStatus, teacher);
-		createButtons(frame);
+
+		String birthdate = teacher.getBirthdate().getSlashFormattedDate();
+		birthdateField = new JTextField(birthdate);
+		birthdateField.setBounds(70, 195, 190, 27);
+		birthdateField.setEditable(false);
+		frame.getContentPane().add(birthdateField);
+
+		String cpf = teacher.getCpf().getFormattedCpf();
+		cpfField = new JTextField(cpf);
+		cpfField.setBounds(102, 97, 129, 27);
+		cpfField.setEditable(false);
+		frame.getContentPane().add(cpfField);
 	}
 	
 	@Override
@@ -54,7 +66,6 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 
 	@Override
 	public void createMasks(JFrame frame, int fieldStatus) {
-		// TODO Auto-generated method stub
 		
 	}
 }

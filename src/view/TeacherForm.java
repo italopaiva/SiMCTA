@@ -7,7 +7,6 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
@@ -19,6 +18,8 @@ import model.datatype.Phone;
 import model.datatype.RG;
 
 public class TeacherForm extends TeacherView {
+
+	private JLabel nameLbl;
 
 	@Override
 	public void createLabelsAndFields(JFrame frame, int fieldStatus, Teacher teacher) {
@@ -157,34 +158,6 @@ public class TeacherForm extends TeacherView {
         
         qualificationField.setBounds(177, 444, 402, 127);
         frame.getContentPane().add(qualificationField);	
-        
-        MaskFormatter birthdateMask = null;
-        MaskFormatter cpfMask = null;
-		try{
-	        // Mask for cpf
-	        cpfMask = new MaskFormatter("###########");
-	        cpfMask.setValidCharacters("0123456789");
-	        cpfMask.setValueContainsLiteralCharacters(false);
-
-	        cpfField = new JFormattedTextField(cpfMask);
-	        cpfField.setBounds(102, 97, 129, 27);
-	        frame.getContentPane().add(cpfField);
-	        cpfField.setColumns(10);
-	        
-			// Mask for birthdate
-			birthdateMask = new MaskFormatter("##/##/####");
-			birthdateMask.setValidCharacters("0123456789");
-			birthdateMask.setValueContainsLiteralCharacters(true);
-	        
-	        birthdateField = new JFormattedTextField(birthdateMask);
-	        birthdateField.setBounds(70, 195, 190, 27);
-	        frame.getContentPane().add(birthdateField);
-	        birthdateField.setColumns(10);
-
-		}
-		catch(ParseException e2){
-			e2.printStackTrace();
-		}
         
         if(teacher == null){
 			 nameField.setText(" ");
@@ -333,7 +306,33 @@ public class TeacherForm extends TeacherView {
 	@Override
 	public void createMasks(JFrame frame, int fieldStatus) {
 		
-			
+			MaskFormatter birthdateMask = null;
+	        MaskFormatter cpfMask = null;
+			try{
+		        // Mask for cpf
+		        cpfMask = new MaskFormatter("###########");
+		        cpfMask.setValidCharacters("0123456789");
+		        cpfMask.setValueContainsLiteralCharacters(false);
+
+		        cpfField = new JFormattedTextField(cpfMask);
+		        cpfField.setBounds(102, 97, 129, 27);
+		        frame.getContentPane().add(cpfField);
+		        cpfField.setColumns(10);
+		        
+				// Mask for birthdate
+				birthdateMask = new MaskFormatter("##/##/####");
+				birthdateMask.setValidCharacters("0123456789");
+				birthdateMask.setValueContainsLiteralCharacters(true);
+		        
+		        birthdateField = new JFormattedTextField(birthdateMask);
+		        birthdateField.setBounds(70, 195, 190, 27);
+		        frame.getContentPane().add(birthdateField);
+		        birthdateField.setColumns(10);
+
+			}
+			catch(ParseException e2){
+				e2.printStackTrace();
+			}
 	}
 
 	@Override
