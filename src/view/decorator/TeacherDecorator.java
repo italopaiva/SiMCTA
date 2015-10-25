@@ -2,6 +2,7 @@ package view.decorator;
 
 import javax.swing.JFrame;
 
+import model.Teacher;
 import view.TeacherView;
 
 public abstract class TeacherDecorator extends TeacherView {
@@ -13,8 +14,8 @@ public abstract class TeacherDecorator extends TeacherView {
 	}
 	 
     @Override
-	public void createLabelsAndFields(JFrame frame, int fieldStatus){
-    	this.viewToDecorate.createLabelsAndFields(frame,fieldStatus);
+	public void createLabelsAndFields(JFrame frame, int fieldStatus, Teacher teacher){
+    	this.viewToDecorate.createLabelsAndFields(frame,fieldStatus,teacher);
     }
 
 	@Override

@@ -42,7 +42,7 @@ public class SearchTeacherDecorator extends TeacherDecorator {
 	}
 
 	@Override
-	public void createLabelsAndFields(JFrame viewToDecorate, int fieldStatus) {
+	public void createLabelsAndFields(JFrame viewToDecorate, int fieldStatus, Teacher teacher) {
 		this.frame = viewToDecorate;
 		try {
 			addFields();
@@ -93,7 +93,7 @@ public class SearchTeacherDecorator extends TeacherDecorator {
 					Teacher teacher = teacherController.getTeacher(selectedTeacher);
 					dispose();
 					TeacherView teacherFrame = new ShowTeacherDecorator(new TeacherForm());
-					teacherFrame.buildScreen(teacherFrame, NON_EDITABLE_FIELDS);
+					teacherFrame.buildScreen(teacherFrame, NON_EDITABLE_FIELDS, teacher);
 					teacherFrame.setVisible(true);
 				} 
 				catch (CPFException | TeacherException | PersonException e1) {

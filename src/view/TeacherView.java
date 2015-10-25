@@ -6,6 +6,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import model.Teacher;
+
 public abstract class TeacherView extends View {
 	
 	protected JPanel contentPane;
@@ -33,13 +35,13 @@ public abstract class TeacherView extends View {
 	
 	protected JFrame frame = new JFrame();
 
-	public void buildScreen(TeacherView teacherFrame, int fieldStatus){
-		createLabelsAndFields(teacherFrame,fieldStatus);
+	public void buildScreen(TeacherView teacherFrame, int fieldStatus, Teacher teacher){
+		createLabelsAndFields(teacherFrame,fieldStatus,teacher);
 		createMasks(teacherFrame,fieldStatus);
 		createButtons(teacherFrame);
 	}
 
-	public abstract void createLabelsAndFields(JFrame frame, int fieldStatus);
+	public abstract void createLabelsAndFields(JFrame frame, int fieldStatus, Teacher teacher);
 	
 	public abstract void createMasks(JFrame frame, int fieldStatus);
 	

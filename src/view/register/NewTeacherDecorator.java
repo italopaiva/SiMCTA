@@ -16,6 +16,7 @@ import javax.swing.text.MaskFormatter;
 
 import view.TeacherView;
 import view.decorator.TeacherDecorator;
+import model.Teacher;
 import model.datatype.Address;
 import model.datatype.CPF;
 import model.datatype.Date;
@@ -38,41 +39,15 @@ public class NewTeacherDecorator extends TeacherDecorator {
 
 
 	@Override
-	public void createLabelsAndFields(JFrame frame, int fieldStatus) {
-		super.createLabelsAndFields(frame, fieldStatus);
+	public void createLabelsAndFields(JFrame frame, int fieldStatus, Teacher teacher) {
+		super.createLabelsAndFields(frame, fieldStatus,teacher);
 		
 	}
 	
 	@Override
 	public void createMasks(JFrame frame, int fieldStatus){
 	       
-        MaskFormatter birthdateMask = null;
-        MaskFormatter cpfMask = null;
-		try{
-	        // Mask for cpf
-	        cpfMask = new MaskFormatter("###########");
-	        cpfMask.setValidCharacters("0123456789");
-	        cpfMask.setValueContainsLiteralCharacters(false);
-
-	        cpfField = new JFormattedTextField(cpfMask);
-	        cpfField.setBounds(102, 97, 129, 27);
-	        frame.getContentPane().add(cpfField);
-	        cpfField.setColumns(10);
-	        
-			// Mask for birthdate
-			birthdateMask = new MaskFormatter("##/##/####");
-			birthdateMask.setValidCharacters("0123456789");
-			birthdateMask.setValueContainsLiteralCharacters(true);
-	        
-	        birthdateField = new JFormattedTextField(birthdateMask);
-	        birthdateField.setBounds(70, 195, 190, 27);
-	        frame.getContentPane().add(birthdateField);
-	        birthdateField.setColumns(10);
-
-		}
-		catch(ParseException e2){
-			e2.printStackTrace();
-		}
+       
 	}
 	
 	@Override

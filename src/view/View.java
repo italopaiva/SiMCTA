@@ -13,6 +13,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
+import model.Teacher;
 import view.decorator.SearchTeacherDecorator;
 import view.register.NewCourse;
 import view.register.NewPackage;
@@ -26,7 +27,9 @@ public class View extends JFrame {
 	
 	protected JMenuBar menuBar;
 	protected static JFrame frame = new JFrame();
-	TeacherView teacherFrame;
+	private TeacherView teacherFrame;
+	private Teacher teacher = null;
+
 	// Status of the fields to register a teacher
 	protected static final int BLANK_FIELDS = 0; 
 	
@@ -76,7 +79,7 @@ public class View extends JFrame {
 				
 				dispose();
 				teacherFrame = new NewTeacherDecorator(new TeacherForm());
-				teacherFrame.buildScreen(teacherFrame, BLANK_FIELDS);
+				teacherFrame.buildScreen(teacherFrame, BLANK_FIELDS, teacher);
 				teacherFrame.setVisible(true);
 			}
 		});
@@ -88,7 +91,7 @@ public class View extends JFrame {
 				
 				dispose();
 				teacherFrame = new SearchTeacherDecorator(new TeacherForm());
-				teacherFrame.buildScreen(teacherFrame, NON_EDITABLE_FIELDS);
+				teacherFrame.buildScreen(teacherFrame, NON_EDITABLE_FIELDS, teacher);
 				teacherFrame.setVisible(true);
 			}
 		});
