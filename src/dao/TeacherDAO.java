@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import model.Student;
 import model.Teacher;
 import model.datatype.Address;
 import model.datatype.CPF;
@@ -128,7 +127,7 @@ public class TeacherDAO extends DAO{
 		ResultSet resultOfTheSearch = null;
 		
 		String query = ("SELECT * FROM "+ TEACHER_TABLE_NAME + " WHERE " + STATUS_COLUMN + "=" + 1);
-		ArrayList<Teacher> teachers = null;
+		ArrayList<Teacher> teachers = new ArrayList<Teacher>();
 		Teacher teacher = null;
 		CPF teacherCpf = null;
 		

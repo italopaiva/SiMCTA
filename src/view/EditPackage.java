@@ -148,7 +148,7 @@ public class EditPackage extends View{
 	/**
 	 * Creates the masks of value and duration fields
 	 */
-	protected void createMasks() {
+	public void createMasks() {
 		
 		MaskFormatter durationMask = null;
 		MaskFormatter valueMask = null;
@@ -180,7 +180,7 @@ public class EditPackage extends View{
 	/**
 	 * Creates all labels and fields on frame
 	 */
-	protected void createLabelsAndFields() {
+	public void createLabelsAndFields() {
 		packageNameField = new JTextField();
 		packageNameField.setBounds(276, 74, 346, 30);
 		contentPane.add(packageNameField);
