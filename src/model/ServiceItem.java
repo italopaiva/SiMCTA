@@ -85,7 +85,7 @@ public abstract class ServiceItem extends Model{
 	
 	protected void setId(Integer id) throws ServiceItemException{
 		
-		boolean courseIdIsValid = id > 0;
+		boolean courseIdIsValid = id != null && id > 0;
 		
 		if(courseIdIsValid){
 			
