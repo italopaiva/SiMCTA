@@ -16,22 +16,14 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import model.Course;
 import model.Teacher;
-import model.datatype.Address;
 import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 import util.ButtonColumn;
+import view.TeacherForm;
 import view.TeacherView;
 import controller.TeacherController;
-import exception.AddressException;
 import exception.CPFException;
-import exception.DateException;
 import exception.PersonException;
-import exception.PhoneException;
-import exception.RGException;
 import exception.TeacherException;
 
 public class SearchTeacherDecorator extends TeacherDecorator {
@@ -43,25 +35,25 @@ public class SearchTeacherDecorator extends TeacherDecorator {
 	private JScrollPane scrollPane;
 	private JButton backButton;
 	private DefaultTableModel tableModel;
+	private TeacherController teacherController;
 
 	public SearchTeacherDecorator(TeacherView viewToDecorate) {
 		super(viewToDecorate);
 	}
 
 	@Override
-	public void createLabelsAndFields(JFrame viewToDecorate) {
+	public void createLabelsAndFields(JFrame viewToDecorate, int fieldStatus) {
 		this.frame = viewToDecorate;
 		try {
 			addFields();
+			createButtons(frame);
 		} 
 		catch(TeacherException e){
 			
 		}
-		//super.createLabelsAndFields(viewToDecorate);
-		createButtons(frame);
 	}
 
-	private void addFields() throws TeacherException{
+	public void addFields() throws TeacherException{
 		
         searchedTeacherField = new JTextField();
 		searchedTeacherField.setBounds(141, 24, 446, 30);
@@ -96,7 +88,18 @@ public class SearchTeacherDecorator extends TeacherDecorator {
 				int selectedRow = table.getSelectedRow();
 				
 				String cpfSelectedTeacher  = table.getModel().getValueAt(selectedRow,2).toString();
-				CPF selectedTeacher;
+				try {
+					CPF selectedTeacher = new CPF(cpfSelectedTeacher);
+					Teacher teacher = teacherController.getTeacher(selectedTeacher);
+					dispose();
+					TeacherView teacherFrame = new ShowTeacherDecorator(new TeacherForm());
+					teacherFrame.buildScreen(teacherFrame, NON_EDITABLE_FIELDS);
+					teacherFrame.setVisible(true);
+				} 
+				catch (CPFException | TeacherException | PersonException e1) {
+					
+				}
+				
 			}
 
 		};
@@ -113,7 +116,7 @@ public class SearchTeacherDecorator extends TeacherDecorator {
 
 	private void fillTableWithAllTeachers() throws TeacherException {
 		
-		TeacherController teacherController = new TeacherController();
+		teacherController = new TeacherController();
 		ArrayList<Teacher> teachers;
 		try {
 			teachers = teacherController.getTeachers();
@@ -145,7 +148,7 @@ public class SearchTeacherDecorator extends TeacherDecorator {
 	}
 
 	@Override
-	public void createMasks(JFrame frame) {
+	public void createMasks(JFrame frame, int fieldStatus) {
 		
 		
 	}

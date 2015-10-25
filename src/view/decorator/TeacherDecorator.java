@@ -13,13 +13,13 @@ public abstract class TeacherDecorator extends TeacherView {
 	}
 	 
     @Override
-	public void createLabelsAndFields(JFrame frame){
-    	this.viewToDecorate.createLabelsAndFields(frame);
+	public void createLabelsAndFields(JFrame frame, int fieldStatus){
+    	this.viewToDecorate.createLabelsAndFields(frame,fieldStatus);
     }
 
 	@Override
-	public void createMasks(JFrame frame){
-		this.viewToDecorate.createMasks(frame);
+	public void createMasks(JFrame frame,int fieldStatus){
+		this.viewToDecorate.createMasks(frame,fieldStatus);
 	}
 	
 	@Override

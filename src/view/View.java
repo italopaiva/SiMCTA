@@ -16,7 +16,7 @@ import javax.swing.JPasswordField;
 import view.decorator.SearchTeacherDecorator;
 import view.register.NewCourse;
 import view.register.NewPackage;
-import view.register.NewTeacher;
+import view.register.NewTeacherDecorator;
 import exception.AuthenticationException;
 import exception.CourseException;
 import exception.PackageException;
@@ -27,6 +27,14 @@ public class View extends JFrame {
 	protected JMenuBar menuBar;
 	protected static JFrame frame = new JFrame();
 	TeacherView teacherFrame;
+	// Status of the fields to register a teacher
+	protected static final int BLANK_FIELDS = 0; 
+	
+	// Status of the fields to visualize a teacher
+	protected static final int NON_EDITABLE_FIELDS = 1;
+	
+	// Status of the fields to edit a teacher
+	protected static final int EDITABLE_FIELDS = 2;	
 	/**
 	 * Launch the application.
 	 */
@@ -67,8 +75,8 @@ public class View extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				dispose();
-				teacherFrame = new NewTeacher();
-				teacherFrame.buildScreen(teacherFrame);
+				teacherFrame = new NewTeacherDecorator(new TeacherForm());
+				teacherFrame.buildScreen(teacherFrame, BLANK_FIELDS);
 				teacherFrame.setVisible(true);
 			}
 		});
@@ -79,8 +87,8 @@ public class View extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				dispose();
-				teacherFrame = new SearchTeacherDecorator(new NewTeacher());
-				teacherFrame.buildScreen(teacherFrame);
+				teacherFrame = new SearchTeacherDecorator(new TeacherForm());
+				teacherFrame.buildScreen(teacherFrame, NON_EDITABLE_FIELDS);
 				teacherFrame.setVisible(true);
 			}
 		});
