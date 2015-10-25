@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 
 import model.datatype.Date;
+import model.Package;
 import exception.PaymentException;
 import exception.ServiceException;
 
@@ -32,18 +33,11 @@ public class Service extends Model{
 		setStudent(student);
 	}
 	
-	public Service(Student student, Date contractsDate, Payment payment) throws ServiceException, PaymentException{
+	public Service(Integer serviceId, Student student, Date contractsDate, Payment payment) throws ServiceException, PaymentException{
 		
+		setServiceId(serviceId);
 		setContractsDate(contractsDate);
 		setStudent(student);
-		setPayment(payment);
-	}
-	
-	
-	public Service(Service service, Payment payment) throws ServiceException, PaymentException{
-				
-		setContractsDate(service.getContractsDate());
-		setStudent(service.getStudent());
 		setPayment(payment);
 	}
 	
@@ -140,13 +134,21 @@ public class Service extends Model{
 				
 		String formattedValue = null;
 		Integer value = getTotalValue();
-		formattedValue = value.toString();
-		int lastIndex = formattedValue.length();
 		
-		String entireValue = formattedValue.substring(0,(lastIndex - 2));
-		String decimalValue = formattedValue.substring((lastIndex - 2),lastIndex);
-		
-		formattedValue  = "R$ " + entireValue + "," + decimalValue;
+		if(value != 0){
+			
+			formattedValue = value.toString();
+			
+			int lastIndex = formattedValue.length();
+			
+			String entireValue = formattedValue.substring(0,(lastIndex - 2));
+			String decimalValue = formattedValue.substring((lastIndex - 2),lastIndex);
+			
+			formattedValue  = "R$ " + entireValue + "," + decimalValue;
+		}
+		else{
+			formattedValue = "R$ 0,00";
+		}
 		
 		return formattedValue;
 	}
@@ -160,15 +162,64 @@ public class Service extends Model{
 		
 		Integer installmentsValue = value/installments;
 		
-		formattedInstallmentsValue = installmentsValue.toString();
-		int lastIndex = formattedInstallmentsValue.length();
+		if(installmentsValue != 0){
 		
-		String entireValue = formattedInstallmentsValue.substring(0,(lastIndex - 2));
-		String decimalValue = formattedInstallmentsValue.substring((lastIndex - 2),lastIndex);
-		
-		
-		formattedInstallmentsValue  = "R$ " + entireValue + "," + decimalValue;
+			formattedInstallmentsValue = installmentsValue.toString();
+			int lastIndex = formattedInstallmentsValue.length();
+			
+			String entireValue = formattedInstallmentsValue.substring(0,(lastIndex - 2));
+			String decimalValue = formattedInstallmentsValue.substring((lastIndex - 2),lastIndex);
+			
+			formattedInstallmentsValue  = "R$ " + entireValue + "," + decimalValue;
+		}
+		else{
+			formattedInstallmentsValue = "R$ 0,00";
+		}
 		
 		return formattedInstallmentsValue;
+	}
+	
+	/**
+	 * Get the service itens which is courses
+	 * @return An Array of ServiceItem with the courses only
+	 */
+	public ArrayList<ServiceItem> getCourses(){
+		
+		ArrayList<ServiceItem> itens = this.getItens();
+		
+		ArrayList<ServiceItem> courses = new ArrayList<ServiceItem>();
+		
+		for(ServiceItem item : itens){
+			
+			boolean isCourse = item.getClass().equals(Course.class);
+			
+			if(isCourse){
+				courses.add(item);
+			}
+		}
+		
+		return courses;
+	}
+	
+	/**
+	 * Get the service itens which is packages
+	 * @return An Array of ServiceItem with the packages only
+	 */
+	public ArrayList<ServiceItem> getPackages(){
+		
+		ArrayList<ServiceItem> itens = this.getItens();
+		
+		ArrayList<ServiceItem> packages = new ArrayList<ServiceItem>();
+		
+		for(ServiceItem item : itens){
+			
+			boolean isPackage = item.getClass().equals(Package.class);
+			
+			if(isPackage){
+				packages.add(item);
+			}
+		}
+		
+		return packages;
 	}
 }

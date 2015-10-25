@@ -50,11 +50,11 @@ public class PaymentController{
 			payment = paymentDAO.get(paymentId);
 
 			if(payment == null){
-				throw new PaymentException(payment.PAYMENT_SERVICE_CANT_BE_NULL);
+				throw new PaymentException(Payment.PAYMENT_SERVICE_CANT_BE_NULL);
 			}
 		}
 		else{
-			throw new PaymentException(payment.PAYMENT_SERVICE_CANT_BE_NULL);
+			throw new PaymentException(Payment.PAYMENT_SERVICE_CANT_BE_NULL);
 		}
 		return payment;
 		

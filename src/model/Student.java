@@ -1,15 +1,14 @@
 package model;
 
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import exception.StudentException;
-import model.datatype.CPF;
-import model.datatype.RG;
 import model.datatype.Address;
-import model.datatype.Phone;
+import model.datatype.CPF;
 import model.datatype.Date;
+import model.datatype.Phone;
+import model.datatype.RG;
+import exception.StudentException;
 
 public class Student extends Model{
 	
@@ -59,6 +58,10 @@ public class Student extends Model{
 		setStudentCpf(studentCpf);
 	}
 
+	public Student(CPF studentCpf) throws StudentException {
+		setStudentCpf(studentCpf);
+	}
+	
 	private void setFatherName(String fatherName) throws StudentException {
 		
 		if(fatherName != null && fatherName != ""){

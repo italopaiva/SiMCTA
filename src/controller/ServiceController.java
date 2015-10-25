@@ -118,23 +118,22 @@ public class ServiceController {
 		ArrayList<Service> services = new ArrayList<Service>();
 		ArrayList<Service> servicesWithPayments = new ArrayList<Service>();
 
-		services = serviceDAO.get(basicDataOfStudent);
+		StudentController studentControl = new StudentController();
+		Student student = studentControl.getStudent(basicDataOfStudent.getStudentCpf());
 		
-		int i = 0;
-		while(i < services.size()){
-			
-			Service service = services.get(i);
-			
+		services = serviceDAO.get(student);
+		
+		for(Service service : services){
+						
 			Payment payment = service.getPayment();
-			
 			payment = paymentController.searchPayment(payment);
 
-			service = new Service(services.get(i), payment);
+			service.addPayment(payment);
+			
 			servicesWithPayments.add(service);
-			i++;
 		}
+		
 		return servicesWithPayments;
-	
 	}
 	
 	public void setServiceDAO(ServiceDAO serviceDao) {

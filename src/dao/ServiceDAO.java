@@ -4,6 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import controller.CourseController;
+import controller.PackageController;
+import controller.PaymentController;
+import controller.StudentController;
 import exception.CourseException;
 import exception.DateException;
 import exception.PaymentException;
@@ -31,6 +35,16 @@ public class ServiceDAO extends DAO {
 	private static final String PAYMENT_ID_COLUMN = "id_payment";
 	private static final String PAYMENT_TABLE = "Payment";
 	private static final String COULDNT_SAVE_SERVICE = "Não foi possível salvar os dados do serviço informado.";
+	
+	private CourseController courseController;
+	private PaymentController paymentController;
+	private PackageController packageController;
+	
+	public ServiceDAO(){
+		courseController = new CourseController();
+		paymentController = new PaymentController();
+		packageController = new PackageController();
+	}
 	
 	/**
 	 * Save a given service on the database
@@ -97,7 +111,7 @@ public class ServiceDAO extends DAO {
 	/**
 	 * Gets the services of a selected student
 	 * @param student - an object with the data of the selected student
-	 * @return an arraylist with the found services
+	 * @return an array list with the found services
 	 * @throws CourseException
 	 * @throws DateException
 	 * @throws ServiceException
@@ -106,94 +120,101 @@ public class ServiceDAO extends DAO {
 	public ArrayList<Service> get(Student student) throws CourseException, DateException, ServiceException, PaymentException {
 		
 		ResultSet services = null;
-		ResultSet coursesOfService = null;
-		ResultSet packagesOfService = null;
-		CPF cpf = student.getStudentCpf();
-		String studentCPF = cpf.getCpf();
+		
 		ArrayList<Service> foundServices = new ArrayList<Service>();
 		Service service = null;
-		ArrayList<String> courses = new ArrayList<String>();
-		ArrayList<String> packages = new ArrayList<String>();
 		
+		CPF cpf = student.getStudentCpf();
+		String studentCPF = cpf.getCpf();
 		String queryForService = "SELECT * FROM " + SERVICE_TABLE_NAME + " WHERE " + CPF_COLUMN + "=\"" + studentCPF + " \""; 
 		
 		try {
 			services = this.search(queryForService);
 			
-			while(services.next()){			
-				int serviceId = services.getInt(ID_COLUMN);				
-				try{
-					String queryForCourses =  "SELECT * FROM " + TABLE_SERVICE_COURSE_NAME + " WHERE " + ID_COLUMN + "=" + serviceId;
-					coursesOfService = this.search(queryForCourses);
-					
-					while(coursesOfService.next()){			
-						String courseId = coursesOfService.getString(ID_COURSE_COLUMN);
-						courses.add(courseId);
-					}
-					String queryForPackages = "SELECT * FROM " + TABLE_SERVICE_PACKAGE_NAME + " WHERE " + ID_COLUMN + "=" + serviceId;
-					packagesOfService = this.search(queryForPackages);
-
-					while(packagesOfService.next()){		
-						String packageId = packagesOfService.getString(ID_PACKAGE_COLUMN);
-						packages.add(packageId);
-					}
-					service = getDataFromService(services,student, courses, packages);
-					foundServices.add(service);
-				}
-				catch(SQLException e){
-					
-				}
-
+			while(services.next()){
+				
+				int serviceId = services.getInt(ID_COLUMN);
+				
+				String date = services.getString(DATE_COLUMN);
+				String year = date.substring(0,4);
+				String month = date.substring(5,7);
+				String day = date.substring(8,10);
+				Date contractsDate = new Date(new Integer(day),new Integer(month),new Integer(year));
+				
+				int paymentId = services.getInt(PAYMENT_ID_COLUMN);
+				Payment payment = new Payment(paymentId);
+				
+				service = new Service(serviceId, student, contractsDate, payment);
+				
+				service = addServiceCourses(service);
+				service = addServicePackages(service);
+				
+				foundServices.add(service);
 			}
 			
 		} 
 		catch(SQLException e){
-			
+			e.printStackTrace();
 		}
+		
 		return foundServices;
 	}
-
-	/**
-	 * Gets the data of the found service
-	 * @param services - the row that contains the service
-	 * @param student - the selected student 
-	 * @param courses - the courses id of the service
-	 * @param packages - the packages id of the service
-	 * @return an Service object that contains the data of the found service
-	 * @throws SQLException
-	 * @throws DateException
-	 * @throws ServiceException
-	 * @throws PaymentException 
-	 */
-	private Service getDataFromService(ResultSet services, Student student, ArrayList<String> courses, ArrayList<String> packages) throws SQLException, DateException, ServiceException, PaymentException {
-		
-		Service service = null;
 	
-		String date = services.getString(DATE_COLUMN);
-		String year = date.substring(0,4);
-		String month = date.substring(5,7);
-		String day = date.substring(8,10);
-		Date contractsDate = new Date(new Integer(day),new Integer(month),new Integer(year));
-
-		if(courses.isEmpty()){
-			courses = null;
+	/**
+	 * Adds the courses of a service to it
+	 * @param service
+	 * @return the service with the added courses
+	 * @throws SQLException
+	 * @throws ServiceException
+	 */
+	private Service addServiceCourses(Service service) throws SQLException, ServiceException{
+		
+		Integer serviceId = service.getServiceId();
+		
+		String queryForCourses =  "SELECT * FROM " + TABLE_SERVICE_COURSE_NAME + " WHERE " + ID_COLUMN + "=" + serviceId;
+		
+		ResultSet coursesOfService = this.search(queryForCourses);
+		
+		while(coursesOfService.next()){
+			Integer courseId = coursesOfService.getInt(ID_COURSE_COLUMN);
+			Course foundCourse = courseController.get(courseId);
+						
+			if(foundCourse != null){
+				service.addItem(foundCourse);
+			}
 		}
-		else{
-			// Nothing to do
-		}
-		if(packages.isEmpty()){
-			packages = null;
-		}
-		else{
-			// Nothing to do
-		}
-
-		int paymentId = services.getInt(PAYMENT_ID_COLUMN);
-		Payment payment = new Payment(paymentId);
-				
-		service  = new Service(student, courses, packages, contractsDate,payment);
 		
 		return service;
 	}
+	
+	/**
+	 * Adds the packages of a service to it
+	 * @param service
+	 * @return the service with the added packages
+	 * @throws SQLException
+	 * @throws ServiceException
+	 */
+	private Service addServicePackages(Service service) throws SQLException, ServiceException{
+		
+		Integer serviceId = service.getServiceId();
+		
+		String queryForPackages = "SELECT * FROM " + TABLE_SERVICE_PACKAGE_NAME + " WHERE " + ID_COLUMN + "=" + serviceId;
+		
+		ResultSet packagesOfService = this.search(queryForPackages);
 
+		while(packagesOfService.next()){		
+			
+			Integer packageId = packagesOfService.getInt(ID_PACKAGE_COLUMN);
+			Package foundPackage = packageController.getPackage(packageId);
+			
+			if(foundPackage != null){
+				service.addItem(foundPackage);
+			}
+			else{
+				// Nothing to do
+			}
+		}
+		
+		return service;
+	}
 }

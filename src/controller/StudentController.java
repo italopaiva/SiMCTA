@@ -79,7 +79,20 @@ public class StudentController {
 			throw new StudentException(CANT_SAVE_NULL_STUDENT);
 		}
 	}
-
+	
+	public Student getStudent(CPF cpf){
+		
+		Student foundStudent;
+		try {
+			foundStudent = studentDAO.get(cpf);
+		} catch (PhoneException | CPFException | DateException
+				| AddressException | RGException | StudentException e) {
+			foundStudent = null;
+		}
+		
+		return foundStudent;
+	}
+	
 	/**
 	 * Search the student with the entered name
 	 * @param studentName - the entered name by user
