@@ -2,12 +2,14 @@ package controllerTest;
 
 import static org.junit.Assert.*;
 
+import java.awt.ItemSelectable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import model.Course;
 import model.Package;
+import model.ServiceItem;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -103,16 +105,20 @@ public class PackageControllerTest {
 	}
 	
 	@Test
-	public void testSearchPackageByNamePackageFound() throws PackageException{
+	public void testSearchPackageByNamePackageFound() throws PackageException, CourseException{
 		
 		ArrayList<Package> packagesArray = new ArrayList<Package>();
-		ArrayList<String> courses = new ArrayList<String>();
+		ArrayList<ServiceItem> courses = new ArrayList<ServiceItem>();
 		
-		courses.add("Curso1");
-		courses.add("Curso2");
+		ServiceItem serviceItem1 = new Course(1, "Aplicação de película", "Curso bom", 3, 500000);
+		ServiceItem serviceItem2 = new Course(2, "Instalação de Som", "Curso bom", 3, 500000);
+				
+		courses.add(serviceItem1);
+		courses.add(serviceItem2);
 		
 		Package pacote1 = new Package(1, "Pacote 1", 200000, 2, 1, courses);
-		courses.add("Curso3");
+		ServiceItem serviceItem3 = new Course(3, "Instalação de Alarme", "Curso muito bom", 3, 510000);
+		courses.add(serviceItem3);
 		Package pacote2 = new Package(2, "Pacote 2", 250000, 4, 1, courses);
 		
 		packagesArray.add(pacote1);
