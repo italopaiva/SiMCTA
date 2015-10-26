@@ -31,12 +31,15 @@ import dao.PackageDAO;
 import model.Package;
 import exception.CourseException;
 import exception.PackageException;
+import exception.StudentException;
 
 @SuppressWarnings("serial")
 public class SearchPackage extends View {
 
-	private final static int NUMBER_OF_COLUMNS = 0;
-	
+	private static final int ACTIVE = 1;
+
+	private static final int INACTIVE = 0;
+
 	private JPanel contentPane;
 	final DefaultTableModel tableModel;
 	private JScrollPane scrollPane;
@@ -50,6 +53,9 @@ public class SearchPackage extends View {
 
 	private JInternalFrame internalFrame;
 	private int packageId;
+	private JButton activeOrDeactivePackageBtn;
+	private int status;
+	private String action;
 	
 	/**
 	 * Launch the application.
@@ -124,9 +130,14 @@ public class SearchPackage extends View {
 				}				
 			}
 		});
-		editPackageBtn.setBounds(156, 248, 107, 25);
+		editPackageBtn.setBounds(124, 248, 107, 25);
 		editPackageBtn.setVisible(true);
 		internalFrame.getContentPane().add(editPackageBtn);
+		
+		activeOrDeactivePackageBtn = new JButton("Desativar");
+		activeOrDeactivePackageBtn.setBounds(279, 248, 107, 25);
+		activeOrDeactivePackageBtn.setVisible(false);
+		internalFrame.getContentPane().add(activeOrDeactivePackageBtn);
 		
 		JLabel lblInfo = new JLabel("Informações sobre Pacote");
 		lblInfo.setBounds(12, 14, 219, 15);
@@ -349,8 +360,8 @@ public class SearchPackage extends View {
 		DefaultTableModel model = (DefaultTableModel) jTable.getModel();
 	    model.setRowCount(0);
 		
-		PackageDAO packageDAO = new PackageDAO();
-		ArrayList<model.Package> arrayListPackage = packageDAO.searchPackageByName(name);		
+		PackageController packageController = new PackageController();
+		ArrayList<model.Package> arrayListPackage = packageController.searchPackageByName(name);		
 		
 		if (arrayListPackage == null){
 			JOptionPane.showMessageDialog(jTable, "Não foi possível encontrar resultados para a pesquisa.");
@@ -366,7 +377,7 @@ public class SearchPackage extends View {
 				packages[0] = arrayListPackage.get(i).getName();
 				packages[1] = "R$ " + passValueToMonetaryForm(arrayListPackage.get(i).getValue());
 				packages[2] = arrayListPackage.get(i).getDuration().toString() + " semana(s)";
-				packages[3] = showsAtivoOrInativo(arrayListPackage.get(i).getStatus());
+				packages[3] = showActiveOrInactive(arrayListPackage.get(i).getStatus());
 				packages[4] = arrayListPackage.get(i).getId().toString();
 				packages[5] = "Ver";
 				tableModel.addRow(packages);
@@ -374,19 +385,15 @@ public class SearchPackage extends View {
 			}
 		}
 	}
-	
-	private String showsAtivoOrInativo(int status){
-		return ((status==0) ? "Desativado":"Ativo");
-	}
-	
+
 	public void getPackageById(final int idPackage) throws PackageException{
 		this.packageId = idPackage;
 		
-		PackageController packageController = new PackageController();
-		Package packageToShow;
+		final PackageController packageController = new PackageController();
+		final Package packageToShow;
 		
 		DefaultListModel<String> courseListModel = new DefaultListModel<String>();
-		ArrayList<String> coursesName;
+		final ArrayList<String> coursesName;
 		packageToShow = packageController.showPackage(idPackage);
 
 		jTxtPackageID.setText(packageToShow.getId().toString());
@@ -404,5 +411,84 @@ public class SearchPackage extends View {
 		}
 		
 		jLstCourses.setModel(courseListModel);
+		
+		
+		status = packageToShow.getStatus();
+		action = setTextToTheDeactiveOrActiveButton(status);
+		activeOrDeactivePackageBtn.setVisible(true);
+		activeOrDeactivePackageBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {						
+				
+				int confirm = 0;				
+				
+				confirm = JOptionPane.showConfirmDialog(internalFrame, "Tem certeza que deseja que o pacote seja " + action + "?", action, JOptionPane.YES_NO_OPTION);
+				
+				if (confirm == JOptionPane.YES_OPTION) {
+					
+					boolean wasAltered = false;
+					try {
+						changeStatus();
+						wasAltered = packageController.alterStatusOfThePackage(packageToShow, status);
+					} 
+					catch(PackageException e1) {
+
+					}	
+					if(wasAltered){
+						showInfoMessage("O pacote está " + action + "!");	
+						action = setTextToTheDeactiveOrActiveButton(status);
+					}
+					else{
+						changeStatus();
+						showInfoMessage("Um erro ocorreu, o pacote não foi " + action);
+					}
+				}
+				else{
+					// Nothing to do
+				}
+			
+			}
+
+			private void changeStatus() {
+				
+				if(status == ACTIVE){
+					status = INACTIVE;
+				}
+				else{
+					status = ACTIVE;
+				}
+				
+			}
+		});
+		
 	}
+	private String setTextToTheDeactiveOrActiveButton(int status) {
+		
+		String packageStatus = "";
+		if(status == ACTIVE){
+			activeOrDeactivePackageBtn.setText("Desativar");
+			packageStatus = "desativado";
+		}
+		else{
+			activeOrDeactivePackageBtn.setText("Ativar");
+			packageStatus = "ativado";
+		}
+		
+		return packageStatus;
+		
+	}
+	
+	private String showActiveOrInactive(int status){
+		
+		String statusToShow = null;
+		
+		switch(status){
+			case INACTIVE:
+				statusToShow = "Desativado";
+				break;
+			case ACTIVE:
+				statusToShow = "Ativado";
+		}
+		
+		return statusToShow;
+	}	
 }

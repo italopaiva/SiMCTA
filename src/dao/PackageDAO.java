@@ -29,6 +29,7 @@ public class PackageDAO extends DAO{
 	private static final String COURSE_NAME_COLUMN = "course_name";
 	private static final String STATUS_COLUMN = "status";
 	private static final String COULDNT_GET_PACKAGE_COURSES = "Não foi possível pegar os dados dos cursos do pacote.";
+	private static final String CANT_UPDATE_STATUS = "Não foi possível alterar o status do pacote";
 	
 	private CourseController courseController;
 	
@@ -234,12 +235,12 @@ public class PackageDAO extends DAO{
 				Integer idPackage = result.getInt(ID_COLUMN);
 				String packageName = result.getString(NAME_COLUMN);
 				Integer packageValue = result.getInt(VALUE_COLUMN);
-				
+				int packageStatus = result.getInt(STATUS_COLUMN);
 				Integer courseId = result.getInt(ID_COURSE_COLUMN);
 
 				Course course = courseController.get(courseId);
 								
-				foundPackage = new Package(idPackage, packageName, packageValue);
+				foundPackage = new Package(idPackage, packageName, packageValue, packageStatus);
 				foundPackage.addServiceItem(course);
 				
 				result.first();
@@ -519,6 +520,23 @@ public class PackageDAO extends DAO{
 			caughtException.printStackTrace();
 			return null;
 		}
+	}
+
+	public void update(int packageId, int status) throws PackageException {
+		
+		String query = "UPDATE "+ TABLE_NAME + " SET "
+				   + STATUS_COLUMN + "='" + status + "'"
+				   + "WHERE " + ID_COLUMN + "='" + packageId + "'";
+		
+		try{
+			
+			this.execute(query);
+			
+		}
+		catch(SQLException caughtException){
+			throw new PackageException(CANT_UPDATE_STATUS);
+		}
+		
 	}
 
 }
