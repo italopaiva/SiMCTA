@@ -1,7 +1,14 @@
 package controller;
 
+import java.util.ArrayList;
+
 import dao.TeacherDAO;
+import exception.AddressException;
+import exception.CPFException;
+import exception.DateException;
 import exception.PersonException;
+import exception.PhoneException;
+import exception.RGException;
 import exception.TeacherException;
 import model.Teacher;
 import model.datatype.Address;
@@ -52,7 +59,72 @@ public class TeacherController {
 		}
 
 	}
+	
+	/**
+	 * Get all teachers registered that are active
+	 * @return an array with the teachers
+	 * @throws TeacherException
+	 */
+	public ArrayList<Teacher> getTeachers() throws TeacherException{
+		
+		ArrayList<Teacher> teachers = new ArrayList<Teacher>();
+		
+		try {
+			teachers = teacherDAO.get();
+		} 
+		catch(PhoneException | CPFException | DateException
+				| AddressException | RGException | TeacherException e){
+			
+			throw new TeacherException(e.getMessage());
+		}
+		
+		return teachers;
+	}
 
+	/**
+	 * Get all teachers registered found with the searched name
+	 * @param searchedTeacher - the name entered by the user
+	 * @return an array with the found teachers
+	 * @throws TeacherException
+	 * @throws PersonException
+	 */
+	public ArrayList<Teacher> getTeachers(String searchedTeacher) throws TeacherException, PersonException{
+		
+		ArrayList<Teacher> teachers = new ArrayList<Teacher>();
+
+		try {
+			teachers = teacherDAO.get(searchedTeacher);
+		} 
+		catch(TeacherException e){
+			
+			throw new TeacherException(e.getMessage());
+		}
+		
+		return teachers;
+	}
+	
+	/**
+	 * Get the data of the teacher selected by the user
+	 * @param selectedTeacher - the 'cpf' of the selected teacher
+	 * @return the data of the teacher selected
+	 * @throws TeacherException
+	 * @throws PersonException
+	 */
+	public Teacher getTeacher(CPF selectedTeacher) throws TeacherException, PersonException{
+			
+		Teacher teacher = null;
+		try {
+			teacher = teacherDAO.get(selectedTeacher);
+		} 
+		catch(PhoneException | CPFException | DateException
+				| AddressException | RGException | TeacherException e){
+			
+			throw new TeacherException(e.getMessage());
+		}
+		
+		return teacher;
+	}
+	
 	public void setTeacherDAO(TeacherDAO teacherDAO){
 		this.teacherDAO = teacherDAO;
 	}

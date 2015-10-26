@@ -111,7 +111,7 @@ public class EnrollStudent extends View {
 	/**
 	 * Creates the labels and fields of the frame
 	 */
-	protected void createLabelsAndFields(){
+	public void createLabelsAndFields(){
 		
 		contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
