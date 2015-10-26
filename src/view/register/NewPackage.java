@@ -1,4 +1,4 @@
-package view;
+package view.register;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -21,6 +21,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
+import view.SimCta;
+import view.View;
 import model.Course;
 import controller.CourseController;
 import controller.PackageController;
@@ -123,7 +125,7 @@ public class NewPackage extends View{
 	/**
 	 * Creates the masks of value and duration fields
 	 */
-	protected void createMasks() {
+	public void createMasks() {
 		
 		MaskFormatter durationMask = null;
 		MaskFormatter valueMask = null;
@@ -155,7 +157,7 @@ public class NewPackage extends View{
 	/**
 	 * Creates all labels and fields on frame
 	 */
-	protected void createLabelsAndFields() {
+	public void createLabelsAndFields() {
 		packageNameField = new JTextField();
 		packageNameField.setBounds(276, 74, 346, 30);
 		contentPane.add(packageNameField);

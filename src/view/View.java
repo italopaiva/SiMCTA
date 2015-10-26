@@ -4,7 +4,6 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.text.ParseException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,6 +13,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
+import model.Teacher;
+import view.register.NewCourse;
+import view.register.NewPackage;
+import view.register.NewTeacherDecorator;
 import exception.AuthenticationException;
 import exception.CourseException;
 import exception.PackageException;
@@ -22,6 +25,9 @@ import exception.PackageException;
 public class View extends JFrame {
 	
 	protected JMenuBar menuBar;
+	protected static JFrame frame = new JFrame();
+	private TeacherView teacherFrame;
+
 	/**
 	 * Launch the application.
 	 */
@@ -36,16 +42,6 @@ public class View extends JFrame {
 				}
 			}
 		});
-	}
-	
-	/**
-	 * Defines the order of creation of the screen elements  
-	 */
-	protected void buildScreen(){
-		instantiateMenuBar();
-		createLabelsAndFields();
-		createMasks();
-		createButtons();
 	}
 
 	protected void instantiateMenuBar(){
@@ -72,11 +68,24 @@ public class View extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				dispose();
-				NewTeacher newTeacherFrame = new NewTeacher();
-				newTeacherFrame.setVisible(true);
+				teacherFrame = new NewTeacherDecorator(new TeacherForm());
+				teacherFrame.buildScreen(teacherFrame, null);
+				teacherFrame.setVisible(true);
 			}
 		});
 		teacherMenu.add(newTeacher);
+		
+		JMenuItem searchTeacher = new JMenuItem("Visualizar professor");
+		searchTeacher.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				dispose();
+				teacherFrame = new SearchTeacher();
+				teacherFrame.buildScreen(teacherFrame, null);
+				teacherFrame.setVisible(true);
+			}
+		});
+		teacherMenu.add(searchTeacher);
 		
 	}
 
@@ -206,19 +215,6 @@ public class View extends JFrame {
 		courseMenu.add(searchCourse);
 		
 	}
-
-	protected void createLabelsAndFields(){
-		// Nothing to do
-	}
-	
-	protected void createMasks(){
-		// Nothing to do
-	}
-	
-	protected void createButtons(){
-		// Nothing to do
-	}
-
 	protected boolean getPermissionToAccess(){
 		
 		boolean canAccess = false;
