@@ -92,6 +92,7 @@ public class SearchStudent extends View {
 	private JTextField installmentsValueField;
 	private JTextField paymentInstallmentsField;
 	private JButton deactivateOrActivateButton;
+	private JButton addMoreCoursesButton;
 	private Student student;
 	private int status;
 	private String action;
@@ -356,12 +357,11 @@ public class SearchStudent extends View {
 		deactivateOrActivateButton = new JButton("Desativar matrícula");
 		deactivateOrActivateButton.setBounds(576, 11, 208, 25);
 		internalFrame.getContentPane().add(deactivateOrActivateButton);
-		
-		JButton btnAddMoreCourses = new JButton("+ Cursos/Pacotes");
-		btnAddMoreCourses.setBounds(404, 11, 158, 25);
-		internalFrame.getContentPane().add(btnAddMoreCourses);
 		deactivateOrActivateButton.setVisible(false);
-
+		
+		addMoreCoursesButton = new JButton("+ Cursos/Pacotes");
+		addMoreCoursesButton.setBounds(404, 11, 158, 25);
+		internalFrame.getContentPane().add(addMoreCoursesButton);
 		
 		internalFrame.setVisible(false);
 		
@@ -589,6 +589,21 @@ public class SearchStudent extends View {
 				
 				i++;
 			}
+			
+			addMoreCoursesButton.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					CPF studentCpf = null;
+					String studentName = null;
+					studentCpf = student.getCpf();
+					studentName = student.getName();
+					dispose();					
+					EnrollStudentInMoreCourses enrollStudentInMoreCourses;
+					enrollStudentInMoreCourses = new EnrollStudentInMoreCourses(studentCpf, studentName);
+					enrollStudentInMoreCourses.setVisible(true);			
+				}
+			});
 			
 			
 			backButton.addActionListener(new ActionListener() {
