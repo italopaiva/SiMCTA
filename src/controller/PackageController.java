@@ -12,6 +12,7 @@ public class PackageController {
 
 	private PackageDAO packageDAO;
 	private CourseController courseController;
+	private static final String CANT_UPDATE_STATUS = "Não foi possível alterar o status do pacote";
 	
 	public PackageController(){
 		packageDAO = new PackageDAO();
@@ -141,5 +142,23 @@ public class PackageController {
 		ArrayList<Package> packages = packageDAO.get();
 		
 		return packages;
+	}
+
+	public boolean alterStatusOfThePackage(Package packageToShow, int status) throws PackageException {
+
+		int packageId = packageToShow.getId();
+		boolean wasAltered = false;
+		
+		Package newPackage;
+		try {
+			packageDAO.update(packageId, status);
+			wasAltered = true;
+		} 
+		catch(PackageException e){
+			throw new PackageException(CANT_UPDATE_STATUS);
+		}
+		
+		
+		return wasAltered;
 	}
 }
