@@ -118,7 +118,7 @@ public class StudentControllerTest {
 		int paymentId = 1;
 		Payment payment = new Payment(paymentId);
 		
-		Service service = new Service(student, courses, null, contractsDate, payment);
+		Service service = new Service(3, student, contractsDate, payment);
 		
 		ArrayList<Service> services = new ArrayList<Service>();
 		services.add(service);
@@ -129,7 +129,7 @@ public class StudentControllerTest {
 		ArrayList<Service> receivedServices = studentController.searchStudent(cpf);
 		
 		ArrayList<Service> servicesWithPayments = new ArrayList<Service>();
-		Service serviceWithPayment = new Service(service, payment);
+		Service serviceWithPayment = new Service(3, student);
 		servicesWithPayments.add(serviceWithPayment);
 		
 		serviceWithPayment = servicesWithPayments.get(0);
@@ -158,7 +158,7 @@ public class StudentControllerTest {
 		int paymentId = 1;
 		Payment payment = new Payment(paymentId);
 		
-		Service service = new Service(student, null, packages, contractsDate, payment);
+		Service service = new Service(3, student, contractsDate, payment);
 		
 		ArrayList<Service> services = new ArrayList<Service>();
 		services.add(service);
@@ -169,7 +169,7 @@ public class StudentControllerTest {
 		ArrayList<Service> receivedServices = studentController.searchStudent(cpf);
 		
 		ArrayList<Service> servicesWithPayments = new ArrayList<Service>();
-		Service serviceWithPayment = new Service(service, payment);
+		Service serviceWithPayment = new Service(3, student);
 		servicesWithPayments.add(serviceWithPayment);
 		
 		serviceWithPayment = servicesWithPayments.get(0);
@@ -201,7 +201,7 @@ public class StudentControllerTest {
 		int paymentId = 1;
 		Payment payment = new Payment(paymentId);
 		
-		Service service = new Service(student, courses, packages, contractsDate, payment);
+		Service service = new Service(3, student, contractsDate, payment);
 		
 		ArrayList<Service> services = new ArrayList<Service>();
 		services.add(service);
@@ -212,7 +212,7 @@ public class StudentControllerTest {
 		ArrayList<Service> receivedServices = studentController.searchStudent(cpf);
 		
 		ArrayList<Service> servicesWithPayments = new ArrayList<Service>();
-		Service serviceWithPayment = new Service(service, payment);
+		Service serviceWithPayment = new Service(student);
 		servicesWithPayments.add(serviceWithPayment);
 		
 		serviceWithPayment = servicesWithPayments.get(0);
@@ -232,11 +232,11 @@ public class StudentControllerTest {
 		
 	}
 	
-	@Test(expected = PersonException.class)
+	@Test(expected = StudentException.class)
 	public void testIfNotAlterStatusWithANullStudent() throws PersonException, StudentException{
 		
 		student = null;
-		when(studentDAOMock.update(student)).thenReturn(true);
+		//when(studentDAOMock.get(cpf)).thenReturn(true);
 		
 		boolean wasUpdate = studentController.alterStatusOfTheStudent(student);
 		

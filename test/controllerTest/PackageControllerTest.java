@@ -2,12 +2,14 @@ package controllerTest;
 
 import static org.junit.Assert.*;
 
+import java.awt.ItemSelectable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import model.Course;
 import model.Package;
+import model.ServiceItem;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +30,7 @@ public class PackageControllerTest {
 	
 	private PackageController packageController;
 	private Package packageInstance;
+	private ArrayList<ServiceItem> courses;
 	private ArrayList<String> coursesID;
 	
 	@Mock
@@ -40,6 +43,12 @@ public class PackageControllerTest {
 		MockitoAnnotations.initMocks(this);
 		packageDAOMock = mock(PackageDAO.class);
 		
+		courses = new ArrayList<ServiceItem>();
+		Course course1 = new Course(1, "Aplicação de película", "Curso bom", 3, 500000);
+		courses.add(course1);
+		Course course2 = new Course(2, "Instalação de Som", "Curso bom", 3, 500000);
+		courses.add(course2);
+		
 		coursesID = new ArrayList<String>();
 		coursesID.add("1");
 		coursesID.add("2");
@@ -48,27 +57,23 @@ public class PackageControllerTest {
 		
 		// Insert a course to associate with a package
 		courseControllerMock = mock(CourseController.class);
-		//courseControllerMock.newCourse(1, "Aplicação de película", "Curso bom", 3, 500000);
-		//courseControllerMock.newCourse(2, "Instalação de Som", "Curso bom", 3, 500000);
+		//courseControllerMock.newCourse();
+		//courseControllerMock.newCourse();
 	}
-	/*
+	
 	@Test
 	public void testNewPackageMethodWithValidPackage() throws PackageException, SQLException{
 		
 
 		when(packageDAOMock.getTheLastId()).thenReturn(2);
 		packageController.setPackageDAO(packageDAOMock);
-		packageInstance = new Package(packageDAOMock.getTheLastId() + 1,"PelSom", 500000, 3, coursesID);
+		packageInstance = new Package(packageDAOMock.getTheLastId() + 1,"PelSom", 500000, 3);
 		
-		when(packageDAOMock.save(packageInstance)).thenReturn(true);
 		packageController.setPackageDAO(packageDAOMock);
 		
-		boolean wasSaved;
-		wasSaved = packageController.newPackage("PelSom", 500000, 3, coursesID); 
-		
-		assertTrue("Should create the given package", wasSaved);
+		packageController.newPackage("PelSom", 500000, coursesID);
 	}
-	
+	/*
 	@Test(expected= PackageException.class)
 	public void testNewPackageMethodWithInvalidPackage() throws PackageException, SQLException{
 		
@@ -103,16 +108,20 @@ public class PackageControllerTest {
 	}
 	
 	@Test
-	public void testSearchPackageByNamePackageFound() throws PackageException{
+	public void testSearchPackageByNamePackageFound() throws PackageException, CourseException{
 		
 		ArrayList<Package> packagesArray = new ArrayList<Package>();
-		ArrayList<String> courses = new ArrayList<String>();
+		ArrayList<ServiceItem> courses = new ArrayList<ServiceItem>();
 		
-		courses.add("Curso1");
-		courses.add("Curso2");
+		ServiceItem serviceItem1 = new Course(1, "Aplicação de película", "Curso bom", 3, 500000);
+		ServiceItem serviceItem2 = new Course(2, "Instalação de Som", "Curso bom", 3, 500000);
+				
+		courses.add(serviceItem1);
+		courses.add(serviceItem2);
 		
 		Package pacote1 = new Package(1, "Pacote 1", 200000, 2, 1, courses);
-		courses.add("Curso3");
+		ServiceItem serviceItem3 = new Course(3, "Instalação de Alarme", "Curso muito bom", 3, 510000);
+		courses.add(serviceItem3);
 		Package pacote2 = new Package(2, "Pacote 2", 250000, 4, 1, courses);
 		
 		packagesArray.add(pacote1);
@@ -127,33 +136,38 @@ public class PackageControllerTest {
 	}
 	
 	@Test
-	public void testShowPackage() throws PackageException{
+	public void testShowPackage() throws PackageException, CourseException{
 		
 		ArrayList<String> coursesNames = new ArrayList<String>();
 		coursesNames.add("Instalacao de Pelicula");
 		coursesNames.add("Instalacao de Som");
 		
-		Package packageTest = new Package(2, "Pacote 2", 250000, 4, 1);
+		ArrayList<ServiceItem> courses = new ArrayList<ServiceItem>();
+		Course course1 = new Course(1, "Aplicação de película", "Curso bom", 3, 500000);
+		Course course2 = new Course(2, "Instalação de Som", "Curso bom", 3, 500000);
+		courses.add(course1);
+		courses.add(course2);
+		
+		Package packageTest = new Package(2, "Pacote 2", 250000, 4, 1, courses);
 				
-		when(packageDAOMock.getNameCoursesInPackages(2)).thenReturn(coursesNames);
-		when(packageDAOMock.showPackage(2)).thenReturn(packageTest);
+		when(packageDAOMock.get(2)).thenReturn(packageTest);
 		packageController.setPackageDAO(packageDAOMock);
 		
-		Package expectedPackage = new Package(packageTest.getPackageId(),
-												packageTest.getPackageName(),
-												packageTest.getPackageValue(),
-												packageTest.getPackageDuration(),
-												packageTest.getPackageStatus(),
-												coursesNames);
+		Package expectedPackage = new Package(packageTest.getId(),
+												packageTest.getName(),
+												packageTest.getValue(),
+												packageTest.getDuration(),
+												packageTest.getStatus(),
+												courses);
 		
 		Package receivedPackage = new Package();
 		receivedPackage = packageController.showPackage(2);
 		
-		assertEquals(expectedPackage.getPackageId(), receivedPackage.getPackageId());
-		assertEquals(expectedPackage.getPackageName(), receivedPackage.getPackageName());
-		assertEquals(expectedPackage.getPackageValue(), receivedPackage.getPackageValue());
-		assertEquals(expectedPackage.getPackageDuration(), receivedPackage.getPackageDuration());
-		assertEquals(expectedPackage.getPackageStatus(), receivedPackage.getPackageStatus());
+		assertEquals(expectedPackage.getId(), receivedPackage.getId());
+		assertEquals(expectedPackage.getName(), receivedPackage.getName());
+		assertEquals(expectedPackage.getValue(), receivedPackage.getValue());
+		assertEquals(expectedPackage.getDuration(), receivedPackage.getDuration());
+		assertEquals(expectedPackage.getStatus(), receivedPackage.getStatus());
 		assertEquals(expectedPackage.getCourses(), receivedPackage.getCourses());
 		
 	}
@@ -162,12 +176,11 @@ public class PackageControllerTest {
 	public void testUpdatePackageMethodWithValidCourse() throws PackageException, SQLException{
 		
 		try{
-			
-			Package packageModel = new Package(packageDAOMock.getTheLastId() + 1,"PelSom", 500000, 3, coursesID); 		
-			when(packageDAOMock.update(packageDAOMock.getTheLastId(), packageModel)).thenReturn(true);
+			 		
+			when(packageDAOMock.getTheLastId()).thenReturn(2);
 			packageController.setPackageDAO(packageDAOMock);
 			
-			packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"SomPel", 500000, 3, coursesID);
+			packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"SomPel", 500000, coursesID);
 		
 		}catch(PackageException caughtException){
 			
@@ -178,26 +191,26 @@ public class PackageControllerTest {
 	@Test(expected = PackageException.class)
 	public void testUpdatePackageMethodWithInvalidName() throws CourseException, PackageException, SQLException{
 		
-		packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"", 500000, 3, coursesID);
+		packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"", 500000, coursesID);
 	}
 
-	@Test(expected = PackageException.class)
+/*	@Test(expected = PackageException.class)
 	public void testUpdatePackageMethodWithInvalidDuration() throws CourseException, PackageException, SQLException{
 		
-		packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"Pelsom", 500000, null, coursesID);
-	}
+		packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"Pelsom", 500000, null);
+	}*/
 	
-	@Test(expected = PackageException.class)
+/*	@Test(expected = PackageException.class)
 	public void testUpdatePackageMethodWithInvalidValue() throws CourseException, PackageException, SQLException{
 		
-		packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"PelSom", null, 3, coursesID);
-	}
+		packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"PelSom", null, coursesID);
+	}*/
 	
-	@Test(expected = PackageException.class)
+/*	@Test(expected = PackageException.class)
 	public void testUpdatePackageMethodWithInvalidCourses() throws CourseException, PackageException, SQLException{
 		coursesID.clear();
-		packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"PelSom", 500000, 3, coursesID);
-	}
-	
+		//coursesID = null;
+		packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"PelSom", 500000, coursesID);
+	}*/
 	
 }
