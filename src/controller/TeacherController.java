@@ -128,5 +128,10 @@ public class TeacherController {
 	public void setTeacherDAO(TeacherDAO teacherDAO){
 		this.teacherDAO = teacherDAO;
 	}
+
+	public Teacher updateTeacher(Teacher teacher) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

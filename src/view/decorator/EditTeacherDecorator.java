@@ -1,5 +1,7 @@
 package view.decorator;
 
+
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -8,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
+import controller.TeacherController;
 import model.Teacher;
 import model.datatype.Address;
 import model.datatype.CPF;
@@ -18,13 +21,14 @@ import view.SearchTeacher;
 import view.TeacherForm;
 import view.TeacherView;
 
-public class ShowTeacherDecorator extends TeacherDecorator {
+public class EditTeacherDecorator extends TeacherDecorator {
 
-	private JButton editTeacherBtn;
+	private Component alterTeacherBtn;
 	private JButton backBtn;
-	Teacher teacher;
+	private Teacher teacher;
+	private TeacherView teacherFrame;
 
-	public ShowTeacherDecorator(TeacherView viewToDecorate) {
+	public EditTeacherDecorator(TeacherView viewToDecorate) {
 		super(viewToDecorate);
 	}
 
@@ -33,7 +37,7 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 		this.frame = viewToDecorate;
 		super.createLabelsAndFields(viewToDecorate, teacher);
 		this.teacher = teacher;
-
+				
 		registerTeacherLbl.setText(teacher.getName());
 		registerTeacherLbl.setBounds(407, 12, 475, 31);
 		registerTeacherLbl.setFont(new Font("Dialog", Font.BOLD, 20));
@@ -98,18 +102,19 @@ public class ShowTeacherDecorator extends TeacherDecorator {
         qualificationField.setBounds(177, 444, 402, 127);
         frame.getContentPane().add(qualificationField);	
 		
+        fillTheFields(teacher);
+        
 		String birthdate = teacher.getBirthdate().getSlashFormattedDate();
 		birthdateField = new JTextField(birthdate);
 		birthdateField.setBounds(70, 195, 190, 27);
+		birthdateField.setEditable(false);
 		frame.getContentPane().add(birthdateField);
 
 		String cpf = teacher.getCpf().getFormattedCpf();
 		cpfField = new JTextField(cpf);
 		cpfField.setBounds(102, 97, 129, 27);
+		cpfField.setEditable(false);
 		frame.getContentPane().add(cpfField);
-
-		fillTheFields(teacher);
-
 	}
 	
 	private void fillTheFields(Teacher teacher) {
@@ -126,7 +131,7 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 
 		//CPF
 		CPF cpf = teacher.getCpf();
-		String teacherCpf  = cpf.getFormattedCpf();
+		String teacherCpf  = cpf.getCpf();
 		cpfField.setText(teacherCpf);
 		
 		//RG
@@ -171,58 +176,67 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 		String qualification = teacher.getQualification();
 		qualificationField.setText(qualification);
 		
-		setNonEditableAllFields();
-		
+		setEditableAllFields();
 	}
 	
-	private void setNonEditableAllFields() {
-		nameField.setEditable(false);
-        rgField.setEditable(false);
-        cellField.setEditable(false);
-        phoneField.setEditable(false);
-        addressField.setEditable(false);
-        cepField.setEditable(false);
-        cityField.setEditable(false);
-        emailField.setEditable(false);
-        motherField.setEditable(false);
-        fatherField.setEditable(false);
-        dddCellField.setEditable(false);
-        dddPhoneField.setEditable(false);
-        issuingInstitutionField.setEditable(false);
-        ufField.setEditable(false);
-        numberField.setEditable(false);
-        complementField.setEditable(false);
-        qualificationField.setEditable(false);
-		cpfField.setEditable(false);
+	private void setEditableAllFields() {
+        /** 
+         * RG and CPF can't be edit
+         */
+		rgField.setEditable(true);
+    	cpfField.setEditable(false);
+		nameField.setEditable(true);
+        cellField.setEditable(true);
+        phoneField.setEditable(true);
+        addressField.setEditable(true);
+        cepField.setEditable(true);
+        cityField.setEditable(true);
+        emailField.setEditable(true);
+        motherField.setEditable(true);
+        fatherField.setEditable(true);
+        dddCellField.setEditable(true);
+        dddPhoneField.setEditable(true);
+        issuingInstitutionField.setEditable(true);
+        ufField.setEditable(true);
+        numberField.setEditable(true);
+        complementField.setEditable(true);
+        qualificationField.setEditable(true);
 		birthdateField.setEditable(false);
+		
 	}
-
 
 
 	@Override
-	public void createButtons(JFrame frame) {
-		editTeacherBtn = new JButton("Editar");
-		frame.getContentPane().add(editTeacherBtn);
-		editTeacherBtn.setBounds(599, 55, 117, 25);
-		editTeacherBtn.addMouseListener(new MouseAdapter() {
+	public void createButtons(JFrame frame) {	
+		
+		
+		alterTeacherBtn = new JButton("Alterar");
+		frame.getContentPane().add(alterTeacherBtn);
+		alterTeacherBtn.setBounds(599, 26, 117, 25);
+		alterTeacherBtn.addMouseListener(new MouseAdapter() {
+			private TeacherController teacherController;
+
 			@Override
 			public void mouseClicked(MouseEvent e){			
-				TeacherView teacherFrame = new EditTeacherDecorator(new TeacherForm());
-				dispose();
-				teacherFrame.buildScreen(teacherFrame,teacher);
+				teacherController = new TeacherController();
+				teacher = teacherController.updateTeacher(teacher);
+				teacherFrame = new ShowTeacherDecorator(new TeacherForm());
+				teacherFrame.buildScreen(teacherFrame, teacher);
 				teacherFrame.setVisible(true);
+				
 			}
 		});
 		
 		backBtn = new JButton("Voltar");
 		frame.getContentPane().add(backBtn);
-		backBtn.setBounds(799, 55, 117, 25);
+		backBtn.setBounds(799, 26, 117, 25);
 		backBtn.addMouseListener(new MouseAdapter() {
+
 			@Override
 			public void mouseClicked(MouseEvent e){			
 				dispose();
-				TeacherView teacherFrame = new SearchTeacher();
-				teacherFrame.buildScreen(teacherFrame,null);
+				teacherFrame = new ShowTeacherDecorator(new TeacherForm());
+				teacherFrame.buildScreen(teacherFrame,teacher);
 				teacherFrame.setVisible(true);
 			}
 		});
