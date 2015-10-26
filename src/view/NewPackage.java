@@ -1,4 +1,4 @@
-package view.register;
+package view;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -21,8 +21,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
-import view.SimCta;
-import view.View;
 import model.Course;
 import controller.CourseController;
 import controller.PackageController;

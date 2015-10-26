@@ -1,4 +1,4 @@
-package view.register;
+package view.decorator;
 
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -20,7 +20,6 @@ import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
 import view.TeacherView;
-import view.decorator.TeacherDecorator;
 import controller.TeacherController;
 import exception.AddressException;
 import exception.CPFException;

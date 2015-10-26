@@ -14,9 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
 import model.Teacher;
-import view.register.NewCourse;
-import view.register.NewPackage;
-import view.register.NewTeacherDecorator;
+import view.decorator.NewTeacherDecorator;
 import exception.AuthenticationException;
 import exception.CourseException;
 import exception.PackageException;

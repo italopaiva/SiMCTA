@@ -1,4 +1,4 @@
-package view.register;
+package view;
 
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -14,8 +14,6 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
-import view.SimCta;
-import view.View;
 import controller.CourseController;
 import exception.CourseException;
 

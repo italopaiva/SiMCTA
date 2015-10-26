@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import model.Course;
 import model.Teacher;
 import model.datatype.Address;
 import model.datatype.CPF;
@@ -239,14 +240,14 @@ public class TeacherDAO extends DAO{
 		Phone principalPhone;
 		Phone secondaryPhone;
 		
-		if(!residencePhone.isEmpty()){
-			
+		principalPhone = new Phone(DDDPrincipalPhone,numberPrincipalPhone);
+		
+		if(!residencePhone.isEmpty() && residencePhone != "null"){
 			DDDSecondaryPhone = residencePhone.substring(0,2);
 			numberSecondaryPhone = residencePhone.substring(2,10);
-			principalPhone = new Phone(DDDPrincipalPhone,numberPrincipalPhone);
 			secondaryPhone = new Phone(DDDSecondaryPhone,numberSecondaryPhone);
-		}else{
-			principalPhone = new Phone(DDDPrincipalPhone,numberPrincipalPhone);
+		}
+		else{
 			secondaryPhone = null;
 		}
 
@@ -303,4 +304,73 @@ public class TeacherDAO extends DAO{
 		return teachers;
 	}
 
+	/**
+	 * Update a given course on the database
+	 * @param courseId - The course to be updated
+	 * @param course - A Course object with the course new data
+	 * @return TRUE if the course was updated on database or FALSE if it does not
+	 */
+	public Teacher update(Teacher teacher){
+				
+		String teacherName = teacher.getName();		
+		String email = teacher.getEmail();
+		String motherName = teacher.getMotherName();
+		String fatherName = teacher.getFatherName();
+
+		//CPF
+		CPF cpf = teacher.getCpf();
+		String teacherCpf  = cpf.getCpf();
+
+		// Birthdate
+		Date date = teacher.getBirthdate();
+		String birthdate = date.getHyphenFormattedDate();
+		
+		//Address
+		Address address = teacher.getAddress();
+		String city = address.getCity();
+		String cep = address.getCep();
+		String addressInfo = address.getAddressInfo();
+		String complement = address.getComplement();
+	
+		//Phones
+		Phone principalPhone = teacher.getPrincipalPhone();
+		Phone secondaryPhone = teacher.getSecondaryPhone();
+		
+		String cellPhone = principalPhone.getWholePhone();
+		String phone;
+		if(secondaryPhone != null){
+			phone = secondaryPhone.getWholePhone();
+		}
+		else{
+			phone = "";
+		}
+		
+		String qualification = teacher.getQualification();
+				
+		String query = "UPDATE "+ TEACHER_TABLE_NAME + " SET "
+					   + NAME_COLUMN + "='" + teacherName + "', "
+					   + EMAIL_COLUMN + "='" + email + "', "
+					   + MOTHER_COLUMN + "='" + motherName + "', "
+					   + FATHER_COLUMN + "='" + fatherName + "', "
+					   + BIRTHDATE_COLUMN + "='" + birthdate + "', "
+					   + ADDRESS_COLUMN + "='" + addressInfo + "', "
+					   + COMPLEMENT_COLUMN + "='" + complement + "', "
+					   + CITY_COLUMN + "='" + city + "', "
+					   + CEP_COLUMN + "='" + cep + "', "
+					   + PRINCIPAL_PHONE_COLUMN + "='" + cellPhone + "', "
+					   + SECONDARY_PHONE_COLUMN + "='" + phone + "', "
+					   + QUALIFICATION_COLUMN + "='" + qualification + "' "
+					   + "WHERE " + CPF_COLUMN + "='" + teacherCpf + "'";
+
+		try{
+			this.execute(query);
+			teacher = get(cpf);
+		}
+		catch(SQLException | PhoneException | CPFException | DateException | AddressException | RGException | TeacherException caughtException){
+			System.out.print("aqui:" + caughtException.getMessage());
+
+		}
+		
+		return teacher;
+	}
 }

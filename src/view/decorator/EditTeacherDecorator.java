@@ -5,12 +5,22 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+import javax.swing.text.MaskFormatter;
 
 import controller.TeacherController;
+import exception.AddressException;
+import exception.CPFException;
+import exception.DateException;
+import exception.PersonException;
+import exception.PhoneException;
+import exception.RGException;
+import exception.TeacherException;
 import model.Teacher;
 import model.datatype.Address;
 import model.datatype.CPF;
@@ -103,14 +113,8 @@ public class EditTeacherDecorator extends TeacherDecorator {
         frame.getContentPane().add(qualificationField);	
 		
         fillTheFields(teacher);
-        
-		String birthdate = teacher.getBirthdate().getSlashFormattedDate();
-		birthdateField = new JTextField(birthdate);
-		birthdateField.setBounds(70, 195, 190, 27);
-		birthdateField.setEditable(false);
-		frame.getContentPane().add(birthdateField);
 
-		String cpf = teacher.getCpf().getFormattedCpf();
+		String cpf = teacher.getCpf().getCpf();
 		cpfField = new JTextField(cpf);
 		cpfField.setBounds(102, 97, 129, 27);
 		cpfField.setEditable(false);
@@ -219,11 +223,87 @@ public class EditTeacherDecorator extends TeacherDecorator {
 			@Override
 			public void mouseClicked(MouseEvent e){			
 				teacherController = new TeacherController();
-				teacher = teacherController.updateTeacher(teacher);
-				teacherFrame = new ShowTeacherDecorator(new TeacherForm());
-				teacherFrame.buildScreen(teacherFrame, teacher);
-				teacherFrame.setVisible(true);
 				
+					try {
+						editTeacher();
+						dispose();
+						teacherFrame = new ShowTeacherDecorator(new TeacherForm());
+						teacherFrame.buildScreen(teacherFrame, teacher);
+						teacherFrame.setVisible(true);
+					
+					} 
+					catch(PersonException | TeacherException e1){
+						
+					}
+
+			}
+
+			private void editTeacher() throws PersonException, TeacherException {
+				String message = "";
+				try{
+					String teacherName = nameField.getText();
+					
+					CPF teacherCpf = teacher.getCpf();
+	
+					String rgNumber = rgField.getText();
+					String rgIssuingInstitution = issuingInstitutionField.getText();
+					String rgUf = ufField.getText();
+				
+					RG teacherRg = new RG(rgNumber, rgIssuingInstitution, rgUf);					
+				
+					String date = birthdateField.getText();
+					String dates [] = date.split("/");
+					String day = dates[0];
+					String month = dates[1];
+					String year = dates[2];
+					
+					Date birthdate = new Date(Integer.parseInt(day), Integer.parseInt(month), Integer.parseInt(year));
+					
+					String email = emailField.getText();
+					
+					String addressInfo = addressField.getText();
+					String addressNumber = numberField.getText();
+					String addressComplement = complementField.getText();
+					String addressCity = cityField.getText();
+					String addressCep = cepField.getText();
+					
+					Address address = new Address(addressInfo, addressNumber, addressComplement, addressCep, addressCity);
+					
+					String ddCell = dddCellField.getText();
+					String cellNumber = cellField.getText();
+										
+					String ddPhone = dddPhoneField.getText();
+					String phoneNumber = phoneField.getText();
+					
+					Phone principalPhone;
+					Phone secondaryPhone;
+					if(!phoneNumber.isEmpty() && !ddPhone.isEmpty()){
+						
+						principalPhone = new Phone(ddCell, cellNumber);
+						secondaryPhone = new Phone(ddPhone, phoneNumber);
+					}
+					else{
+						principalPhone = new Phone(ddCell, cellNumber);
+						secondaryPhone = null;
+					}
+					
+					String motherName = motherField.getText();
+					String fatherName = fatherField.getText();
+					
+					String qualification = qualificationField.getText();
+					
+					teacher = teacherController.updateTeacher(teacherName, teacherCpf, teacherRg, birthdate, email, address,
+		 					 principalPhone, secondaryPhone, motherName, fatherName, qualification);
+					
+					message = "Cadastro do professor alterado com sucesso!";
+				}
+				catch(DateException | PhoneException | RGException | AddressException e2){
+					message = e2.getMessage();
+				} 					
+				finally{
+					showInfoMessage(message);
+				}
+	
 			}
 		});
 		
@@ -244,6 +324,25 @@ public class EditTeacherDecorator extends TeacherDecorator {
 
 	@Override
 	public void createMasks(JFrame frame) {
-		
+        
+	
+		// Mask for birthdate
+		MaskFormatter birthdateMask;
+		try {
+			birthdateMask = new MaskFormatter("##/##/####");
+			birthdateMask.setValidCharacters("0123456789");
+			birthdateMask.setValueContainsLiteralCharacters(true);
+			String birthdate = teacher.getBirthdate().getSlashFormattedDate();
+			birthdateMask.setMask(birthdate);
+
+	        birthdateField = new JFormattedTextField(birthdateMask);
+	        birthdateField.setBounds(70, 195, 190, 27);
+	        frame.getContentPane().add(birthdateField);
+	        birthdateField.setColumns(10);
+		} 
+		catch(ParseException e){
+
+		}
+
 	}
 }

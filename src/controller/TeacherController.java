@@ -129,9 +129,23 @@ public class TeacherController {
 		this.teacherDAO = teacherDAO;
 	}
 
-	public Teacher updateTeacher(Teacher teacher) {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Update the data passed
+	 * @param teacher - an object with the current data
+	 * @return the teacher altered
+	 * @throws TeacherException 
+	 * @throws PersonException 
+	 */
+	public Teacher updateTeacher(String teacherName, CPF teacherCpf,
+			RG teacherRg, Date birthdate, String email, Address address,
+			Phone principalPhone, Phone secondaryPhone, String motherName,
+			String fatherName, String qualification) throws PersonException, TeacherException {
+		
+		Teacher teacher = new Teacher(teacherName, teacherCpf, teacherRg, birthdate, email, address, principalPhone, secondaryPhone, motherName, fatherName, qualification);
+
+		teacher = teacherDAO.update(teacher);
+
+		return teacher;
 	}
 	
 }
