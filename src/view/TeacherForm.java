@@ -96,49 +96,6 @@ public class TeacherForm extends TeacherView {
 
 	}
 
-	
-	private void setEditableAllFields() {
-		 nameField.setEditable(true);
-         rgField.setEditable(true);
-         cellField.setEditable(true);
-         phoneField.setEditable(true);
-         addressField.setEditable(true);
-         cepField.setEditable(true);
-         cityField.setEditable(true);
-         emailField.setEditable(true);
-         motherField.setEditable(true);
-         fatherField.setEditable(true);
-         dddCellField.setEditable(true);
-         dddPhoneField.setEditable(true);
-         issuingInstitutionField.setEditable(true);
-         ufField.setEditable(true);
-         numberField.setEditable(true);
-         complementField.setEditable(true);
-         qualificationField.setEditable(true);
-		
-	}
-
-	private void setNonEditableAllFields() {
-		 nameField.setEditable(false);
-         rgField.setEditable(false);
-         cellField.setEditable(false);
-         phoneField.setEditable(false);
-         addressField.setEditable(false);
-         cepField.setEditable(false);
-         cityField.setEditable(false);
-         emailField.setEditable(false);
-         motherField.setEditable(false);
-         fatherField.setEditable(false);
-         dddCellField.setEditable(false);
-         dddPhoneField.setEditable(false);
-         issuingInstitutionField.setEditable(false);
-         ufField.setEditable(false);
-         numberField.setEditable(false);
-         complementField.setEditable(false);
-         qualificationField.setEditable(false);
-		
-	}
-
 	@Override
 	public void createMasks(JFrame frame) {
 		

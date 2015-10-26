@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
 import model.Teacher;
+import view.decorator.NewCourseDecorator;
 import view.decorator.NewTeacherDecorator;
 import exception.AuthenticationException;
 import exception.CourseException;
@@ -182,7 +183,8 @@ public class View extends JFrame {
 				permissionToAccess = getPermissionToAccess();
 				if(permissionToAccess == true){
 					dispose();
-					NewCourse newCourseFrame = new NewCourse();
+					NewCourseDecorator newCourseFrame = new NewCourseDecorator(new CourseForm());
+					newCourseFrame.buildScreen(newCourseFrame, null);
 					newCourseFrame.setVisible(true);
 				}
 				else{
