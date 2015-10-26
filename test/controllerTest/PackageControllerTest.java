@@ -30,6 +30,7 @@ public class PackageControllerTest {
 	
 	private PackageController packageController;
 	private Package packageInstance;
+	private ArrayList<ServiceItem> courses;
 	private ArrayList<String> coursesID;
 	
 	@Mock
@@ -42,16 +43,18 @@ public class PackageControllerTest {
 		MockitoAnnotations.initMocks(this);
 		packageDAOMock = mock(PackageDAO.class);
 		
-		coursesID = new ArrayList<String>();
-		coursesID.add("1");
-		coursesID.add("2");
+		courses = new ArrayList<ServiceItem>();
+		Course course1 = new Course(1, "Aplicação de película", "Curso bom", 3, 500000);
+		courses.add(course1);
+		Course course2 = new Course(2, "Instalação de Som", "Curso bom", 3, 500000);
+		courses.add(course2);
 		
 		packageController = new PackageController();
 		
 		// Insert a course to associate with a package
 		courseControllerMock = mock(CourseController.class);
-		//courseControllerMock.newCourse(1, "Aplicação de película", "Curso bom", 3, 500000);
-		//courseControllerMock.newCourse(2, "Instalação de Som", "Curso bom", 3, 500000);
+		//courseControllerMock.newCourse();
+		//courseControllerMock.newCourse();
 	}
 	/*
 	@Test
@@ -133,33 +136,38 @@ public class PackageControllerTest {
 	}
 	
 	@Test
-	public void testShowPackage() throws PackageException{
+	public void testShowPackage() throws PackageException, CourseException{
 		
 		ArrayList<String> coursesNames = new ArrayList<String>();
 		coursesNames.add("Instalacao de Pelicula");
 		coursesNames.add("Instalacao de Som");
 		
-		Package packageTest = new Package(2, "Pacote 2", 250000, 4, 1);
+		ArrayList<ServiceItem> courses = new ArrayList<ServiceItem>();
+		Course course1 = new Course(1, "Aplicação de película", "Curso bom", 3, 500000);
+		Course course2 = new Course(2, "Instalação de Som", "Curso bom", 3, 500000);
+		courses.add(course1);
+		courses.add(course2);
+		
+		Package packageTest = new Package(2, "Pacote 2", 250000, 4, 1, courses);
 				
-		when(packageDAOMock.getNameCoursesInPackages(2)).thenReturn(coursesNames);
-		when(packageDAOMock.showPackage(2)).thenReturn(packageTest);
+		when(packageDAOMock.get(2)).thenReturn(packageTest);
 		packageController.setPackageDAO(packageDAOMock);
 		
-		Package expectedPackage = new Package(packageTest.getPackageId(),
-												packageTest.getPackageName(),
-												packageTest.getPackageValue(),
-												packageTest.getPackageDuration(),
-												packageTest.getPackageStatus(),
-												coursesNames);
+		Package expectedPackage = new Package(packageTest.getId(),
+												packageTest.getName(),
+												packageTest.getValue(),
+												packageTest.getDuration(),
+												packageTest.getStatus(),
+												courses);
 		
 		Package receivedPackage = new Package();
 		receivedPackage = packageController.showPackage(2);
 		
-		assertEquals(expectedPackage.getPackageId(), receivedPackage.getPackageId());
-		assertEquals(expectedPackage.getPackageName(), receivedPackage.getPackageName());
-		assertEquals(expectedPackage.getPackageValue(), receivedPackage.getPackageValue());
-		assertEquals(expectedPackage.getPackageDuration(), receivedPackage.getPackageDuration());
-		assertEquals(expectedPackage.getPackageStatus(), receivedPackage.getPackageStatus());
+		assertEquals(expectedPackage.getId(), receivedPackage.getId());
+		assertEquals(expectedPackage.getName(), receivedPackage.getName());
+		assertEquals(expectedPackage.getValue(), receivedPackage.getValue());
+		assertEquals(expectedPackage.getDuration(), receivedPackage.getDuration());
+		assertEquals(expectedPackage.getStatus(), receivedPackage.getStatus());
 		assertEquals(expectedPackage.getCourses(), receivedPackage.getCourses());
 		
 	}
@@ -169,11 +177,11 @@ public class PackageControllerTest {
 		
 		try{
 			
-			Package packageModel = new Package(packageDAOMock.getTheLastId() + 1,"PelSom", 500000, 3, coursesID); 		
-			when(packageDAOMock.update(packageDAOMock.getTheLastId(), packageModel)).thenReturn(true);
+			Package packageModel = new Package(packageDAOMock.getTheLastId() + 1,"PelSom", 500000, 3, 1, courses); 		
+			//doReturn(packageDAOMock.update(packageModel)).thenReturn(2);
 			packageController.setPackageDAO(packageDAOMock);
 			
-			packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"SomPel", 500000, 3, coursesID);
+			packageController.updatePackage(packageDAOMock.getTheLastId() + 1,"SomPel", 500000, courses);
 		
 		}catch(PackageException caughtException){
 			
