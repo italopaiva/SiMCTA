@@ -41,7 +41,7 @@ public class SearchTeacher extends TeacherView {
 	private TeacherController teacherController;
 
 	@Override
-	public void createLabelsAndFields(JFrame viewToDecorate, int fieldStatus, Teacher teacher) {
+	public void createLabelsAndFields(JFrame viewToDecorate, Teacher teacher) {
 		this.frame = viewToDecorate;
 		try {
 			addFields();
@@ -97,7 +97,7 @@ public class SearchTeacher extends TeacherView {
 					Teacher teacher = teacherController.getTeacher(selectedTeacher);
 					dispose();
 					TeacherView teacherFrame = new ShowTeacherDecorator(new TeacherForm());
-					teacherFrame.buildScreen(teacherFrame, NON_EDITABLE_FIELDS, teacher);
+					teacherFrame.buildScreen(teacherFrame, teacher);
 					teacherFrame.setVisible(true);
 				} 
 				catch (CPFException | TeacherException | PersonException e1) {
@@ -148,7 +148,7 @@ public class SearchTeacher extends TeacherView {
 	}
 
 	@Override
-	public void createMasks(JFrame frame, int fieldStatus) {
+	public void createMasks(JFrame frame) {
 		
 		
 	}

@@ -1,10 +1,17 @@
 package view.register;
 
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.MaskFormatter;
 
 import model.Teacher;
 import model.datatype.Address;
@@ -33,13 +40,105 @@ public class NewTeacherDecorator extends TeacherDecorator {
 
 
 	@Override
-	public void createLabelsAndFields(JFrame frame, int fieldStatus, Teacher teacher) {
-		super.createLabelsAndFields(frame, fieldStatus,teacher);
+	public void createLabelsAndFields(JFrame frame, Teacher teacher) {
+		
+		super.createLabelsAndFields(frame,teacher);
+        
+		registerTeacherLbl.setText("Cadastrar novo professor");
+		registerTeacherLbl.setBounds(407, 12, 475, 31);
+		registerTeacherLbl.setFont(new Font("Dialog", Font.BOLD, 20));
+		frame.getContentPane().add(registerTeacherLbl);
+		
+        nameField.setBounds(115, 55, 434, 27);
+        frame.getContentPane().add(nameField);
+        nameField.setColumns(10);
+        
+        rgField.setBounds(327, 92, 100, 27);
+        frame.getContentPane().add(rgField);
+        rgField.setColumns(10);
+        
+		issuingInstitutionField.setColumns(10);
+		issuingInstitutionField.setBounds(203, 131, 85, 27);
+		frame.getContentPane().add(issuingInstitutionField);
+		
+		ufField.setColumns(10);
+		ufField.setBounds(417, 132, 100, 27);
+		frame.getContentPane().add(ufField);
+		
+        dddCellField.setBounds(379, 166, 40, 27);
+        frame.getContentPane().add(dddCellField);
+        dddCellField.setColumns(10);
+        
+        cellField.setBounds(429, 166, 100, 27);
+        frame.getContentPane().add(cellField);
+        cellField.setColumns(10);
+        
+        dddPhoneField.setBounds(379, 200, 40, 27);
+        frame.getContentPane().add(dddPhoneField);
+        dddPhoneField.setColumns(10);
+        
+        phoneField.setBounds(429, 200, 100, 27);
+        frame.getContentPane().add(phoneField);
+        phoneField.setColumns(10);
+               
+        emailField.setBounds(115, 243, 334, 27);
+        frame.getContentPane().add(emailField);
+
+        addressField.setBounds(145, 277, 344, 27);
+        frame.getContentPane().add(addressField);
+
+        cepField.setBounds(545, 316, 84, 27);
+        frame.getContentPane().add(cepField);
+        
+        cityField.setBounds(385, 316, 105, 27);
+        frame.getContentPane().add(cityField);
+
+		numberField.setBounds(522, 277, 57, 27);
+		frame.getContentPane().add(numberField);
+		
+		complementField.setBounds(177, 316, 122, 27);
+		frame.getContentPane().add(complementField);
+		        
+        motherField.setBounds(177, 364, 402, 27);
+        frame.getContentPane().add(motherField);
+
+        fatherField.setBounds(177, 404, 402, 27);
+        frame.getContentPane().add(fatherField);
+        
+        qualificationField.setBounds(177, 444, 402, 127);
+        frame.getContentPane().add(qualificationField);	
 	}
 	
 	@Override
-	public void createMasks(JFrame frame, int fieldStatus){
-	       
+	public void createMasks(JFrame frame){
+		
+		MaskFormatter birthdateMask = null;
+        MaskFormatter cpfMask = null;
+		try{
+	        // Mask for cpf
+	        cpfMask = new MaskFormatter("###########");
+	        cpfMask.setValidCharacters("0123456789");
+	        cpfMask.setValueContainsLiteralCharacters(false);
+
+	        cpfField = new JFormattedTextField(cpfMask);
+	        cpfField.setBounds(102, 97, 129, 27);
+	        frame.getContentPane().add(cpfField);
+	        cpfField.setColumns(10);
+	        
+			// Mask for birthdate
+			birthdateMask = new MaskFormatter("##/##/####");
+			birthdateMask.setValidCharacters("0123456789");
+			birthdateMask.setValueContainsLiteralCharacters(true);
+	        
+	        birthdateField = new JFormattedTextField(birthdateMask);
+	        birthdateField.setBounds(70, 195, 190, 27);
+	        frame.getContentPane().add(birthdateField);
+	        birthdateField.setColumns(10);
+
+		}
+		catch(ParseException e2){
+			e2.printStackTrace();
+		}  
        
 	}
 	
@@ -68,10 +167,8 @@ public class NewTeacherDecorator extends TeacherDecorator {
 		String message = "";
 		
 		try{
-			String teacherName = super.nameField.getText();
-			
-			System.out.println("Teacher: '" + teacherName+ "'");
-			
+			String teacherName = nameField.getText();
+						
 			String cpf = cpfField.getText();
 			CPF teacherCpf = new CPF(cpf);
 

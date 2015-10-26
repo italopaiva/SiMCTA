@@ -27,16 +27,7 @@ public class View extends JFrame {
 	protected JMenuBar menuBar;
 	protected static JFrame frame = new JFrame();
 	private TeacherView teacherFrame;
-	private Teacher teacher = null;
 
-	// Status of the fields to register a teacher
-	protected static final int BLANK_FIELDS = 0; 
-	
-	// Status of the fields to visualize a teacher
-	protected static final int NON_EDITABLE_FIELDS = 1;
-	
-	// Status of the fields to edit a teacher
-	protected static final int EDITABLE_FIELDS = 2;	
 	/**
 	 * Launch the application.
 	 */
@@ -78,7 +69,7 @@ public class View extends JFrame {
 				
 				dispose();
 				teacherFrame = new NewTeacherDecorator(new TeacherForm());
-				teacherFrame.buildScreen(teacherFrame, BLANK_FIELDS, teacher);
+				teacherFrame.buildScreen(teacherFrame, null);
 				teacherFrame.setVisible(true);
 			}
 		});
@@ -90,7 +81,7 @@ public class View extends JFrame {
 				
 				dispose();
 				teacherFrame = new SearchTeacher();
-				teacherFrame.buildScreen(teacherFrame, NON_EDITABLE_FIELDS, teacher);
+				teacherFrame.buildScreen(teacherFrame, null);
 				teacherFrame.setVisible(true);
 			}
 		});

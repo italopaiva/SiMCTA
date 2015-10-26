@@ -34,15 +34,15 @@ public abstract class TeacherView extends View {
 	
 	protected JFrame frame = new JFrame();
 
-	public void buildScreen(TeacherView teacherFrame, int fieldStatus, Teacher teacher){
-		createLabelsAndFields(teacherFrame,fieldStatus,teacher);
-		createMasks(teacherFrame,fieldStatus);
+	public void buildScreen(TeacherView teacherFrame, Teacher teacher){
+		createLabelsAndFields(teacherFrame, teacher);
+		createMasks(teacherFrame);
 		createButtons(teacherFrame);
 	}
 
-	public abstract void createLabelsAndFields(JFrame frame, int fieldStatus, Teacher teacher);
+	public abstract void createLabelsAndFields(JFrame frame, Teacher teacher);
 	
-	public abstract void createMasks(JFrame frame, int fieldStatus);
+	public abstract void createMasks(JFrame frame);
 	
 	public abstract void createButtons(JFrame frame);
 
