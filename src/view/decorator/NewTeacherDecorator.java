@@ -13,13 +13,14 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
+import model.Person;
 import model.Teacher;
 import model.datatype.Address;
 import model.datatype.CPF;
 import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
-import view.TeacherView;
+import view.PersonView;
 import controller.TeacherController;
 import exception.AddressException;
 import exception.CPFException;
@@ -33,13 +34,13 @@ public class NewTeacherDecorator extends TeacherDecorator {
 	
     protected JButton registerTeacherBtn;
 	
-	public NewTeacherDecorator(TeacherView viewToDecorate) {
+	public NewTeacherDecorator(PersonView viewToDecorate) {
 		super(viewToDecorate);
 	}
 
 
 	@Override
-	public void createLabelsAndFields(JFrame frame, Teacher teacher) {
+	public void createLabelsAndFields(JFrame frame, Person teacher) {
 		
 		super.createLabelsAndFields(frame,teacher);
         

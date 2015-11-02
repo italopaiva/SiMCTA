@@ -27,7 +27,7 @@ public class View extends JFrame {
 	
 	protected JMenuBar menuBar;
 	protected static JFrame frame = new JFrame();
-	private TeacherView teacherFrame;
+	private PersonView teacherFrame;
 
 	/**
 	 * Launch the application.

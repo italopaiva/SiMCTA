@@ -17,7 +17,7 @@ import model.Course;
 import view.CourseView;
 import view.SearchCourse;
 import view.SearchTeacher;
-import view.TeacherView;
+import view.PersonView;
 import view.forms.CourseForm;
 import controller.CourseController;
 import exception.CourseException;

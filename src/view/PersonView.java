@@ -1,14 +1,13 @@
 package view;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import model.Teacher;
+import model.Person;
 
-public abstract class TeacherView extends View {
+public abstract class PersonView extends View {
 	
 	protected JPanel contentPane;
 	protected JTextField nameField = new JTextField();
@@ -34,13 +33,13 @@ public abstract class TeacherView extends View {
 	
 	protected JFrame frame = new JFrame();
 
-	public void buildScreen(TeacherView teacherFrame, Teacher teacher){
-		createLabelsAndFields(teacherFrame, teacher);
+	public void buildScreen(PersonView teacherFrame, Person person){
+		createLabelsAndFields(teacherFrame, person);
 		createMasks(teacherFrame);
 		createButtons(teacherFrame);
 	}
 
-	public abstract void createLabelsAndFields(JFrame frame, Teacher teacher);
+	public abstract void createLabelsAndFields(JFrame frame, Person person);
 	
 	public abstract void createMasks(JFrame frame);
 	

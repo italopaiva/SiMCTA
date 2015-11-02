@@ -2,19 +2,20 @@ package view.decorator;
 
 import javax.swing.JFrame;
 
+import model.Person;
 import model.Teacher;
-import view.TeacherView;
+import view.PersonView;
 
-public abstract class TeacherDecorator extends TeacherView {
+public abstract class TeacherDecorator extends PersonView {
 	        
-	protected TeacherView viewToDecorate;
+	protected PersonView viewToDecorate;
 
-	public TeacherDecorator (TeacherView viewToDecorate) {
+	public TeacherDecorator (PersonView viewToDecorate) {
 	   this.viewToDecorate = viewToDecorate;
 	}
 	 
     @Override
-	public void createLabelsAndFields(JFrame frame, Teacher teacher){
+	public void createLabelsAndFields(JFrame frame, Person teacher){
     	this.viewToDecorate.createLabelsAndFields(frame, teacher);
     }
 
