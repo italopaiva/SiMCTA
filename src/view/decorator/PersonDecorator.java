@@ -6,11 +6,11 @@ import model.Person;
 import model.Teacher;
 import view.PersonView;
 
-public abstract class TeacherDecorator extends PersonView {
+public abstract class PersonDecorator extends PersonView {
 	        
 	protected PersonView viewToDecorate;
 
-	public TeacherDecorator (PersonView viewToDecorate) {
+	public PersonDecorator (PersonView viewToDecorate) {
 	   this.viewToDecorate = viewToDecorate;
 	}
 	 

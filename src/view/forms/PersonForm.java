@@ -85,13 +85,11 @@ public class PersonForm extends PersonView {
 
 	@Override
 	public void createMasks(JFrame frame) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void createButtons(JFrame frame) {
-		// TODO Auto-generated method stub
 		
 	}
 

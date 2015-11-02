@@ -19,7 +19,7 @@ import view.SearchTeacher;
 import view.PersonView;
 import view.forms.TeacherForm;
 
-public class ShowTeacherDecorator extends TeacherDecorator {
+public class ShowTeacherDecorator extends PersonDecorator {
 
 	private JButton editTeacherBtn;
 	private JButton backBtn;

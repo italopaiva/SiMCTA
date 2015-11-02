@@ -24,7 +24,7 @@ import model.Teacher;
 import model.datatype.CPF;
 import util.ButtonColumn;
 import view.decorator.ShowTeacherDecorator;
-import view.decorator.TeacherDecorator;
+import view.decorator.PersonDecorator;
 import view.forms.TeacherForm;
 import controller.StudentController;
 import controller.TeacherController;

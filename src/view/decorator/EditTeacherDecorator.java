@@ -32,7 +32,7 @@ import view.SearchTeacher;
 import view.PersonView;
 import view.forms.TeacherForm;
 
-public class EditTeacherDecorator extends TeacherDecorator {
+public class EditTeacherDecorator extends PersonDecorator {
 
 	private Component alterTeacherBtn;
 	private JButton backBtn;

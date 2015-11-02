@@ -14,9 +14,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
 import model.Teacher;
+import view.decorator.EnrollStudentDecorator;
 import view.decorator.NewCourseDecorator;
 import view.decorator.NewTeacherDecorator;
 import view.forms.CourseForm;
+import view.forms.StudentForm;
 import view.forms.TeacherForm;
 import exception.AuthenticationException;
 import exception.CourseException;
@@ -99,7 +101,8 @@ public class View extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				dispose();
-				EnrollStudent newStudentFrame = new EnrollStudent();
+				PersonView newStudentFrame = new EnrollStudentDecorator(new StudentForm());
+				newStudentFrame.buildScreen(newStudentFrame, null);
 				newStudentFrame.setVisible(true);
 			}
 		});

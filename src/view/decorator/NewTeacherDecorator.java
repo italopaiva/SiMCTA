@@ -10,6 +10,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
@@ -30,10 +31,10 @@ import exception.PhoneException;
 import exception.RGException;
 import exception.TeacherException;
 
-public class NewTeacherDecorator extends TeacherDecorator {
+public class NewTeacherDecorator extends PersonDecorator {
 	
-    protected JButton registerTeacherBtn;
-	
+    private JButton registerTeacherBtn;
+
 	public NewTeacherDecorator(PersonView viewToDecorate) {
 		super(viewToDecorate);
 	}
