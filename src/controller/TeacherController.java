@@ -19,7 +19,9 @@ import model.datatype.RG;
 
 public class TeacherController {
 
-	private static final String COULDNT_SAVE_TEACHER = "Não foi possível cadastrar o professor";
+	private static final String COULDNT_SAVE_TEACHER = "Não foi possível cadastrar o professor.";
+	private static final String CANT_UPDATE_NULL_TEACHER = "Não é possível atualizar um professor nulo.";
+	
 	TeacherDAO teacherDAO;
 	
 	public TeacherController(){
@@ -148,4 +150,25 @@ public class TeacherController {
 		return teacher;
 	}
 	
+	public void disableTeacher(Teacher teacher) throws TeacherException{
+		
+		if(teacher != null){
+			updateTeacherStatus(teacher, Teacher.INACTIVE);
+		}else{
+			throw new TeacherException(CANT_UPDATE_NULL_TEACHER);
+		}
+	}
+	
+	public void activateTeacher(Teacher teacher) throws TeacherException{
+		
+		if(teacher != null){
+			updateTeacherStatus(teacher, Teacher.INACTIVE);
+		}else{
+			updateTeacherStatus(teacher, Teacher.ACTIVE);
+		}
+	}
+	
+	private void updateTeacherStatus(Teacher teacher, int newStatus){
+		
+	}
 }

@@ -6,8 +6,13 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import controller.TeacherController;
+import exception.StudentException;
+import exception.TeacherException;
+import model.Student;
 import model.Teacher;
 import model.datatype.Address;
 import model.datatype.CPF;
@@ -23,6 +28,9 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 	private JButton editTeacherBtn;
 	private JButton backBtn;
 	Teacher teacher;
+	private JButton disableTeacherBtn;
+	private int status;
+	private String action;
 
 	public ShowTeacherDecorator(TeacherView viewToDecorate) {
 		super(viewToDecorate);
@@ -200,7 +208,7 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 
 
 	@Override
-	public void createButtons(JFrame frame) {
+	public void createButtons(final JFrame frame) {
 		editTeacherBtn = new JButton("Editar");
 		frame.getContentPane().add(editTeacherBtn);
 		editTeacherBtn.setBounds(599, 55, 117, 25);
@@ -211,6 +219,66 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 				dispose();
 				teacherFrame.buildScreen(teacherFrame,teacher);
 				teacherFrame.setVisible(true);
+			}
+		});
+				
+		disableTeacherBtn = new JButton("Desativar professor");
+		frame.getContentPane().add(disableTeacherBtn);
+		disableTeacherBtn.setBounds(599, 95, 155, 25);
+		//editTeacherBtn.setBounds
+		
+		status = teacher.getStatus();
+		
+		action = setTextToTheDeactiveOrActiveButton(status);
+		disableTeacherBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e){			
+				
+				int confirm = 0;				
+				
+				confirm = JOptionPane.showConfirmDialog(frame.getContentPane(), "Tem certeza que deseja que o professor seja " + action + "?", "Status do professor", JOptionPane.YES_NO_OPTION);
+				
+				if (confirm == JOptionPane.YES_OPTION) {
+					
+					TeacherController teacherController = new TeacherController();
+					try{
+						
+						switch(status){
+						
+							case Teacher.ACTIVE:
+								teacherController.disableTeacher(teacher);
+								changeStatus();
+								showInfoMessage("A matrícula do aluno está " + action + "!");
+								break;
+								
+							case Teacher.INACTIVE:
+								teacherController.activateTeacher(teacher);
+								changeStatus();
+								break;
+							
+							default:
+								break;
+						}
+					}
+					catch(TeacherException e1){
+						showInfoMessage("Um erro ocorreu, a matrícula não foi " + action);
+					}
+						
+				}
+				else{
+					// Nothing to do
+				}
+			}
+			
+			private void changeStatus() {
+				
+				if(status == Teacher.ACTIVE){
+					status = 0;
+				}
+				else{
+					status = 1;
+				}
+				
 			}
 		});
 		
@@ -230,6 +298,21 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 
 	@Override
 	public void createMasks(JFrame frame) {
+
+	}
+	
+	private String setTextToTheDeactiveOrActiveButton(int status) {
 		
+		String statusState = "";
+		if(status == Teacher.ACTIVE){
+			disableTeacherBtn.setText("Desativar professor");
+			statusState = "desativado";
+		}
+		else{
+			disableTeacherBtn.setText("Ativar professor");
+			statusState = "ativado";
+		}
+		
+		return statusState;
 	}
 }

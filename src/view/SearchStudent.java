@@ -571,7 +571,7 @@ public class SearchStudent extends View {
 
 					private void changeStatus() {
 						
-						if(status == student.ACTIVE){
+						if(status == Student.ACTIVE){
 							status = 0;
 						}
 						else{
