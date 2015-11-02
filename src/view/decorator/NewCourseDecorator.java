@@ -38,7 +38,7 @@ public class NewCourseDecorator extends CourseDecorator{
 		
 		JLabel lblC = new JLabel("Novo curso");
 		lblC.setFont(new Font("Dialog", Font.BOLD, 20));
-		lblC.setBounds(426, 12, 144, 15);
+		lblC.setBounds(426, 15, 144, 15);
 		frame.getContentPane().add(lblC);
 		
 		descriptionField.setBounds(284, 306, 446, 105);
