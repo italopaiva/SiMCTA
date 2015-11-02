@@ -41,6 +41,7 @@ public class TeacherDAO extends DAO{
 	private static final String ADDRESS_COLUMN	= "address_info";
 	private static final String STATUS_COLUMN	= "status";
 	private static final String QUALIFICATION_COLUMN = "qualification";
+	
 	private static final String CANT_SAVE_TEACHER = "Não foi possível salvar os dados do professor informado.";
 	private static final String CPF_ALREADY_EXISTS = "O CPF informado já está cadastrado.";
 	private static final String COULDNT_CHECK_TEACHER = "Não foi possível checar se o professor está cadastrado. Tente novamente.";
@@ -259,9 +260,11 @@ public class TeacherDAO extends DAO{
 		Date birthdate = new Date(new Integer(day),new Integer(month),new Integer(year));
 		
 		String qualification = resultOfTheSearch.getString(QUALIFICATION_COLUMN);
-				
+		
+		int status = resultOfTheSearch.getInt(STATUS_COLUMN);
+		
 		Teacher teacher = new Teacher(teacherName, teacherCpf, teacherRg, birthdate, email, address,
-									 principalPhone, secondaryPhone, motherName, fatherName, qualification);
+									 principalPhone, secondaryPhone, motherName, fatherName, qualification, status);
 	
 		return teacher;
 	}
@@ -372,5 +375,27 @@ public class TeacherDAO extends DAO{
 		}
 		
 		return teacher;
+	}
+	
+	/**
+	 * Updates the status of the given teacher on database
+	 * @param teacher - Teacher to update the status
+	 * @param newStatus - New status of the teacher
+	 * @throws TeacherException
+	 */
+	public void updateStatus(Teacher teacher, int newStatus) throws TeacherException{
+		
+		CPF cpf = teacher.getCpf();
+		String teacherCpf  = cpf.getCpf();
+		
+		String query = "UPDATE "+ TEACHER_TABLE_NAME + " SET "
+				     + STATUS_COLUMN + "='" + newStatus + "'"
+				     + " WHERE " + CPF_COLUMN + "='" + teacherCpf + "'";
+		try{
+			this.execute(query);
+		}
+		catch(SQLException e){
+			throw new TeacherException(CANT_SAVE_TEACHER);
+		}
 	}
 }

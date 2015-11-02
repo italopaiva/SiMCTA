@@ -150,6 +150,11 @@ public class TeacherController {
 		return teacher;
 	}
 	
+	/**
+	 * Deactivate a teacher
+	 * @param teacher - Teacher to be deactivated
+	 * @throws TeacherException
+	 */
 	public void disableTeacher(Teacher teacher) throws TeacherException{
 		
 		if(teacher != null){
@@ -159,6 +164,11 @@ public class TeacherController {
 		}
 	}
 	
+	/**
+	 * Activate a teacher
+	 * @param teacher - Teacher to be activated
+	 * @throws TeacherException
+	 */
 	public void activateTeacher(Teacher teacher) throws TeacherException{
 		
 		if(teacher != null){
@@ -168,7 +178,14 @@ public class TeacherController {
 		}
 	}
 	
-	private void updateTeacherStatus(Teacher teacher, int newStatus){
+	/**
+	 * Change the status of a teacher
+	 * @param teacher - Teacher to change the status
+	 * @param newStatus - New status to be setted to the teacher
+	 * @throws TeacherException
+	 */
+	private void updateTeacherStatus(Teacher teacher, int newStatus) throws TeacherException{
 		
+		teacherDAO.updateStatus(teacher, newStatus);
 	}
 }

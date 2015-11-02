@@ -228,8 +228,9 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 		//editTeacherBtn.setBounds
 		
 		status = teacher.getStatus();
-		
+				
 		action = setTextToTheDeactiveOrActiveButton(status);
+		
 		disableTeacherBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			
@@ -248,12 +249,15 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 							case Teacher.ACTIVE:
 								teacherController.disableTeacher(teacher);
 								changeStatus();
-								showInfoMessage("A matrícula do aluno está " + action + "!");
+								showInfoMessage("O professor foi " + action + "!");
+								action = setTextToTheDeactiveOrActiveButton(status);
 								break;
 								
 							case Teacher.INACTIVE:
 								teacherController.activateTeacher(teacher);
 								changeStatus();
+								showInfoMessage("O professor foi " + action + "!");
+								action = setTextToTheDeactiveOrActiveButton(status);
 								break;
 							
 							default:
@@ -261,7 +265,7 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 						}
 					}
 					catch(TeacherException e1){
-						showInfoMessage("Um erro ocorreu, a matrícula não foi " + action);
+						showInfoMessage(e1.getMessage() + ". O professor não foi " + action + ".");
 					}
 						
 				}
@@ -302,7 +306,7 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 	}
 	
 	private String setTextToTheDeactiveOrActiveButton(int status) {
-		
+				
 		String statusState = "";
 		if(status == Teacher.ACTIVE){
 			disableTeacherBtn.setText("Desativar professor");
