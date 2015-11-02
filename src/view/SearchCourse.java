@@ -21,14 +21,15 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import model.Course;
+import model.ServiceItem;
 import util.ButtonColumn;
 import view.decorator.ShowCourseDecorator;
-import view.forms.CourseForm;
+import view.forms.ServiceItemForm;
 import controller.CourseController;
 import exception.CourseException;
 
 @SuppressWarnings("serial")
-public class SearchCourse extends CourseView {
+public class SearchCourse extends ServiceItemView {
 	
 	protected static final Integer COURSE_ACTIVE = 1;
 	
@@ -61,7 +62,7 @@ public class SearchCourse extends CourseView {
 
 
 	@Override
-	public void createLabelsAndFields(JFrame frame, Course course) {
+	public void createLabelsAndFields(JFrame frame, ServiceItem course) {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -98,7 +99,7 @@ public class SearchCourse extends CourseView {
 				try {
 					Course course = courseController.showCourse(idCourse);
 					dispose();
-					CourseView courseFrame = new ShowCourseDecorator(new CourseForm());
+					ServiceItemView courseFrame = new ShowCourseDecorator(new ServiceItemForm());
 					courseFrame.buildScreen(courseFrame, course);
 					courseFrame.setVisible(true);
 				} 

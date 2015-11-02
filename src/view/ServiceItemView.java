@@ -7,24 +7,25 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import model.Course;
+import model.ServiceItem;
 import model.Teacher;
 
-public abstract class CourseView extends View {
+public abstract class ServiceItemView extends View {
 
     protected JPanel contentPane = new JPanel();
-    protected JTextField courseNameField = new JTextField();
+    protected JTextField nameField = new JTextField();
     protected JFormattedTextField durationField = new JFormattedTextField();
     protected JFormattedTextField valueField = new JFormattedTextField();
     protected JTextArea descriptionField = new JTextArea();
 	protected JFrame frame = new JFrame();
 
-	public void buildScreen(CourseView courseFrame, Course course){
-		createLabelsAndFields(courseFrame, course);
+	public void buildScreen(ServiceItemView courseFrame, ServiceItem serviceItem){
+		createLabelsAndFields(courseFrame, serviceItem);
 		createMasks(courseFrame);
 		createButtons(courseFrame);
 	}
 
-	public abstract void createLabelsAndFields(JFrame frame, Course course);
+	public abstract void createLabelsAndFields(JFrame frame, ServiceItem serviceItem);
 	
 	public abstract void createMasks(JFrame frame);
 	

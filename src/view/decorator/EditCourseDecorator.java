@@ -20,15 +20,16 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
 import model.Course;
+import model.ServiceItem;
 import view.SearchCourse;
-import view.CourseView;
+import view.ServiceItemView;
 import view.View;
-import view.forms.CourseForm;
+import view.forms.ServiceItemForm;
 import controller.CourseController;
 import exception.CourseException;
 
 @SuppressWarnings("serial")
-public class EditCourseDecorator extends CourseDecorator{
+public class EditCourseDecorator extends ServiceItemDecorator{
 
 	private Component editCourseBtn;
 	private JButton backBtn;
@@ -38,19 +39,19 @@ public class EditCourseDecorator extends CourseDecorator{
 	 * Create the frame.
 	 * @param courseForm 
 	 */
-	public EditCourseDecorator(CourseView viewToDecorate) {
+	public EditCourseDecorator(ServiceItemView viewToDecorate) {
 		super(viewToDecorate);
 	}
 	
 	@Override
-	public void createLabelsAndFields(JFrame viewToDecorate, Course course) {
+	public void createLabelsAndFields(JFrame viewToDecorate, ServiceItem course) {
 		this.frame = viewToDecorate;
 		super.createLabelsAndFields(viewToDecorate, course);
-		this.course = course;
+		this.course = (Course) course;
 
-		courseNameField.setBounds(276, 74, 346, 30);
-		frame.getContentPane().add(courseNameField);
-		courseNameField.setColumns(10);
+		nameField.setBounds(276, 74, 346, 30);
+		frame.getContentPane().add(nameField);
+		nameField.setColumns(10);
 		
 		JLabel lblC = new JLabel("Alterar dados do curso: " + course.getName());
 		lblC.setFont(new Font("Dialog", Font.BOLD, 20));
@@ -61,13 +62,13 @@ public class EditCourseDecorator extends CourseDecorator{
 		frame.getContentPane().add(descriptionField);
 	
 			
-		fillTheFields(course);
+		fillTheFields(this.course);
 
 	}
 	
 	private void fillTheFields(Course course) {
 		
-		courseNameField.setText(course.getName());
+		nameField.setText(course.getName());
 		descriptionField.setText(course.getCourseDescription());
 		setEditableAllFields();
 		
@@ -75,7 +76,7 @@ public class EditCourseDecorator extends CourseDecorator{
 	
 	private void setEditableAllFields() {
 		
-		courseNameField.setEditable(true);
+		nameField.setEditable(true);
 		descriptionField.setEditable(true);
 		durationField.setEditable(true);
 		valueField.setEditable(true);
@@ -91,7 +92,7 @@ public class EditCourseDecorator extends CourseDecorator{
 
 			@Override
 			public void mouseClicked(MouseEvent e){			
-				String courseName = courseNameField.getText();
+				String courseName = nameField.getText();
 				String courseDescription = descriptionField.getText();
 				
 				Integer courseDuration;
@@ -137,7 +138,7 @@ public class EditCourseDecorator extends CourseDecorator{
 				}
 				showInfoMessage(message);
 				dispose();
-				CourseView courseFrame = new SearchCourse();
+				ServiceItemView courseFrame = new SearchCourse();
 				courseFrame.buildScreen(courseFrame, course);
 				courseFrame.setVisible(true);	
 			}
@@ -150,7 +151,7 @@ public class EditCourseDecorator extends CourseDecorator{
 			@Override
 			public void mouseClicked(MouseEvent e){			
 				dispose();
-				CourseView courseFrame = new ShowCourseDecorator(new CourseForm());
+				ServiceItemView courseFrame = new ShowCourseDecorator(new ServiceItemForm());
 				courseFrame.buildScreen(courseFrame, course);
 				courseFrame.setVisible(true);
 			}

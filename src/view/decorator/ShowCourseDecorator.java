@@ -14,15 +14,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import model.Course;
-import view.CourseView;
+import model.ServiceItem;
+import view.ServiceItemView;
 import view.SearchCourse;
 import view.SearchTeacher;
 import view.PersonView;
-import view.forms.CourseForm;
+import view.forms.ServiceItemForm;
 import controller.CourseController;
 import exception.CourseException;
 
-public class ShowCourseDecorator extends CourseDecorator {
+public class ShowCourseDecorator extends ServiceItemDecorator {
 
 	protected static final Integer COURSE_ACTIVE = 1;
 	
@@ -33,19 +34,19 @@ public class ShowCourseDecorator extends CourseDecorator {
 	Course course;
 	private JButton btnActiveOrDeactive;
 
-	public ShowCourseDecorator(CourseView viewToDecorate) {
+	public ShowCourseDecorator(ServiceItemView viewToDecorate) {
 		super(viewToDecorate);
 	}
 		
 	@Override
-	public void createLabelsAndFields(JFrame viewToDecorate, Course course) {
+	public void createLabelsAndFields(JFrame viewToDecorate, ServiceItem course) {
 		this.frame = viewToDecorate;
 		super.createLabelsAndFields(viewToDecorate, course);
-		this.course = course;
+		this.course = (Course) course;
 
-		courseNameField.setBounds(276, 74, 346, 30);
-		frame.getContentPane().add(courseNameField);
-		courseNameField.setColumns(10);
+		nameField.setBounds(276, 74, 346, 30);
+		frame.getContentPane().add(nameField);
+		nameField.setColumns(10);
 		
 		JLabel lblC = new JLabel(course.getName());
 		lblC.setFont(new Font("Dialog", Font.BOLD, 20));
@@ -63,13 +64,13 @@ public class ShowCourseDecorator extends CourseDecorator {
 		valueField.setBounds(284, 224,124, 28);
 		frame.getContentPane().add(valueField);
 		
-		fillTheFields(course);
+		fillTheFields(this.course);
 
 	}
 	
 	private void fillTheFields(Course course) {
 		
-		courseNameField.setText(course.getName());
+		nameField.setText(course.getName());
 		descriptionField.setText(course.getCourseDescription());
 		durationField.setText(course.getDuration().toString() + " semanas");
 		
@@ -82,7 +83,7 @@ public class ShowCourseDecorator extends CourseDecorator {
 	
 	private void setNonEditableAllFields() {
 		
-		courseNameField.setEditable(false);
+		nameField.setEditable(false);
 		descriptionField.setEditable(false);
 		durationField.setEditable(false);
 		valueField.setEditable(false);
@@ -97,7 +98,7 @@ public class ShowCourseDecorator extends CourseDecorator {
 		editTeacherBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			
-				CourseView courseFrame = new EditCourseDecorator(new CourseForm());
+				ServiceItemView courseFrame = new EditCourseDecorator(new ServiceItemForm());
 				dispose();
 				courseFrame.buildScreen(courseFrame,course);
 				courseFrame.setVisible(true);
@@ -111,7 +112,7 @@ public class ShowCourseDecorator extends CourseDecorator {
 			@Override
 			public void mouseClicked(MouseEvent e){			
 				dispose();
-				CourseView courseFrame;
+				ServiceItemView courseFrame;
 				courseFrame = new SearchCourse();
 				courseFrame.buildScreen(courseFrame,null);
 				courseFrame.setVisible(true);

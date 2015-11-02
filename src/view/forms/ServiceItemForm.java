@@ -1,23 +1,16 @@
 package view.forms;
 
-import java.awt.Font;
-import java.text.ParseException;
-
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.MaskFormatter;
 
-import view.CourseView;
-import model.Course;
-import model.Teacher;
+import model.ServiceItem;
+import view.ServiceItemView;
 
-public class CourseForm extends CourseView {
+public class ServiceItemForm extends ServiceItemView {
 
 	@Override
-	public void createLabelsAndFields(JFrame frame, Course course) {
+	public void createLabelsAndFields(JFrame frame, ServiceItem serviceItem) {
 		
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frame.setContentPane(contentPane);
@@ -34,10 +27,7 @@ public class CourseForm extends CourseView {
         JLabel valueLabel = new JLabel("Valor");
         valueLabel.setBounds(286, 197, 70, 15);
         frame.getContentPane().add(valueLabel);
-        
-        JLabel descriptionLabel = new JLabel("Descrição do curso");
-        descriptionLabel.setBounds(284, 264, 144, 15);
-        frame.getContentPane().add(descriptionLabel);
+
 		
 	}
 
