@@ -1,4 +1,4 @@
-package view;
+package view.forms;
 
 import java.awt.Font;
 import java.text.ParseException;
@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
+import view.TeacherView;
 import model.Teacher;
 import model.datatype.Address;
 import model.datatype.CPF;

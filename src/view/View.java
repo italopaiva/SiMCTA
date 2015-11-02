@@ -16,6 +16,8 @@ import javax.swing.JPasswordField;
 import model.Teacher;
 import view.decorator.NewCourseDecorator;
 import view.decorator.NewTeacherDecorator;
+import view.forms.CourseForm;
+import view.forms.TeacherForm;
 import exception.AuthenticationException;
 import exception.CourseException;
 import exception.PackageException;
@@ -200,16 +202,9 @@ public class View extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				dispose();			
-				try {
-					SearchCourse searchCourseFrame = new SearchCourse();
-					searchCourseFrame.setVisible(true);
-				} 
-				catch(SQLException e){
-					e.printStackTrace();
-				}
-				catch(CourseException e){
-					
-				}
+				CourseView searchCourseFrame = new SearchCourse();
+				searchCourseFrame.buildScreen(searchCourseFrame, null);
+				searchCourseFrame.setVisible(true);
 			}
 		});
 		courseMenu.add(searchCourse);

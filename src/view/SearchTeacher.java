@@ -24,6 +24,7 @@ import model.datatype.CPF;
 import util.ButtonColumn;
 import view.decorator.ShowTeacherDecorator;
 import view.decorator.TeacherDecorator;
+import view.forms.TeacherForm;
 import controller.StudentController;
 import controller.TeacherController;
 import exception.CPFException;

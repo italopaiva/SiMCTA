@@ -15,8 +15,8 @@ import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
 import view.SearchTeacher;
-import view.TeacherForm;
 import view.TeacherView;
+import view.forms.TeacherForm;
 
 public class ShowTeacherDecorator extends TeacherDecorator {
 
