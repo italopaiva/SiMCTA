@@ -8,7 +8,7 @@ public class RunMigration {
 
 	public static void main(String[] args) {
 		
-		M010_CreatingPaymentDescriptionTable m = new M010_CreatingPaymentDescriptionTable();
+		M012_CreatingClassTable m = new M012_CreatingClassTable();
 		
 		String message = "";
 		try {
