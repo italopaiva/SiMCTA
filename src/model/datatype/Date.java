@@ -177,7 +177,6 @@ public class Date extends Model{
 			date += (("0" + month) + year);
 		}
 
-		System.out.print(date);
 		return date;
 	}
 }
