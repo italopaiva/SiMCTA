@@ -14,6 +14,7 @@ import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
 import exception.StudentException;
+import model.Course;
 import model.Student;
 import model.Service;
 import model.datatype.Address;
@@ -90,6 +91,18 @@ public class StudentController {
 		else{
 			throw new StudentException(CANT_SAVE_NULL_STUDENT);
 		}
+	}
+	
+	public boolean updateStudent(String studentName, Date birthdate, String email, Address address,
+			   Phone principalPhone, Phone secondaryPhone, String motherName, String fatherName)
+			 throws StudentException, PersonException{
+
+		Student student = new Student(studentName, birthdate, email, address, principalPhone, secondaryPhone, motherName, fatherName, ACTIVE_STATUS);
+		
+		boolean wasSaved = false;
+		wasSaved = studentDAO.update(student);
+		
+		return wasSaved;
 	}
 	
 	public Student getStudent(CPF cpf){
