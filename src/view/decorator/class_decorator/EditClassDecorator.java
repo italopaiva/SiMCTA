@@ -3,6 +3,9 @@ package view.decorator.class_decorator;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -13,17 +16,30 @@ import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
 import controller.ClassController;
+import controller.TeacherController;
+import exception.ClassException;
+import exception.DateException;
+import exception.TeacherException;
 import model.Class;
+import model.Teacher;
+import model.datatype.CPF;
+import model.datatype.Date;
 import view.ClassView;
 import view.TeacherForm;
 import view.decorator.ShowTeacherDecorator;
 
 public class EditClassDecorator extends ClassDecorator {
 
+	private static final String COULDNT_LOAD_TEACHERS = "Não foi possível carregar os professores do banco de dados. Será mantido o professor atual.";
+	private static final String CLASS_WAS_UPDATED = "Turma alterada com sucesso!"; 
+	
 	private Class classInstance;
+	private Map<String, CPF> teachersMap;
 	
 	public EditClassDecorator(ClassView viewToDecorate) {
 		super(viewToDecorate);
+		
+		teachersMap = new HashMap<String, CPF>();
 	}
 	
 	@Override
@@ -33,9 +49,7 @@ public class EditClassDecorator extends ClassDecorator {
 		
 		super.createLabelsAndFields(frame, classInstance);
 		
-		availableTeachersModel = new DefaultComboBoxModel<String>();
-		// Get from database all the teachers
-		availableTeachersModel.addElement(classInstance.getTeacher().getName());
+		fillTeachersDropdown();
 		
 		availableTeachers = new JComboBox<String>(availableTeachersModel);
 		availableTeachers.setBounds(286, 188, 250, 24);
@@ -49,11 +63,8 @@ public class EditClassDecorator extends ClassDecorator {
 		availableCourses.setBounds(286, 122, 250, 24);
 		frame.getContentPane().add(availableCourses);
 		availableCourses.setEnabled(false);
-				
-		shiftsModel = new DefaultComboBoxModel<String>();
-		shiftsModel.addElement(Class.MORNING_SHIFT);
-		shiftsModel.addElement(Class.AFTERNOON_SHIFT);
-		shiftsModel.addElement(Class.NIGHT_SHIFT);
+		
+		fillShiftsDropdown();
 		
 		shifts = new JComboBox<String>(shiftsModel);
 		shifts.setBounds(600, 122, 121, 24);
@@ -65,8 +76,38 @@ public class EditClassDecorator extends ClassDecorator {
 		classIdField.setColumns(10);
 		classIdField.setText(classInstance.getClassId());
 		classIdField.setEditable(false);
+		classIdField.setEnabled(false);
 	}
 	
+	private void fillShiftsDropdown(){
+		
+		shiftsModel = new DefaultComboBoxModel<String>();
+		
+		shiftsModel.addElement(Class.MORNING_SHIFT);
+		shiftsModel.addElement(Class.AFTERNOON_SHIFT);
+		shiftsModel.addElement(Class.NIGHT_SHIFT);
+	}
+
+	private void fillTeachersDropdown(){
+		
+		TeacherController teacherController = new TeacherController();
+		
+		availableTeachersModel = new DefaultComboBoxModel<String>();
+				
+		try{
+			ArrayList<Teacher> teachers = teacherController.getTeachers();
+			
+			for(Teacher teacher : teachers){
+				availableTeachersModel.addElement(teacher.getName());
+				teachersMap.put(teacher.getName(), teacher.getCpf());
+			}
+		}
+		catch(TeacherException e){
+			showInfoMessage(COULDNT_LOAD_TEACHERS);
+			availableTeachersModel.addElement(classInstance.getTeacher().getName());
+		}
+	}
+
 	@Override
 	public void createMasks(JFrame frame){
 		super.createMasks(frame);
@@ -103,9 +144,32 @@ public class EditClassDecorator extends ClassDecorator {
 			@Override
 			public void mouseClicked(MouseEvent e){			
 				
-				ClassController classController = new ClassController();
+				String message = "";
 				
-				classController.updateClass(classInstance.getClassId(), teacherCpf, shift, startDate);
+				try{
+					
+					String shift = (String) shifts.getSelectedItem();
+					String selectedTeacher = (String) availableTeachers.getSelectedItem();
+					CPF teacherCpf = teachersMap.get(selectedTeacher);
+					
+					String givenStartDate = startDateField.getText();
+					
+					Date startDate;
+					
+					startDate = new Date(givenStartDate);
+					
+					ClassController classController = new ClassController();
+					classController.updateClass(classInstance.getClassId(), teacherCpf, shift, startDate);
+					
+					message = CLASS_WAS_UPDATED;
+				}
+				catch(DateException e1){
+					message = e1.getMessage();
+				}catch(ClassException e1){
+					message = e1.getMessage();
+				}finally{
+					showInfoMessage(message);
+				}
 			}
 		});
 	}

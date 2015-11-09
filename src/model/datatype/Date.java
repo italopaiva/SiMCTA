@@ -11,11 +11,12 @@ public class Date extends Model{
 	private static final int MIN_DAY = 1;
 	private static final int MAX_DAY = 31;
 	private static final int FEBRUARY_BISSEXTILE_MAX_DAYS = 29;
+	private static final int STRING_DATE_LENGTH = 10;
 
-	private static final String YEAR_INVALID = "O ano de nascimento informado é inválido";
-	private static final String DAY_INVALID = "O dia de nascimento informado é inválido";
-	private static final String DATE_INVALID = "A data de nascimento informada é inválida";
-	private static final String MONTH_INVALID = "O mês de nascimento informado é inválido";;
+	private static final String YEAR_INVALID = "O ano informado é inválido";
+	private static final String DAY_INVALID = "O dia informado é inválido";
+	private static final String DATE_INVALID = "A data informada é inválida";
+	private static final String MONTH_INVALID = "O mês informado é inválido";;
 	
 	private Integer day;
 	private Integer month;
@@ -27,6 +28,28 @@ public class Date extends Model{
 		setDay(day);
 	}
 	
+	public Date(String date) throws DateException{
+		
+		getDateFromString(date);
+	}
+	
+	private void getDateFromString(String date) throws DateException{
+		
+		if(date.length() == STRING_DATE_LENGTH){
+			
+			String day = date.substring(0, 2);
+			String month = date.substring(3,5);
+			String year = date.substring(6, 10);
+			
+			setYear(new Integer(year));
+			setMonth(new Integer(month));
+			setDay(new Integer(day));
+			
+		}else{
+			throw new DateException(DATE_INVALID);
+		}
+	}
+
 	private void setYear(Integer year) throws DateException {
 		
 		boolean yearIsValid = year != null && (year >= MIN_YEAR);

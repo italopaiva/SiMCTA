@@ -80,55 +80,6 @@ public class View extends JFrame {
 		
 		JMenu classMenu = new JMenu("Turmas");
 		menuBar.add(classMenu);
-		
-		JMenuItem updateClass = new JMenuItem("Alterar turma");
-		updateClass.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-				Course course;
-				Teacher teacher;
-				Date date;
-				Address address;
-				Phone phone1;
-				Phone phone2;
-				CPF cpf;
-				RG rg;
-				String name;
-				String email;
-				String qualification;
-				
-				name = "João da Silva";
-				
-				try {
-					address = new Address("Rua 3 ", "6B", "", "72323411", "Brasília");
-					date = new Date(05, 06, 1996);
-					phone1 = new Phone("61","83265622");
-					phone2 = new Phone("61","32551111");
-					cpf = new CPF("51464638403");
-					rg = new RG("8598298", "SSP", "DF");
-					email = "jacoma@gmail.com";
-					qualification = "Mecânica automotiva";
-					
-					teacher = new Teacher(name, cpf, rg, date, email, address, phone1, phone2, 
-						      			"Milene Souza Medeiros", "Mário Souza Filho",qualification);
-					
-					course = new Course(1, "Aplicação de película", "Top", 3, 150000);
-					
-					Class classInstance = new Class(new Date(10, 02, 2015), "MA", teacher, course);
-					
-					dispose();
-					classFrame = new EditClassDecorator(new ClassForm());
-					classFrame.buildScreen(classFrame, classInstance);
-					classFrame.setVisible(true);
-				}
-				catch(AddressException | PersonException | TeacherException | CourseException | RGException | ClassException | DateException | CPFException | PhoneException e){
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-			}
-		});
-		classMenu.add(updateClass);
 	}
 
 	private void addTeacherOptionsToMenu(){

@@ -127,15 +127,15 @@ public class Class extends Model{
 			
 			switch(shift){
 				
-				case "MA":
+				case MORNING_SHIFT:
 					this.shift = shift;
 					break;
 					
-				case "VE":
+				case AFTERNOON_SHIFT:
 					this.shift = shift;
 					break;
 					
-				case "NO":
+				case NIGHT_SHIFT:
 					this.shift = shift;
 					break;
 					
