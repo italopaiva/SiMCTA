@@ -4,7 +4,6 @@ import exception.DateException;
 import model.Model;
 
 public class Date extends Model{
-
 	
 	private static final int MIN_YEAR = 1900;
 	private static final int MIN_MONTH = 1;
@@ -137,9 +136,15 @@ public class Date extends Model{
 	
 	public String getSlashFormattedDate(){
 		
+		String month = getMonth().toString();
+		
+		if(month.length() == 1){
+			month = "0" + month;
+		}
+		
 		String date = getDay() + "/" ;
-		date+= getMonth() + "/";
-		date+= getYear();
+		date += month + "/";
+		date += getYear();
 
 		return date;
 	}

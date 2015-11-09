@@ -13,12 +13,28 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
+import model.Class;
+import model.Course;
 import model.Teacher;
+import model.datatype.Address;
+import model.datatype.CPF;
+import model.datatype.Date;
+import model.datatype.Phone;
+import model.datatype.RG;
 import view.decorator.NewCourseDecorator;
 import view.decorator.NewTeacherDecorator;
+import view.decorator.class_decorator.EditClassDecorator;
+import exception.AddressException;
 import exception.AuthenticationException;
+import exception.CPFException;
+import exception.ClassException;
 import exception.CourseException;
+import exception.DateException;
 import exception.PackageException;
+import exception.PersonException;
+import exception.PhoneException;
+import exception.RGException;
+import exception.TeacherException;
 
 @SuppressWarnings("serial")
 public class View extends JFrame {
@@ -26,6 +42,7 @@ public class View extends JFrame {
 	protected JMenuBar menuBar;
 	protected static JFrame frame = new JFrame();
 	private TeacherView teacherFrame;
+	private ClassView classFrame;
 
 	/**
 	 * Launch the application.
@@ -56,8 +73,64 @@ public class View extends JFrame {
 		
 		addTeacherOptionsToMenu();
 		
+		addClassOptionsToMenu();
 	}
 	
+	private void addClassOptionsToMenu(){
+		
+		JMenu classMenu = new JMenu("Turmas");
+		menuBar.add(classMenu);
+		
+		JMenuItem updateClass = new JMenuItem("Alterar turma");
+		updateClass.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				Course course;
+				Teacher teacher;
+				Date date;
+				Address address;
+				Phone phone1;
+				Phone phone2;
+				CPF cpf;
+				RG rg;
+				String name;
+				String email;
+				String qualification;
+				
+				name = "João da Silva";
+				
+				try {
+					address = new Address("Rua 3 ", "6B", "", "72323411", "Brasília");
+					date = new Date(05, 06, 1996);
+					phone1 = new Phone("61","83265622");
+					phone2 = new Phone("61","32551111");
+					cpf = new CPF("51464638403");
+					rg = new RG("8598298", "SSP", "DF");
+					email = "jacoma@gmail.com";
+					qualification = "Mecânica automotiva";
+					
+					teacher = new Teacher(name, cpf, rg, date, email, address, phone1, phone2, 
+						      			"Milene Souza Medeiros", "Mário Souza Filho",qualification);
+					
+					course = new Course(1, "Aplicação de película", "Top", 3, 150000);
+					
+					Class classInstance = new Class(new Date(10, 02, 2015), "MA", teacher, course);
+					
+					dispose();
+					classFrame = new EditClassDecorator(new ClassForm());
+					classFrame.buildScreen(classFrame, classInstance);
+					classFrame.setVisible(true);
+				}
+				catch(AddressException | PersonException | TeacherException | CourseException | RGException | ClassException | DateException | CPFException | PhoneException e){
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		});
+		classMenu.add(updateClass);
+	}
+
 	private void addTeacherOptionsToMenu(){
 		JMenu teacherMenu = new JMenu("Professores");
 		menuBar.add(teacherMenu);

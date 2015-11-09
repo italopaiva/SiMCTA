@@ -46,6 +46,4 @@ public abstract class TeacherView extends View {
 	
 	public abstract void createButtons(JFrame frame);
 
-
-
 }

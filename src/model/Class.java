@@ -7,6 +7,10 @@ import model.datatype.Date;
 
 public class Class extends Model{
 	
+	public static final String MORNING_SHIFT = "MA";
+	public static final String AFTERNOON_SHIFT = "VE";
+	public static final String NIGHT_SHIFT = "NO";
+	
 	private static final String INVALID_SHIFT = "O turno informado é inválido.";
 	private static final String START_DATE_CANT_BE_NULL = "A data de início da turma é obrigatória.";
 	private static final String END_DATE_CANT_BE_NULL = "Ocorreu um erro ao calcular a data de término da turma. Data não pode ser nula.";
