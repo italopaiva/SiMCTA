@@ -1,12 +1,11 @@
 package model;
 
-import exception.PersonException;
-import exception.StudentException;
-import model.datatype.CPF;
-import model.datatype.RG;
 import model.datatype.Address;
-import model.datatype.Phone;
+import model.datatype.CPF;
 import model.datatype.Date;
+import model.datatype.Phone;
+import model.datatype.RG;
+import exception.PersonException;
 
 public class Student extends Person{
 	
@@ -32,8 +31,9 @@ public class Student extends Person{
 		setCpf(studentCpf);
 	}
 
-
-
+	public Student(CPF studentCpf) throws PersonException{
+		setCpf(studentCpf);
+	}
 }
 
 	

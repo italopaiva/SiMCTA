@@ -47,6 +47,22 @@ public class TeacherTest {
 		qualification = "Mecânica automotiva";
 	}
 	
+	
+	@Test
+	public void testValidTeacherToRegister(){
+		try {
+			teacher = new Teacher(name, cpf, rg, date, email, address, phone1, phone2, 
+							      "Milene Souza Medeiros", "Mário Souza Filho",qualification);
+			assertEquals(name, teacher.getName());
+			assertEquals(cpf, teacher.getCpf());
+			assertEquals(rg, teacher.getRg());
+		} 
+		catch (PersonException|TeacherException e) {
+			fail("Should not throw this exception: "+e.getMessage());
+		}
+	}
+	
+	
 	@Test
 	public void testValidTeacherQualification() throws TeacherException {
 		
@@ -99,6 +115,22 @@ public class TeacherTest {
 			catch (PersonException e) {
 				fail("Should throw this exception: "+e.getMessage());
 			}
+	}
+
+	@Test
+	public void testValidTeacherToSearch(){
+		try {
+			teacher = new Teacher(name, cpf);
+			assertEquals(name, teacher.getName());
+		} 
+		catch (PersonException e) {
+			fail("Should not throw this exception: "+e.getMessage());
+		}
+	}
+	
+	@Test(expected = PersonException.class)
+	public void testInalidTeacherToSearch() throws PersonException{
+		teacher = new Teacher("", cpf);
 	}
 
 }

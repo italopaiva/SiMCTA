@@ -66,19 +66,11 @@ public class PaymentControllerTest {
 	public void testIfGetsThePaymentForTheId() throws PaymentException, StudentException, ServiceException, PersonException {
 		
 		int paymentId = 3;
-		Student student = new Student("Jacó Mário Souza", cpf, rg, date, email, address, phone1, phone2, 
-				  "Milene Souza Medeiros", "Mário Souza Filho", 1);		
-		ArrayList <String> courses = new ArrayList<String>();
-		ArrayList <String> packages = new ArrayList<String>();
-		
-		courses.add("1");
-		packages = null;
-		Service service = new Service(student, courses, packages);
 		int paymentType = 1;
 		int paymentForm = 1;
-		int installments = 0;
+		int installments = 1;
 		
-		Payment payment = new Payment(paymentId);
+		Payment payment = new Payment(paymentId, paymentType, paymentForm, installments);
 		
 		when(paymentDAOMock.get(paymentId)).thenReturn(payment);
 		paymentController.setPaymentDAO(paymentDAOMock);
@@ -106,26 +98,18 @@ public class PaymentControllerTest {
 	@Test(expected = PaymentException.class)
 	public void testIfGetsThePaymentForTheIdInexistentPaymentId() throws PaymentException, StudentException, ServiceException, PersonException {
 		
-		int paymentId = 1;
-		Student student = new Student("Jacó Mário Souza", cpf, rg, date, email, address, phone1, phone2, 
-				  "Milene Souza Medeiros", "Mário Souza Filho", 1);		
-		ArrayList <String> courses = new ArrayList<String>();
-		ArrayList <String> packages = new ArrayList<String>();
-		
-		courses.add("1");
-		packages = null;
-		Service service = new Service(student, courses, packages);
+		int paymentId = 3;
+
 		int paymentType = 1;
 		int paymentForm = 1;
-		int installments = 0;
+		int installments = 1;
 		
-		Payment payment = new Payment(paymentId, service, paymentType, paymentForm, installments);
+		Payment payment = new Payment(paymentId, paymentType, paymentForm, installments);
 		
-		when(paymentDAOMock.get(paymentId)).thenReturn(payment);
+		when(paymentDAOMock.get(paymentId)).thenReturn(null);
 		paymentController.setPaymentDAO(paymentDAOMock);
 		
-		Payment payment2 = new Payment(2);
-		Payment receivedPayment = paymentController.searchPayment(payment2);
+		Payment receivedPayment = paymentController.searchPayment(payment);
 	
 	}
 

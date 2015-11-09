@@ -33,6 +33,7 @@ import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
 import controller.CourseController;
+import controller.EnrollController;
 import controller.PackageController;
 import controller.StudentController;
 import exception.AddressException;
@@ -110,7 +111,7 @@ public class EnrollStudent extends View {
 	/**
 	 * Creates the labels and fields of the frame
 	 */
-	protected void createLabelsAndFields(){
+	public void createLabelsAndFields(){
 		
 		contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -525,7 +526,7 @@ public class EnrollStudent extends View {
 	 * @throws CourseException 
 	 * @throws PackageException 
 	 */
-	private void getAllPackagesToSelect() throws CourseException, PackageException {
+	private void getAllPackagesToSelect() throws CourseException, PackageException  {
 		
 		PackageController packageController = new PackageController();
 		ArrayList<Package> packages = packageController.getPackages();		
@@ -534,8 +535,8 @@ public class EnrollStudent extends View {
 		while(indexOfPackages < packages.size()){
 			
 			Package currentPackage = packages.get(indexOfPackages);
-			Integer packageId = currentPackage.getPackageId();
-			String packageName = (currentPackage.getPackageName());
+			Integer packageId = currentPackage.getId();
+			String packageName = (currentPackage.getName());
 
 			packagesId.add(packageId.toString());
 			packagesName.add(packageName);
@@ -560,8 +561,8 @@ public class EnrollStudent extends View {
 		while(indexOfCourses < courses.size()){
 			
 			Course course = courses.get(indexOfCourses);
-			Integer courseId = course.getCourseId();
-			String courseName = (course.getCourseName());
+			Integer courseId = course.getId();
+			String courseName = (course.getName());
 
 			coursesId.add(courseId.toString());
 			coursesName.add(courseName);
@@ -669,8 +670,8 @@ public class EnrollStudent extends View {
 				installments = 0;
 			}
 			
-			StudentController studentController = new StudentController();
-			studentController.newStudent(studentName, studentCpf, studentRg, birthdate, email, address,
+			EnrollController enroll = new EnrollController();
+			enroll.enrollStudent(studentName, studentCpf, studentRg, birthdate, email, address,
 											 principalPhone, secondaryPhone, motherName, fatherName,
 											 addedCoursesId, addedPackagesId, paymentType, paymentForm, installments);
 			
@@ -697,9 +698,6 @@ public class EnrollStudent extends View {
 			message = e1.getMessage();
 		}
 		catch(PaymentException e1){
-			message = e1.getMessage();
-		} 
-		catch(PersonException e1){
 			message = e1.getMessage();
 		}
 		finally{

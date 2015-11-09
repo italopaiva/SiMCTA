@@ -155,4 +155,29 @@ public class Date extends Model{
 	public Integer getDay() {
 		return day;
 	}
+
+	public String getWholeDate() {
+		
+		String day = getDay().toString();
+		String month = getMonth().toString();
+		String year = getYear().toString();
+		String date = "";
+		
+		if(day.length() == 2){
+			date = day;
+		}
+		else{
+			date = "0" + day;
+		}
+		
+		if(month.length() == 2){
+			date += (month + year);
+		}
+		else{
+			date += (("0" + month) + year);
+		}
+
+		System.out.print(date);
+		return date;
+	}
 }

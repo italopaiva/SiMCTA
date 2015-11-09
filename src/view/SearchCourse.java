@@ -269,10 +269,10 @@ public class SearchCourse extends View {
 				
 				String[] allCourses = new String[4];
 				Course course = courses.get(indexOfCourses);
-				Integer courseId = course.getCourseId();
+				Integer courseId = course.getId();
 				
-				allCourses[0] = (course.getCourseName());
-				allCourses[1] = (showActiveOrInactive(course.getCourseStatus()));
+				allCourses[0] = (course.getName());
+				allCourses[1] = (showActiveOrInactive(course.getStatus()));
 				allCourses[2] = ("Ver");
 				allCourses[3] = (courseId.toString());
 				
@@ -324,12 +324,12 @@ public class SearchCourse extends View {
 		String valueText = "";
 		String durationString = "";
 		
-		courseId = course.getCourseId();
-		courseName = course.getCourseName();
+		courseId = course.getId();
+		courseName = course.getName();
 		courseDescription = course.getCourseDescription();
-		courseValue = course.getCourseValue();
-		courseDuration = course.getCourseDuration();
-		courseStatus = course.getCourseStatus();
+		courseValue = course.getValue();
+		courseDuration = course.getDuration();
+		courseStatus = course.getStatus();
 		
 		valueText = passValueToMonetaryForm(courseValue);
 		durationString = courseDuration.toString() + " semanas";
@@ -431,9 +431,9 @@ public class SearchCourse extends View {
 				String[] allCourses = new String[4];
 				Course course = foundCourses.get(indexOfCourses);
 				
-				Integer courseId = course.getCourseId();
-				allCourses[0] = (course.getCourseName());
-				allCourses[1] = (showActiveOrInactive(course.getCourseStatus()));
+				Integer courseId = course.getId();
+				allCourses[0] = (course.getName());
+				allCourses[1] = (showActiveOrInactive(course.getStatus()));
 				allCourses[2] = ("Ver");
 				allCourses[3] = (courseId.toString());
 				

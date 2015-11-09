@@ -1,10 +1,8 @@
 package controller;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import dao.PackageDAO;
 import dao.StudentDAO;
 import exception.AddressException;
 import exception.CPFException;
@@ -28,6 +26,7 @@ public class StudentController {
 	
 	private static final String STUDENT_WITHOUT_SERVICE = "Um aluno deve possuir um serviço associado";
 	private static final String STUDENT_NULL = "Não foi possível encontrar o estudante para mudar o status";
+	private static final String CANT_SAVE_NULL_STUDENT = "Não é possível salvar um estudante nulo.";
 	private static final int ACTIVE_STATUS	= 1;
 	private StudentDAO studentDAO;
 	private ServiceController serviceController;
@@ -50,33 +49,62 @@ public class StudentController {
 	 * @param studentName - Name of the student
 	 * @param studentCpf - CPF of the student
 	 * @param studentRg - RG of the student
-	 * @param birthdate - Birthdate of the student
+	 * @param birthdate - Birth date of the student
 	 * @param email - Email of the student (optional)
 	 * @param address - Address of the student
 	 * @param principalPhone - The principal phone number of the student
 	 * @param secondaryPhone - The secondary phone number of the student (optional)
 	 * @param motherName - The name of the student's mother
 	 * @param fatherName - The name of the student's father
-	 * @param courses - The courses ids contracted by the student 
-	 * @param packages - The packages ids contracted by the student 
-	 * @param paymentType - The payment type of the chosen payment by the student
-	 * @param paymentForm- The payment form of the chosen payment by the student
-	 * @param installments - Quantity of installments requested by the student
 	 * @throws StudentException
-	 * @throws ServiceException
-	 * @throws PaymentException
-	 * @throws PersonException 
-	 */
-	public void newStudent(String studentName, CPF studentCpf, RG studentRg, Date birthdate, String email, Address address,
-			 			   Phone principalPhone, Phone secondaryPhone, String motherName, String fatherName,
-			 			   ArrayList<String> courses, ArrayList<String> packages, int paymentType, int paymentForm, Integer installments) throws StudentException, ServiceException, PaymentException, PersonException{
-		
-		Student student = new Student(studentName, studentCpf, studentRg, birthdate, email, address, principalPhone, secondaryPhone, motherName, fatherName, ACTIVE_STATUS);
-		studentDAO.save(student);
-		
-		serviceController.newService(student, courses, packages, paymentType, paymentForm, installments);
-	}
+	 */	
+	public Student newStudent(String studentName, CPF studentCpf, RG studentRg, Date birthdate, String email, Address address,
+			   Phone principalPhone, Phone secondaryPhone, String motherName, String fatherName) throws StudentException{
 
+		Student student;
+		try{
+			student = new Student(studentName, studentCpf, studentRg, birthdate, email, address, principalPhone, secondaryPhone, motherName, fatherName, ACTIVE_STATUS);
+		}
+		catch(PersonException e){
+			throw new StudentException(e.getMessage());
+		}
+		
+		return student;
+	}
+	
+	/**
+	 * Try to save the given student
+	 * @param student
+	 * @throws StudentException
+	 */
+	public void saveStudent(Student student) throws StudentException{
+		
+		if(student != null){
+			try{
+				studentDAO.save(student);
+			}
+			catch(PersonException e){
+				throw new StudentException(e.getMessage());
+			}
+		}
+		else{
+			throw new StudentException(CANT_SAVE_NULL_STUDENT);
+		}
+	}
+	
+	public Student getStudent(CPF cpf){
+		
+		Student foundStudent;
+		try {
+			foundStudent = studentDAO.get(cpf);
+		} catch (PhoneException | CPFException | DateException
+				| AddressException | RGException | StudentException | PersonException e) {
+			foundStudent = null;
+		}
+		
+		return foundStudent;
+	}
+	
 	/**
 	 * Search the student with the entered name
 	 * @param studentName - the entered name by user

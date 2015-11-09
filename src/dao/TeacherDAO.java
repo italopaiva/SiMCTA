@@ -2,7 +2,15 @@ package dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
+import model.Course;
+import model.Teacher;
+import model.datatype.Address;
+import model.datatype.CPF;
+import model.datatype.Date;
+import model.datatype.Phone;
+import model.datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
@@ -11,12 +19,6 @@ import exception.PhoneException;
 import exception.RGException;
 import exception.StudentException;
 import exception.TeacherException;
-import model.Teacher;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 
 public class TeacherDAO extends DAO{
 	
@@ -39,10 +41,18 @@ public class TeacherDAO extends DAO{
 	private static final String ADDRESS_COLUMN	= "address_info";
 	private static final String STATUS_COLUMN	= "status";
 	private static final String QUALIFICATION_COLUMN = "qualification";
+	
 	private static final String CANT_SAVE_TEACHER = "Não foi possível salvar os dados do professor informado.";
 	private static final String CPF_ALREADY_EXISTS = "O CPF informado já está cadastrado.";
 	private static final String COULDNT_CHECK_TEACHER = "Não foi possível checar se o professor está cadastrado. Tente novamente.";
+	private static final String CANT_FOUND_TEACHERS = "Não foi possível encontrar os professores cadastrados.";
+	private static final String CANT_FOUND_TEACHER = "Não foi possível encontrar os dados do professor selecionado.";;
 	
+	/**
+	 * Save on database the received teacher 
+	 * @param teacher - the data of the teacher to be save
+	 * @throws TeacherException
+	 */
 	public void save(Teacher teacher) throws TeacherException{
 		try{
 			Teacher previousTeacher = get(teacher.getCpf());
@@ -101,6 +111,48 @@ public class TeacherDAO extends DAO{
 			throw new TeacherException(COULDNT_CHECK_TEACHER);
 		}
 		
+	}
+	
+	/**
+	 * Gets all teachers from database
+	 * @return an array with all teachers 
+	 * @throws PhoneException
+	 * @throws CPFException
+	 * @throws DateException
+	 * @throws AddressException
+	 * @throws RGException
+	 * @throws StudentException
+	 */
+	public ArrayList<Teacher> get() throws PhoneException, CPFException, DateException, AddressException,
+												RGException, TeacherException {
+		
+		ResultSet resultOfTheSearch = null;
+		
+		String query = ("SELECT * FROM "+ TEACHER_TABLE_NAME + " WHERE " + STATUS_COLUMN + "=" + 1);
+		ArrayList<Teacher> teachers = new ArrayList<Teacher>();
+		Teacher teacher = null;
+		CPF teacherCpf = null;
+		
+		try{
+			resultOfTheSearch = this.search(query);
+			
+			while(resultOfTheSearch.next()){
+				String teacherName = (resultOfTheSearch.getString(NAME_COLUMN));
+				String cpf = (resultOfTheSearch.getString(CPF_COLUMN));
+				teacherCpf = new CPF(cpf);
+				teacher = new Teacher(teacherName, teacherCpf);
+				teachers.add(teacher);
+			}
+			
+		}
+		catch(SQLException e){
+			throw new TeacherException(CANT_FOUND_TEACHERS);
+		} 
+		catch (PersonException e) {
+			throw new TeacherException(CANT_FOUND_TEACHERS);
+		}
+
+		return teachers;
 	}
 
 	/**
@@ -189,14 +241,14 @@ public class TeacherDAO extends DAO{
 		Phone principalPhone;
 		Phone secondaryPhone;
 		
-		if(!residencePhone.isEmpty()){
-			
+		principalPhone = new Phone(DDDPrincipalPhone,numberPrincipalPhone);
+		
+		if(!residencePhone.isEmpty() && residencePhone != "null"){
 			DDDSecondaryPhone = residencePhone.substring(0,2);
 			numberSecondaryPhone = residencePhone.substring(2,10);
-			principalPhone = new Phone(DDDPrincipalPhone,numberPrincipalPhone);
 			secondaryPhone = new Phone(DDDSecondaryPhone,numberSecondaryPhone);
-		}else{
-			principalPhone = new Phone(DDDPrincipalPhone,numberPrincipalPhone);
+		}
+		else{
 			secondaryPhone = null;
 		}
 
@@ -208,10 +260,142 @@ public class TeacherDAO extends DAO{
 		Date birthdate = new Date(new Integer(day),new Integer(month),new Integer(year));
 		
 		String qualification = resultOfTheSearch.getString(QUALIFICATION_COLUMN);
-				
+		
+		int status = resultOfTheSearch.getInt(STATUS_COLUMN);
+		
 		Teacher teacher = new Teacher(teacherName, teacherCpf, teacherRg, birthdate, email, address,
-									 principalPhone, secondaryPhone, motherName, fatherName, qualification);
+									 principalPhone, secondaryPhone, motherName, fatherName, qualification, status);
 	
 		return teacher;
+	}
+
+	/**
+	 * Gets the teachers with the searched name
+	 * @param searchedTeacher - searched name by the user
+	 * @return an arraylist with the found teachers
+	 * @throws CPFException
+	 * @throws PersonException 
+	 * @throws TeacherException 
+	 */
+	public ArrayList<Teacher> get(String searchedTeacher) throws PersonException, TeacherException {
+		
+		ResultSet resultOfTheSearch = null;
+		String query = "SELECT * FROM " + TEACHER_TABLE_NAME + " WHERE " + NAME_COLUMN + " LIKE \"%" + searchedTeacher + "%\""; 
+		ArrayList<Teacher> teachers = new ArrayList<Teacher>();
+		Teacher teacher = null;
+		CPF teacherCpf = null;
+		
+		try{
+			resultOfTheSearch = this.search(query);
+			
+			while(resultOfTheSearch.next()){
+				String teacherName = (resultOfTheSearch.getString(NAME_COLUMN));
+				String cpf = (resultOfTheSearch.getString(CPF_COLUMN));
+				teacherCpf = new CPF(cpf);
+				teacher = new Teacher(teacherName, teacherCpf);
+				teachers.add(teacher);
+			}
+			
+		}
+		catch(SQLException e){
+			throw new TeacherException(CANT_FOUND_TEACHERS);
+		} 
+		catch (PersonException | CPFException e) {
+			throw new PersonException(e.getMessage());
+		}
+
+		return teachers;
+	}
+
+	/**
+	 * Update a given course on the database
+	 * @param courseId - The course to be updated
+	 * @param course - A Course object with the course new data
+	 * @return TRUE if the course was updated on database or FALSE if it does not
+	 */
+	public Teacher update(Teacher teacher){
+				
+		String teacherName = teacher.getName();		
+		String email = teacher.getEmail();
+		String motherName = teacher.getMotherName();
+		String fatherName = teacher.getFatherName();
+
+		//CPF
+		CPF cpf = teacher.getCpf();
+		String teacherCpf  = cpf.getCpf();
+
+		// Birthdate
+		Date date = teacher.getBirthdate();
+		String birthdate = date.getHyphenFormattedDate();
+		
+		//Address
+		Address address = teacher.getAddress();
+		String city = address.getCity();
+		String cep = address.getCep();
+		String addressInfo = address.getAddressInfo();
+		String complement = address.getComplement();
+	
+		//Phones
+		Phone principalPhone = teacher.getPrincipalPhone();
+		Phone secondaryPhone = teacher.getSecondaryPhone();
+		
+		String cellPhone = principalPhone.getWholePhone();
+		String phone;
+		if(secondaryPhone != null){
+			phone = secondaryPhone.getWholePhone();
+		}
+		else{
+			phone = "";
+		}
+		
+		String qualification = teacher.getQualification();
+				
+		String query = "UPDATE "+ TEACHER_TABLE_NAME + " SET "
+					   + NAME_COLUMN + "='" + teacherName + "', "
+					   + EMAIL_COLUMN + "='" + email + "', "
+					   + MOTHER_COLUMN + "='" + motherName + "', "
+					   + FATHER_COLUMN + "='" + fatherName + "', "
+					   + BIRTHDATE_COLUMN + "='" + birthdate + "', "
+					   + ADDRESS_COLUMN + "='" + addressInfo + "', "
+					   + COMPLEMENT_COLUMN + "='" + complement + "', "
+					   + CITY_COLUMN + "='" + city + "', "
+					   + CEP_COLUMN + "='" + cep + "', "
+					   + PRINCIPAL_PHONE_COLUMN + "='" + cellPhone + "', "
+					   + SECONDARY_PHONE_COLUMN + "='" + phone + "', "
+					   + QUALIFICATION_COLUMN + "='" + qualification + "' "
+					   + "WHERE " + CPF_COLUMN + "='" + teacherCpf + "'";
+
+		try{
+			this.execute(query);
+			teacher = get(cpf);
+		}
+		catch(SQLException | PhoneException | CPFException | DateException | AddressException | RGException | TeacherException caughtException){
+			System.out.print("aqui:" + caughtException.getMessage());
+
+		}
+		
+		return teacher;
+	}
+	
+	/**
+	 * Updates the status of the given teacher on database
+	 * @param teacher - Teacher to update the status
+	 * @param newStatus - New status of the teacher
+	 * @throws TeacherException
+	 */
+	public void updateStatus(Teacher teacher, int newStatus) throws TeacherException{
+		
+		CPF cpf = teacher.getCpf();
+		String teacherCpf  = cpf.getCpf();
+		
+		String query = "UPDATE "+ TEACHER_TABLE_NAME + " SET "
+				     + STATUS_COLUMN + "='" + newStatus + "'"
+				     + " WHERE " + CPF_COLUMN + "='" + teacherCpf + "'";
+		try{
+			this.execute(query);
+		}
+		catch(SQLException e){
+			throw new TeacherException(CANT_SAVE_TEACHER);
+		}
 	}
 }

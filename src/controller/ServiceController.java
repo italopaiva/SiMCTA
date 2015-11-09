@@ -2,7 +2,11 @@ package controller;
 
 import java.util.ArrayList;
 
-import dao.PackageDAO;
+import model.Course;
+import model.Package;
+import model.Payment;
+import model.Service;
+import model.Student;
 import dao.ServiceDAO;
 import exception.AddressException;
 import exception.CPFException;
@@ -14,20 +18,20 @@ import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
 import exception.StudentException;
-import model.Payment;
-import model.Service;
-import model.Student;
-import model.datatype.CPF;
 
 public class ServiceController {
 	
+	private static final String CANT_SAVE_NULL_SERVICE = "Não é possível salvar um serviço nulo";
 	private ServiceDAO serviceDAO;
 	private PaymentController paymentController;
+	private CourseController courseController;
+	private PackageController packageController;
 	
 	public ServiceController(){
 		serviceDAO = new ServiceDAO();
 		paymentController = new PaymentController();
-
+		courseController = new CourseController();
+		packageController = new PackageController();
 	}
 	
 /*	public ServiceController(String ){
@@ -41,23 +45,75 @@ public class ServiceController {
 	 * @param student - The student that requested the services
 	 * @param courses - The courses requested
 	 * @param packages - The packages requested
-	 * @param paymentType - The payment type of the chosen payment
-	 * @param paymentForm - The payment form of the chosen payment
-	 * @param installments - Quantity of installments of the payment
 	 * @throws ServiceException
-	 * @throws PaymentException
+	 */	
+	public Service newService(Student student, ArrayList<String> courses, ArrayList<String> packages) throws ServiceException{
+
+		Service service = new Service(student);
+		
+		service = addCoursesToService(service, courses);
+		service = addPackagesToService(service, packages);
+		
+		return service;
+	}
+	
+	private Service addCoursesToService(Service service, ArrayList<String> coursesId){
+		
+		for(String courseId : coursesId){
+			
+			Course course = courseController.get(new Integer(courseId));
+			
+			if(course != null){
+				try{
+					service.addItem(course);
+				}
+				catch (ServiceException e){
+					// Nothing to do
+				}
+			}
+			else{
+				// Nothing to do
+			}
+		}
+		
+		return service;
+	}
+	
+	private Service addPackagesToService(Service service, ArrayList<String> packagesId){
+		
+		for(String packageId : packagesId){
+			
+			Package foundPackage = packageController.getPackage(new Integer(packageId));
+			
+			if(foundPackage != null){
+				try{
+					service.addItem(foundPackage);
+				}
+				catch (ServiceException e){
+					// Nothing to do
+				}
+			}
+			else{
+				// Nothing to do
+			}
+		}
+		
+		return service;
+	}
+	
+	/**
+	 * Try to save the given service
+	 * @param service
+	 * @throws ServiceException
 	 */
-	public void newService(Student student, ArrayList<String> courses, ArrayList<String> packages,
-						   int paymentType, int paymentForm, Integer installments) throws ServiceException, PaymentException{
+	public void saveService(Service service) throws ServiceException{
 		
-		Service service = new Service(student, courses, packages);
-					
-		PaymentController paymentController = new PaymentController();
-		Payment payment = paymentController.newPayment(service, paymentType, paymentForm, installments);
-		
-		service.addPayment(payment);
-		
-		serviceDAO.save(service);
+		if(service != null){
+			serviceDAO.save(service);
+		}
+		else{
+			throw new ServiceException(CANT_SAVE_NULL_SERVICE);
+		}
 	}
 	
 	/**
@@ -107,23 +163,22 @@ public class ServiceController {
 		ArrayList<Service> services = new ArrayList<Service>();
 		ArrayList<Service> servicesWithPayments = new ArrayList<Service>();
 
-		services = serviceDAO.get(basicDataOfStudent);
+		StudentController studentControl = new StudentController();
+		Student student = studentControl.getStudent(basicDataOfStudent.getCpf());
 		
-		int i = 0;
-		while(i < services.size()){
-			
-			Service service = services.get(i);
-			
+		services = serviceDAO.get(student);
+		
+		for(Service service : services){
+						
 			Payment payment = service.getPayment();
-			
 			payment = paymentController.searchPayment(payment);
 
-			service = new Service(services.get(i), payment);
+			service.addPayment(payment);
+			
 			servicesWithPayments.add(service);
-			i++;
 		}
+		
 		return servicesWithPayments;
-	
 	}
 	
 	public void setServiceDAO(ServiceDAO serviceDao) {

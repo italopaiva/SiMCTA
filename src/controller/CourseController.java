@@ -124,7 +124,7 @@ public class CourseController {
 		return courses;
 	}
 
-	public Course get(int courseId){
+	public Course get(Integer courseId){
 	
 		Course foundCourse = null;
 		

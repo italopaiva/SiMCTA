@@ -103,8 +103,7 @@ public class NewPackage extends View{
 											
 					PackageController packageController = new PackageController();
 					
-					packageController.newPackage(packageName, packageValue, 
-																		   packageDuration, coursesId);
+					packageController.newPackage(packageName, packageValue, coursesId);
 
 					showInfoMessage("Pacote cadastrado com sucesso.");
 					dispose();
@@ -124,7 +123,7 @@ public class NewPackage extends View{
 	/**
 	 * Creates the masks of value and duration fields
 	 */
-	protected void createMasks() {
+	public void createMasks() {
 		
 		MaskFormatter durationMask = null;
 		MaskFormatter valueMask = null;
@@ -156,7 +155,7 @@ public class NewPackage extends View{
 	/**
 	 * Creates all labels and fields on frame
 	 */
-	protected void createLabelsAndFields() {
+	public void createLabelsAndFields() {
 		packageNameField = new JTextField();
 		packageNameField.setBounds(276, 74, 346, 30);
 		contentPane.add(packageNameField);
@@ -390,12 +389,12 @@ public class NewPackage extends View{
 		while(indexOfCourses < courses.size()){
 			
 			Course course = courses.get(indexOfCourses);
-			Integer courseId = course.getCourseId();
-			Integer courseDuration = course.getCourseDuration();
+			Integer courseId = course.getId();
+			Integer courseDuration = course.getDuration();
 
 			String[] allCourses = new String[3];
 	
-			allCourses[0] = (course.getCourseName());
+			allCourses[0] = (course.getName());
 			allCourses[1] = (courseId.toString());
 			allCourses[2] = (courseDuration.toString());
 			

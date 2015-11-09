@@ -8,7 +8,7 @@ public class Payment extends Model{
 	public static final String INVALID_INSTALLMENT = "A quantidade de parcelas devem ser maiores ou iguais a zero.";
 	public static final String PAYMENT_ID_CANT_BE_ZERO = "O ID do pagamento deve ser maior que zero.";
 	
-	private static final int MIN_INSTALLMENT = 0;
+	private static final int MIN_INSTALLMENT = 1;
 	
 	private Integer paymentId;
 	private PaymentDescription description;

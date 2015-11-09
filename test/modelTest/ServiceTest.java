@@ -28,8 +28,6 @@ public class ServiceTest {
 
 	private Service service;
 	private Student student;
-	private ArrayList<String> courses = new ArrayList<String>();
-	private ArrayList<String> packages = new ArrayList<String>();
 	
 	private Date date;
 	private Address address;
@@ -53,15 +51,6 @@ public class ServiceTest {
 		
 		student = new Student("Jacó Mário Souza", cpf, rg, date, email, address, phone1,
 							  phone2, "Milene Souza Medeiros", "Mário Souza Filho",1);
-		
-		String invalidCourse = "46163";
-		courses.add(0, "1");
-		courses.add(1, "2");
-		courses.add(2, invalidCourse);
-		
-		String invalidPackage = "12231";
-		packages.add(0, "7");
-		packages.add(1, invalidPackage);
 	}
 	
 	/** Tests for student */
@@ -69,7 +58,7 @@ public class ServiceTest {
 	public void testValidStudentOfService(){
 		
 		try{
-			service = new Service(student, courses, packages);
+			service = new Service(student);
 			assertEquals(service.getStudent().getCpf(), cpf);
 		}
 		catch(ServiceException e){
@@ -80,104 +69,10 @@ public class ServiceTest {
 	@Test(expected = ServiceException.class)
 	public void testInvalidNullStudentOfService() throws ServiceException{
 		
-		service = new Service(null, courses, packages);
+		service = new Service(null);
 	}
 	
 	/** Tests for courses */
-	@Test
-	public void testValidCoursesOfService(){
 		
-		try{
-			service = new Service(student, courses, packages);
-			assertEquals(1, service.getCourses().get(0).getCourseId());
-		}
-		catch(ServiceException e){
-			fail("Should not throw this exception:" + e.getMessage());
-		}
-	}
-	
-	@Test
-	public void testValidCourses2OfService(){
-		
-		try{
-			service = new Service(student, courses, packages);
-			assertEquals(2, service.getCourses().get(1).getCourseId());
-		}
-		catch(ServiceException e){
-			fail("Should not throw this exception:" + e.getMessage());
-		}
-	}
-	
-	@Test
-	public void testValidEmptyCoursesOfServiceWithNotNullPackages(){
-		
-		try{
-			service = new Service(student, new ArrayList<String>(), packages);
-			assertTrue(service.getCourses().isEmpty());
-		}
-		catch(ServiceException e){
-			fail("Should not throw this exception:" + e.getMessage());
-		}
-	}
-	
-	@Test
-	public void testValidNullCoursesOfServiceWithNotNullPackages(){
-		
-		try{
-			service = new Service(student, null, packages);
-			assertTrue(service.getCourses().isEmpty());
-		}
-		catch(ServiceException e){
-			fail("Should not throw this exception:" + e.getMessage());
-		}
-	}
-	
 	/** Tests for packages */
-	@Test
-	public void testValidPackagesOfService(){
-		
-		try{
-			service = new Service(student, courses, packages);
-			assertEquals(new Integer(7), service.getPackages().get(0).getPackageId());
-		}
-		catch(ServiceException e){
-			fail("Should not throw this exception:" + e.getMessage());
-		}
-	}
-	
-	@Test
-	public void testValidEmptyPackagesOfServiceWithNotNullCourses(){
-		
-		try{
-			service = new Service(student, courses, new ArrayList<String>());
-			assertTrue(service.getPackages().isEmpty());
-		}
-		catch(ServiceException e){
-			fail("Should not throw this exception:" + e.getMessage());
-		}
-	}
-	
-	@Test
-	public void testValidNullPackagesOfServiceWithNotNullCourses(){
-		
-		try{
-			service = new Service(student, courses, null);
-			assertTrue(service.getPackages().isEmpty());
-		}
-		catch(ServiceException e){
-			fail("Should not throw this exception:" + e.getMessage());
-		}
-	}
-	
-	@Test(expected = ServiceException.class)
-	public void testInvalidEmptyPackagesAndCoursesOfService() throws ServiceException{
-		
-		service = new Service(student, new ArrayList<String>(), new ArrayList<String>());
-	}
-	
-	@Test(expected = ServiceException.class)
-	public void testInvalidNullPackagesAndCoursesOfService() throws ServiceException{
-		
-		service = new Service(student, null, null);
-	}
 }
