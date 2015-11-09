@@ -21,6 +21,7 @@ public class Class extends Model{
 	private Course course;
 	private ArrayList<Student> students = new ArrayList<Student>();
 		
+	// For new classes
 	public Class(Date startDate, String shift, Teacher teacher, Course course) throws ClassException {
 		
 		setStartDate(startDate);
@@ -29,6 +30,16 @@ public class Class extends Model{
 		setCourse(course);
 		generateEndDate();
 		generateClassID();
+	}
+	
+	// For updating classes
+	public Class(String classId, Date startDate, String shift, Teacher teacher) throws ClassException {
+		
+		setClassId(classId);
+		setStartDate(startDate);
+		setShift(shift);
+		setTeacher(teacher);
+		generateEndDate();
 	}
 	
 	private void generateClassID(){
@@ -73,8 +84,7 @@ public class Class extends Model{
 	}
 	
 	private void generateEndDate(){
-		
-		
+			
 	}
 	
 	private void setEndDate(Date endDate) throws ClassException{

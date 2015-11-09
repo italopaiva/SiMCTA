@@ -51,6 +51,10 @@ public class Teacher extends Person{
 		setName(teacherName);
 		setCpf(teacherCpf);
 	}
+	
+	public Teacher(CPF teacherCpf) throws PersonException {
+		setCpf(teacherCpf);
+	}
 
 	private void setQualification(String qualification) throws TeacherException{
 		
