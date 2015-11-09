@@ -26,6 +26,20 @@ public class Student extends Person{
 		setStatus(status);
 	}
 	
+	public Student(String studentName, Date birthdate, String studentEmail, Address address, Phone principalPhone,
+			Phone secondaryPhone, String motherName, String fatherName, int status) throws PersonException {
+			
+		setName(studentName);
+		setBirthdate(birthdate);
+		setEmail(studentEmail);
+		setAddress(address);
+		setPrincipalPhone(principalPhone);
+		setSecondaryPhone(secondaryPhone);
+		setMotherName(motherName);
+		setFatherName(fatherName);
+		setStatus(status);
+	}
+	
 	public Student(String studentName, CPF studentCpf) throws PersonException {
 		setName(studentName);
 		setCpf(studentCpf);

@@ -19,7 +19,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
@@ -27,26 +26,15 @@ import javax.swing.text.MaskFormatter;
 import model.Course;
 import model.Package;
 import model.datatype.Address;
-import model.datatype.CPF;
 import model.datatype.Date;
 import model.datatype.Phone;
-import model.datatype.RG;
 import controller.CourseController;
-import controller.EnrollController;
 import controller.PackageController;
 import controller.StudentController;
-import exception.AddressException;
-import exception.CPFException;
 import exception.CourseException;
-import exception.DateException;
 import exception.PackageException;
-import exception.PaymentException;
-import exception.PersonException;
-import exception.PhoneException;
-import exception.RGException;
-import exception.ServiceException;
-import exception.StudentException;
 
+@SuppressWarnings("serial")
 public class EditStudent  extends View{
 	
  	
@@ -70,10 +58,6 @@ public class EditStudent  extends View{
 	private DefaultTableModel packageTableModel;
 	private JTextField ddCellField;
 	private JTextField ddPhoneField;
-	private JTextField issuingInstitutionField;
-	private JTextField ufField;
-	private JTextField numberField;
-	private JTextField complementField;
 	private JComboBox<String> paymentForms;
 	private JComboBox<String> paymentTypes;
 	private JComboBox<String> packages;
@@ -87,7 +71,6 @@ public class EditStudent  extends View{
 	private JTable tableOfAddedPackages;
 	private ArrayList<String> addedCoursesId = new ArrayList<String>(); 
 	private ArrayList<String> addedPackagesId = new ArrayList<String>();
-	private JButton editlBtn;
 	
 	public EditStudent() {
 		
