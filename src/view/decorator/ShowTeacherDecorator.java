@@ -13,6 +13,7 @@ import controller.TeacherController;
 import exception.StudentException;
 import exception.TeacherException;
 import model.Student;
+import model.Person;
 import model.Teacher;
 import model.datatype.Address;
 import model.datatype.CPF;
@@ -20,10 +21,10 @@ import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
 import view.SearchTeacher;
-import view.TeacherForm;
-import view.TeacherView;
+import view.PersonView;
+import view.forms.TeacherForm;
 
-public class ShowTeacherDecorator extends TeacherDecorator {
+public class ShowTeacherDecorator extends PersonDecorator {
 
 	private JButton editTeacherBtn;
 	private JButton backBtn;
@@ -32,15 +33,15 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 	private int status;
 	private String action;
 
-	public ShowTeacherDecorator(TeacherView viewToDecorate) {
+	public ShowTeacherDecorator(PersonView viewToDecorate) {
 		super(viewToDecorate);
 	}
 
 	@Override
-	public void createLabelsAndFields(JFrame viewToDecorate, Teacher teacher) {
+	public void createLabelsAndFields(JFrame viewToDecorate, Person teacher) {
 		this.frame = viewToDecorate;
 		super.createLabelsAndFields(viewToDecorate, teacher);
-		this.teacher = teacher;
+		this.teacher = (Teacher) teacher;
 
 		registerTeacherLbl.setText(teacher.getName());
 		registerTeacherLbl.setBounds(407, 12, 475, 31);
@@ -116,7 +117,7 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 		cpfField.setBounds(102, 97, 129, 27);
 		frame.getContentPane().add(cpfField);
 
-		fillTheFields(teacher);
+		fillTheFields(this.teacher);
 
 	}
 	
@@ -215,7 +216,7 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 		editTeacherBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			
-				TeacherView teacherFrame = new EditTeacherDecorator(new TeacherForm());
+				PersonView teacherFrame = new EditTeacherDecorator(new TeacherForm());
 				dispose();
 				teacherFrame.buildScreen(teacherFrame,teacher);
 				teacherFrame.setVisible(true);
@@ -293,7 +294,7 @@ public class ShowTeacherDecorator extends TeacherDecorator {
 			@Override
 			public void mouseClicked(MouseEvent e){			
 				dispose();
-				TeacherView teacherFrame = new SearchTeacher();
+				PersonView teacherFrame = new SearchTeacher();
 				teacherFrame.buildScreen(teacherFrame,null);
 				teacherFrame.setVisible(true);
 			}

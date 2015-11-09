@@ -334,6 +334,7 @@ public class TeacherDAO extends DAO{
 		String cep = address.getCep();
 		String addressInfo = address.getAddressInfo();
 		String complement = address.getComplement();
+		String number = address.getNumber();
 	
 		//Phones
 		Phone principalPhone = teacher.getPrincipalPhone();
@@ -358,6 +359,7 @@ public class TeacherDAO extends DAO{
 					   + BIRTHDATE_COLUMN + "='" + birthdate + "', "
 					   + ADDRESS_COLUMN + "='" + addressInfo + "', "
 					   + COMPLEMENT_COLUMN + "='" + complement + "', "
+					   + NUMBER_COLUMN + "='" + number + "', "
 					   + CITY_COLUMN + "='" + city + "', "
 					   + CEP_COLUMN + "='" + cep + "', "
 					   + PRINCIPAL_PHONE_COLUMN + "='" + cellPhone + "', "

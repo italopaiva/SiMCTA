@@ -21,6 +21,7 @@ import exception.PersonException;
 import exception.PhoneException;
 import exception.RGException;
 import exception.TeacherException;
+import model.Person;
 import model.Teacher;
 import model.datatype.Address;
 import model.datatype.CPF;
@@ -28,25 +29,25 @@ import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
 import view.SearchTeacher;
-import view.TeacherForm;
-import view.TeacherView;
+import view.PersonView;
+import view.forms.TeacherForm;
 
-public class EditTeacherDecorator extends TeacherDecorator {
+public class EditTeacherDecorator extends PersonDecorator {
 
 	private Component alterTeacherBtn;
 	private JButton backBtn;
 	private Teacher teacher;
-	private TeacherView teacherFrame;
+	private PersonView teacherFrame;
 
-	public EditTeacherDecorator(TeacherView viewToDecorate) {
+	public EditTeacherDecorator(PersonView viewToDecorate) {
 		super(viewToDecorate);
 	}
 
 	@Override
-	public void createLabelsAndFields(JFrame viewToDecorate, Teacher teacher) {
+	public void createLabelsAndFields(JFrame viewToDecorate, Person teacher) {
 		this.frame = viewToDecorate;
 		super.createLabelsAndFields(viewToDecorate, teacher);
-		this.teacher = teacher;
+		this.teacher = (Teacher) teacher;
 				
 		registerTeacherLbl.setText(teacher.getName());
 		registerTeacherLbl.setBounds(407, 12, 475, 31);
@@ -112,7 +113,7 @@ public class EditTeacherDecorator extends TeacherDecorator {
         qualificationField.setBounds(177, 444, 402, 127);
         frame.getContentPane().add(qualificationField);	
 		
-        fillTheFields(teacher);
+        fillTheFields(this.teacher);
 
 		String cpf = teacher.getCpf().getCpf();
 		cpfField = new JTextField(cpf);
@@ -187,7 +188,7 @@ public class EditTeacherDecorator extends TeacherDecorator {
         /** 
          * RG and CPF can't be edit
          */
-		rgField.setEditable(true);
+		rgField.setEditable(false);
     	cpfField.setEditable(false);
 		nameField.setEditable(true);
         cellField.setEditable(true);
@@ -200,12 +201,12 @@ public class EditTeacherDecorator extends TeacherDecorator {
         fatherField.setEditable(true);
         dddCellField.setEditable(true);
         dddPhoneField.setEditable(true);
-        issuingInstitutionField.setEditable(true);
-        ufField.setEditable(true);
+        issuingInstitutionField.setEditable(false);
+        ufField.setEditable(false);
         numberField.setEditable(true);
         complementField.setEditable(true);
         qualificationField.setEditable(true);
-		birthdateField.setEditable(false);
+		birthdateField.setEditable(true);
 		
 	}
 
@@ -216,7 +217,7 @@ public class EditTeacherDecorator extends TeacherDecorator {
 		
 		alterTeacherBtn = new JButton("Alterar");
 		frame.getContentPane().add(alterTeacherBtn);
-		alterTeacherBtn.setBounds(599, 26, 117, 25);
+		alterTeacherBtn.setBounds(599, 55, 117, 25);
 		alterTeacherBtn.addMouseListener(new MouseAdapter() {
 			private TeacherController teacherController;
 
@@ -309,7 +310,7 @@ public class EditTeacherDecorator extends TeacherDecorator {
 		
 		backBtn = new JButton("Voltar");
 		frame.getContentPane().add(backBtn);
-		backBtn.setBounds(799, 26, 117, 25);
+		backBtn.setBounds(799, 55, 117, 25);
 		backBtn.addMouseListener(new MouseAdapter() {
 
 			@Override
