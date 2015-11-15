@@ -1,8 +1,11 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import exception.ClassException;
+import exception.DateException;
 import model.datatype.Date;
 
 public class Class extends Model{
@@ -16,6 +19,10 @@ public class Class extends Model{
 	private static final String END_DATE_CANT_BE_NULL = "Ocorreu um erro ao calcular a data de término da turma. Data não pode ser nula.";
 	private static final String CLASS_MUST_HAVE_A_TEACHER = "Um professor deve ser associado à turma.";
 	private static final String CLASS_MUST_BELONGS_TO_A_COURSE = "A turma deve estar associada a um curso.";
+	private static final String COULDNT_GENERATE_END_DATE = "Não foi possível gerar a data final da turma.";
+
+	// Number of days in a week
+	private static final Integer DAYS_IN_WEEK = 5;
 	
 	private String classId;
 	private Date startDate;
@@ -87,8 +94,39 @@ public class Class extends Model{
 		this.classId = classId;
 	}
 	
-	private void generateEndDate(){
-			
+	private void generateEndDate() throws ClassException{
+				
+		// Setting the date to the java.util.Date format
+		Integer year = getStartDate().getYear() - 1900; 
+		Integer month = getStartDate().getMonth() - 1;
+		Integer day = getStartDate().getDay();
+		java.util.Date date = new java.util.Date(year, month, day);
+
+		// Get the course duration
+		Integer courseDurationInWeeks = getCourse().getDuration();
+		int courseDurationInDays = courseDurationInWeeks* (DAYS_IN_WEEK);
+
+		// Adding to the start date the course duration
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) + courseDurationInDays);
+
+		// Get the formatted end date
+		String formattedDate = new SimpleDateFormat("dd/MM/yyyy").format(c.getTime());
+
+		// Set the end date
+		day = new Integer(formattedDate.substring(0, 2));
+		month = new Integer(formattedDate.substring(3, 5));
+		year = new Integer(formattedDate.substring(6, 10));		
+		
+		Date endDate;
+		try {
+			endDate = new Date(day,month,year);
+			setEndDate(endDate);
+		} 
+		catch(DateException | ClassException e) {
+			throw new ClassException(COULDNT_GENERATE_END_DATE);
+		}
 	}
 	
 	private void setEndDate(Date endDate) throws ClassException{
