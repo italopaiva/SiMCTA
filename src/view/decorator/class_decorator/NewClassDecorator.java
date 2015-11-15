@@ -168,7 +168,12 @@ public class NewClassDecorator extends ClassDecorator {
 					startDate = new Date(givenStartDate);
 					
 					ClassController classController = new ClassController();
-					classController.newClass(teacherCpf, shift, startDate, courseId);
+					try {
+						classController.newClass(teacherCpf, shift, startDate, courseId);
+					} 
+					catch(ClassException e1){
+						
+					}
 					
 					message = CLASS_WAS_SAVED;
 				}
