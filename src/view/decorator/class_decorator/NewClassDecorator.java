@@ -17,6 +17,13 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
+import model.Class;
+import model.Course;
+import model.Teacher;
+import model.datatype.CPF;
+import model.datatype.Date;
+import view.ClassForm;
+import view.SimCta;
 import controller.ClassController;
 import controller.CourseController;
 import controller.TeacherController;
@@ -24,12 +31,6 @@ import exception.ClassException;
 import exception.CourseException;
 import exception.DateException;
 import exception.TeacherException;
-import model.Class;
-import model.Course;
-import model.Teacher;
-import model.datatype.CPF;
-import model.datatype.Date;
-import view.ClassForm;
 
 public class NewClassDecorator extends ClassDecorator {
 
@@ -38,7 +39,7 @@ public class NewClassDecorator extends ClassDecorator {
 	
 	private Class classInstance;
 	private Map<String, Integer> coursesMap = new HashMap<String, Integer>();
-	private String calculatedEndDate;
+	private JTextField endDateField;
 
 	public NewClassDecorator(ClassForm classForm) {
 		super(classForm);
@@ -68,7 +69,7 @@ public class NewClassDecorator extends ClassDecorator {
 		availableCourses = new JComboBox<String>(availableCoursesModel);
 		availableCourses.setBounds(286, 122, 250, 24);
 		frame.getContentPane().add(availableCourses);
-		availableCourses.setEditable(true);
+		availableCourses.setEditable(false);
 			
 		fillShiftsDropdown();
 
@@ -84,6 +85,14 @@ public class NewClassDecorator extends ClassDecorator {
 		classIdField.setEditable(false);
 		classIdField.setEnabled(false);
 		
+		JLabel endDateLbl = new JLabel("Data de Fim");
+		endDateLbl.setBounds(600, 218, 128, 15);
+		frame.getContentPane().add(endDateLbl);
+		
+		endDateField = new JTextField();
+		endDateField.setBounds(600, 237, 150, 24);
+		frame.getContentPane().add(endDateField);
+		endDateField.setEditable(false);
 	}
 
 
@@ -116,36 +125,12 @@ public class NewClassDecorator extends ClassDecorator {
 		
 		super.createButtons(frame);
 		
-		final JButton confirmData = new JButton("Confirmar Dados");
-		confirmData.setBounds(415, 237, 140, 30);
-		frame.getContentPane().add(confirmData);
-		confirmData.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseClicked(MouseEvent e){		
-				calculateEndDate();
-				generateClassId();			
-				confirmData.setVisible(false);
-			}
-
-			private void calculateEndDate() {
-				// TODO Auto-generated method stub
-				
-			}
-
-			private void generateClassId() {
-				
-				
-				classIdField.setText("");
-			}
-				
-		});
-		
 		actionBtn = new JButton("Abrir Turma");
-		actionBtn.setBounds(415, 237, 140, 30);
+		actionBtn.setBounds(415, 277, 140, 30);
 		frame.getContentPane().add(actionBtn);
 		actionBtn.addMouseListener(new MouseAdapter() {
 
+		Class newClass = null;
 
 			@Override
 			public void mouseClicked(MouseEvent e){			
@@ -169,9 +154,11 @@ public class NewClassDecorator extends ClassDecorator {
 					
 					ClassController classController = new ClassController();
 					try {
-						classController.newClass(teacherCpf, shift, startDate, courseId);
+						newClass = classController.newClass(teacherCpf, shift, startDate, courseId);
+						showEndDate();
+						showClassId();
 					} 
-					catch(ClassException e1){
+					catch(ClassException e1 ){
 						
 					}
 					
@@ -179,9 +166,22 @@ public class NewClassDecorator extends ClassDecorator {
 				}
 				catch(DateException e1){
 					message = e1.getMessage();
-				}finally{
-					showInfoMessage(message);
 				}
+				finally{
+					showInfoMessage(message);
+					dispose();
+					SimCta frame = new SimCta();
+					frame.setVisible(true);
+				}
+			}
+
+			private void showClassId() {
+				classIdField.setText(newClass.getClassId());			
+			}
+
+			private void showEndDate() {
+				String endDate = newClass.getEndDate().getSlashFormattedDate();
+				endDateField.setText(endDate);
 			}
 		});
 		

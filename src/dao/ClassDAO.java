@@ -7,7 +7,6 @@ import exception.DateException;
 import model.Class;
 import model.Course;
 import model.Teacher;
-import model.datatype.Date;
 
 public class ClassDAO extends DAO {
 	

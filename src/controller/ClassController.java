@@ -33,11 +33,12 @@ public class ClassController {
 	 * @throws ClassException 
 	 * @throws DateException 
 	 */
-	public void newClass(CPF teacherCpf, String shift,
+	public Class newClass(CPF teacherCpf, String shift,
 			Date startDate, Integer courseId) throws ClassException, DateException {
 		
 		Teacher teacher = null;
 		Course course = null;
+		Class classToReturn = null;
 		try {
 			
 			teacher = new Teacher(teacherCpf);
@@ -47,6 +48,9 @@ public class ClassController {
 			course = courseDAO.get(course, true);
 			
 			Class classToSave = new Class(startDate, shift, teacher, course);
+			Date endDate = classToSave.getEndDate();
+			String classId = classToSave.getClassId();
+			classToReturn = new Class(classId, startDate, endDate, shift, teacher, course);
 			classDAO.save(classToSave);
 
 		} 
@@ -59,6 +63,8 @@ public class ClassController {
 		catch(ClassException e) {
 	
 		}
+		
+		return classToReturn;
 		
 	}
 	

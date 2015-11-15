@@ -1,15 +1,7 @@
 package view;
 
-import java.awt.Font;
-import java.text.ParseException;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.text.MaskFormatter;
 
 import model.Class;
 

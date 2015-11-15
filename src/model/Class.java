@@ -53,6 +53,19 @@ public class Class extends Model{
 		generateEndDate();
 	}
 	
+	// For search classes	
+	public Class(String classId, Date startDate, Date endDate,
+				 String shift, Teacher teacher, Course course) throws ClassException {
+		
+		setClassId(classId);
+		setStartDate(startDate);
+		setEndDate(endDate);
+		setShift(shift);
+		setTeacher(teacher);
+		setCourse(course);
+	
+	}
+
 	private void generateClassID(){
 		
 		String classId = "";
