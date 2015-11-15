@@ -134,9 +134,7 @@ public class NewClassDecorator extends ClassDecorator {
 
 			@Override
 			public void mouseClicked(MouseEvent e){			
-				
-				String message = "";
-				
+								
 				try{
 					String shift = (String) shifts.getSelectedItem();
 					
@@ -157,22 +155,22 @@ public class NewClassDecorator extends ClassDecorator {
 						newClass = classController.newClass(teacherCpf, shift, startDate, courseId);
 						showEndDate();
 						showClassId();
+						
+						showInfoMessage(CLASS_WAS_SAVED);
+						
+						dispose();
+						SimCta frame = new SimCta();
+						frame.setVisible(true);
 					} 
 					catch(ClassException e1 ){
-						
+						showInfoMessage(e1.getMessage());
 					}
 					
-					message = CLASS_WAS_SAVED;
 				}
 				catch(DateException e1){
-					message = e1.getMessage();
+					showInfoMessage(e1.getMessage());
 				}
-				finally{
-					showInfoMessage(message);
-					dispose();
-					SimCta frame = new SimCta();
-					frame.setVisible(true);
-				}
+
 			}
 
 			private void showClassId() {

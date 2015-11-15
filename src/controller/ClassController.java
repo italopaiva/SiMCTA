@@ -16,6 +16,7 @@ public class ClassController {
 	
 	private static final String INVALID_TEACHER = "O professor informado não é válido.";
 	private static final String INVALID_COURSE = "O curso informado não é válido.";
+	private static final String CLASS_ALREADY_EXISTS = "Essa turma já existe.";
 
 	private ClassDAO classDAO;
 
@@ -52,7 +53,6 @@ public class ClassController {
 			String classId = classToSave.getClassId();
 			classToReturn = new Class(classId, startDate, endDate, shift, teacher, course);
 			classDAO.save(classToSave);
-
 		} 
 		catch(PersonException e1){
 			throw new ClassException(INVALID_TEACHER);
@@ -61,7 +61,7 @@ public class ClassController {
 			throw new ClassException(INVALID_COURSE);
 		}
 		catch(ClassException e) {
-	
+			throw new ClassException(CLASS_ALREADY_EXISTS);
 		}
 		
 		return classToReturn;

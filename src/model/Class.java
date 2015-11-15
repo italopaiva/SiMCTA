@@ -74,8 +74,13 @@ public class Class extends Model{
 		
 		Integer startDay = getStartDate().getDay();
 		Integer startMonth = getStartDate().getMonth();
+		Integer wholeYear = getStartDate().getYear();
 		
-		classId += courseFirstName + " - " + getShift() + " " + startDay + "/" + startMonth;
+		//  Only two last digits
+		String twoDigitsOfyear = wholeYear.toString().substring(2, 4);
+		Integer startYear = new Integer(twoDigitsOfyear);
+		
+		classId += courseFirstName + " - " + getShift() + " " + startDay + "/" + startMonth + "/" + startYear;
 		
 		classId = classId.toUpperCase();
 		
