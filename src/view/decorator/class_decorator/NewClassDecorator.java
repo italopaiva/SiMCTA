@@ -18,32 +18,34 @@ import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
 import controller.ClassController;
+import controller.CourseController;
 import controller.TeacherController;
 import exception.ClassException;
+import exception.CourseException;
 import exception.DateException;
 import exception.TeacherException;
 import model.Class;
+import model.Course;
 import model.Teacher;
 import model.datatype.CPF;
 import model.datatype.Date;
-import view.ClassView;
-import view.TeacherForm;
-import view.decorator.ShowTeacherDecorator;
+import view.ClassForm;
 
-public class EditClassDecorator extends ClassDecorator {
+public class NewClassDecorator extends ClassDecorator {
 
-	private static final String CLASS_WAS_UPDATED = "Turma alterada com sucesso!"; 
-
+	private static final String COULDNT_LOAD_COURSES = "Não foi possível carregar os cursos disponíveis";
+	protected static final String CLASS_WAS_SAVED = "Turma aberta com sucesso";
+	
 	private Class classInstance;
-	
-	public EditClassDecorator(ClassView viewToDecorate) {
-		super(viewToDecorate);
-		
-		teachersMap = new HashMap<String, CPF>();
+	private Map<String, Integer> coursesMap = new HashMap<String, Integer>();
+	private String calculatedEndDate;
+
+	public NewClassDecorator(ClassForm classForm) {
+		super(classForm);
 	}
-	
+
 	@Override
-	public void createLabelsAndFields(JFrame frame, Class classInstance){
+	public void createLabelsAndFields(JFrame frame, Class classInstance) {
 		
 		this.classInstance = classInstance;
 		
@@ -51,26 +53,25 @@ public class EditClassDecorator extends ClassDecorator {
 		
 		fillTeachersDropdown();
 		
-		titleLbl = new JLabel("Alterar dados da turma");
+		titleLbl = new JLabel("Abrir nova turma");
 		titleLbl.setFont(new Font("Dialog", Font.BOLD, 18));
 		titleLbl.setBounds(410, 0, 246, 30);
 		frame.getContentPane().add(titleLbl);
-		
+			
 		availableTeachers = new JComboBox<String>(availableTeachersModel);
 		availableTeachers.setBounds(286, 188, 250, 24);
 		frame.getContentPane().add(availableTeachers);
 		availableTeachers.setEditable(true);		
 		
-		availableCoursesModel = new DefaultComboBoxModel<String>();
-		availableCoursesModel.addElement(classInstance.getCourse().getName());
-		
+		fillCoursesDropdown();
+				
 		availableCourses = new JComboBox<String>(availableCoursesModel);
 		availableCourses.setBounds(286, 122, 250, 24);
 		frame.getContentPane().add(availableCourses);
-		availableCourses.setEnabled(false);
-		
+		availableCourses.setEditable(true);
+			
 		fillShiftsDropdown();
-		
+
 		shifts = new JComboBox<String>(shiftsModel);
 		shifts.setBounds(600, 122, 121, 24);
 		frame.getContentPane().add(shifts);
@@ -79,20 +80,108 @@ public class EditClassDecorator extends ClassDecorator {
 		classIdField.setBounds(286, 65, 250, 24);
 		frame.getContentPane().add(classIdField);
 		classIdField.setColumns(10);
-		classIdField.setText(classInstance.getClassId());
+		classIdField.setText("");
 		classIdField.setEditable(false);
 		classIdField.setEnabled(false);
-	}
-	
-	private void fillShiftsDropdown(){
 		
-		shiftsModel = new DefaultComboBoxModel<String>();
-		
-		shiftsModel.addElement(Class.MORNING_SHIFT);
-		shiftsModel.addElement(Class.AFTERNOON_SHIFT);
-		shiftsModel.addElement(Class.NIGHT_SHIFT);
 	}
 
+
+
+	@Override
+	public void createMasks(JFrame frame) {
+		super.createMasks(frame);
+		
+		// Mask for birth date
+		MaskFormatter startDateMask;
+		
+		try{
+			startDateMask = new MaskFormatter("##/##/####");
+			startDateMask.setValidCharacters("0123456789");
+			startDateMask.setValueContainsLiteralCharacters(true);
+						
+			startDateField = new JFormattedTextField(startDateMask);
+			startDateField.setBounds(600, 189, 150, 24);
+			frame.getContentPane().add(startDateField);
+			startDateField.setColumns(10);
+		}
+		catch(ParseException e){
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public void createButtons(JFrame frame) {
+		
+		super.createButtons(frame);
+		
+		final JButton confirmData = new JButton("Confirmar Dados");
+		confirmData.setBounds(415, 237, 140, 30);
+		frame.getContentPane().add(confirmData);
+		confirmData.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e){		
+				calculateEndDate();
+				generateClassId();			
+				confirmData.setVisible(false);
+			}
+
+			private void calculateEndDate() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			private void generateClassId() {
+				
+				
+				classIdField.setText("");
+			}
+				
+		});
+		
+		actionBtn = new JButton("Abrir Turma");
+		actionBtn.setBounds(415, 237, 140, 30);
+		frame.getContentPane().add(actionBtn);
+		actionBtn.addMouseListener(new MouseAdapter() {
+
+
+			@Override
+			public void mouseClicked(MouseEvent e){			
+				
+				String message = "";
+				
+				try{
+					String shift = (String) shifts.getSelectedItem();
+					
+					String selectedTeacher = (String) availableTeachers.getSelectedItem();
+					CPF teacherCpf = teachersMap.get(selectedTeacher);
+					
+					String selectedCourse = (String) availableCourses.getSelectedItem();
+					Integer courseId = coursesMap.get(selectedCourse);
+					
+					String givenStartDate = startDateField.getText();
+					
+					Date startDate;
+					
+					startDate = new Date(givenStartDate);
+					
+					ClassController classController = new ClassController();
+					classController.newClass(teacherCpf, shift, startDate, courseId);
+					
+					message = CLASS_WAS_SAVED;
+				}
+				catch(DateException e1){
+					message = e1.getMessage();
+				}finally{
+					showInfoMessage(message);
+				}
+			}
+		});
+		
+	}
+	
 	private void fillTeachersDropdown(){
 		
 		TeacherController teacherController = new TeacherController();
@@ -112,70 +201,34 @@ public class EditClassDecorator extends ClassDecorator {
 			availableTeachersModel.addElement(classInstance.getTeacher().getName());
 		}
 	}
+	
 
-	@Override
-	public void createMasks(JFrame frame){
-		super.createMasks(frame);
+	private void fillCoursesDropdown() {
+		CourseController courseController = new CourseController();
 		
-		// Mask for birth date
-		MaskFormatter startDateMask;
-		
+		availableCoursesModel = new DefaultComboBoxModel<String>();
+				
 		try{
-			startDateMask = new MaskFormatter("##/##/####");
-			startDateMask.setValidCharacters("0123456789");
-			startDateMask.setValueContainsLiteralCharacters(true);
-						
-			startDateField = new JFormattedTextField(startDateMask);
-			startDateField.setBounds(600, 189, 150, 24);
-			frame.getContentPane().add(startDateField);
-			startDateField.setColumns(10);
-			startDateField.setText(classInstance.getStartDate().getSlashFormattedDate());
-		}
-		catch(ParseException e){
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void createButtons(JFrame frame){
-		
-		super.createButtons(frame);
-		
-		actionBtn = new JButton("Alterar Turma");
-		actionBtn.setBounds(415, 237, 140, 30);
-		frame.getContentPane().add(actionBtn);
-		actionBtn.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseClicked(MouseEvent e){			
-				
-				String message = "";
-				
-				try{
-					
-					String shift = (String) shifts.getSelectedItem();
-					String selectedTeacher = (String) availableTeachers.getSelectedItem();
-					CPF teacherCpf = teachersMap.get(selectedTeacher);
-					
-					String givenStartDate = startDateField.getText();
-					
-					Date startDate;
-					
-					startDate = new Date(givenStartDate);
-					
-					ClassController classController = new ClassController();
-					classController.updateClass(classInstance.getClassId(), teacherCpf, shift, startDate);
-					
-					message = CLASS_WAS_UPDATED;
-				}
-				catch(DateException e1){
-					message = e1.getMessage();
-				}catch(ClassException e1){
-					message = e1.getMessage();
-				}finally{
-					showInfoMessage(message);
-				}
+			ArrayList<Course> courses = courseController.showCourse();
+			
+			for(Course course: courses){
+				availableCoursesModel.addElement(course.getName());
+				coursesMap .put(course.getName(), course.getId());
 			}
-		});
+		}
+		catch (CourseException e) {
+			showInfoMessage(COULDNT_LOAD_COURSES);
+		}
+		
 	}
+	
+	private void fillShiftsDropdown(){
+		
+		shiftsModel = new DefaultComboBoxModel<String>();
+		
+		shiftsModel.addElement(Class.MORNING_SHIFT);
+		shiftsModel.addElement(Class.AFTERNOON_SHIFT);
+		shiftsModel.addElement(Class.NIGHT_SHIFT);
+	}
+
 }

@@ -24,6 +24,7 @@ import model.datatype.RG;
 import view.decorator.NewCourseDecorator;
 import view.decorator.NewTeacherDecorator;
 import view.decorator.class_decorator.EditClassDecorator;
+import view.decorator.class_decorator.NewClassDecorator;
 import exception.AddressException;
 import exception.AuthenticationException;
 import exception.CPFException;
@@ -80,6 +81,18 @@ public class View extends JFrame {
 		
 		JMenu classMenu = new JMenu("Turmas");
 		menuBar.add(classMenu);
+		
+		JMenuItem newClass = new JMenuItem("Abrir turma");
+		newClass.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				dispose();
+				classFrame = new NewClassDecorator(new ClassForm());
+				classFrame.buildScreen(classFrame, null);
+				classFrame.setVisible(true);
+			}
+		});
+		classMenu.add(newClass);
 	}
 
 	private void addTeacherOptionsToMenu(){

@@ -21,28 +21,23 @@ public class ClassForm extends ClassView {
 		
 		frame.getContentPane().setLayout(null);
 		
-		startDateLbl = new JLabel("Data de início");
+		startDateLbl = new JLabel("* Data de início");
 		startDateLbl.setBounds(600, 170, 128, 15);
 		frame.getContentPane().add(startDateLbl);
 		
 		classIdLbl = new JLabel("Código da turma");
 		classIdLbl.setBounds(286, 42, 122, 15);
 		frame.getContentPane().add(classIdLbl);
-		
-		titleLbl = new JLabel("Alterar dados da turma");
-		titleLbl.setFont(new Font("Dialog", Font.BOLD, 18));
-		titleLbl.setBounds(410, 0, 246, 30);
-		frame.getContentPane().add(titleLbl);
-		
-		classCourseLbl = new JLabel("Curso da turma");
+			
+		classCourseLbl = new JLabel("* Curso da turma");
 		classCourseLbl.setBounds(286, 101, 128, 15);
 		frame.getContentPane().add(classCourseLbl);
 		
-		classTeacherLbl = new JLabel("Professor da turma");
-		classTeacherLbl.setBounds(286, 170, 140, 15);
+		classTeacherLbl = new JLabel("* Professor da turma");
+		classTeacherLbl.setBounds(286, 170, 180, 15);
 		frame.getContentPane().add(classTeacherLbl);
 		
-		classShiftLbl = new JLabel("Turno");
+		classShiftLbl = new JLabel("* Turno");
 		classShiftLbl.setBounds(600, 101, 70, 15);
 		frame.getContentPane().add(classShiftLbl);
 	}
