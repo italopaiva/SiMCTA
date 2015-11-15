@@ -4,6 +4,7 @@ import dao.ClassDAO;
 import dao.CourseDAO;
 import exception.ClassException;
 import exception.CourseException;
+import exception.DateException;
 import exception.PersonException;
 import model.datatype.CPF;
 import model.datatype.Date;
@@ -30,9 +31,10 @@ public class ClassController {
 	 * @param startDate - The startDate of the class
 	 * @param courseId - The course of the class
 	 * @throws ClassException 
+	 * @throws DateException 
 	 */
 	public void newClass(CPF teacherCpf, String shift,
-			Date startDate, Integer courseId) throws ClassException {
+			Date startDate, Integer courseId) throws ClassException, DateException {
 		
 		Teacher teacher = null;
 		Course course = null;
