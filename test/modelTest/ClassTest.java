@@ -62,12 +62,31 @@ public class ClassTest {
 		try{
 			classInstance = new Class(new Date(10, 02, 2015), "MA", teacher, course);
 			
-			System.out.println(classInstance.getClassId());
-			assertEquals("APLICAÇÃO - MA 10/2", classInstance.getClassId());
+			assertEquals("APLICAÇÃO - MA 10/2/15", classInstance.getClassId());
+		}
+		catch(ClassException | DateException e){
+			fail("Should not throw this exception:" + e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testIfGeneratesEndDate(){
+		
+		try{
+			classInstance = new Class(new Date(10, 02, 2015), "MA", teacher, course);
+			
+			assertEquals("2015-2-25", classInstance.getEndDate().getHyphenFormattedDate());
 		}
 		catch(ClassException | DateException e){
 			fail("Should not throw this exception:" + e.getMessage());
 		}
 	}
 
+	@Test (expected = DateException.class)	
+	public void testIfGeneratesEndDateWithInvalidStartDate() throws ClassException, DateException{
+
+		classInstance = new Class(new Date(10, 14, 2015), "MA", teacher, course);
+		classInstance.getEndDate();
+	
+	}
 }

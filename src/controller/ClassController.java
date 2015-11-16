@@ -16,7 +16,7 @@ public class ClassController {
 	
 	private static final String INVALID_TEACHER = "O professor informado não é válido.";
 	private static final String INVALID_COURSE = "O curso informado não é válido.";
-	private static final String CLASS_ALREADY_EXISTS = "Essa turma já existe.";
+	private static final String COULDNT_SAVE_CLASS = "Não foi possível cadastrar a turma.";
 
 	private ClassDAO classDAO;
 
@@ -61,7 +61,7 @@ public class ClassController {
 			throw new ClassException(INVALID_COURSE);
 		}
 		catch(ClassException e) {
-			throw new ClassException(CLASS_ALREADY_EXISTS);
+			throw new ClassException(COULDNT_SAVE_CLASS);
 		}
 		
 		return classToReturn;
@@ -94,4 +94,8 @@ public class ClassController {
 		}
 	}
 
+	public void setClassDAO(ClassDAO classDao){
+		this.classDAO = classDao;
+	}
+	
 }
