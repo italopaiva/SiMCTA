@@ -24,7 +24,10 @@ public class ClassDAO extends DAO {
 	private static final String START_DATE_COLUMN = "startDate";
 	private static final String END_DATE_COLUMN = "endDate";
 	private static final String SHIFT_COLUMN = "shift";
+	private static final String STATUS_COLUMN = "status";
 
+	private static final int ACTIVE_CLASS = 1;
+	private static final int INACTIVE_CLASS = 0;
 	
 	/**
 	 * Save a class on the database
@@ -51,9 +54,9 @@ public class ClassDAO extends DAO {
 			try {
 				String query = "INSERT INTO "+ CLASS_TABLE_NAME 
 							 + "( " + START_DATE_COLUMN + "," + TEACHER_CPF_COLUMN + ", "
-							 + SHIFT_COLUMN +","+ ID_COURSE_COLUMN + "," + ID_CLASS_COLUMN +","+ END_DATE_COLUMN +")";
+							 + SHIFT_COLUMN +","+ ID_COURSE_COLUMN + "," + ID_CLASS_COLUMN +","+ END_DATE_COLUMN +","+ STATUS_COLUMN +")";
 				
-				query += "VALUES ('"+ formattedStartDate +"','" + teacherCpf +"','" + shift +"','" + courseId +"','" + classId +"','" + endDate +"')"; 
+				query += "VALUES ('"+ formattedStartDate +"','" + teacherCpf +"','" + shift +"','" + courseId +"','" + classId +"','" + endDate +"', '"+ ACTIVE_CLASS +"')"; 
 
 				this.execute(query);
 			}
