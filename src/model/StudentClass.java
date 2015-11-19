@@ -82,12 +82,12 @@ public class StudentClass extends Model{
 		}
 	}
 	
-	private void setAbsences(Integer absences){
+	public void setAbsences(Integer absences){
 		
 		this.absences = absences;
 	}
 	
-	private void setGrade(Integer grade){
+	public void setGrade(Integer grade){
 		this.grade = grade;
 	}	
 	

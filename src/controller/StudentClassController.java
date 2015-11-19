@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 
 import dao.StudentClassDAO;
+import exception.CPFException;
 import exception.PersonException;
 import exception.StudentClassException;
 import model.Class;
@@ -11,6 +12,8 @@ import model.StudentClass;
 import model.datatype.CPF;
 
 public class StudentClassController{
+
+	private static final String COULDNT_FIND_STUDENT_OF_CLASS = "Não foi possível encontrar os estudantes dessa turma.";
 
 	private StudentClassDAO studentClassDAO;
 	
@@ -30,5 +33,19 @@ public class StudentClassController{
 			
 			studentClassDAO.enrollStudentInClass(studentClass);
 		}
+	}
+	
+	public ArrayList<Student> getStudents(Class enrolledClass) throws StudentClassException{
+		
+		ArrayList<Student> students = new ArrayList<Student>();
+		
+		try {
+			students = studentClassDAO.get(enrolledClass);
+		} 
+		catch (StudentClassException | CPFException e) {
+			throw new StudentClassException(COULDNT_FIND_STUDENT_OF_CLASS);
+		}
+		
+		return students;
 	}
 }

@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import controller.StudentClassController;
+import exception.StudentClassException;
 import view.decorator.class_decorator.ClassDecorator;
 import model.Class;
 import model.Student;
@@ -79,19 +80,26 @@ public class CloseClass extends ClassDecorator {
 	private void getAllStudentsClass(Class enrolledClass) {
 		
 		StudentClassController studentClassController = new StudentClassController();
-		ArrayList<StudentClass> students = studentClassController.getStudents(enrolledClass);
-		
-		for(StudentClass studentClass : students){
-			String [] studentsClass = new String [5];
-			studentsClass[0] = studentClass.getStudent().getName();
-			studentsClass[1] = "";
-			studentsClass[2] = "";
-			studentsClass[3] = "";
-			CPF studentCPF = studentClass.getStudent().getCpf();			
-			studentsClass[4] = studentCPF.getCpf();
-			
-			tableModel.addRow(studentsClass);
+		ArrayList<Student> students;
+		try {
+			students = studentClassController.getStudents(enrolledClass);
+			for(Student student : students){
+				String [] studentsClass = new String [5];
+				studentsClass[0] = student.getName();
+				studentsClass[1] = "";
+				studentsClass[2] = "";
+				studentsClass[3] = "";
+				CPF studentCPF = student.getCpf();			
+				studentsClass[4] = studentCPF.getCpf();
+				
+				tableModel.addRow(studentsClass);
+			}
+		} 
+		catch (StudentClassException e) {
+			showInfoMessage(e.getMessage());
 		}
+		
+		
 	}
 
 	/**
