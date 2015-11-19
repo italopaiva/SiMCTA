@@ -63,7 +63,10 @@ public class Class extends Model{
 		setShift(shift);
 		setTeacher(teacher);
 		setCourse(course);
+	}
 	
+	public Class(String classId){
+		setClassId(classId);
 	}
 
 	private void generateClassID(){
