@@ -98,24 +98,4 @@ public class Course extends ServiceItem{
 	}
 	
 
-	/**
-	 * Method used to pass the course value to monetary form
-	 * @param value - Receives the course value on entire form
-	 * @return - Return the course value on monetary form (R$)
-	 */
-	public String getFormattedValue(Integer value) {
-		
-		String valueText= "";
-		String entireValue = "";
-		String decimalValue = "";
-		int lengthOfValue = 0;
-		
-		valueText = value.toString();
-		lengthOfValue = valueText.length();
-		entireValue = valueText.substring(0, (lengthOfValue - 2));
-		decimalValue = valueText.substring((lengthOfValue - 2), lengthOfValue);
-		valueText = entireValue + "," + decimalValue;
-		
-		return valueText;
-	}
 }

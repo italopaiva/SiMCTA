@@ -12,6 +12,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -26,256 +27,80 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import util.ButtonColumn;
+import view.decorator.ShowPackageDecorator;
+import view.forms.ServiceItemForm;
 import controller.PackageController;
 import dao.PackageDAO;
 import model.Package;
+import model.ServiceItem;
 import exception.CourseException;
 import exception.PackageException;
 
 @SuppressWarnings("serial")
-public class SearchPackage extends View {
-
-	private final static int NUMBER_OF_COLUMNS = 0;
+public class SearchPackage extends ServiceItemView {
 	
-	private JPanel contentPane;
-	final DefaultTableModel tableModel;
+	private DefaultTableModel tableModel;
 	private JScrollPane scrollPane;
 	private JTable jTable;
-	
-	private JTextField jTxtPackageID;
-	private JLabel jLblPackageName;
-	private JLabel jLblValor;
-	private JLabel jLblDuracao;
-	private JList<String> jLstCourses;
-
-	private JInternalFrame internalFrame;
+	private JTextField searchedPackageField;
+	private JButton btnPesquisar;
 	private int packageId;
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SearchPackage frame = new SearchPackage();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the frame.
-	 * @throws SQLException 
-	 * @throws PackageException 
-	 */
-	public SearchPackage() throws SQLException, PackageException{
-		
-		super();
-		
+
+	@Override
+	public void createLabelsAndFields(JFrame frame, ServiceItem serviceItem) {
+
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		final JTextField searchedPackageField = new JTextField();
-		searchedPackageField.setBounds(140, 56, 446, 19);
-		contentPane.add(searchedPackageField);
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
+        
+		searchedPackageField = new JTextField();
+		searchedPackageField.setBounds(140, 56, 446, 29);
+		add(searchedPackageField);
 		searchedPackageField.setColumns(10);
-		
-		final JButton btnPesquisar = new JButton("Listar Pacotes");
-		btnPesquisar.setBounds(598, 53, 152, 25);
-		contentPane.add(btnPesquisar);
-		
-		internalFrame = new JInternalFrame();
-		internalFrame.getContentPane().setLayout(null);
-		
-		JButton editPackageBtn = new JButton("Editar");
-		editPackageBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-				boolean permissionToAccess = false;
-				
-				permissionToAccess = getPermissionToAccess();
-				if(permissionToAccess){
-					
-					dispose();
-					
-					try {
-						dispose();
-						EditPackage editPackageFrame;
-						editPackageFrame = new EditPackage(packageId);
-						editPackageFrame.setVisible(true);
-					} catch (SQLException e) {
-						showInfoMessage("Ocorreu um erro ao carregar os cursos. Tente novamente.");
-					} catch (CourseException e) {
-						
-					} catch (ParseException e) {
 
-					}
-
-				}
-				else{
-					View frame = new View();
-					frame.setVisible(true);
-				}				
-			}
-		});
-		editPackageBtn.setBounds(156, 248, 107, 25);
-		editPackageBtn.setVisible(true);
-		internalFrame.getContentPane().add(editPackageBtn);
-		
-		JLabel lblInfo = new JLabel("Informações sobre Pacote");
-		lblInfo.setBounds(12, 14, 219, 15);
-		internalFrame.getContentPane().add(lblInfo);
-		
-		JLabel lblNome = new JLabel("Nome: ");
-		lblNome.setBounds(12, 60, 70, 14);
-		internalFrame.getContentPane().add(lblNome);
-		
-		jLblPackageName = new JLabel("");
-		jLblPackageName.setBounds(43, 79, 273, 15);
-		internalFrame.getContentPane().add(jLblPackageName);
-		
-		JLabel lblId = new JLabel("ID:");
-		lblId.setBounds(12, 33, 70, 15);
-		internalFrame.getContentPane().add(lblId);
-		
-		jTxtPackageID = new JTextField();
-		jTxtPackageID.setEditable(false);
-		jTxtPackageID.setEnabled(false);
-		jTxtPackageID.setBounds(43, 30, 114, 19);
-		internalFrame.getContentPane().add(jTxtPackageID);
-		jTxtPackageID.setColumns(10);
-		
-		JLabel lblValorTitulo = new JLabel("Valor: ");
-		lblValorTitulo.setBounds(13, 106, 70, 15);
-		internalFrame.getContentPane().add(lblValorTitulo);
-		
-		JLabel lblDuracaoTitulo = new JLabel("Duração:");
-		lblDuracaoTitulo.setBounds(12, 144, 70, 15);
-		internalFrame.getContentPane().add(lblDuracaoTitulo);
-		
-		jLblDuracao = new JLabel("");
-		jLblDuracao.setBackground(Color.LIGHT_GRAY);
-		jLblDuracao.setBounds(54, 167, 137, 15);
-		internalFrame.getContentPane().add(jLblDuracao);
-		
-		JLabel lblCursosAssociados = new JLabel("Cursos Associados");
-		lblCursosAssociados.setBounds(368, 33, 148, 15);
-		internalFrame.getContentPane().add(lblCursosAssociados);
-		
-		jLstCourses = new JList<String>();
-		jLstCourses.setBackground(Color.LIGHT_GRAY);
-		jLstCourses.setBounds(366, 59, 156, 153);
-		internalFrame.getContentPane().add(jLstCourses);
-		
-		jLblValor = new JLabel("");
-		jLblValor.setBackground(Color.LIGHT_GRAY);
-		jLblValor.setBounds(70, 117, 70, 15);
-		internalFrame.getContentPane().add(jLblValor);
-		
-		JLabel lblDuracao = new JLabel("");
-		lblDuracao.setBackground(Color.LIGHT_GRAY);
-		lblDuracao.setBounds(70, 169, 161, 30);
-		internalFrame.getContentPane().add(lblDuracao);
-		internalFrame.setEnabled(false);
-		internalFrame.setBackground(Color.WHITE);
-		internalFrame.setBounds(227, 141, 557, 317);
-		contentPane.add(internalFrame);
-	
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(227, 141, 557, 317);
-		contentPane.add(scrollPane);
+		add(scrollPane);
 		scrollPane.setBackground(Color.WHITE);
 		
-		final JButton backButton = new JButton("Voltar");
-		backButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				searchedPackageField.setText("");
-				internalFrame.dispose();
-				backButton.setVisible(false);
-			}
-		});
-		
 		String [] columns = { "Nome", "Valor", "Duração", "Status", "Id", "Ações" };
-			
+
 		tableModel = new DefaultTableModel(null, columns);
 		final JTable tableOfPackages = new JTable(tableModel);
 		tableOfPackages.setBackground(Color.WHITE);
 			
-		backButton.setBounds(762, 53, 117, 25);
-		contentPane.add(backButton);
-		backButton.setVisible(false);
 		scrollPane.setViewportView(tableOfPackages);
 		
 		jTable = tableOfPackages;
 		
 		tableOfPackages.removeColumn(tableOfPackages.getColumnModel().getColumn(4));
 		
-		getSearchedPackage(searchedPackageField.getText());
+		try {
+			getSearchedPackage(searchedPackageField.getText());
+		} 
+		catch (PackageException | SQLException e2) {
+
+		}
 		
 		Action showPackage = new AbstractAction() {
 				public void actionPerformed(ActionEvent e) {
-					
-					internalFrame.validate();
-
+				
 					JTable table = (JTable)e.getSource();
 					int idPackage = Integer.parseInt(table.getModel().getValueAt(table.getSelectedRow(), 4).toString());
 
 					try {
 						getPackageById(idPackage);
-					} catch (PackageException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					} 
+					catch (PackageException e1) {
 					
-					internalFrame.setVisible(true);
-					internalFrame.updateUI();
-					backButton.setVisible(true);
-					tableOfPackages.setVisible(false);
-
+					}
 				}
 		};
 		
 		ButtonColumn buttonColumn2 = new ButtonColumn(tableOfPackages, showPackage, 4);
-		
-		btnPesquisar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				internalFrame.dispose();
-				backButton.setVisible(false);
-				String searchedPackage = searchedPackageField.getText();
-				
-				boolean enteredPackage = !searchedPackage.isEmpty();
-				
-				if(enteredPackage == true){
-					try {
-						getSearchedPackage(searchedPackage);
-					} catch (SQLException | PackageException e1) {
-						e1.printStackTrace();
-					}	
-				}
-				else{
-					//JOptionPane.showMessageDialog(null, "Digite algum texto para pesquisar por pacotes.");
-					try {
-						getSearchedPackage("");
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (PackageException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
-				jTable.updateUI();
-			}
-			
-		});
-		
+
 		searchedPackageField.getDocument().addDocumentListener(new DocumentListener() {
 			
 			@Override
@@ -322,6 +147,50 @@ public class SearchPackage extends View {
 			}
 		});
 	}
+
+	@Override
+	public void createMasks(JFrame frame) {
+		
+	}
+
+	@Override
+	public void createButtons(JFrame frame) {
+		
+		btnPesquisar = new JButton("Listar Pacotes");
+		btnPesquisar.setBounds(598, 53, 117, 25);
+		add(btnPesquisar);
+		btnPesquisar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String searchedPackage = searchedPackageField.getText();
+				
+				boolean enteredPackage = !searchedPackage.isEmpty();
+				
+				if(enteredPackage == true){
+					try {
+						getSearchedPackage(searchedPackage);
+					} catch (SQLException | PackageException e1) {
+						e1.printStackTrace();
+					}	
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "Digite algum texto para pesquisar por pacotes.");
+					try {
+						getSearchedPackage("");
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (PackageException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				jTable.updateUI();
+			}
+			
+		});
+		
+	}
+	
 	
 	/**
 	 * Method used to pass the course value to monetary form
@@ -384,25 +253,14 @@ public class SearchPackage extends View {
 		
 		PackageController packageController = new PackageController();
 		Package packageToShow;
-		
-		DefaultListModel<String> courseListModel = new DefaultListModel<String>();
-		ArrayList<String> coursesName;
-		packageToShow = packageController.showPackage(idPackage);
 
-		jTxtPackageID.setText(packageToShow.getId().toString());
-		jLblPackageName.setText(packageToShow.getName());
-		jLblDuracao.setText(packageToShow.getDuration().toString() + " semanas");
-		jLblValor.setText(passValueToMonetaryForm(packageToShow.getValue()));
+		packageToShow = packageController.showPackage(idPackage);
 		
-		coursesName = packageToShow.getCourses();
-		
-		int i = 0;
-		
-		while (i < coursesName.size()){
-			courseListModel.addElement(coursesName.get(i));
-			i++;
-		}
-		
-		jLstCourses.setModel(courseListModel);
+		dispose();
+		ServiceItemView showPackageFrame = new ShowPackageDecorator(new ServiceItemForm());
+		showPackageFrame.buildScreen(showPackageFrame, packageToShow);
+		showPackageFrame.setVisible(true);
+
 	}
+	
 }

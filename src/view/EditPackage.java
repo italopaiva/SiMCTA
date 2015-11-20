@@ -127,9 +127,7 @@ public class EditPackage extends View{
 				}
 				catch(PackageException caughtException){
 					showInfoMessage(caughtException.getMessage());
-				} catch (SQLException e1) {
-
-				}
+				} 
 			}
 
 		});

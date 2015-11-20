@@ -155,16 +155,9 @@ public class View extends JFrame {
 				
 				dispose();
 
-				try {
-					SearchPackage newPackageFrame = new SearchPackage();
-					newPackageFrame.setVisible(true);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (PackageException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}				
+				SearchPackage searchPackageFrame = new SearchPackage();
+				searchPackageFrame.buildScreen(searchPackageFrame, null);
+				searchPackageFrame.setVisible(true);				
 			}
 		});
 		packageMenu.add(searchPackage);		
