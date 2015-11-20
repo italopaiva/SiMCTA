@@ -18,6 +18,8 @@ import static org.mockito.Mockito.*;
 
 import org.mockito.*;
 
+import view.NewPackage;
+
 import com.mysql.jdbc.Connection;
 
 import controller.PackageController;
@@ -67,7 +69,7 @@ public class PackageControllerTest {
 
 		when(packageDAOMock.getTheLastId()).thenReturn(2);
 		packageController.setPackageDAO(packageDAOMock);
-		packageInstance = new Package(packageDAOMock.getTheLastId() + 1,"PelSom", 500000, 3);
+		packageInstance = new Package(packageDAOMock.getTheLastId() + 1,"PelSom", 500000, 1);
 		
 		packageController.setPackageDAO(packageDAOMock);
 		
