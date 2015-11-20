@@ -20,9 +20,13 @@ public class Class extends Model{
 	private static final String CLASS_MUST_HAVE_A_TEACHER = "Um professor deve ser associado à turma.";
 	private static final String CLASS_MUST_BELONGS_TO_A_COURSE = "A turma deve estar associada a um curso.";
 	private static final String COULDNT_GENERATE_END_DATE = "Não foi possível gerar a data final da turma.";
-
+	private static final String INVALID_STATUS = "Status da turma inválido";
+	
 	// Number of days in a week
 	private static final Integer DAYS_IN_WEEK = 5;
+	
+	private static final int OPEN_CLASS = 1;
+	private static final int CLOSED_CLASS = 0;
 	
 	private String classId;
 	private Date startDate;
@@ -31,6 +35,7 @@ public class Class extends Model{
 	private Teacher teacher;
 	private Course course;
 	private ArrayList<Student> students = new ArrayList<Student>();
+	private Integer status;
 		
 	// For new classes
 	public Class(Date startDate, String shift, Teacher teacher, Course course) throws ClassException {
@@ -218,6 +223,16 @@ public class Class extends Model{
 		}
 	}
 	
+	private void setStatus(Integer status) throws ClassException{
+		
+		if(status == OPEN_CLASS || status == CLOSED_CLASS){
+			this.status = status;
+		}
+		else{
+			throw new ClassException(INVALID_STATUS);
+		}
+	}
+	
 	public Date getStartDate(){
 		return this.startDate;
 	}
@@ -244,5 +259,9 @@ public class Class extends Model{
 
 	public ArrayList<Student> getStudents(){
 		return this.students;
+	}
+
+	public Integer getStatus() {
+		return this.status;
 	}
 }

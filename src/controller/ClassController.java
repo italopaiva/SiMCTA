@@ -17,7 +17,8 @@ public class ClassController {
 	private static final String INVALID_TEACHER = "O professor informado não é válido.";
 	private static final String INVALID_COURSE = "O curso informado não é válido.";
 	private static final String COULDNT_SAVE_CLASS = "Não foi possível cadastrar a turma.";
-	
+	private static final String INVALID_CLASS = "Turma inválida";
+
 	private static final int CLOSED_CLASS = 0;
 
 	private ClassDAO classDAO;
@@ -109,7 +110,12 @@ public class ClassController {
 		
 		int newStatus = CLOSED_CLASS;
 		
-		classDAO.update(enrolledClass, newStatus);
+		if(enrolledClass != null){
+			classDAO.update(enrolledClass, newStatus);
+		}
+		else{
+			throw new ClassException(INVALID_CLASS);
+		}
 		
 	}
 	

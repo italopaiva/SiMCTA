@@ -31,7 +31,7 @@ import exception.PersonException;
 import exception.StudentClassException;
 
 public class CloseClass extends ClassDecorator{
-	
+		
 	private Class enrolledClass;
 	private DefaultTableModel tableModel;
 	private JTable tableOfStudents;
@@ -147,7 +147,8 @@ public class CloseClass extends ClassDecorator{
 			absenceMask.setPlaceholder("00");
 
 			absenceField = new JFormattedTextField(absenceMask); 
-		      
+		    absenceField.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT); 
+  
 		    TableColumn absenceCollumn = tableOfStudents.getColumnModel().getColumn(1);  
 		    absenceCollumn.setCellEditor(new DefaultCellEditor(absenceField));
 	    
@@ -160,7 +161,9 @@ public class CloseClass extends ClassDecorator{
 
 	@Override
 	public void createButtons(JFrame frame) {
+		
 		super.createButtons(frame);
+
 		actionBtn = new JButton("Fechar turma");
 		frame.getContentPane().add(actionBtn);
 		actionBtn.setBounds(679, 42, 117, 25);
@@ -171,8 +174,8 @@ public class CloseClass extends ClassDecorator{
 				for (int i = 0; i < tableModel.getRowCount(); i++) {
 					
 					String studentCpf = tableModel.getValueAt(i, 4).toString();
-					Integer grade = setGradeToInteger(tableModel.getValueAt(i, 2).toString());
-					Integer absence = new Integer(tableModel.getValueAt(i, 1).toString());
+					String grade = tableModel.getValueAt(i, 2).toString();
+					String absence = tableModel.getValueAt(i, 1).toString();
 					
 					try {
 						StudentClass studentClass = setStudentSituation(studentCpf, grade, absence);
@@ -198,25 +201,8 @@ public class CloseClass extends ClassDecorator{
 
 			}
 
-			/**
-			 * Used to get only number of the grade
-			 * @param gradeField - get the grade with '.'
-			 * @return
-			 */
-			private Integer setGradeToInteger(String gradeField) {
-				
-				Integer grade = null;
-				int lastDigit = gradeField.length();
-				
-				String entirePart = gradeField.substring(0, (lastDigit - 2));
-				char decimalPart = gradeField.charAt(lastDigit - 1);
-				
-				grade = new Integer(entirePart + decimalPart);
-				
-				return grade;
-			}
-		});
-		
+		});	
+
 		backBtn = new JButton("Voltar");
 		frame.getContentPane().add(backBtn);
 		backBtn.setBounds(798, 42, 117, 25);
@@ -228,7 +214,7 @@ public class CloseClass extends ClassDecorator{
 		});
 	}
 
-	private StudentClass setStudentSituation(String studentCpf, Integer grade, Integer absence) throws StudentClassException, CPFException, PersonException{
+	private StudentClass setStudentSituation(String studentCpf, String grade, String absence) throws StudentClassException, CPFException, PersonException{
 		
 		StudentClassController studentClassController = new StudentClassController();
 		StudentClass studentClass = studentClassController.setStudentSituation(studentCpf, grade, absence, enrolledClass);

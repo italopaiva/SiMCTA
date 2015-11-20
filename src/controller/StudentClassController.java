@@ -14,7 +14,8 @@ import model.datatype.CPF;
 public class StudentClassController{
 
 	private static final String COULDNT_FIND_STUDENT_OF_CLASS = "Não foi possível encontrar os estudantes dessa turma.";
-	private static final String COULDNT_SAVE_THE_SITUATION = "Não foi possível salvar as notas e faltas dos alunos.";
+
+	private static final String INVALID_GRADE = "Digite todos os números da nota";
 
 	private StudentClassDAO studentClassDAO;
 	
@@ -66,20 +67,68 @@ public class StudentClassController{
 	 * @throws PersonException
 	 * @throws StudentClassException
 	 */
-	public StudentClass setStudentSituation(String studentCpf, Integer grade, Integer absence, Class enrolledClass) throws StudentClassException, CPFException, PersonException{
+	public StudentClass setStudentSituation(String studentCpf, String grade, String absence, Class enrolledClass) throws StudentClassException, CPFException, PersonException{
 	
 		StudentClass studentClass = null;
 		try {
 			CPF cpf = new CPF(studentCpf);
 			Student student = new Student(cpf);
-			studentClass = new StudentClass(student, enrolledClass, absence, grade);
+			
+			Integer entireGrade = convertGradeStringToInteger(grade);
+			Integer absences = convertAbsenceStringToInteger(absence); 
+			studentClass = new StudentClass(student, enrolledClass, absences, entireGrade);
 			
 			studentClassDAO.save(studentClass);
 		} 
 		catch (StudentClassException e) {
-			throw new StudentClassException(COULDNT_SAVE_THE_SITUATION);
+			throw new StudentClassException(e.getMessage());
 		}
 		
 		return studentClass;
+	}
+	
+	
+	/**
+	 * Used to convert absense in number
+	 * @param gradeField - get the grade with '.'
+	 * @return
+	 */
+	private Integer convertAbsenceStringToInteger(String absence) {
+
+		int lastDigit = absence.length();
+		
+		if(Character.isSpaceChar(absence.charAt(lastDigit - 1))){
+			absence = "0" + absence.charAt(0);
+		}
+		else{
+			// Nothing to do
+		}
+		Integer absences = new Integer(absence);
+
+		return absences;
+	}
+
+	/**
+	 * Used to get only number of the grade
+	 * @param gradeField - get the grade with '.'
+	 * @return
+	 * @throws StudentClassException 
+	 */
+	private Integer convertGradeStringToInteger(String gradeField) throws StudentClassException {
+		
+		Integer grade = null;
+		int lastDigit = gradeField.length();
+		
+		String entirePart = gradeField.substring(0, (lastDigit - 2));
+		char decimalPart = gradeField.charAt(lastDigit - 1);
+		
+		try{
+			grade = new Integer(entirePart + decimalPart);
+		}
+		catch (NumberFormatException e){
+			throw new StudentClassException(INVALID_GRADE);
+		}
+		
+		return grade;
 	}
 }

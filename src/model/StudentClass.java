@@ -7,16 +7,23 @@ public class StudentClass extends Model{
 	private static final String STUDENT_CANT_BE_NULL = "O estudante de uma turma não pode ser nulo.";
 	private static final String CLASS_CANT_BE_NULL = "A turma não pode ser nula.";
 	private static final String INVALID_SITUATION = "A situação do aluno na turma só pode ser 'Aprovado' ou 'Reprovado'.";
-	
+	private static final String ABSENCE_CANT_BE_NULL = "O número de faltas deve ser preenchido";
+	private static final String ABSENCE_CANT_BE_GREATER_THAN_DURATION = "O número de faltas não pode ser maior que a duração da turma";
+	private static final String INVALID_GRADE = "As notas devem estar entre 0 e 10";
+
 	private static final String APPROVED_SITUATION = "APROVADO";
 	private static final String DISAPPROVED_SITUATION = "REPROVADO";
 	
+	private static final Double MAXIMUM_GRADE = new Double(10.0);
+	private static final Double MINIMUM_GRADE = new Double(00.0);
+	
 	// The minimum grade to approved student
-	private static final Integer MINIMUM_GRADE = 5;
+	private static final Integer MINIMUM_GRADE_TO_APPROVE = 5;
 	
 	// The maximum percent of permitted absences
 	private static final Double MAXIMUM_PERCENT_ABSENCES = new Double(25);
-	
+
+
 	private Student student;
 	private Class enrolledClass;
 	private Integer absences;
@@ -50,19 +57,11 @@ public class StudentClass extends Model{
 	private void assessSituation() throws StudentClassException{
 
 		Double percentOfAbsences = null;
-	
-		String grade = getGrade().toString();
 		
-		int lastDigit = grade.length();
-		char decimalPart = grade.charAt(lastDigit - 1);
-		
-		grade = grade.substring(0, (lastDigit - 1));
-		grade += "." + decimalPart;
-		
-		Double doubleGrade = new Double(grade);
+		Double doubleGrade = convertGradeToDouble(getGrade());
 		
 		// Checking if the grade is greater than the minimum grade
-		if(doubleGrade >= MINIMUM_GRADE){
+		if(doubleGrade >= MINIMUM_GRADE_TO_APPROVE){
 			
 			// Checking if the student has less than 25% of absences
 			percentOfAbsences = calculatePercentOfAbsence();
@@ -80,6 +79,22 @@ public class StudentClass extends Model{
 		
 		
 	}
+
+	private Double convertGradeToDouble(Integer integerGrade) {
+		
+		String grade = integerGrade.toString();
+		
+		int lastDigit = grade.length();
+		char decimalPart = grade.charAt(lastDigit - 1);
+		
+		grade = grade.substring(0, (lastDigit - 1));
+		grade += "." + decimalPart;
+		
+		Double doubleGrade = new Double(grade);
+		
+		return doubleGrade;
+	}
+
 
 	private Double calculatePercentOfAbsence() {
 		
@@ -129,13 +144,33 @@ public class StudentClass extends Model{
 		}
 	}
 	
-	public void setAbsences(Integer absences){
+	public void setAbsences(Integer absences) throws StudentClassException{
 		
-		this.absences = absences;
+		if(absences != null){
+			// In days
+			int durationOfTheClass = getEnrolledClass().getClassDuration();  
+			
+			if(absences <= durationOfTheClass){
+				this.absences = absences;
+			}
+			else{
+				throw new StudentClassException(ABSENCE_CANT_BE_GREATER_THAN_DURATION);
+			}
+		}
+		else{
+			throw new StudentClassException(ABSENCE_CANT_BE_NULL);
+		}
 	}
 	
-	public void setGrade(Integer grade){
-		this.grade = grade;
+	public void setGrade(Integer grade) throws StudentClassException{
+		
+		Double doubleGrade = convertGradeToDouble(grade); 
+		if(doubleGrade >= MINIMUM_GRADE && doubleGrade <= MAXIMUM_GRADE){
+			this.grade = grade;
+		}
+		else{
+			throw new StudentClassException(INVALID_GRADE);
+		}
 	}	
 	
 	public Student getStudent(){
