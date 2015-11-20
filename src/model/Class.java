@@ -20,9 +20,13 @@ public class Class extends Model{
 	private static final String CLASS_MUST_HAVE_A_TEACHER = "Um professor deve ser associado à turma.";
 	private static final String CLASS_MUST_BELONGS_TO_A_COURSE = "A turma deve estar associada a um curso.";
 	private static final String COULDNT_GENERATE_END_DATE = "Não foi possível gerar a data final da turma.";
-
+	private static final String INVALID_STATUS = "Status da turma inválido";
+	
 	// Number of days in a week
 	private static final Integer DAYS_IN_WEEK = 5;
+	
+	private static final int OPEN_CLASS = 1;
+	private static final int CLOSED_CLASS = 0;
 	
 	private String classId;
 	private Date startDate;
@@ -31,6 +35,7 @@ public class Class extends Model{
 	private Teacher teacher;
 	private Course course;
 	private ArrayList<Student> students = new ArrayList<Student>();
+	private Integer status;
 		
 	// For new classes
 	public Class(Date startDate, String shift, Teacher teacher, Course course) throws ClassException {
@@ -68,7 +73,7 @@ public class Class extends Model{
 	public Class(String classId){
 		setClassId(classId);
 	}
-
+	
 	private void generateClassID(){
 		
 		String classId = "";
@@ -129,9 +134,8 @@ public class Class extends Model{
 		java.util.Date date = new java.util.Date(year, month, day);
 
 		// Get the course duration
-		Integer courseDurationInWeeks = getCourse().getDuration();
-		int courseDurationInDays = courseDurationInWeeks* (DAYS_IN_WEEK);
-
+		Integer courseDurationInDays = getClassDuration();
+		
 		// Adding to the start date the course duration
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
@@ -140,14 +144,9 @@ public class Class extends Model{
 		// Get the formatted end date
 		String formattedDate = new SimpleDateFormat("dd/MM/yyyy").format(c.getTime());
 
-		// Set the end date
-		day = new Integer(formattedDate.substring(0, 2));
-		month = new Integer(formattedDate.substring(3, 5));
-		year = new Integer(formattedDate.substring(6, 10));		
-		
 		Date endDate;
 		try {
-			endDate = new Date(day,month,year);
+			endDate = new Date(formattedDate);
 			setEndDate(endDate);
 		} 
 		catch(DateException | ClassException e) {
@@ -155,6 +154,13 @@ public class Class extends Model{
 		}
 	}
 	
+	public Integer getClassDuration() {
+		Integer courseDurationInWeeks = getCourse().getDuration();
+		int courseDurationInDays = courseDurationInWeeks* (DAYS_IN_WEEK);	
+		
+		return courseDurationInDays;
+	}
+
 	private void setEndDate(Date endDate) throws ClassException{
 		
 		if(endDate != null){
@@ -222,6 +228,16 @@ public class Class extends Model{
 		}
 	}
 	
+	private void setStatus(Integer status) throws ClassException{
+		
+		if(status == OPEN_CLASS || status == CLOSED_CLASS){
+			this.status = status;
+		}
+		else{
+			throw new ClassException(INVALID_STATUS);
+		}
+	}
+	
 	public Date getStartDate(){
 		return this.startDate;
 	}
@@ -248,5 +264,9 @@ public class Class extends Model{
 
 	public ArrayList<Student> getStudents(){
 		return this.students;
+	}
+
+	public Integer getStatus() {
+		return this.status;
 	}
 }

@@ -16,6 +16,8 @@ public class ClassDAO extends DAO {
 	private static final String COULDNT_SAVE_CLASS = "Não foi possível abrir a nova turma";
 	private static final String CLASS_ALREADY_EXISTS = "Essa turma já existe.";
 	private static final String COULDNT_FIND_CLASS = "Não foi possível encontrar a turma.";
+	private static final String COULDNT_CLOSE_CLASS = "Não foi possível fechar a turma.";
+	private static final String INVALID_STATUS = "Status inválido";
 
 	private static final String CLASS_TABLE_NAME = "Class";
 	private static final String ID_CLASS_COLUMN = "id_class";
@@ -26,8 +28,8 @@ public class ClassDAO extends DAO {
 	private static final String SHIFT_COLUMN = "shift";
 	private static final String STATUS_COLUMN = "status";
 
-	private static final int ACTIVE_CLASS = 1;
-	private static final int INACTIVE_CLASS = 0;
+	private static final int OPEN_CLASS = 1;
+	private static final int CLOSED_CLASS = 0;
 	
 	/**
 	 * Save a class on the database
@@ -56,7 +58,7 @@ public class ClassDAO extends DAO {
 							 + "( " + START_DATE_COLUMN + "," + TEACHER_CPF_COLUMN + ", "
 							 + SHIFT_COLUMN +","+ ID_COURSE_COLUMN + "," + ID_CLASS_COLUMN +","+ END_DATE_COLUMN +","+ STATUS_COLUMN +")";
 				
-				query += "VALUES ('"+ formattedStartDate +"','" + teacherCpf +"','" + shift +"','" + courseId +"','" + classId +"','" + endDate +"', '"+ ACTIVE_CLASS +"')"; 
+				query += "VALUES ('"+ formattedStartDate +"','" + teacherCpf +"','" + shift +"','" + courseId +"','" + classId +"','" + endDate +"', '"+ OPEN_CLASS +"')"; 
 
 				this.execute(query);
 			}
@@ -131,6 +133,33 @@ public class ClassDAO extends DAO {
 		}
 		catch(SQLException e){
 			throw new ClassException(COULDNT_UPDATE_CLASS);
+		}
+	}
+
+	/**
+	 * Update a status class to CLOSED
+	 * @param enrolledClass - the class to be update 
+	 * @param newStatus - the status
+	 * @throws ClassException 
+	 */
+	public void update(Class enrolledClass, int newStatus) throws ClassException {
+		
+		String classId = enrolledClass.getClassId();
+		
+		if(newStatus == CLOSED_CLASS){
+			try {
+				String query = "UPDATE "+ CLASS_TABLE_NAME 
+							 + " SET "+ STATUS_COLUMN +" = " + newStatus
+				 			 + " WHERE "+ ID_CLASS_COLUMN +" = '"+ classId +"'";
+							
+				this.execute(query);
+			}
+			catch(SQLException e){
+				throw new ClassException(COULDNT_CLOSE_CLASS);
+			}	
+		}
+		else{
+			throw new ClassException(INVALID_STATUS);
 		}
 	}
 
