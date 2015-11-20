@@ -24,7 +24,6 @@ public class StudentClassDAO extends DAO {
 	private static final String COULDNT_SAVE_THE_SITUATION = "Não foi possível salvar as notas e faltas dos alunos.";
 
 	private static final String STUDENT_CLASS_TABLE = "StudentClass";
-	private static final String STUDENT_TABLE = "Student";
 	private static final String ID_CLASS_COLUMN = "id_class";
 	private static final String STUDENT_CPF_COLUMN = "cpf";
 	private static final String ABSENCE_COLUMN = "absences";

@@ -10,6 +10,7 @@ public class StudentClass extends Model{
 	private static final String ABSENCE_CANT_BE_NULL = "O número de faltas deve ser preenchido";
 	private static final String ABSENCE_CANT_BE_GREATER_THAN_DURATION = "O número de faltas não pode ser maior que a duração da turma";
 	private static final String INVALID_GRADE = "As notas devem estar entre 0 e 10";
+	private static final String GRADE_CANT_BE_NULL = "A nota deve ser preenchida";
 
 	private static final String APPROVED_SITUATION = "APROVADO";
 	private static final String DISAPPROVED_SITUATION = "REPROVADO";
@@ -144,7 +145,7 @@ public class StudentClass extends Model{
 		}
 	}
 	
-	public void setAbsences(Integer absences) throws StudentClassException{
+	private void setAbsences(Integer absences) throws StudentClassException{
 		
 		if(absences != null){
 			// In days
@@ -162,15 +163,21 @@ public class StudentClass extends Model{
 		}
 	}
 	
-	public void setGrade(Integer grade) throws StudentClassException{
+	private void setGrade(Integer grade) throws StudentClassException{
 		
-		Double doubleGrade = convertGradeToDouble(grade); 
-		if(doubleGrade >= MINIMUM_GRADE && doubleGrade <= MAXIMUM_GRADE){
-			this.grade = grade;
+		if(grade != null){
+			Double doubleGrade = convertGradeToDouble(grade); 
+			if(doubleGrade >= MINIMUM_GRADE && doubleGrade <= MAXIMUM_GRADE){
+				this.grade = grade;
+			}
+			else{
+				throw new StudentClassException(INVALID_GRADE);
+			}
 		}
 		else{
-			throw new StudentClassException(INVALID_GRADE);
+			throw new StudentClassException(GRADE_CANT_BE_NULL);
 		}
+
 	}	
 	
 	public Student getStudent(){

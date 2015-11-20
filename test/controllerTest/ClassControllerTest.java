@@ -31,14 +31,20 @@ public class ClassControllerTest {
 	private ClassController classController;
 	@Mock
 	private ClassDAO classDAOMock;
+	private Class enrolledClass;
 	
 	@Before
-	public void setUp(){
+	public void setUp() throws CourseException, PersonException, CPFException, ClassException, DateException{
 		
 		MockitoAnnotations.initMocks(this);
 		classDAOMock = mock(ClassDAO.class);
 		
 		classController = new ClassController();
+		
+		Course course = new Course("Instalação", "lala", 5, 10000);
+
+		Teacher teacher = new Teacher(new CPF("03382132109"));
+		enrolledClass = new Class(new Date(11,8,2015), "VE", teacher, course);
 
 	}
 	
@@ -77,4 +83,12 @@ public class ClassControllerTest {
 			fail("Should not throw this exception: " + e.getMessage());
 		}
 	}*/
+
+	@Test (expected = ClassException.class)
+	public void testIfCloseANullClass() throws ClassException{
+
+		enrolledClass = null;
+		classController.closeClass(enrolledClass);
+
+	}
 }
