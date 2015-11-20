@@ -21,12 +21,13 @@ public class StudentClassDAO extends DAO {
 
 	private static final String COULDNT_ENROLL_STUDENT_TO_CLASS = "Não foi possível associar este aluno para esta turma.";
 	private static final String COULDNT_FIND_STUDENT_OF_CLASS = "Não foi possível encontrar os estudantes dessa turma.";
-	
+	private static final String COULDNT_SAVE_THE_SITUATION = "Não foi possível salvar as notas e faltas dos alunos.";
+
 	private static final String STUDENT_CLASS_TABLE = "StudentClass";
 	private static final String STUDENT_TABLE = "Student";
 	private static final String ID_CLASS_COLUMN = "id_class";
 	private static final String STUDENT_CPF_COLUMN = "cpf";
-	private static final String ABSCENCE_COLUMN = "abscence";
+	private static final String ABSENCE_COLUMN = "absences";
 	private static final String GRADE_COLUMN = "grade";
 	private static final String SITUATION_COLUMN = "situation";
 	
@@ -83,6 +84,32 @@ public class StudentClassDAO extends DAO {
 
 		return students;
 	
+	}
+
+	public void save(StudentClass studentClass) throws StudentClassException {
+		
+		String classId = studentClass.getEnrolledClass().getClassId();
+		String studentCpf = studentClass.getStudent().getCpf().getCpf();
+		Integer absence = studentClass.getAbsences();
+		Integer grade = studentClass.getGrade();
+		String situation = studentClass.getStudentSituation();
+		
+		String query = "";
+		query += "UPDATE " + STUDENT_CLASS_TABLE + " SET ";
+		query += ABSENCE_COLUMN + " = " + absence + " , ";
+		query += GRADE_COLUMN + " = " + grade + " , ";
+		query += SITUATION_COLUMN + " = '" + situation + "' ";
+		query += " WHERE " + ID_CLASS_COLUMN + " = '" + classId + "'";
+		query += " AND " + STUDENT_CPF_COLUMN + " = '"  + studentCpf + "'";
+		
+		try{
+			this.execute(query);
+		}
+		catch(SQLException e){
+			throw new StudentClassException(COULDNT_SAVE_THE_SITUATION);
+		}
+		
+		
 	}
 	
 	

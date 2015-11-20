@@ -124,9 +124,8 @@ public class Class extends Model{
 		java.util.Date date = new java.util.Date(year, month, day);
 
 		// Get the course duration
-		Integer courseDurationInWeeks = getCourse().getDuration();
-		int courseDurationInDays = courseDurationInWeeks* (DAYS_IN_WEEK);
-
+		Integer courseDurationInDays = getClassDuration();
+		
 		// Adding to the start date the course duration
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
@@ -135,14 +134,9 @@ public class Class extends Model{
 		// Get the formatted end date
 		String formattedDate = new SimpleDateFormat("dd/MM/yyyy").format(c.getTime());
 
-		// Set the end date
-		day = new Integer(formattedDate.substring(0, 2));
-		month = new Integer(formattedDate.substring(3, 5));
-		year = new Integer(formattedDate.substring(6, 10));		
-		
 		Date endDate;
 		try {
-			endDate = new Date(day,month,year);
+			endDate = new Date(formattedDate);
 			setEndDate(endDate);
 		} 
 		catch(DateException | ClassException e) {
@@ -150,6 +144,13 @@ public class Class extends Model{
 		}
 	}
 	
+	public Integer getClassDuration() {
+		Integer courseDurationInWeeks = getCourse().getDuration();
+		int courseDurationInDays = courseDurationInWeeks* (DAYS_IN_WEEK);	
+		
+		return courseDurationInDays;
+	}
+
 	private void setEndDate(Date endDate) throws ClassException{
 		
 		if(endDate != null){

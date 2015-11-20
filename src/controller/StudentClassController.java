@@ -14,6 +14,7 @@ import model.datatype.CPF;
 public class StudentClassController{
 
 	private static final String COULDNT_FIND_STUDENT_OF_CLASS = "Não foi possível encontrar os estudantes dessa turma.";
+	private static final String COULDNT_SAVE_THE_SITUATION = "Não foi possível salvar as notas e faltas dos alunos.";
 
 	private StudentClassDAO studentClassDAO;
 	
@@ -35,6 +36,12 @@ public class StudentClassController{
 		}
 	}
 	
+	/**
+	 * Get all students enrolled in the class
+	 * @param enrolledClass - class to get students
+	 * @return an array with all students enrolled in the class
+	 * @throws StudentClassException
+	 */
 	public ArrayList<Student> getStudents(Class enrolledClass) throws StudentClassException{
 		
 		ArrayList<Student> students = new ArrayList<Student>();
@@ -47,5 +54,30 @@ public class StudentClassController{
 		}
 		
 		return students;
+	}
+
+	/**
+	 * Save the student situation
+	 * @param studentCpf - the 'cpf' of the student to save the situation
+	 * @param grade - the grade of the student
+	 * @param absence - the absences of the student
+	 * @param enrolledClass - the class of the student
+	 * @throws CPFException
+	 * @throws PersonException
+	 * @throws StudentClassException
+	 */
+	public void setStudentSituation(String studentCpf, Integer grade, Integer absence, Class enrolledClass) throws StudentClassException, CPFException, PersonException{
+	
+		try {
+			CPF cpf = new CPF(studentCpf);
+			Student student = new Student(cpf);
+			StudentClass studentClass = new StudentClass(student, enrolledClass, absence, grade);
+			
+			studentClassDAO.save(studentClass);
+		} 
+		catch (StudentClassException e) {
+			throw new StudentClassException(COULDNT_SAVE_THE_SITUATION);
+		}
+		
 	}
 }

@@ -8,8 +8,14 @@ public class StudentClass extends Model{
 	private static final String CLASS_CANT_BE_NULL = "A turma não pode ser nula.";
 	private static final String INVALID_SITUATION = "A situação do aluno na turma só pode ser 'Aprovado' ou 'Reprovado'.";
 	
-	private static final String APPROVED_SITUATION = "Aprovado";
-	private static final String DISAPPROVED_SITUATION = "Reprovado";
+	private static final String APPROVED_SITUATION = "APROVADO";
+	private static final String DISAPPROVED_SITUATION = "REPROVADO";
+	
+	// The minimum grade to approved student
+	private static final Integer MINIMUM_GRADE = 5;
+	
+	// The maximum percent of permitted absences
+	private static final Double MAXIMUM_PERCENT_ABSENCES = new Double(25);
 	
 	private Student student;
 	private Class enrolledClass;
@@ -41,8 +47,49 @@ public class StudentClass extends Model{
 		setSituation(situation);
 	}
 
-	private void assessSituation(){
+	private void assessSituation() throws StudentClassException{
+
+		Double percentOfAbsences = null;
+	
+		String grade = getGrade().toString();
 		
+		int lastDigit = grade.length();
+		char decimalPart = grade.charAt(lastDigit - 1);
+		
+		grade = grade.substring(0, lastDigit);
+		grade += "." + decimalPart;
+		
+		Double doubleGrade = new Double(grade);
+		
+		// Checking if the grade is greater than the minimum grade
+		if(doubleGrade >= MINIMUM_GRADE){
+			
+			// Checking if the student has less than 25% of absences
+			percentOfAbsences = calculatePercentOfAbsence();
+			if(percentOfAbsences <= MAXIMUM_PERCENT_ABSENCES){
+				setSituation(APPROVED_SITUATION);
+
+			}
+			else{
+				setSituation(DISAPPROVED_SITUATION);
+			}
+		}
+		else{
+			setSituation(DISAPPROVED_SITUATION);
+		}
+		
+		
+	}
+
+	private Double calculatePercentOfAbsence() {
+		
+		Integer duration = getEnrolledClass().getClassDuration();
+
+		Integer absences = getAbsences();
+		
+		Double percentOfAbsences = (double) ((absences * 100)/duration);
+		
+		return percentOfAbsences;		
 	}
 
 	private void setSituation(String situation) throws StudentClassException{
@@ -105,5 +152,9 @@ public class StudentClass extends Model{
 	
 	public Integer getGrade(){
 		return this.grade;
+	}
+
+	public String getStudentSituation() {
+		return this.studentSituation;
 	}
 }

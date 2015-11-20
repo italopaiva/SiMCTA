@@ -1,8 +1,6 @@
 package view;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -13,17 +11,17 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-import controller.StudentClassController;
-import exception.StudentClassException;
-import view.decorator.class_decorator.ClassDecorator;
 import model.Class;
 import model.Student;
-import model.StudentClass;
 import model.datatype.CPF;
+import view.decorator.class_decorator.ClassDecorator;
+import controller.StudentClassController;
+import exception.CPFException;
+import exception.PersonException;
+import exception.StudentClassException;
 
 public class CloseClass extends ClassDecorator {
 	
@@ -39,15 +37,6 @@ public class CloseClass extends ClassDecorator {
 		super(classViewToDecorate);
 	}
 	
-	private void setStudentSituation(Student student, Integer grade, Integer abscence){
-		
-	}
-	
-	
-	private void closeClass(String enrolledClassId){
-		
-	}
-
 	@Override
 	public void createLabelsAndFields(JFrame frame, Class enrolledClass) {
 
@@ -68,8 +57,8 @@ public class CloseClass extends ClassDecorator {
 		tableOfStudents.setBackground(Color.WHITE);
 		scrollPane.setViewportView(tableOfStudents);
 		
-		
-		getAllStudentsClass(enrolledClass);
+		this.enrolledClass = enrolledClass;
+		getAllStudentsClass();
 		
 	}
 
@@ -77,7 +66,7 @@ public class CloseClass extends ClassDecorator {
 	 * Get all students enrolled in the class
 	 * @param enrolledClass2
 	 */
-	private void getAllStudentsClass(Class enrolledClass) {
+	private void getAllStudentsClass() {
 		
 		StudentClassController studentClassController = new StudentClassController();
 		ArrayList<Student> students;
@@ -97,9 +86,7 @@ public class CloseClass extends ClassDecorator {
 		} 
 		catch (StudentClassException e) {
 			showInfoMessage(e.getMessage());
-		}
-		
-		
+		}		
 	}
 
 	/**
@@ -129,10 +116,57 @@ public class CloseClass extends ClassDecorator {
 		actionBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			
-				/**ServiceItemView courseFrame = new EditCourseDecorator(new ServiceItemForm());
-				dispose();
-				courseFrame.buildScreen(courseFrame,course);
-				courseFrame.setVisible(true);*/
+				
+				ArrayList<String> studentCpfs = new ArrayList<String>();
+				ArrayList<String> grades = new ArrayList<String>();
+				ArrayList<String> absences = new ArrayList<String>();
+				boolean dataOk = false;
+				
+				for (int i = 0; i < tableModel.getRowCount(); i++) {
+					
+					boolean absenceNotEmpty = tableModel.getValueAt(i, 1).toString() != "";
+					boolean gradeNotEmpty = tableModel.getValueAt(i, 2).toString() != "";
+					
+					if(absenceNotEmpty && gradeNotEmpty){
+						
+						absences.add(tableModel.getValueAt(i, 1).toString());
+						grades.add(tableModel.getValueAt(i, 2).toString());
+						studentCpfs.add(tableModel.getValueAt(i, 4).toString());
+						
+						dataOk = true;
+					}
+					else{
+						showInfoMessage("Você deve preencher o número de faltas e a nota de todos os alunos");
+						
+						absences.clear();
+						grades.clear();
+						studentCpfs.clear();
+						
+						dataOk = false;
+						break;
+					}
+				}
+						
+				if(dataOk){
+					
+					for (int i = 0; i < studentCpfs.size(); i++) {
+						
+						String studentCpf = studentCpfs.get(i);
+						Integer grade = new Integer(grades.get(i));
+						Integer absence = new Integer(absences.get(i));
+						
+						try {
+							setStudentSituation(studentCpf, grade, absence);
+						} 
+						catch (StudentClassException | CPFException
+								| PersonException e1) {
+							showInfoMessage(e1.getMessage());
+						}
+					}
+				}
+				else{
+					// Nothing to do
+				}
 			}
 		});
 		
@@ -142,12 +176,20 @@ public class CloseClass extends ClassDecorator {
 		backBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			
-				dispose();
-				
-		
+				dispose();	
 			}
 		});
 	}
 
+	private void setStudentSituation(String studentCpf, Integer grade, Integer absence) throws StudentClassException, CPFException, PersonException{
+		
+		StudentClassController studentClassController = new StudentClassController();
+		studentClassController.setStudentSituation(studentCpf, grade, absence, enrolledClass);
+	}
+	
+	
+	private void closeClass(String enrolledClassId){
+		
+	}
 
 }
