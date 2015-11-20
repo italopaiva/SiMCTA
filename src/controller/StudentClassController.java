@@ -14,8 +14,8 @@ import model.datatype.CPF;
 public class StudentClassController{
 
 	private static final String COULDNT_FIND_STUDENT_OF_CLASS = "Não foi possível encontrar os estudantes dessa turma.";
-
 	private static final String INVALID_GRADE = "Digite todos os números da nota";
+	private static final String CLASS_CANT_BE_NULL = "Não foi possível encontrar a turma";
 
 	private StudentClassDAO studentClassDAO;
 	
@@ -47,13 +47,19 @@ public class StudentClassController{
 		
 		ArrayList<Student> students = new ArrayList<Student>();
 		
-		try {
-			students = studentClassDAO.get(enrolledClass);
-		} 
-		catch (StudentClassException | CPFException e) {
-			throw new StudentClassException(COULDNT_FIND_STUDENT_OF_CLASS);
+		if(enrolledClass != null){
+			try {
+				students = studentClassDAO.get(enrolledClass);
+			} 
+			catch (StudentClassException | CPFException e) {
+				throw new StudentClassException(COULDNT_FIND_STUDENT_OF_CLASS);
+			}
+			
 		}
-		
+		else{
+			throw new StudentClassException(CLASS_CANT_BE_NULL);
+		}
+
 		return students;
 	}
 
@@ -93,7 +99,7 @@ public class StudentClassController{
 	 * @param gradeField - get the grade with '.'
 	 * @return
 	 */
-	private Integer convertAbsenceStringToInteger(String absence) {
+	public Integer convertAbsenceStringToInteger(String absence) {
 
 		int lastDigit = absence.length();
 		
@@ -114,15 +120,15 @@ public class StudentClassController{
 	 * @return
 	 * @throws StudentClassException 
 	 */
-	private Integer convertGradeStringToInteger(String gradeField) throws StudentClassException {
-		
+	public Integer convertGradeStringToInteger(String gradeField) throws StudentClassException {
+
 		Integer grade = null;
-		int lastDigit = gradeField.length();
-		
-		String entirePart = gradeField.substring(0, (lastDigit - 2));
-		char decimalPart = gradeField.charAt(lastDigit - 1);
-		
+
 		try{
+			int lastDigit = gradeField.length();
+			
+			String entirePart = gradeField.substring(0, (lastDigit - 2));
+			char decimalPart = gradeField.charAt(lastDigit - 1);
 			grade = new Integer(entirePart + decimalPart);
 		}
 		catch (NumberFormatException e){
@@ -130,5 +136,9 @@ public class StudentClassController{
 		}
 		
 		return grade;
+	}
+
+	public void setDAO(StudentClassDAO studentClassDAO) {
+		this.studentClassDAO = studentClassDAO;
 	}
 }
