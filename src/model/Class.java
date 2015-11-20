@@ -90,6 +90,11 @@ public class Class extends Model{
 		setClassId(classId);
 	}
 	
+//	Tirar esse metodo
+	public void ssetCourse(Course course){
+		this.course = course;
+	}
+	
 	private String getCourseFirstName(){
 		
 		String courseName = getCourse().getName();

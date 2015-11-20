@@ -37,9 +37,19 @@ public class Date extends Model{
 		
 		if(date.length() == STRING_DATE_LENGTH){
 			
-			String day = date.substring(0, 2);
-			String month = date.substring(3,5);
-			String year = date.substring(6, 10);
+			String year;
+			String month;
+			String day;
+			
+			if(date.charAt(2) == '/'){
+				day = date.substring(0, 2);
+				month = date.substring(3,5);
+				year = date.substring(6, 10);
+			}else{
+				year = date.substring(0,4);
+				month = date.substring(5,7);
+				day = date.substring(8,10);
+			}
 			
 			setYear(new Integer(year));
 			setMonth(new Integer(month));

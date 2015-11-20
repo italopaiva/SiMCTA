@@ -254,10 +254,7 @@ public class TeacherDAO extends DAO{
 
 		// Birthdate
 		String date = resultOfTheSearch.getString(BIRTHDATE_COLUMN);
-		String year = date.substring(0,4);
-		String month = date.substring(5,7);
-		String day = date.substring(8,10);
-		Date birthdate = new Date(new Integer(day),new Integer(month),new Integer(year));
+		Date birthdate = new Date(date);
 		
 		String qualification = resultOfTheSearch.getString(QUALIFICATION_COLUMN);
 		

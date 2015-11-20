@@ -14,6 +14,7 @@ import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
 import exception.StudentException;
+import model.Course;
 import model.Student;
 import model.Service;
 import model.datatype.Address;
@@ -148,10 +149,15 @@ public class StudentController {
 		else{	
 			throw new StudentException(STUDENT_WITHOUT_SERVICE);
 		}
-				
-		
 		
 		return servicesOfStudent;
+	}
+	
+	public ArrayList<Student> getStudentsOfCourse(Course course) throws StudentException{
+		
+		ArrayList<Student> studentsOfCourse = studentDAO.get(course);
+		
+		return studentsOfCourse;
 	}
 
 	public boolean alterStatusOfTheStudent(Student student) throws StudentException {
