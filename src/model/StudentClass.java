@@ -56,7 +56,7 @@ public class StudentClass extends Model{
 		int lastDigit = grade.length();
 		char decimalPart = grade.charAt(lastDigit - 1);
 		
-		grade = grade.substring(0, lastDigit);
+		grade = grade.substring(0, (lastDigit - 1));
 		grade += "." + decimalPart;
 		
 		Double doubleGrade = new Double(grade);

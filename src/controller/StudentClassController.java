@@ -66,12 +66,13 @@ public class StudentClassController{
 	 * @throws PersonException
 	 * @throws StudentClassException
 	 */
-	public void setStudentSituation(String studentCpf, Integer grade, Integer absence, Class enrolledClass) throws StudentClassException, CPFException, PersonException{
+	public StudentClass setStudentSituation(String studentCpf, Integer grade, Integer absence, Class enrolledClass) throws StudentClassException, CPFException, PersonException{
 	
+		StudentClass studentClass = null;
 		try {
 			CPF cpf = new CPF(studentCpf);
 			Student student = new Student(cpf);
-			StudentClass studentClass = new StudentClass(student, enrolledClass, absence, grade);
+			studentClass = new StudentClass(student, enrolledClass, absence, grade);
 			
 			studentClassDAO.save(studentClass);
 		} 
@@ -79,5 +80,6 @@ public class StudentClassController{
 			throw new StudentClassException(COULDNT_SAVE_THE_SITUATION);
 		}
 		
+		return studentClass;
 	}
 }

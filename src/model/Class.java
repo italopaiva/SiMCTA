@@ -68,7 +68,7 @@ public class Class extends Model{
 	public Class(String classId){
 		setClassId(classId);
 	}
-
+	
 	private void generateClassID(){
 		
 		String classId = "";

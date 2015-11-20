@@ -22,13 +22,11 @@ public class ClassShowForm extends ClassView {
 		titleLbl.setBounds(410, 0, 300, 30);
 		frame.getContentPane().add(titleLbl);
 		
-		//startDateLbl = new JLabel("Data de início " + classInstance.getStartDate().getSlashFormattedDate());
-		startDateLbl = new JLabel("Data de início ");
+		startDateLbl = new JLabel("Data de início: " + classInstance.getStartDate().getSlashFormattedDate());
 		startDateLbl.setBounds(86, 32, 300, 30);
 		frame.getContentPane().add(startDateLbl);
 		
-		//endDateLbl = new JLabel("Data de fim " + classInstance.getEndDate().getSlashFormattedDate());
-		endDateLbl = new JLabel("Data de fim ");
+		endDateLbl = new JLabel("Data de fim: " + classInstance.getEndDate().getSlashFormattedDate());
 		endDateLbl.setBounds(326, 32, 300, 30);
 		frame.getContentPane().add(endDateLbl);
 		
