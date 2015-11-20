@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+import javax.print.DocFlavor.SERVICE_FORMATTED;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultListModel;
@@ -44,7 +45,6 @@ public class SearchPackage extends ServiceItemView {
 	private JTable jTable;
 	private JTextField searchedPackageField;
 	private JButton btnPesquisar;
-	private int packageId;
 
 
 	@Override
@@ -245,11 +245,21 @@ public class SearchPackage extends ServiceItemView {
 	}
 	
 	private String showsAtivoOrInativo(int status){
-		return ((status==0) ? "Desativado":"Ativo");
+		
+		String statusToShow = null;
+		
+		if(status == SERVICE_ACTIVE){
+			statusToShow = "Ativo";
+		}
+		else{
+			statusToShow = "Desativado";
+		}
+		
+		return statusToShow;
+		
 	}
 	
 	public void getPackageById(final int idPackage) throws PackageException{
-		this.packageId = idPackage;
 		
 		PackageController packageController = new PackageController();
 		Package packageToShow;

@@ -24,8 +24,6 @@ import controller.CourseController;
 import exception.CourseException;
 
 public class ShowCourseDecorator extends ServiceItemDecorator {
-
-	protected static final Integer COURSE_ACTIVE = 1;
 	
 	private JButton editTeacherBtn;
 	private JButton backBtn;
@@ -159,7 +157,7 @@ public class ShowCourseDecorator extends ServiceItemDecorator {
 			}
 
 			private void changeStatus() {
-				if(courseStatus == COURSE_ACTIVE){
+				if(courseStatus == SERVICE_ACTIVE){
 					courseStatus = 0;
 				}
 				else{

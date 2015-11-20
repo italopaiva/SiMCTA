@@ -236,10 +236,11 @@ public class PackageDAO extends DAO{
 				Integer packageValue = result.getInt(VALUE_COLUMN);
 				
 				Integer courseId = result.getInt(ID_COURSE_COLUMN);
+				Integer status = result.getInt(STATUS_COLUMN);
 
 				Course course = courseController.get(courseId);
 								
-				foundPackage = new Package(idPackage, packageName, packageValue);
+				foundPackage = new Package(idPackage, packageName, packageValue, status);
 				foundPackage.addServiceItem(course);
 				
 				result.first();

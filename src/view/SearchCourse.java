@@ -30,9 +30,7 @@ import exception.CourseException;
 
 @SuppressWarnings("serial")
 public class SearchCourse extends ServiceItemView {
-	
-	protected static final Integer COURSE_ACTIVE = 1;
-	
+		
 	private JPanel contentPane;
 	private DefaultTableModel tableModel;
 	private JScrollPane scrollPane;

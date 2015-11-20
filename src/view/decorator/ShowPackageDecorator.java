@@ -31,8 +31,6 @@ import exception.CourseException;
 import exception.PackageException;
 
 public class ShowPackageDecorator extends ServiceItemDecorator{
-
-	protected static final Integer PACKAGE_ACTIVE = 1;
 	
 	private JButton editTeacherBtn;
 	private JButton backBtn;
@@ -204,7 +202,7 @@ public class ShowPackageDecorator extends ServiceItemDecorator{
 			}
 
 			private void changeStatus() {
-				if(packageStatus == PACKAGE_ACTIVE){
+				if(packageStatus == SERVICE_ACTIVE){
 					packageStatus = 0;
 				}
 				else{
