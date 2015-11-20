@@ -2,7 +2,10 @@ package controller;
 
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import dao.StudentClassDAO;
+import exception.CPFException;
 import exception.PersonException;
 import exception.StudentClassException;
 import model.Class;
@@ -18,17 +21,24 @@ public class StudentClassController{
 		studentClassDAO = new StudentClassDAO();
 	}
 	
-	public void enrollStudentToClass(String classId, ArrayList<CPF> students) throws PersonException, StudentClassException{
+	public void enrollStudentToClass(String classId, ArrayList<String> students) throws PersonException, StudentClassException{
 		
 		Class classToEnroll = new Class(classId);
 		
-		for(CPF studentCpf : students){
+		for(String cpf : students){
 			
-			Student student = new Student(studentCpf);
-			
-			StudentClass studentClass = new StudentClass(student, classToEnroll);
-			
-			studentClassDAO.enrollStudentInClass(studentClass);
+			try{
+				CPF studentCpf = new CPF(cpf);
+				
+				Student student = new Student(studentCpf);
+				
+				StudentClass studentClass = new StudentClass(student, classToEnroll);
+				
+				studentClassDAO.enrollStudentInClass(studentClass);
+			}
+			catch(CPFException e){
+				JOptionPane.showMessageDialog(null, "Não foi possível salvar o aluno do CPF nº" + cpf + ". Clique em OK para continuar.");
+			}
 		}
 	}
 }

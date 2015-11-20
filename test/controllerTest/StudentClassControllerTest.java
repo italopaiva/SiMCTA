@@ -17,7 +17,7 @@ public class StudentClassControllerTest {
 	
 	private StudentClassController studentClassController; 
 	private String classId;
-	private ArrayList<CPF> students = new ArrayList<CPF>();
+	private ArrayList<String> students = new ArrayList<String>();
 	
 	@Before
 	public void setUp() throws Exception {
@@ -25,8 +25,8 @@ public class StudentClassControllerTest {
 		studentClassController = new StudentClassController();
 		
 		classId = "APLICAÇÃO - MA 10/2";
-		students.add(new CPF("76658496285"));
-		students.add(new CPF("82835356509"));
+		students.add("76658496285");
+		students.add("82835356509");
 	}
 
 	@Test
