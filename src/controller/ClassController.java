@@ -64,7 +64,7 @@ public class ClassController {
 			throw new ClassException(INVALID_COURSE);
 		}
 		catch(ClassException e) {
-			throw new ClassException(COULDNT_SAVE_CLASS);
+			throw new ClassException(e.getMessage());
 		}
 		
 		return classToReturn;

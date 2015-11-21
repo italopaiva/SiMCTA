@@ -51,11 +51,17 @@ public class Date extends Model{
 				day = date.substring(8,10);
 			}
 			
-			setYear(new Integer(year));
-			setMonth(new Integer(month));
-			setDay(new Integer(day));
+			try{
+				setYear(new Integer(year));
+				setMonth(new Integer(month));
+				setDay(new Integer(day));
+			}
+			catch(NumberFormatException e){
+				throw new DateException(DATE_INVALID);
+			}
 			
-		}else{
+		}
+		else{
 			throw new DateException(DATE_INVALID);
 		}
 	}

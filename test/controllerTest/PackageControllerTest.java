@@ -2,8 +2,6 @@ package controllerTest;
 
 import static org.junit.Assert.*;
 
-import java.awt.ItemSelectable;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -17,11 +15,6 @@ import org.junit.Test;
 import static org.mockito.Mockito.*;
 
 import org.mockito.*;
-
-import view.NewPackage;
-
-import com.mysql.jdbc.Connection;
-
 import controller.PackageController;
 import exception.CourseException;
 import exception.PackageException;
