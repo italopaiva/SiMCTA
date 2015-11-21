@@ -7,6 +7,7 @@ import model.Package;
 import model.Payment;
 import model.Service;
 import model.Student;
+import model.datatype.CPF;
 import dao.ServiceDAO;
 import exception.AddressException;
 import exception.CPFException;
@@ -139,7 +140,10 @@ public class ServiceController {
 		
 		Student student = new Student(studentName, studentCpf);
 		
-		Service service = new Service(student, courses, packages);
+		Service service = new Service(student);
+		
+		service = addCoursesToService(service, courses);
+		service = addPackagesToService(service, packages);
 					
 		PaymentController paymentController = new PaymentController();
 		Payment payment = paymentController.newPayment(service, paymentType, paymentForm, installments);
