@@ -4,6 +4,9 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
+import model.Payment;
+import model.Service;
+import model.Student;
 import model.datatype.Address;
 import model.datatype.CPF;
 import model.datatype.Date;
@@ -12,18 +15,38 @@ import model.datatype.RG;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.*;
 
 import controller.EnrollController;
+import controller.PaymentController;
+import controller.ServiceController;
+import controller.StudentController;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
 import exception.PaymentException;
+import exception.PersonException;
 import exception.PhoneException;
 import exception.RGException;
 import exception.ServiceException;
 import exception.StudentException;
 
 public class EnrollControllerTest {
+	
+	  @Mock (name = "studentController") //same name as private var.
+	  StudentController studentController;
+	  @Mock (name = "serviceController")
+	  ServiceController serviceController;
+	  @Mock (name = "paymentController")
+	  PaymentController paymentController;
+	  @Mock
+	  Student studentMock; //the object we want returned
+	  @Mock
+	  Service serviceMock;
+	  @Mock
+	  Payment paymentMock;
+	  @InjectMocks
+	  EnrollController enrollControllerTester; //the class to test
 
 	private EnrollController enrollController;
 	
@@ -38,8 +61,9 @@ public class EnrollControllerTest {
 	private ArrayList<String> packages;
 	
 	@Before
-	public void setUp() throws AddressException, DateException, PhoneException, CPFException, RGException{
-		enrollController = new EnrollController();
+	public void setUp() throws AddressException, DateException, PhoneException, CPFException, RGException, PersonException{
+		
+		MockitoAnnotations.initMocks(this);
 		
 		date = new Date(05, 06, 1996);
 		address = new Address("Rua 3 ", "6B", "", "72323411", "Brasilia");
@@ -50,19 +74,17 @@ public class EnrollControllerTest {
 		email = "jacoma@gmail.com";
 		courses = new ArrayList<String>();
 		packages = new ArrayList<String>();
+		
 	}
 	
 	@Test
-	public void testValidEnrollData(){
+	public void enrollStudentTest() throws StudentException, ServiceException, PaymentException{
 		
-		courses.add("1");
-		packages.add("7");
+		Mockito.when(studentController.newStudent("Ana Julia Costa", cpf, rg, date, email, address, phone1, phone2, "Maria Julia", "Julio Costa")).thenReturn(studentMock);
+		Mockito.when(serviceController.newService(studentMock, courses, packages)).thenReturn(serviceMock);
+		Mockito.when(paymentController.newPayment(serviceMock, 1, 1, 1)).thenReturn(paymentMock);
 		
-		try{
-			enrollController.enrollStudent("Ana Julia Costa", cpf, rg, date, email, address, phone1, phone2, "Maria Julia", "Julio Costa", courses, packages, 1, 1, 2);
-		}
-		catch (StudentException | ServiceException | PaymentException e){
-			fail("Should not throw this exception: " + e.getMessage());
-		}
+		enrollControllerTester.enrollStudent("Ana Julia Costa", cpf, rg, date, email, address, phone1, phone2, "Maria Julia", "Julio Costa", courses, packages, 1, 1, 1);
+
 	}
 }
