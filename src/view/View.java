@@ -114,7 +114,8 @@ public class View extends JFrame {
 		searchStudent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
-				SearchStudent searchStudentFrame = new SearchStudent();
+				PersonView searchStudentFrame = new SearchStudent();
+				searchStudentFrame.buildScreen(searchStudentFrame, null);
 				searchStudentFrame.setVisible(true);
 			}
 		});

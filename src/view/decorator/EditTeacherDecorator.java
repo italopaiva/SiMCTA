@@ -49,10 +49,10 @@ public class EditTeacherDecorator extends PersonDecorator {
 		super.createLabelsAndFields(viewToDecorate, teacher);
 		this.teacher = (Teacher) teacher;
 				
-		registerTeacherLbl.setText(teacher.getName());
-		registerTeacherLbl.setBounds(407, 12, 475, 31);
-		registerTeacherLbl.setFont(new Font("Dialog", Font.BOLD, 20));
-		frame.getContentPane().add(registerTeacherLbl);
+		registerPersonLbl.setText(teacher.getName());
+		registerPersonLbl.setBounds(407, 12, 475, 31);
+		registerPersonLbl.setFont(new Font("Dialog", Font.BOLD, 20));
+		frame.getContentPane().add(registerPersonLbl);
 		
         nameField.setBounds(115, 55, 434, 27);
         frame.getContentPane().add(nameField);

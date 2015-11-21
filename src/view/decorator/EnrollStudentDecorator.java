@@ -70,7 +70,8 @@ public class EnrollStudentDecorator extends PersonDecorator {
 	private JTable tableOfAddedCourses;
 	private JTable tableOfAddedPackages;
 	private ArrayList<String> addedCoursesId = new ArrayList<String>(); 
-	private ArrayList<String> addedPackagesId = new ArrayList<String>(); 
+	private ArrayList<String> addedPackagesId = new ArrayList<String>();
+	private JLabel paymentTypeLbl; 
 	
 	public EnrollStudentDecorator(PersonView viewToDecorate) {
 		super(viewToDecorate);
@@ -81,10 +82,10 @@ public class EnrollStudentDecorator extends PersonDecorator {
 		
 		super.createLabelsAndFields(frame,student);
         
-		registerTeacherLbl.setText("Matricular novo aluno");
-		registerTeacherLbl.setBounds(407, 12, 475, 31);
-		registerTeacherLbl.setFont(new Font("Dialog", Font.BOLD, 20));
-		frame.getContentPane().add(registerTeacherLbl);
+		registerPersonLbl.setText("Matricular novo aluno");
+		registerPersonLbl.setBounds(407, 12, 475, 31);
+		registerPersonLbl.setFont(new Font("Dialog", Font.BOLD, 20));
+		frame.getContentPane().add(registerPersonLbl);
 		
         nameField.setBounds(115, 55, 434, 27);
         frame.getContentPane().add(nameField);
@@ -141,7 +142,15 @@ public class EnrollStudentDecorator extends PersonDecorator {
 
         fatherField.setBounds(177, 404, 402, 27);
         frame.getContentPane().add(fatherField);
-                          
+
+        JLabel paymentValue = new JLabel("Valor total");
+        paymentValue.setBounds(30, 580, 200, 17);
+        frame.getContentPane().add(paymentValue);
+                       
+        JLabel paymentInstallments = new JLabel("Quantidade de Parcelas");
+        paymentInstallments.setBounds(229, 580, 190, 17);
+        frame.getContentPane().add(paymentInstallments);
+        
         paymentValueField = new JTextField();
         paymentValueField.setBounds(105, 580, 120, 27);
         frame.getContentPane().add(paymentValueField);
@@ -169,6 +178,14 @@ public class EnrollStudentDecorator extends PersonDecorator {
 		availablePackages = new DefaultComboBoxModel<String>();
         
         packages.setModel(availablePackages);
+        
+        JLabel paymentForm = new JLabel("Forma de pagamento");
+        paymentForm.setBounds(72, 520, 171, 17);
+        frame.getContentPane().add(paymentForm);
+        
+        paymentTypeLbl = new JLabel("Tipo de pagamento");
+        paymentTypeLbl.setBounds(72, 472, 150, 17);
+        frame.getContentPane().add(paymentTypeLbl);
         
         paymentTypes = new JComboBox<String>();
         paymentTypes.setBounds(221, 472, 151, 24);
