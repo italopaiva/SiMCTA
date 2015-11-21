@@ -511,7 +511,7 @@ public class ShowStudentDecorator extends PersonDecorator {
 		
 		addMoreCoursesButton = new JButton("+ Cursos/Pacotes");
 		addMoreCoursesButton.setBounds(404, 11, 158, 25);
-		internalFrame.getContentPane().add(addMoreCoursesButton);
+		frame.getContentPane().add(addMoreCoursesButton);
 
 		addMoreCoursesButton.addActionListener(new ActionListener() {
 				
