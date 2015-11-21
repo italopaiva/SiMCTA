@@ -8,7 +8,7 @@ public class RunMigration {
 
 	public static void main(String[] args) {
 		
-		M013_AddingClassStatusColumn m = new M013_AddingClassStatusColumn();
+		M015_UpdatingIdClassColumnToClass m = new M015_UpdatingIdClassColumnToClass();
 		
 		String message = "";
 		try {
