@@ -18,7 +18,7 @@ public class ServiceItemForm extends ServiceItemView {
 		frame.setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JLabel courseNameLabel = new JLabel("* Nome do curso");
+		JLabel courseNameLabel = new JLabel("* Nome");
 		courseNameLabel.setBounds(274, 65, 124, 17);
 		frame.getContentPane().add(courseNameLabel);
 

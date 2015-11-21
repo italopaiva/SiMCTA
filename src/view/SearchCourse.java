@@ -42,23 +42,6 @@ public class SearchCourse extends ServiceItemView {
 
 	private CourseController courseController;
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SearchCourse frame = new SearchCourse();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-
 	@Override
 	public void createLabelsAndFields(JFrame frame, ServiceItem course) {
 		contentPane = new JPanel();
