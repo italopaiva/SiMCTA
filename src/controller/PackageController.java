@@ -66,11 +66,10 @@ public class PackageController {
 	 */
 	public void updatePackage(Integer packageId, String packageName, Integer packageValue, ArrayList<String> packageCourses)
 		throws PackageException{
-		
+	
 		Package newPackage = new Package(packageId, packageName, packageValue);
 		
 		for(String courseId : packageCourses){
-			
 			Integer id = new Integer(courseId);
 			Course course = courseController.get(id);
 			
@@ -127,7 +126,7 @@ public class PackageController {
 		Package foundPackage;
 
 		foundPackage = packageDAO.get(idPackage);
-				
+
 		return foundPackage;
 	}
 	

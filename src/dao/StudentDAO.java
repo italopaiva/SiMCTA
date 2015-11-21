@@ -150,7 +150,7 @@ public class StudentDAO extends DAO {
 		ResultSet resultOfTheSearch = null;
 		String receivedCPF = studentCpf.getCpf();
 		
-		String query = "SELECT * FROM " + STUDENT_TABLE_NAME + " WHERE " + CPF_COLUMN + "= \"" + receivedCPF + "\""; 
+		String query = "SELECT * FROM " + STUDENT_TABLE_NAME + " WHERE " + CPF_COLUMN + "= '" + receivedCPF + "'"; 
 		Student student = null;
 
 		try{

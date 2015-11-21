@@ -1,4 +1,4 @@
-package view;
+package view.decorator;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -15,6 +15,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -25,8 +26,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
+import view.PersonView;
+import view.View;
 import model.Course;
 import model.Package;
+import model.Person;
 import model.datatype.Address;
 import model.datatype.CPF;
 import model.datatype.Date;
@@ -48,34 +52,12 @@ import exception.RGException;
 import exception.ServiceException;
 import exception.StudentException;
 
-public class EnrollStudent extends View {
+public class EnrollStudentDecorator extends PersonDecorator {
 	
-	private JPanel contentPane;
-	private JTextField nameField;
-	private JTextField cpfField;
-	private JTextField rgField;
-	private JTextField cellField;
-	private JTextField phoneField;
-	private JTextField addressField;
-	private JTextField cepField;
-	private JTextField cityField;
-	private JTextField emailField;
-	private JFormattedTextField birthdateField;
-	private JTextField motherField;
-	private JTextField fatherField;
-	private JLabel firstListLabel;
-	private JLabel secondListLabel;
 	private JTextField paymentValueField;
 	private JTextField paymentInstallmentsField;
-	private JLabel paymentTypeLbl;
 	private DefaultTableModel courseTableModel;
 	private DefaultTableModel packageTableModel;
-	private JTextField ddCellField;
-	private JTextField ddPhoneField;
-	private JTextField issuingInstitutionField;
-	private JTextField ufField;
-	private JTextField numberField;
-	private JTextField complementField;
 	private JComboBox<String> paymentForms;
 	private JComboBox<String> paymentTypes;
 	private JComboBox<String> packages;
@@ -88,213 +70,126 @@ public class EnrollStudent extends View {
 	private JTable tableOfAddedCourses;
 	private JTable tableOfAddedPackages;
 	private ArrayList<String> addedCoursesId = new ArrayList<String>(); 
-	private ArrayList<String> addedPackagesId = new ArrayList<String>(); 
-
-	public EnrollStudent(){
-		
-		super();
-		
-		getContentPane().setLayout(null);
-		
-		createLabelsAndFields();
-		
-		try{
-			getAllCoursesToSelect();
-			
-			getAllPackagesToSelect();
-		} 
-		catch(CourseException | PackageException e){
-			showInfoMessage(e.getMessage());
-		}
-	}
+	private ArrayList<String> addedPackagesId = new ArrayList<String>();
+	private JLabel paymentTypeLbl; 
 	
-	/**
-	 * Creates the labels and fields of the frame
-	 */
-	public void createLabelsAndFields(){
+	public EnrollStudentDecorator(PersonView viewToDecorate) {
+		super(viewToDecorate);
+	}
+
+	@Override
+	public void createLabelsAndFields(JFrame frame, Person student){
 		
-		contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        setContentPane(contentPane);
-        contentPane.setLayout(null);
+		super.createLabelsAndFields(frame,student);
         
-        JLabel enrollStudentLbl = new JLabel("Matricular novo aluno");
-		enrollStudentLbl.setBounds(407, 12, 275, 31);
-		enrollStudentLbl.setFont(new Font("Dialog", Font.BOLD, 20));
-		contentPane.add(enrollStudentLbl);
-        
-        JLabel dataOfStudentLbl = new JLabel("DADOS DO ALUNO");
-        dataOfStudentLbl.setFont(new Font("Dialog", Font.BOLD, 12));
-        dataOfStudentLbl.setBounds(189, 36, 150, 17);
-        contentPane.add(dataOfStudentLbl);
-        
-        JLabel nameLbl = new JLabel("Nome");
-        nameLbl.setBounds(40, 60, 70, 17);
-        contentPane.add(nameLbl);
-        
-        nameField = new JTextField();
-        nameField.setBounds(85, 55, 434, 27);
-        contentPane.add(nameField);
+		registerPersonLbl.setText("Matricular novo aluno");
+		registerPersonLbl.setBounds(407, 12, 475, 31);
+		registerPersonLbl.setFont(new Font("Dialog", Font.BOLD, 20));
+		frame.getContentPane().add(registerPersonLbl);
+		
+        nameField.setBounds(115, 55, 434, 27);
+        frame.getContentPane().add(nameField);
         nameField.setColumns(10);
         
-        JLabel cpfLabel = new JLabel("CPF");
-        cpfLabel.setBounds(40, 102, 70, 17);
-        contentPane.add(cpfLabel);
-        
-        JLabel rgLabel = new JLabel("Número RG");
-        rgLabel.setBounds(213, 97, 85, 17);
-        contentPane.add(rgLabel);
-        
-        cpfField = new JTextField();
-        cpfField.setBounds(72, 97, 129, 27);
-        contentPane.add(cpfField);
-        cpfField.setColumns(10);
-        
-        rgField = new JTextField();
-        rgField.setBounds(297, 92, 100, 27);
-        contentPane.add(rgField);
+        rgField.setBounds(327, 92, 100, 27);
+        frame.getContentPane().add(rgField);
         rgField.setColumns(10);
-
-        JLabel birthdateLabel = new JLabel("Data de Nascimento");
-        birthdateLabel.setBounds(30, 171, 200, 17);
-        contentPane.add(birthdateLabel);
         
-        MaskFormatter birthdateMask;
-		try{
-			birthdateMask = new MaskFormatter("##/##/####");
-			birthdateMask.setValidCharacters("0123456789");
-			birthdateMask.setValueContainsLiteralCharacters(true);
-	        
-	        birthdateField = new JFormattedTextField(birthdateMask);
-		}
-		catch(ParseException e2){
-			e2.printStackTrace();
-		}
-
-        birthdateField.setBounds(30, 195, 190, 27);
-        contentPane.add(birthdateField);
-        birthdateField.setColumns(10);
+		issuingInstitutionField.setColumns(10);
+		issuingInstitutionField.setBounds(203, 131, 85, 27);
+		frame.getContentPane().add(issuingInstitutionField);
+		
+		ufField.setColumns(10);
+		ufField.setBounds(417, 132, 100, 27);
+		frame.getContentPane().add(ufField);
+		
+        dddCellField.setBounds(379, 166, 40, 27);
+        frame.getContentPane().add(dddCellField);
+        dddCellField.setColumns(10);
         
-        JLabel cellLabel = new JLabel("Celular");
-        cellLabel.setBounds(285, 171, 70, 17);
-        contentPane.add(cellLabel);
-               
-        JLabel phoneLabel = new JLabel("Telefone");
-        phoneLabel.setBounds(285, 205, 70, 17);
-        contentPane.add(phoneLabel);
-        
-        ddCellField = new JTextField();
-        ddCellField.setBounds(359, 166, 40, 27);
-        contentPane.add(ddCellField);
-        ddCellField.setColumns(10);
-        
-        cellField = new JTextField();
-        cellField.setBounds(399, 166, 100, 27);
-        contentPane.add(cellField);
+        cellField.setBounds(429, 166, 100, 27);
+        frame.getContentPane().add(cellField);
         cellField.setColumns(10);
         
-        ddPhoneField = new JTextField();
-        ddPhoneField.setBounds(359, 200, 40, 27);
-        contentPane.add(ddPhoneField);
-        ddPhoneField.setColumns(10);
+        dddPhoneField.setBounds(379, 200, 40, 27);
+        frame.getContentPane().add(dddPhoneField);
+        dddPhoneField.setColumns(10);
         
-        phoneField = new JTextField();
-        phoneField.setBounds(399, 200, 100, 27);
-        contentPane.add(phoneField);
+        phoneField.setBounds(429, 200, 100, 27);
+        frame.getContentPane().add(phoneField);
         phoneField.setColumns(10);
-        
-        JLabel emailLabel = new JLabel("Email");
-        emailLabel.setBounds(30, 248, 70, 17);
-        contentPane.add(emailLabel);
-        
-        emailField = new JTextField();
-        emailField.setBounds(85, 243, 334, 27);
-        contentPane.add(emailField);
+               
+        emailField.setBounds(115, 243, 334, 27);
+        frame.getContentPane().add(emailField);
 
-        JLabel addressLabel = new JLabel("Endereço");
-        addressLabel.setBounds(30, 282, 70, 17);
-        contentPane.add(addressLabel);
-        
-        addressField = new JTextField();
-        addressField.setBounds(105, 277, 344, 27);
-        contentPane.add(addressField);
+        addressField.setBounds(145, 277, 344, 27);
+        frame.getContentPane().add(addressField);
 
-        JLabel cepLabel = new JLabel("CEP");
-        cepLabel.setBounds(416, 321, 33, 17);
-        contentPane.add(cepLabel);
+        cepField.setBounds(535, 316, 84, 27);
+        frame.getContentPane().add(cepField);
         
-        cepField = new JTextField();
-        cepField.setBounds(455, 316, 84, 27);
-        contentPane.add(cepField);
+        cityField.setBounds(385, 316, 105, 27);
+        frame.getContentPane().add(cityField);
 
-        JLabel cityLabel = new JLabel("Cidade");
-        cityLabel.setBounds(266, 321, 70, 17);
-        contentPane.add(cityLabel);
-        
-        cityField = new JTextField();
-        cityField.setBounds(326, 316, 85, 27);
-        contentPane.add(cityField);
-
-        JLabel motherLabel = new JLabel("Nome da mãe");
-        motherLabel.setBounds(30, 369, 95, 17);
-        contentPane.add(motherLabel);
-        
-        motherField = new JTextField();
-        motherField.setBounds(137, 364, 402, 27);
-        contentPane.add(motherField);
-
-        JLabel fatherLabel = new JLabel("Nome do pai");
-        fatherLabel.setBounds(30, 409, 95, 17);
-        contentPane.add(fatherLabel);
-        
-        fatherField = new JTextField();
-        fatherField.setBounds(137, 404, 402, 27);
-        contentPane.add(fatherField);
-        
-        firstListLabel = new JLabel();
-        firstListLabel.setBounds(562, 73, 120, 17);
-        contentPane.add(firstListLabel);
-        		
-		JLabel coursesLabel = new JLabel("Cursos");
-		coursesLabel.setBounds(546, 73, 70, 17);
-		contentPane.add(coursesLabel);
+		numberField.setBounds(522, 277, 57, 27);
+		frame.getContentPane().add(numberField);
 		
-		secondListLabel = new JLabel("Pacotes");
-        secondListLabel.setBounds(546, 308, 70, 17);
-        contentPane.add(secondListLabel);
-        
-        JLabel dataOfPaymentLbl = new JLabel("DADOS DO PAGAMENTO");
-        dataOfPaymentLbl.setFont(new Font("Dialog", Font.BOLD, 12));
-        dataOfPaymentLbl.setBounds(189, 443, 200, 17);
-        contentPane.add(dataOfPaymentLbl);
-        
-        JLabel paymentForm = new JLabel("Forma de pagamento");
-        paymentForm.setBounds(42, 520, 171, 17);
-        contentPane.add(paymentForm);
-        
-        paymentTypeLbl = new JLabel("Tipo de pagamento");
-        paymentTypeLbl.setBounds(42, 472, 150, 17);
-        contentPane.add(paymentTypeLbl);
+		complementField.setBounds(177, 316, 122, 27);
+		frame.getContentPane().add(complementField);
+		        
+        motherField.setBounds(177, 364, 402, 27);
+        frame.getContentPane().add(motherField);
+
+        fatherField.setBounds(177, 404, 402, 27);
+        frame.getContentPane().add(fatherField);
 
         JLabel paymentValue = new JLabel("Valor total");
-        paymentValue.setBounds(30, 586, 200, 17);
-        contentPane.add(paymentValue);
-                
+        paymentValue.setBounds(30, 580, 200, 17);
+        frame.getContentPane().add(paymentValue);
+                       
+        JLabel paymentInstallments = new JLabel("Quantidade de Parcelas");
+        paymentInstallments.setBounds(229, 580, 190, 17);
+        frame.getContentPane().add(paymentInstallments);
+        
         paymentValueField = new JTextField();
         paymentValueField.setBounds(105, 580, 120, 27);
-        contentPane.add(paymentValueField);
+        frame.getContentPane().add(paymentValueField);
         
         paymentInstallmentsField = new JTextField();
         paymentInstallmentsField.setBounds(412, 581, 27, 27);
-        contentPane.add(paymentInstallmentsField);
+        frame.getContentPane().add(paymentInstallmentsField);
+  
+        packages = new JComboBox<String>();
+        packages.setBounds(583, 97, 251, 31);
+        frame.getContentPane().add(packages);
+        availableCourses = new DefaultComboBoxModel<String>();
+		
+        packages.setModel(availableCourses);
         
-        JLabel paymentInstallments = new JLabel("Quantidade de Parcelas");
-        paymentInstallments.setBounds(229, 580, 190, 17);
-        contentPane.add(paymentInstallments);
+		JScrollPane scrollPaneAddedCourses = new JScrollPane();
+		scrollPaneAddedCourses.setBounds(583, 130, 251, 169);
+		frame.getContentPane().add(scrollPaneAddedCourses);
+		scrollPaneAddedCourses.setBackground(Color.WHITE);
+		
+        packages = new JComboBox<String>();
+		packages.setBounds(583, 377, 251, 31);
+		frame.getContentPane().add(packages);
+        
+		availablePackages = new DefaultComboBoxModel<String>();
+        
+        packages.setModel(availablePackages);
+        
+        JLabel paymentForm = new JLabel("Forma de pagamento");
+        paymentForm.setBounds(72, 520, 171, 17);
+        frame.getContentPane().add(paymentForm);
+        
+        paymentTypeLbl = new JLabel("Tipo de pagamento");
+        paymentTypeLbl.setBounds(72, 472, 150, 17);
+        frame.getContentPane().add(paymentTypeLbl);
         
         paymentTypes = new JComboBox<String>();
         paymentTypes.setBounds(221, 472, 151, 24);
-        contentPane.add(paymentTypes);
+        frame.getContentPane().add(paymentTypes);
         
         DefaultComboBoxModel<String> paymentTypesModel = new DefaultComboBoxModel<String>();
         paymentTypesModel.addElement("À vista");
@@ -304,7 +199,7 @@ public class EnrollStudent extends View {
         
         paymentForms = new JComboBox<String>();
         paymentForms.setBounds(221, 516, 151, 24);
-        contentPane.add(paymentForms);
+        frame.getContentPane().add(paymentForms);
         
         DefaultComboBoxModel<String> paymentFormsModel = new DefaultComboBoxModel<String>();
         paymentFormsModel.addElement("Dinheiro");
@@ -312,30 +207,10 @@ public class EnrollStudent extends View {
         paymentFormsModel.addElement("Cheque");
         
         paymentForms.setModel(paymentFormsModel);
-        
-        packages = new JComboBox<String>();
-        packages.setBounds(553, 97, 251, 31);
-        contentPane.add(packages);
-        availableCourses = new DefaultComboBoxModel<String>();
-		
-        packages.setModel(availableCourses);
-        
-		JScrollPane scrollPaneAddedCourses = new JScrollPane();
-		scrollPaneAddedCourses.setBounds(553, 130, 251, 169);
-		contentPane.add(scrollPaneAddedCourses);
-		scrollPaneAddedCourses.setBackground(Color.WHITE);
-		
-        packages = new JComboBox<String>();
-		packages.setBounds(553, 337, 251, 31);
-		contentPane.add(packages);
-        
-		availablePackages = new DefaultComboBoxModel<String>();
-        
-        packages.setModel(availablePackages);
 		
 		JScrollPane scrollPaneAddedPackages = new JScrollPane();
-		scrollPaneAddedPackages.setBounds(553, 370, 251, 169);
-		contentPane.add(scrollPaneAddedPackages);
+		scrollPaneAddedPackages.setBounds(583, 410, 251, 169);
+		frame.getContentPane().add(scrollPaneAddedPackages);
 		scrollPaneAddedPackages.setBackground(Color.WHITE);
 					
 		String [] columnsAddedCourses = {"Cursos adicionados", "ID"};
@@ -344,7 +219,6 @@ public class EnrollStudent extends View {
 
 		tableOfAddedCourses = new JTable(courseTableModel);
 		scrollPaneAddedCourses.setViewportView(tableOfAddedCourses);
-		disposeColumns(tableOfAddedCourses);
 			
 		String [] columnsAddedPackages = {"Pacotes adicionados", "ID"};
 		
@@ -352,8 +226,55 @@ public class EnrollStudent extends View {
 
 		tableOfAddedPackages = new JTable(packageTableModel);
 		scrollPaneAddedPackages.setViewportView(tableOfAddedPackages);
+		
+		disposeColumns(tableOfAddedCourses);
+
 		disposeColumns(tableOfAddedPackages);
-        
+ 
+	
+		try {
+			getAllCoursesToSelect();
+			getAllPackagesToSelect();
+		} catch (CourseException | PackageException e1) {
+			e1.printStackTrace();
+		}
+		
+	}
+	
+	@Override
+	public void createMasks(JFrame frame){
+		MaskFormatter birthdateMask = null;
+        MaskFormatter cpfMask = null;
+		try{
+	        // Mask for cpf
+	        cpfMask = new MaskFormatter("###########");
+	        cpfMask.setValidCharacters("0123456789");
+	        cpfMask.setValueContainsLiteralCharacters(false);
+
+	        cpfField = new JFormattedTextField(cpfMask);
+	        cpfField.setBounds(102, 97, 129, 27);
+	        frame.getContentPane().add(cpfField);
+	        cpfField.setColumns(10);
+	        
+			// Mask for birthdate
+			birthdateMask = new MaskFormatter("##/##/####");
+			birthdateMask.setValidCharacters("0123456789");
+			birthdateMask.setValueContainsLiteralCharacters(true);
+	        
+	        birthdateField = new JFormattedTextField(birthdateMask);
+	        birthdateField.setBounds(70, 195, 190, 27);
+	        frame.getContentPane().add(birthdateField);
+	        birthdateField.setColumns(10);
+
+		}
+		catch(ParseException e2){
+			e2.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void createButtons(JFrame frame){
+	       
         JButton enrollBtn = new JButton("Matricular");
 		enrollBtn.addMouseListener(new MouseAdapter() {
 
@@ -366,11 +287,11 @@ public class EnrollStudent extends View {
 
 		});
 		enrollBtn.setBounds(422, 631, 117, 25);
-		contentPane.add(enrollBtn);
+		frame.getContentPane().add(enrollBtn);
 		
 		JButton addCourseBtn = new JButton("Adicionar Curso");
 		addCourseBtn.setBounds(835, 97, 151, 31);
-		contentPane.add(addCourseBtn);
+		frame.getContentPane().add(addCourseBtn);
 		addCourseBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -398,7 +319,7 @@ public class EnrollStudent extends View {
 		
 		JButton removeCourseBtn = new JButton("Remover Curso");
 		removeCourseBtn.setBounds(835, 137, 151, 31);
-		contentPane.add(removeCourseBtn);
+		frame.getContentPane().add(removeCourseBtn);
 		removeCourseBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -446,11 +367,11 @@ public class EnrollStudent extends View {
 				packageTableModel.addRow(allPackages);
 			}
 		});
-		addPackageBtn.setBounds(835, 337, 151, 31);
-		contentPane.add(addPackageBtn);
+		addPackageBtn.setBounds(835, 410, 151, 31);
+		frame.getContentPane().add(addPackageBtn);
 		
 		JButton removePackageBtn = new JButton("Remover Pacote");
-		removePackageBtn.setBounds(835, 377, 151, 31);
+		removePackageBtn.setBounds(835, 450, 151, 31);
 		removePackageBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -470,44 +391,10 @@ public class EnrollStudent extends View {
 			}
 			
 		});
-		contentPane.add(removePackageBtn);
-		
-		issuingInstitutionField = new JTextField();
-		issuingInstitutionField.setColumns(10);
-		issuingInstitutionField.setBounds(163, 131, 85, 27);
-		contentPane.add(issuingInstitutionField);
-		
-		JLabel issuingInstitutionLbl = new JLabel("Órgão expedidor");
-		issuingInstitutionLbl.setBounds(30, 137, 129, 15);
-		contentPane.add(issuingInstitutionLbl);
-		
-		ufField = new JTextField();
-		ufField.setColumns(10);
-		ufField.setBounds(297, 132, 100, 27);
-		contentPane.add(ufField);
-		
-		JLabel ufLbl = new JLabel("UF");
-		ufLbl.setBounds(266, 142, 27, 17);
-		contentPane.add(ufLbl);
-		
-		JLabel numberLbl = new JLabel("Nº");
-		numberLbl.setBounds(455, 282, 33, 17);
-		contentPane.add(numberLbl);
-		
-		numberField = new JTextField();
-		numberField.setBounds(482, 277, 57, 27);
-		contentPane.add(numberField);
-		
-		complementField = new JTextField();
-		complementField.setBounds(137, 316, 122, 27);
-		contentPane.add(complementField);
-		
-		JLabel complementLbl = new JLabel("Complemento");
-		complementLbl.setBounds(30, 321, 105, 17);
-		contentPane.add(complementLbl);
-
+		frame.getContentPane().add(removePackageBtn);
 	}
-
+	
+	
 	/**
 	 * Dispose the id and duration columns
 	 * @param table - Receives the table to dispose columns
@@ -607,10 +494,10 @@ public class EnrollStudent extends View {
 			
 			Address address = new Address(addressInfo, addressNumber, addressComplement, addressCep, addressCity);
 			
-			String ddCell = ddCellField.getText();
+			String ddCell = dddCellField.getText();
 			String cellNumber = cellField.getText();
 								
-			String ddPhone = ddPhoneField.getText();
+			String ddPhone = dddPhoneField.getText();
 			String phoneNumber = phoneField.getText();
 			
 			Phone principalPhone;

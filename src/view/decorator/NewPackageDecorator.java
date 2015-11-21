@@ -1,4 +1,4 @@
-package view;
+package view.decorator;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -10,82 +10,155 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
 import model.Course;
+import model.ServiceItem;
+import view.ServiceItemView;
+import view.SimCta;
 import controller.CourseController;
 import controller.PackageController;
 import exception.CourseException;
 import exception.PackageException;
 
-public class NewPackage extends View{
+public class NewPackageDecorator extends ServiceItemDecorator{
 	
 	private static final int NOW_ROW_SELECTED = -1;
 	
-	private JPanel contentPane;
-	private JTextField packageNameField;
-	private JFormattedTextField valueField;
 	private DefaultTableModel tableModel;
-	private JTextField packageDurationField;
 	private ArrayList <String> coursesName;
 	private ArrayList <String> coursesId;
 	private ArrayList <String> coursesDuration;
 	private DefaultTableModel tableSecondModel;
+	private JTable tableOfCourses;
+	private JTable tableOfAddedCourses;
 
-	/**
-	 * Create the frame.
-	 * @throws SQLException 
-	 * @throws CourseException 
-	 */
-	public NewPackage() throws SQLException, CourseException {
-		
-		super();
-		
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		coursesName = null;
-		coursesId = null;
-		coursesDuration = null;
-		
-		createLabelsAndFields();
-					
-		createMasks();				
-			
-		getAllCoursesToSelect();
-			
-		createAPackage();
+	private JButton addCourseButton;
 
-		
+	private JButton removeAddedCourseButton;
+
+	
+	public NewPackageDecorator(ServiceItemView viewToDecorate) {
+		super(viewToDecorate);
 	}
 	
-	/**
-	 * Creates a new package
-	 */
-	private void createAPackage() {
+	@Override
+	public void createLabelsAndFields(JFrame frame, ServiceItem packageInstance) {
+		
+		super.createLabelsAndFields(frame, packageInstance);
+		this.frame = frame;
+		
+		nameField.setBounds(276, 74, 346, 30);
+		frame.getContentPane().add(nameField);
+		nameField.setColumns(10);
+
+		
+		JLabel lblC = new JLabel("Novo pacote");
+		lblC.setFont(new Font("Dialog", Font.BOLD, 20));
+		lblC.setBounds(426, 15, 144, 15);
+		frame.getContentPane().add(lblC);
+				
+		JLabel coursesLabel = new JLabel("Cursos:");
+		coursesLabel.setBounds(76, 252, 144, 15);
+		frame.getContentPane().add(coursesLabel);
+	
+		final JTextArea listAddedCourses = new JTextArea();
+		listAddedCourses.setBounds(276, 333, 294, -55);
+		frame.getContentPane().add(listAddedCourses);
+
+		JLabel label = new JLabel("Adicionados:");
+		label.setBounds(673, 252, 144, 15);
+		frame.getContentPane().add(label);
+				
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(76, 281, 353, 169);
+		frame.getContentPane().add(scrollPane);
+		scrollPane.setBackground(Color.WHITE);
+		
+		JScrollPane scrollPaneAddedCourses = new JScrollPane();
+		scrollPaneAddedCourses.setBounds(576, 281, 353, 169);
+		frame.getContentPane().add(scrollPaneAddedCourses);
+		scrollPaneAddedCourses.setBackground(Color.WHITE);
+		
+		String [] columns = {"Cursos disponíveis", "ID", "Duração"};
+		
+		tableModel = new DefaultTableModel(null, columns);			
+
+		tableOfCourses = new JTable(tableModel);
+		
+		disposeColumns(tableOfCourses);
+		tableOfCourses.setBackground(Color.WHITE);
+		scrollPane.setViewportView(tableOfCourses);
+		
+		String [] columnsAddedCourses = {"Cursos adicionados", "ID", "Duração"};
+		
+		tableSecondModel = new DefaultTableModel(null, columnsAddedCourses);			
+
+		tableOfAddedCourses = new JTable(tableSecondModel);
+		scrollPaneAddedCourses.setViewportView(tableOfAddedCourses);
+		disposeColumns(tableOfAddedCourses);
+
+		
+		
+		try {
+			getAllCoursesToSelect();
+		} 
+		catch(CourseException | SQLException e){
+			
+		}
+	}
+
+	@Override
+	public void createMasks(JFrame frame) {
+		super.createMasks(frame);		
+		MaskFormatter durationMask = null;
+		MaskFormatter valueMask = null;
+		try {
+			durationMask = new MaskFormatter("## semanas");
+			durationMask.setValidCharacters("0123456789");
+			durationMask.setValueContainsLiteralCharacters(false);
+			
+			durationField = new JFormattedTextField(durationMask);
+			durationField.setBounds(276, 143, 132, 25);
+			durationField.setEditable(false);
+			frame.getContentPane().add(durationField);
+			
+			valueMask = new MaskFormatter("R$ ####,##");
+			valueMask.setValidCharacters("0123456789");
+			valueMask.setValueContainsLiteralCharacters(false);
+			
+			valueField = new JFormattedTextField(valueMask);
+			valueField.setBounds(284, 224,124, 28);
+			frame.getContentPane().add(valueField);
+		} 
+		catch (ParseException e) {
+			
+		}
+	}
+
+	@Override
+	public void createButtons(JFrame frame) {
+		super.createButtons(frame);		
 		
 		JButton registerPackageButton = new JButton("Cadastrar");
 		registerPackageButton.setBackground(Color.WHITE);
 		registerPackageButton.setBounds(456, 525, 114, 25);
-		contentPane.add(registerPackageButton);
+		frame.getContentPane().add(registerPackageButton);
 		
 		registerPackageButton.addMouseListener(new MouseAdapter(){
 			
 			@Override
 			public void mouseClicked(MouseEvent e){		
 				
-				String packageName = packageNameField.getText();
+				String packageName = nameField.getText();
 				Integer packageDuration = calculateDuration(coursesDuration);
 				Integer packageValue;
 				Object packageValueField = valueField.getValue(); 
@@ -117,49 +190,30 @@ public class NewPackage extends View{
 			}
 
 		});
-
-	}
-
-	/**
-	 * Creates the masks of value and duration fields
-	 */
-	public void createMasks() {
 		
-		MaskFormatter durationMask = null;
-		MaskFormatter valueMask = null;
-		try {
-			durationMask = new MaskFormatter("## semanas");
-			durationMask.setValidCharacters("0123456789");
-			durationMask.setValueContainsLiteralCharacters(false);
-			
-			valueMask = new MaskFormatter("R$ ####,##");
-			valueMask.setValidCharacters("0123456789");
-			valueMask.setValueContainsLiteralCharacters(false);
-		} 
-		catch (ParseException e) {
-			
-		}
+		addCourseButton = new JButton("Adicionar");
+		addCourseButton.setBackground(Color.WHITE);
+		addCourseButton.setBounds(452, 333, 114, 25);
+		frame.getContentPane().add(addCourseButton);
+		
+		removeAddedCourseButton = new JButton("Remover");
+		removeAddedCourseButton.setBackground(Color.WHITE);
+		removeAddedCourseButton.setBounds(452, 383, 114, 25);
+		frame.getContentPane().add(removeAddedCourseButton);
+		
+		
+		addCourse(tableOfCourses, tableOfAddedCourses);
 
-		valueField = new JFormattedTextField(valueMask);
-		valueField.setBounds(276, 147, 124, 28);
-		contentPane.add(valueField);
-		
-		packageDurationField = new JFormattedTextField(durationMask);
-		packageDurationField.setBounds(550, 147, 124, 28);
-		contentPane.add(packageDurationField);
-		packageDurationField.setColumns(10);
-		packageDurationField.setEditable(false);
-		
 	}
 
 	/**
 	 * Creates all labels and fields on frame
 	 */
 	public void createLabelsAndFields() {
-		packageNameField = new JTextField();
-		packageNameField.setBounds(276, 74, 346, 30);
-		contentPane.add(packageNameField);
-		packageNameField.setColumns(10);
+		nameField = new JTextField();
+		nameField.setBounds(276, 74, 346, 30);
+		contentPane.add(nameField);
+		nameField.setColumns(10);
 		
 		JLabel packageNameLabel = new JLabel("Nome do pacote");
 		packageNameLabel.setBounds(276, 50, 124, 17);
@@ -178,47 +232,7 @@ public class NewPackage extends View{
 		valueLabel.setBounds(278, 120, 70, 15);
 		contentPane.add(valueLabel);
 		
-		JLabel coursesLabel = new JLabel("Cursos");
-		coursesLabel.setBounds(276, 202, 144, 15);
-		contentPane.add(coursesLabel);
 	
-		final JTextArea listAddedCourses = new JTextArea();
-		listAddedCourses.setBounds(276, 283, 294, -55);
-		contentPane.add(listAddedCourses);
-
-		JLabel label = new JLabel("Adicionados:");
-		label.setBounds(673, 202, 144, 15);
-		contentPane.add(label);
-				
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(76, 231, 353, 169);
-		contentPane.add(scrollPane);
-		scrollPane.setBackground(Color.WHITE);
-		
-		JScrollPane scrollPaneAddedCourses = new JScrollPane();
-		scrollPaneAddedCourses.setBounds(576, 231, 353, 169);
-		contentPane.add(scrollPaneAddedCourses);
-		scrollPaneAddedCourses.setBackground(Color.WHITE);
-		
-		String [] columns = {"Cursos disponíveis", "ID", "Duração"};
-		
-		tableModel = new DefaultTableModel(null, columns);			
-
-		final JTable tableOfCourses = new JTable(tableModel);
-		
-		disposeColumns(tableOfCourses);
-		tableOfCourses.setBackground(Color.WHITE);
-		scrollPane.setViewportView(tableOfCourses);
-		
-		String [] columnsAddedCourses = {"Cursos adicionados", "ID", "Duração"};
-		
-		tableSecondModel = new DefaultTableModel(null, columnsAddedCourses);			
-
-		final JTable tableOfAddedCourses = new JTable(tableSecondModel);
-		scrollPaneAddedCourses.setViewportView(tableOfAddedCourses);
-		disposeColumns(tableOfAddedCourses);
-
-		addCourse(tableOfCourses, tableOfAddedCourses);
 	}
 
 	/**
@@ -232,8 +246,7 @@ public class NewPackage extends View{
 		coursesId = new ArrayList<String>(); 
 		coursesDuration = new ArrayList<String>(); 
 					
-		JButton addCourseButton = new JButton("Adicionar");
-		addCourseButton.setBackground(Color.WHITE);
+		
 		addCourseButton.addMouseListener(new MouseAdapter(){
 			
 			@Override
@@ -267,7 +280,7 @@ public class NewPackage extends View{
 	
 				    //Show the current duration
 				    Integer duration = calculateDuration(coursesDuration);
-				    packageDurationField.setText(duration.toString());
+				    durationField.setText(duration.toString());
 				}	
 				else{
 					showInfoMessage("Selecione um curso da lista de cursos disponíveis");
@@ -276,11 +289,7 @@ public class NewPackage extends View{
 			
 
 		});
-		addCourseButton.setBounds(452, 231, 114, 25);
-		contentPane.add(addCourseButton);
 		
-		JButton removeAddedCourseButton = new JButton("Remover");
-		removeAddedCourseButton.setBackground(Color.WHITE);
 		removeAddedCourseButton.addMouseListener(new MouseAdapter(){
 			
 			@Override
@@ -326,7 +335,7 @@ public class NewPackage extends View{
 	
 				    //Show the current duration
 				    Integer duration = calculateDuration(coursesDuration);
-				    packageDurationField.setText(duration.toString());
+				    durationField.setText(duration.toString());
 				    
 				}
 				else{
@@ -335,9 +344,7 @@ public class NewPackage extends View{
 			}
 
 		});
-		removeAddedCourseButton.setBounds(452, 281, 114, 25);
-		contentPane.add(removeAddedCourseButton);
-		
+
 	}
 
 	/**

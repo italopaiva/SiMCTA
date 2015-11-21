@@ -96,4 +96,6 @@ public class Course extends ServiceItem{
 	public String getCourseDescription(){
 		return this.courseDescription;
 	}
+	
+
 }

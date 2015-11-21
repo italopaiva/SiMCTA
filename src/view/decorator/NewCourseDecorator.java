@@ -15,30 +15,35 @@ import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
 import model.Course;
-import view.CourseView;
+import model.ServiceItem;
+import view.ServiceItemView;
 import view.SimCta;
 import controller.CourseController;
 import exception.CourseException;
 
 @SuppressWarnings("serial")
-public class NewCourseDecorator extends CourseDecorator{
+public class NewCourseDecorator extends ServiceItemDecorator{
 	
 
-	public NewCourseDecorator(CourseView viewToDecorate) {
+	public NewCourseDecorator(ServiceItemView viewToDecorate) {
 		super(viewToDecorate);
 	}
 	
 	@Override
-	public void createLabelsAndFields(JFrame frame, Course course) {
+	public void createLabelsAndFields(JFrame frame, ServiceItem course) {
 		super.createLabelsAndFields(frame, course);
-		courseNameField.setBounds(276, 74, 346, 30);
-		frame.getContentPane().add(courseNameField);
-		courseNameField.setColumns(10);
+		nameField.setBounds(276, 74, 346, 30);
+		frame.getContentPane().add(nameField);
+		nameField.setColumns(10);
 
+        
+        JLabel descriptionLabel = new JLabel("Descrição do curso");
+        descriptionLabel.setBounds(284, 264, 144, 15);
+        frame.getContentPane().add(descriptionLabel);
 		
 		JLabel lblC = new JLabel("Novo curso");
 		lblC.setFont(new Font("Dialog", Font.BOLD, 20));
-		lblC.setBounds(426, 12, 144, 15);
+		lblC.setBounds(426, 15, 144, 15);
 		frame.getContentPane().add(lblC);
 		
 		descriptionField.setBounds(284, 306, 446, 105);
@@ -82,7 +87,7 @@ public class NewCourseDecorator extends CourseDecorator{
 			@Override
 			public void mouseClicked(MouseEvent e){		
 				
-				String courseName = courseNameField.getText();
+				String courseName = nameField.getText();
 				String courseDescription = descriptionField.getText();
 				
 				Integer courseDuration;

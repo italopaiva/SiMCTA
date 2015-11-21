@@ -6,7 +6,6 @@ import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -27,7 +26,6 @@ import model.Teacher;
 import model.datatype.CPF;
 import model.datatype.Date;
 import view.ClassView;
-import view.TeacherForm;
 import view.decorator.ShowTeacherDecorator;
 
 public class EditClassDecorator extends ClassDecorator {

@@ -7,11 +7,14 @@ import model.Package;
 import model.Payment;
 import model.Service;
 import model.Student;
+import model.datatype.CPF;
 import dao.ServiceDAO;
 import exception.CourseException;
 import exception.DateException;
 import exception.PaymentException;
+import exception.PersonException;
 import exception.ServiceException;
+import exception.StudentException;
 
 public class ServiceController {
 	
@@ -106,32 +109,37 @@ public class ServiceController {
 
 	/**
 	 * Search a service of a specific student
-	 * @param basicDataOfStudent - contains the data of the student
+	 * @param studentCpf - contains the cpf of the student
 	 * @return and arrayList of services
 	 * @throws CourseException
 	 * @throws DateException
 	 * @throws ServiceException
 	 * @throws PaymentException 
 	 */
-	public ArrayList<Service> searchService(Student basicDataOfStudent) throws CourseException, DateException, ServiceException, PaymentException{
+	public ArrayList<Service> searchService(CPF studentCpf) throws ServiceException {
 		
 		ArrayList<Service> services = new ArrayList<Service>();
 		ArrayList<Service> servicesWithPayments = new ArrayList<Service>();
 
-		StudentController studentControl = new StudentController();
-		Student student = studentControl.getStudent(basicDataOfStudent.getCpf());
-		
-		services = serviceDAO.get(student);
-		
-		for(Service service : services){
-						
-			Payment payment = service.getPayment();
-			payment = paymentController.searchPayment(payment);
-
-			service.addPayment(payment);
+		Student student;
+		try {
+			student = new Student(studentCpf);
+			services = serviceDAO.get(student);
 			
-			servicesWithPayments.add(service);
-		}
+			for(Service service : services){
+							
+				Payment payment = service.getPayment();
+				payment = paymentController.searchPayment(payment);
+
+				service.addPayment(payment);
+				
+				servicesWithPayments.add(service);
+			}
+		} 
+		catch (PersonException | CourseException | DateException | PaymentException e1) {
+			throw new ServiceException(e1.getMessage());
+		}	
+		
 		
 		return servicesWithPayments;
 	}

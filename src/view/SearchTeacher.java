@@ -18,19 +18,21 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import model.Person;
 import model.Student;
 import model.Teacher;
 import model.datatype.CPF;
 import util.ButtonColumn;
 import view.decorator.ShowTeacherDecorator;
-import view.decorator.TeacherDecorator;
+import view.decorator.PersonDecorator;
+import view.forms.TeacherForm;
 import controller.StudentController;
 import controller.TeacherController;
 import exception.CPFException;
 import exception.PersonException;
 import exception.TeacherException;
 
-public class SearchTeacher extends TeacherView {
+public class SearchTeacher extends PersonView {
 
 	private JButton searchTeacherBtn;
 	private JTextField searchedTeacherField;
@@ -41,7 +43,7 @@ public class SearchTeacher extends TeacherView {
 	private TeacherController teacherController;
 
 	@Override
-	public void createLabelsAndFields(JFrame viewToDecorate, Teacher teacher) {
+	public void createLabelsAndFields(JFrame viewToDecorate, Person teacher) {
 		this.frame = viewToDecorate;
 		try {
 			addFields();
@@ -96,7 +98,7 @@ public class SearchTeacher extends TeacherView {
 					CPF selectedTeacher = new CPF(cpfSelectedTeacher);
 					Teacher teacher = teacherController.getTeacher(selectedTeacher);
 					dispose();
-					TeacherView teacherFrame = new ShowTeacherDecorator(new TeacherForm());
+					PersonView teacherFrame = new ShowTeacherDecorator(new TeacherForm());
 					teacherFrame.buildScreen(teacherFrame, teacher);
 					teacherFrame.setVisible(true);
 				} 

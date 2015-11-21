@@ -1,26 +1,17 @@
-package view;
+package view.forms;
 
-import java.awt.Font;
-import java.text.ParseException;
-
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.MaskFormatter;
 
-import model.Teacher;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
+import model.Person;
+import view.PersonView;
 
-public class TeacherForm extends TeacherView {
+public class PersonForm extends PersonView {
 
 	@Override
-	public void createLabelsAndFields(JFrame frame, Teacher teacher) {
+	public void createLabelsAndFields(JFrame frame, Person person) {
 		contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         frame.setContentPane(contentPane);
@@ -89,49 +80,17 @@ public class TeacherForm extends TeacherView {
         JLabel fatherLabel = new JLabel("Nome do pai");
         fatherLabel.setBounds(70, 409, 95, 17);
         frame.getContentPane().add(fatherLabel);
-        
-        JLabel qualificationLabel = new JLabel("Qualificação");
-        qualificationLabel.setBounds(70, 444, 105, 17);
-        frame.getContentPane().add(qualificationLabel);
-
+        		
 	}
 
 	@Override
 	public void createMasks(JFrame frame) {
 		
-		MaskFormatter birthdateMask = null;
-        MaskFormatter cpfMask = null;
-		try{
-	        // Mask for cpf
-	        cpfMask = new MaskFormatter("###########");
-	        cpfMask.setValidCharacters("0123456789");
-	        cpfMask.setValueContainsLiteralCharacters(false);
-
-	        cpfField = new JFormattedTextField(cpfMask);
-	        cpfField.setBounds(102, 97, 129, 27);
-	        frame.getContentPane().add(cpfField);
-	        cpfField.setColumns(10);
-	        
-			// Mask for birthdate
-			birthdateMask = new MaskFormatter("##/##/####");
-			birthdateMask.setValidCharacters("0123456789");
-			birthdateMask.setValueContainsLiteralCharacters(true);
-	        
-	        birthdateField = new JFormattedTextField(birthdateMask);
-	        birthdateField.setBounds(70, 195, 190, 27);
-	        frame.getContentPane().add(birthdateField);
-	        birthdateField.setColumns(10);
-
-		}
-		catch(ParseException e2){
-			e2.printStackTrace();
-		}
 	}
 
 	@Override
 	public void createButtons(JFrame frame) {
-
-
+		
 	}
 
 }

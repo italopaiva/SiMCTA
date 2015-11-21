@@ -26,7 +26,7 @@ import model.datatype.CPF;
 public class StudentController {
 	
 	private static final String STUDENT_WITHOUT_SERVICE = "Um aluno deve possuir um serviço associado";
-	private static final String STUDENT_NULL = "Não foi possível encontrar o estudante para mudar o status";
+	private static final String STUDENT_NULL = "Não foi possível encontrar o estudante";
 	private static final String CANT_SAVE_NULL_STUDENT = "Não é possível salvar um estudante nulo.";
 	private static final int ACTIVE_STATUS	= 1;
 	private StudentDAO studentDAO;
@@ -93,14 +93,15 @@ public class StudentController {
 		}
 	}
 	
-	public Student getStudent(CPF cpf){
+	public Student getStudent(CPF cpf) throws StudentException{
 		
 		Student foundStudent;
 		try {
 			foundStudent = studentDAO.get(cpf);
-		} catch (PhoneException | CPFException | DateException
+		} 
+		catch (PhoneException | CPFException | DateException
 				| AddressException | RGException | StudentException | PersonException e) {
-			foundStudent = null;
+			throw new StudentException(STUDENT_NULL);
 		}
 		
 		return foundStudent;
@@ -119,7 +120,7 @@ public class StudentController {
 		
 		return foundStudents;
 	}
-
+	
 	/**
 	 * Search the student selected by the user
 	 * @param studentCPF - the 'cpf' of the selected student 
@@ -136,7 +137,7 @@ public class StudentController {
 	 * @throws PaymentException 
 	 * @throws PersonException 
 	 */
-	public ArrayList<Service> searchStudent(CPF studentCPF) throws SQLException, StudentException, PhoneException, CPFException, DateException, AddressException, RGException, CourseException, ServiceException, PaymentException, PersonException {
+	/*public ArrayList<Service> searchStudent(CPF studentCPF) throws SQLException, StudentException, PhoneException, CPFException, DateException, AddressException, RGException, CourseException, ServiceException, PaymentException, PersonException {
 		
 		Student basicDataOfStudent = studentDAO.get(studentCPF);
 		ArrayList<Service> servicesOfStudent = new ArrayList<Service>();
@@ -152,6 +153,7 @@ public class StudentController {
 		
 		return servicesOfStudent;
 	}
+	*/
 	
 	public ArrayList<Student> getStudentsOfCourse(Course course) throws StudentException{
 		

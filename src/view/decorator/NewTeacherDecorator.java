@@ -10,16 +10,18 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
+import model.Person;
 import model.Teacher;
 import model.datatype.Address;
 import model.datatype.CPF;
 import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
-import view.TeacherView;
+import view.PersonView;
 import controller.TeacherController;
 import exception.AddressException;
 import exception.CPFException;
@@ -29,24 +31,24 @@ import exception.PhoneException;
 import exception.RGException;
 import exception.TeacherException;
 
-public class NewTeacherDecorator extends TeacherDecorator {
+public class NewTeacherDecorator extends PersonDecorator {
 	
-    protected JButton registerTeacherBtn;
-	
-	public NewTeacherDecorator(TeacherView viewToDecorate) {
+    private JButton registerTeacherBtn;
+
+	public NewTeacherDecorator(PersonView viewToDecorate) {
 		super(viewToDecorate);
 	}
 
 
 	@Override
-	public void createLabelsAndFields(JFrame frame, Teacher teacher) {
+	public void createLabelsAndFields(JFrame frame, Person teacher) {
 		
 		super.createLabelsAndFields(frame,teacher);
         
-		registerTeacherLbl.setText("Cadastrar novo professor");
-		registerTeacherLbl.setBounds(407, 12, 475, 31);
-		registerTeacherLbl.setFont(new Font("Dialog", Font.BOLD, 20));
-		frame.getContentPane().add(registerTeacherLbl);
+		registerPersonLbl.setText("Cadastrar novo professor");
+		registerPersonLbl.setBounds(407, 12, 475, 31);
+		registerPersonLbl.setFont(new Font("Dialog", Font.BOLD, 20));
+		frame.getContentPane().add(registerPersonLbl);
 		
         nameField.setBounds(115, 55, 434, 27);
         frame.getContentPane().add(nameField);
