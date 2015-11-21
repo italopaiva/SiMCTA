@@ -9,10 +9,15 @@ import model.Service;
 import model.Student;
 import model.datatype.CPF;
 import dao.ServiceDAO;
+import exception.AddressException;
+import exception.CPFException;
 import exception.CourseException;
 import exception.DateException;
 import exception.PaymentException;
 import exception.PersonException;
+import exception.PersonException;
+import exception.PhoneException;
+import exception.RGException;
 import exception.ServiceException;
 import exception.StudentException;
 
@@ -105,6 +110,42 @@ public class ServiceController {
 		else{
 			throw new ServiceException(CANT_SAVE_NULL_SERVICE);
 		}
+	}
+	
+	/**
+	 * Creates a new service with the requested courses and packages by a student
+	 * @param studentCPF - The student's CPF that requested the services
+	 * @param courses - The courses requested
+	 * @param packages - The packages requested
+	 * @param paymentType - The payment type of the chosen payment
+	 * @param paymentForm - The payment form of the chosen payment
+	 * @param installments - Quantity of installments of the payment
+	 * @throws ServiceException
+	 * @throws PaymentException
+	 * @throws PersonException 
+	 * @throws StudentException 
+	 * @throws RGException 
+	 * @throws AddressException 
+	 * @throws DateException 
+	 * @throws CPFException 
+	 * @throws PhoneException 
+	 */
+	public void newService(CPF studentCpf, String studentName, ArrayList<String> courses, ArrayList<String> packages,
+						   int paymentType, int paymentForm, Integer installments) throws ServiceException, PaymentException, PhoneException, CPFException, DateException, AddressException, RGException, StudentException, PersonException{
+		
+		Student student = new Student(studentName, studentCpf);
+		
+		Service service = new Service(student);
+		
+		service = addCoursesToService(service, courses);
+		service = addPackagesToService(service, packages);
+					
+		PaymentController paymentController = new PaymentController();
+		Payment payment = paymentController.newPayment(service, paymentType, paymentForm, installments);
+		
+		service.addPayment(payment);
+		
+		serviceDAO.save(service);
 	}
 
 	/**
