@@ -67,7 +67,7 @@ public class SearchCourse extends ServiceItemView {
 		contentPane.setLayout(null);
 		
 		searchedCourseField = new JTextField();
-		searchedCourseField.setBounds(140, 56, 446, 39);
+		searchedCourseField.setBounds(227, 56, 446, 29);
 		add(searchedCourseField);
 		searchedCourseField.setColumns(10);
 				
@@ -80,7 +80,24 @@ public class SearchCourse extends ServiceItemView {
 		
 		String [] columns = { "Curso", "Status", "Ação", "Id"};
 		
-		tableModel = new DefaultTableModel(null, columns);
+		tableModel = new DefaultTableModel(null, columns){
+			// Overriding the method to set non editable the name and status columns
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				
+				boolean isEditable = false;
+				
+				if(column == 0 || column == 1){
+					isEditable = false;
+				}
+				else{
+					isEditable = true;
+				}
+				
+				return isEditable;
+				
+			};
+		};
 		tableOfCourses = new JTable(tableModel);
 		
 		tableOfCourses.removeColumn(tableOfCourses.getColumnModel().getColumn(3));
@@ -141,7 +158,7 @@ public class SearchCourse extends ServiceItemView {
 	public void createButtons(JFrame frame) {
 
 		JButton btnConsultar = new JButton("Pesquisar");
-		btnConsultar.setBounds(598, 53, 117, 25);
+		btnConsultar.setBounds(675, 56, 117, 29);
 		add(btnConsultar);
 		
 		btnConsultar.addActionListener(new ActionListener() {

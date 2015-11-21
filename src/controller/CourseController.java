@@ -23,7 +23,7 @@ public class CourseController {
 	 * @return TRUE if the course was created or FALSE if it does not
 	 * @throws CourseException
 	 */
-	public boolean newCourse(String courseName, String courseDescription,
+	public Course newCourse(String courseName, String courseDescription,
 							 Integer courseDuration, Integer courseValue)
 							 throws CourseException{
 		
@@ -32,7 +32,14 @@ public class CourseController {
 		boolean hasId = false;
 		boolean wasSaved = saveCourse(course, hasId);
 		
-		return wasSaved;
+		if(!wasSaved){
+			course = null;
+		}
+		else{
+			// Nothing to do
+		}
+		
+		return course;
 	}
 	
 	/**
@@ -45,7 +52,7 @@ public class CourseController {
 	 * @return TRUE if the course was created or FALSE if it does not
 	 * @throws CourseException
 	 */
-	public boolean newCourse(int courseId, String courseName, String courseDescription,
+	public Course newCourse(int courseId, String courseName, String courseDescription,
 							 Integer courseDuration, Integer courseValue)
 							 throws CourseException{
 		
@@ -54,7 +61,14 @@ public class CourseController {
 		boolean hasId = true;
 		boolean wasSaved = saveCourse(course, hasId);
 		
-		return wasSaved;
+		if(!wasSaved){
+			course = null;
+		}
+		else{
+			// Nothing to do
+		}
+		
+		return course;
 	}
 	
 	/**
@@ -62,12 +76,19 @@ public class CourseController {
 	 * @param course - Course object with the course to be saved
 	 * @param hasId - Inform if the course object has an ID associated
 	 * @return a boolean with the result from the DAO layer
+	 * @throws CourseException 
 	 */
-	private boolean saveCourse(Course course, boolean hasId){
+	private boolean saveCourse(Course course, boolean hasId) throws CourseException{
 		
 		boolean wasSaved =  false;
 				
-		wasSaved = courseDAO.save(course, hasId);
+		try {
+			courseDAO.save(course, hasId);
+			wasSaved = true;
+		} 
+		catch (CourseException e) {
+			throw new CourseException(e.getMessage());
+		}
 		
 		return wasSaved;
 	}
@@ -82,16 +103,21 @@ public class CourseController {
 	 * @return TRUE if the course was updated or FALSE if it does not
 	 * @throws CourseException
 	 */
-	public boolean updateCourse(Integer courseId, String courseName, String courseDescription,
+	public Course updateCourse(Integer courseId, String courseName, String courseDescription,
 								 Integer courseDuration, Integer courseValue)
 								 throws CourseException{
 		
 		Course course = new Course(courseName, courseDescription, courseDuration, courseValue);
 		
-		boolean wasSaved = false;
-		wasSaved = courseDAO.update(courseId, course);
+		try{
+			courseDAO.update(courseId, course);
+		}
+		catch(CourseException e){
+			course = null;
+			throw new CourseException(e.getMessage());
+		}
 
-		return wasSaved;
+		return course;
 	}
 	
 	/**

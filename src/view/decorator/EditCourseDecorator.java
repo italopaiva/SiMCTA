@@ -48,17 +48,26 @@ public class EditCourseDecorator extends ServiceItemDecorator{
 		this.frame = viewToDecorate;
 		super.createLabelsAndFields(viewToDecorate, course);
 		this.course = (Course) course;
+		
+		JLabel requiredFieldsLbl = new JLabel("Os campos com * são obrigatórios");
+		requiredFieldsLbl.setFont(new Font("DejaVu Sans Condensed", Font.BOLD | Font.ITALIC,12));
+		requiredFieldsLbl.setBounds(284, 40, 370, 17);
+        frame.getContentPane().add(requiredFieldsLbl);
+				
+        JLabel descriptionLabel = new JLabel("* Descrição do curso");
+        descriptionLabel.setBounds(276, 284, 144, 15);
+        frame.getContentPane().add(descriptionLabel);
 
-		nameField.setBounds(276, 74, 346, 30);
+		nameField.setBounds(276, 94, 346, 30);
 		frame.getContentPane().add(nameField);
 		nameField.setColumns(10);
 		
 		JLabel lblC = new JLabel("Alterar dados do curso: " + course.getName());
 		lblC.setFont(new Font("Dialog", Font.BOLD, 20));
-		lblC.setBounds(326, 15, 344, 15);
+		lblC.setBounds(296, 15, 544, 25);
 		frame.getContentPane().add(lblC);
 		
-		descriptionField.setBounds(284, 306, 446, 105);
+		descriptionField.setBounds(276, 326, 446, 105);
 		frame.getContentPane().add(descriptionField);
 	
 			
@@ -117,16 +126,15 @@ public class EditCourseDecorator extends ServiceItemDecorator{
 			
 				CourseController courseController = new CourseController();
 				String message = "";
-				boolean courseWasUpdated;
 				try {
-					courseWasUpdated = courseController.updateCourse(
+					course = courseController.updateCourse(
 						course.getId(),
 						courseName,
 						courseDescription,
 						courseDuration,
 						courseValue
 					);
-					if(courseWasUpdated){
+					if(course != null){
 						message = "Curso alterado com sucesso.";
 					}
 					else{
@@ -138,7 +146,7 @@ public class EditCourseDecorator extends ServiceItemDecorator{
 				}
 				showInfoMessage(message);
 				dispose();
-				ServiceItemView courseFrame = new SearchCourse();
+				ServiceItemView courseFrame = new ShowCourseDecorator(new ServiceItemForm());
 				courseFrame.buildScreen(courseFrame, course);
 				courseFrame.setVisible(true);	
 			}
@@ -163,12 +171,12 @@ public class EditCourseDecorator extends ServiceItemDecorator{
 	
 		try{
 		
-			MaskFormatter durationMask = new MaskFormatter("##");
+			MaskFormatter durationMask = new MaskFormatter("## semanas");
 			durationMask.setValidCharacters("0123456789");
 			durationMask.setValueContainsLiteralCharacters(false);
 			
 			durationField = new JFormattedTextField(durationMask);
-			durationField.setBounds(276, 143, 132, 25);
+			durationField.setBounds(276, 163, 132, 25);
 			frame.getContentPane().add(durationField);
 			durationField.setValue(course.getDuration());
 			
@@ -197,7 +205,7 @@ public class EditCourseDecorator extends ServiceItemDecorator{
 			}
 			
 			valueField = new JFormattedTextField(valueMask);
-			valueField.setBounds(284, 224, 124, 28);
+			valueField.setBounds(276, 244, 124, 28);
 			frame.getContentPane().add(valueField);
 			valueField.setValue(value);
 	
