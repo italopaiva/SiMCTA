@@ -163,13 +163,13 @@ public class CourseController {
 		
 		boolean statusWasAltered;
 		
-		int teste = courseDAO.returnStatusCourse(idCourse);
+		int teste = courseDAO.getStatus(idCourse);
 	
 		
 		if (teste == 1){
-			statusWasAltered = courseDAO.alterCourseStatus(idCourse, 0);
+			statusWasAltered = courseDAO.updateStatus(idCourse, 0);
 		} else {
-			statusWasAltered = courseDAO.alterCourseStatus(idCourse, 1);
+			statusWasAltered = courseDAO.updateStatus(idCourse, 1);
 		}
 		
 		return statusWasAltered;

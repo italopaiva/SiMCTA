@@ -93,7 +93,7 @@ public class StudentClassController{
 			Integer absences = convertAbsenceStringToInteger(absence); 
 			studentClass = new StudentClass(student, enrolledClass, absences, entireGrade);
 			
-			studentClassDAO.save(studentClass);
+			studentClassDAO.update(studentClass);
 		} 
 		catch (StudentClassException e) {
 			throw new StudentClassException(e.getMessage());

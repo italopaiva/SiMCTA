@@ -75,7 +75,7 @@ public class ServiceDAO extends DAO {
 	/**
 	 * Save the courses and packages associated with the service
 	 * @param serviceId - The service to associate the courses with
-	 * @param service - The service with the courses and packagese to be associated
+	 * @param service - The service with the courses and packages to be associated
 	 * @throws SQLException
 	 */
 	private void saveServiceItens(Integer serviceId, Service service) throws SQLException{

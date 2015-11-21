@@ -26,3 +26,4 @@ src/migration/ManagerMigrations.java
 /bin/
 
 .settings/
+/build/

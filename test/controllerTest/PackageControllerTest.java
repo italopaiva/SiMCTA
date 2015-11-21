@@ -93,7 +93,7 @@ public class PackageControllerTest {
 	public void testSearchPackageByNamePackageNotFound() throws PackageException{
 		
 		ArrayList<Package> array = new ArrayList<Package>();
-		when(packageDAOMock.searchPackageByName("txt")).thenReturn(array);
+		when(packageDAOMock.get("txt")).thenReturn(array);
 		packageController.setPackageDAO(packageDAOMock);
 		
 		ArrayList<Package> array1 = new ArrayList<Package>();
@@ -121,7 +121,7 @@ public class PackageControllerTest {
 		
 		packagesArray.add(pacote1);
 		packagesArray.add(pacote2);
-		when(packageDAOMock.searchPackageByName("pacote")).thenReturn(packagesArray);
+		when(packageDAOMock.get("pacote")).thenReturn(packagesArray);
 		packageController.setPackageDAO(packageDAOMock);
 		
 		ArrayList<Package> array1 = new ArrayList<Package>();

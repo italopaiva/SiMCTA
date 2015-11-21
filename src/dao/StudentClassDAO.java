@@ -30,6 +30,11 @@ public class StudentClassDAO extends DAO {
 	private static final String GRADE_COLUMN = "grade";
 	private static final String SITUATION_COLUMN = "situation";
 	
+	/**
+	 * Enroll a student in a class
+	 * @param studentClass
+	 * @throws StudentClassException
+	 */
 	public void enrollStudentInClass(StudentClass studentClass) throws StudentClassException{
 		
 		String classId = studentClass.getEnrolledClass().getClassId();
@@ -46,7 +51,14 @@ public class StudentClassDAO extends DAO {
 			throw new StudentClassException(COULDNT_ENROLL_STUDENT_TO_CLASS);
 		}
 	}
-
+	
+	/**
+	 * Get the students of a class
+	 * @param enrolledClass
+	 * @return An array with the students of the class
+	 * @throws StudentClassException
+	 * @throws CPFException
+	 */
 	public ArrayList<Student> get(Class enrolledClass) throws StudentClassException, CPFException {
 		
 		String enrolledClassId = enrolledClass.getClassId();
@@ -84,8 +96,13 @@ public class StudentClassDAO extends DAO {
 		return students;
 	
 	}
-
-	public void save(StudentClass studentClass) throws StudentClassException {
+	
+	/**
+	 * Updates a student in a class
+	 * @param studentClass
+	 * @throws StudentClassException
+	 */
+	public void update(StudentClass studentClass) throws StudentClassException {
 		
 		String classId = studentClass.getEnrolledClass().getClassId();
 		String studentCpf = studentClass.getStudent().getCpf().getCpf();
@@ -110,6 +127,5 @@ public class StudentClassDAO extends DAO {
 		
 		
 	}
-	
 	
 }

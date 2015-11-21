@@ -194,8 +194,8 @@ public class CourseControllerTest {
 		
 		boolean wasAltered = false;
 		
-		when(courseDAOMock.returnStatusCourse(205)).thenReturn(1);
-		when(courseDAOMock.alterCourseStatus(205, 0)).thenReturn(true);
+		when(courseDAOMock.getStatus(205)).thenReturn(1);
+		when(courseDAOMock.updateStatus(205, 0)).thenReturn(true);
 		courseController.setCourseDAO(courseDAOMock);
 		
 		
@@ -209,8 +209,8 @@ public class CourseControllerTest {
 		
 		boolean wasAltered = false;
 		
-		when(courseDAOMock.returnStatusCourse(205)).thenReturn(0);
-		when(courseDAOMock.alterCourseStatus(205, 1)).thenReturn(true);
+		when(courseDAOMock.getStatus(205)).thenReturn(0);
+		when(courseDAOMock.updateStatus(205, 1)).thenReturn(true);
 		courseController.setCourseDAO(courseDAOMock);
 		
 		

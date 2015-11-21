@@ -215,7 +215,7 @@ public class CourseDAO extends DAO {
 	 * @return TRUE if the course's status was changed
 	 * @throws CourseException 
 	 */
-	public boolean alterCourseStatus(int courseId, int newCourseStatus) throws CourseException{
+	public boolean updateStatus(int courseId, int newCourseStatus) throws CourseException{
 
 		boolean statusWasAltered;
 		
@@ -239,7 +239,7 @@ public class CourseDAO extends DAO {
 	 * @return course if the course could be select in the database or null if not
 	 * @throws CourseException 
 	 */
-	public Course returnCourseById(int courseId) throws CourseException {
+	public Course get(int courseId) throws CourseException {
 		String query = "SELECT * FROM " + TABLE_NAME + "WHERE " + ID_COLUMN + "=" + courseId;
 		
 		Course course;
@@ -265,7 +265,7 @@ public class CourseDAO extends DAO {
 	 * @return status of the course or throws an error
 	 * @throws CourseException 
 	 */
-	public int returnStatusCourse(int courseId) {
+	public int getStatus(int courseId) {
 		String query = "SELECT " + STATUS_COLUMN + " FROM " + TABLE_NAME + " WHERE " + ID_COLUMN + "=" + courseId;
 		ResultSet result;
 		

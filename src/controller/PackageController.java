@@ -101,7 +101,7 @@ public class PackageController {
 		ArrayList<Package> searchedPackages = null; 
 		
 		try{
-				searchedPackages = packageDAO.searchPackageByName(name);
+				searchedPackages = packageDAO.get(name);
 				if (searchedPackages.isEmpty()){
 					return null;
 				} else {
