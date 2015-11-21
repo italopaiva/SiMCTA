@@ -64,6 +64,8 @@ import javax.swing.ListSelectionModel;
 
 
 public class SearchStudent extends PersonView {
+	public SearchStudent() {
+	}
 	
 	private JPanel contentPane;
 	private JTextField searchedStudentField;
@@ -83,6 +85,7 @@ public class SearchStudent extends PersonView {
 	private JTextField installmentsValueField;
 	private JTextField paymentInstallmentsField;
 	private JButton deactivateOrActivateButton;
+	private JButton addMoreCoursesButton;
 	private Student student;
 	private int status;
 	private String action;
@@ -253,6 +256,4 @@ public class SearchStudent extends PersonView {
 		}
 	
 	}
-
-	
 }

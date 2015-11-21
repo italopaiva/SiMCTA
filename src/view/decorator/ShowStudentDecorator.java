@@ -30,6 +30,7 @@ import model.datatype.CPF;
 import model.datatype.Date;
 import model.datatype.Phone;
 import model.datatype.RG;
+import view.EnrollStudentInMoreCourses;
 import view.PersonView;
 import view.SearchStudent;
 import controller.ServiceController;
@@ -50,6 +51,7 @@ public class ShowStudentDecorator extends PersonDecorator {
 	private JTextField installmentsValueField;
 	private JTextField paymentInstallmentsField;
 	private JButton deactivateOrActivateButton;
+	private JButton addMoreCoursesButton;
 	private int status;
 	private String action;
 	private DefaultTableModel courseTableModel;
@@ -506,6 +508,27 @@ public class ShowStudentDecorator extends PersonDecorator {
 		});
 		frame.getContentPane().add(deactivateOrActivateButton);
 
+		
+		addMoreCoursesButton = new JButton("Adicionar + Cursos/Pacotes");
+		addMoreCoursesButton.setBounds(100, 645, 208, 25);
+		frame.getContentPane().add(addMoreCoursesButton);
+
+		addMoreCoursesButton.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					CPF studentCpf = null;
+					String studentName = null;
+					studentCpf = student.getCpf();
+					studentName = student.getName();
+				
+					EnrollStudentInMoreCourses enrollStudentInMoreCourses;
+					enrollStudentInMoreCourses = new EnrollStudentInMoreCourses(studentCpf, studentName);
+					enrollStudentInMoreCourses.setVisible(true);
+					dispose();	
+				}
+		});
+		
 
 	
 	}

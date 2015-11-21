@@ -10,6 +10,8 @@ import javax.swing.JLabel;
 import model.Person;
 
 public class StudentForm extends PersonForm {
+	public StudentForm() {
+	}
 	
 	protected JLabel paymentTypeLbl;
 	protected JComboBox<String> paymentTypes;
