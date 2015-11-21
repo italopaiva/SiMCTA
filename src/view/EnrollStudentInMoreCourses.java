@@ -92,6 +92,7 @@ public class EnrollStudentInMoreCourses extends View {
 			getAllCoursesToSelect();
 
 			getAllPackagesToSelect();
+			
 		} catch (CourseException | PackageException e) {
 			showInfoMessage(e.getMessage());
 		}
@@ -388,12 +389,10 @@ public class EnrollStudentInMoreCourses extends View {
 
 	/**
 	 * Method used to get the available packages
-	 * 
 	 * @throws CourseException
 	 * @throws PackageException
 	 */
-	private void getAllPackagesToSelect() throws CourseException,
-			PackageException {
+	private void getAllPackagesToSelect() throws CourseException, PackageException {
 
 		PackageController packageController = new PackageController();
 		ArrayList<Package> packages = packageController.getPackages();
@@ -402,8 +401,8 @@ public class EnrollStudentInMoreCourses extends View {
 		while (indexOfPackages < packages.size()) {
 
 			Package currentPackage = packages.get(indexOfPackages);
-			Integer packageId = currentPackage.getPackageId();
-			String packageName = (currentPackage.getPackageName());
+			Integer packageId = currentPackage.getId();
+			String packageName = (currentPackage.getName());
 
 			packagesId.add(packageId.toString());
 			packagesName.add(packageName);
@@ -429,8 +428,8 @@ public class EnrollStudentInMoreCourses extends View {
 		while (indexOfCourses < courses.size()) {
 
 			Course course = courses.get(indexOfCourses);
-			Integer courseId = course.getCourseId();
-			String courseName = (course.getCourseName());
+			Integer courseId = course.getId();
+			String courseName = (course.getName());
 
 			coursesId.add(courseId.toString());
 			coursesName.add(courseName);
