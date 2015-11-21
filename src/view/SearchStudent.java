@@ -595,16 +595,18 @@ public class SearchStudent extends View {
 					String studentName = null;
 					studentCpf = student.getCpf();
 					studentName = student.getName();
-					dispose();					
+				
 					EnrollStudentInMoreCourses enrollStudentInMoreCourses;
 					enrollStudentInMoreCourses = new EnrollStudentInMoreCourses(studentCpf, studentName);
-					enrollStudentInMoreCourses.setVisible(true);			
+					enrollStudentInMoreCourses.setVisible(true);
+					dispose();	
 				}
 			});
 			
 			
 			backButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					internalFrame.dispose();
 					internalFrame.setVisible(false);
 					searchedStudentField.setText("");
 					firstList.removeAll();
