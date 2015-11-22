@@ -2,10 +2,10 @@ package datatype;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import model.datatype.Phone;
 
 import org.junit.Test;
 
+import datatype.Phone;
 import exception.PhoneException;
 import exception.RGException;
 

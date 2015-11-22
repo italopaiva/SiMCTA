@@ -51,7 +51,7 @@ public class ShowPackageDecorator extends ServiceItemDecorator{
 		super.createLabelsAndFields(viewToDecorate, packageInstance);
 		this.packageInstance = (Package) packageInstance;
 
-		nameField.setBounds(276, 74, 346, 30);
+		nameField.setBounds(276, 94, 346, 30);
 		frame.getContentPane().add(nameField);
 		nameField.setColumns(10);
 		
@@ -61,19 +61,19 @@ public class ShowPackageDecorator extends ServiceItemDecorator{
 		frame.getContentPane().add(lblC);
 		
 		durationField =  new JTextField();
-		durationField.setBounds(276, 143, 132, 25);
+		durationField.setBounds(276, 183, 132, 25);
 		frame.getContentPane().add(durationField);
 			
 		valueField = new JTextField();
-		valueField.setBounds(284, 224,124, 28);
+		valueField.setBounds(284, 244,124, 28);
 		frame.getContentPane().add(valueField);
 			
 		JLabel lblCursosAssociados = new JLabel("Cursos Associados");
-		lblCursosAssociados.setBounds(276, 252, 144, 15);
+		lblCursosAssociados.setBounds(276, 272, 144, 15);
 		frame.getContentPane().add(lblCursosAssociados);
 						
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(276, 281, 353, 169);
+		scrollPane.setBounds(276, 301, 353, 169);
 		frame.getContentPane().add(scrollPane);
 		scrollPane.setBackground(Color.WHITE);
 		
@@ -142,7 +142,7 @@ public class ShowPackageDecorator extends ServiceItemDecorator{
 	public void createButtons(JFrame frame) {
 		editTeacherBtn = new JButton("Editar");
 		frame.getContentPane().add(editTeacherBtn);
-		editTeacherBtn.setBounds(379, 455, 117, 25);
+		editTeacherBtn.setBounds(279, 475, 117, 25);
 		editTeacherBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			
@@ -155,7 +155,7 @@ public class ShowPackageDecorator extends ServiceItemDecorator{
 		
 		backBtn = new JButton("Voltar");
 		frame.getContentPane().add(backBtn);
-		backBtn.setBounds(479, 535, 117, 25);
+		backBtn.setBounds(400, 525, 117, 25);
 		backBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			
@@ -168,7 +168,7 @@ public class ShowPackageDecorator extends ServiceItemDecorator{
 		});
 		
 		btnActiveOrDeactive = new JButton("New Button");
-		btnActiveOrDeactive.setBounds(579, 455, 117, 25);
+		btnActiveOrDeactive.setBounds(479, 475, 117, 25);
 		frame.getContentPane().add(btnActiveOrDeactive);
 		btnActiveOrDeactive.setText(showsActiveOrDeactive(packageInstance.getStatus()));
 		
@@ -183,20 +183,24 @@ public class ShowPackageDecorator extends ServiceItemDecorator{
 				confirm = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja " + action + " este pacote?", "Atenção!!!", JOptionPane.YES_NO_OPTION);
 				
 				if (confirm == JOptionPane.YES_OPTION) {
-					/*
-					PackageController packageController = new PackageController();
-					int packageID = packageInstance.getId();
-					
-					boolean wasChanged = packageController.alterStatusPackage(packageID);
-					if(wasChanged){
-						changeStatus();
-						String currentStatus = showActiveOrInactive(packageStatus);
-						showInfoMessage("Pacote " + currentStatus + " com sucesso!");
-						btnActiveOrDeactive.setText(showsActiveOrDeactive(packageStatus));
+					PackageController packageController = new PackageController();					
+					changeStatus();
+					boolean wasChanged;
+					try {
+						wasChanged = packageController.alterStatusOfThePackage(packageInstance, packageStatus);
+						if(wasChanged){
+							String currentStatus = showActiveOrInactive(packageStatus);
+							showInfoMessage("Pacote " + currentStatus + " com sucesso!");
+							btnActiveOrDeactive.setText(showsActiveOrDeactive(packageStatus));
+						}
+						else{
+							changeStatus();
+							showInfoMessage("Não foi possível" + action + "o pacote!");	
+						}
+					} 
+					catch (PackageException e1) {
+						showInfoMessage(e1.getMessage());
 					}
-					else{
-						showInfoMessage("Não foi possível" + action + "o pacote!");	
-					}*/
 				}
 				
 			}

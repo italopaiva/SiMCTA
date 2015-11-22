@@ -6,12 +6,12 @@ import model.Course;
 import model.Student;
 import model.StudentClass;
 import model.Teacher;
-import model.datatype.CPF;
-import model.datatype.Date;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import datatype.CPF;
+import datatype.Date;
 import exception.StudentClassException;
 
 public class StudentClassTest {

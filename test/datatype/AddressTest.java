@@ -1,10 +1,10 @@
 package datatype;
 
 import static org.junit.Assert.*;
-import model.datatype.Address;
 
 import org.junit.Test;
 
+import datatype.Address;
 import exception.AddressException;
 
 public class AddressTest {

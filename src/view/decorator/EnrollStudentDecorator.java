@@ -26,20 +26,23 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
+import org.omg.CORBA.portable.ValueFactory;
+
 import view.PersonView;
 import view.View;
+import view.forms.StudentForm;
 import model.Course;
 import model.Package;
 import model.Person;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 import controller.CourseController;
 import controller.EnrollController;
 import controller.PackageController;
 import controller.StudentController;
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.CourseException;
@@ -54,6 +57,12 @@ import exception.StudentException;
 
 public class EnrollStudentDecorator extends PersonDecorator {
 	
+	// The "-1" means that doesn't have a row selected
+	private static final int NONE_ROW_SELECTED = -1;
+	
+	// The max length of a value (0000.00)
+	private static final int MAX_VALUE_LENGTH = 6;
+	
 	private JTextField paymentValueField;
 	private JTextField paymentInstallmentsField;
 	private DefaultTableModel courseTableModel;
@@ -67,11 +76,14 @@ public class EnrollStudentDecorator extends PersonDecorator {
 	private ArrayList<String> coursesName = new ArrayList<String>();
 	private ArrayList<String> packagesId = new ArrayList<String>();
 	private ArrayList<String> packagesName = new ArrayList<String>();
+	private ArrayList<String> addedCoursesValue = new ArrayList<String>(); 
+	private ArrayList<String> addedPackagesValue = new ArrayList<String>(); 
 	private JTable tableOfAddedCourses;
 	private JTable tableOfAddedPackages;
 	private ArrayList<String> addedCoursesId = new ArrayList<String>(); 
 	private ArrayList<String> addedPackagesId = new ArrayList<String>();
-	private JLabel paymentTypeLbl; 
+	private JLabel paymentTypeLbl;
+	private Person student;
 	
 	public EnrollStudentDecorator(PersonView viewToDecorate) {
 		super(viewToDecorate);
@@ -81,6 +93,11 @@ public class EnrollStudentDecorator extends PersonDecorator {
 	public void createLabelsAndFields(JFrame frame, Person student){
 		
 		super.createLabelsAndFields(frame,student);
+		this.student = student;
+		JLabel requiredFieldsLbl = new JLabel("Os campos com * são obrigatórios");
+		requiredFieldsLbl.setFont(new Font("DejaVu Sans Condensed", Font.BOLD | Font.ITALIC,12));
+		requiredFieldsLbl.setBounds(407, 32, 370, 17);
+        frame.getContentPane().add(requiredFieldsLbl);
         
 		registerPersonLbl.setText("Matricular novo aluno");
 		registerPersonLbl.setBounds(407, 12, 475, 31);
@@ -143,17 +160,13 @@ public class EnrollStudentDecorator extends PersonDecorator {
         fatherField.setBounds(177, 404, 402, 27);
         frame.getContentPane().add(fatherField);
 
-        JLabel paymentValue = new JLabel("Valor total");
-        paymentValue.setBounds(30, 580, 200, 17);
+        JLabel paymentValue = new JLabel("*Valor total");
+        paymentValue.setBounds(25, 580, 200, 17);
         frame.getContentPane().add(paymentValue);
                        
         JLabel paymentInstallments = new JLabel("Quantidade de Parcelas");
         paymentInstallments.setBounds(229, 580, 190, 17);
         frame.getContentPane().add(paymentInstallments);
-        
-        paymentValueField = new JTextField();
-        paymentValueField.setBounds(105, 580, 120, 27);
-        frame.getContentPane().add(paymentValueField);
         
         paymentInstallmentsField = new JTextField();
         paymentInstallmentsField.setBounds(412, 581, 27, 27);
@@ -179,12 +192,12 @@ public class EnrollStudentDecorator extends PersonDecorator {
         
         packages.setModel(availablePackages);
         
-        JLabel paymentForm = new JLabel("Forma de pagamento");
-        paymentForm.setBounds(72, 520, 171, 17);
+        JLabel paymentForm = new JLabel("*Forma de pagamento");
+        paymentForm.setBounds(68, 520, 171, 17);
         frame.getContentPane().add(paymentForm);
         
-        paymentTypeLbl = new JLabel("Tipo de pagamento");
-        paymentTypeLbl.setBounds(72, 472, 150, 17);
+        paymentTypeLbl = new JLabel("*Tipo de pagamento");
+        paymentTypeLbl.setBounds(68, 472, 150, 17);
         frame.getContentPane().add(paymentTypeLbl);
         
         paymentTypes = new JComboBox<String>();
@@ -213,14 +226,14 @@ public class EnrollStudentDecorator extends PersonDecorator {
 		frame.getContentPane().add(scrollPaneAddedPackages);
 		scrollPaneAddedPackages.setBackground(Color.WHITE);
 					
-		String [] columnsAddedCourses = {"Cursos adicionados", "ID"};
+		String [] columnsAddedCourses = {"Cursos adicionados", "ID", "Valor"};
 		
 		courseTableModel = new DefaultTableModel(null, columnsAddedCourses);			
-
+		
 		tableOfAddedCourses = new JTable(courseTableModel);
 		scrollPaneAddedCourses.setViewportView(tableOfAddedCourses);
 			
-		String [] columnsAddedPackages = {"Pacotes adicionados", "ID"};
+		String [] columnsAddedPackages = {"Pacotes adicionados", "ID", "Valor"};
 		
 		packageTableModel = new DefaultTableModel(null, columnsAddedPackages);			
 
@@ -247,7 +260,7 @@ public class EnrollStudentDecorator extends PersonDecorator {
         MaskFormatter cpfMask = null;
 		try{
 	        // Mask for cpf
-	        cpfMask = new MaskFormatter("###########");
+	        cpfMask = new MaskFormatter("###.###.###-##");
 	        cpfMask.setValidCharacters("0123456789");
 	        cpfMask.setValueContainsLiteralCharacters(false);
 
@@ -265,6 +278,15 @@ public class EnrollStudentDecorator extends PersonDecorator {
 	        birthdateField.setBounds(70, 195, 190, 27);
 	        frame.getContentPane().add(birthdateField);
 	        birthdateField.setColumns(10);
+	        
+	        // Mask for value
+ 			MaskFormatter valueMask = new MaskFormatter("R$####,##");
+ 			valueMask.setValidCharacters("0123456789");
+ 			valueMask.setValueContainsLiteralCharacters(false);
+	        
+	        paymentValueField = new JFormattedTextField(valueMask);
+	        paymentValueField.setBounds(105, 580, 120, 27);
+	        frame.getContentPane().add(paymentValueField);
 
 		}
 		catch(ParseException e2){
@@ -297,21 +319,29 @@ public class EnrollStudentDecorator extends PersonDecorator {
 				
 				int indexOfSelectedCourse = packages.getSelectedIndex();
 				addCourseToAddedCourses(indexOfSelectedCourse);
+				
+				String value = calculateValue();
+				paymentValueField.setText(value);
+				
 				availableCourses.removeElementAt(indexOfSelectedCourse);
 				addedCoursesId.add(coursesId.get(indexOfSelectedCourse));
 				coursesId.remove(indexOfSelectedCourse);
 				coursesName.remove(indexOfSelectedCourse);
+				addedCoursesValue.remove(indexOfSelectedCourse);
+
 			}
 			
 			private void addCourseToAddedCourses(int indexOfSelectedCourse) {
 				
 				String courseId = coursesId.get(indexOfSelectedCourse);
 				String courseName = coursesName.get(indexOfSelectedCourse);
-
-				String[] allCourses = new String[2];
+				String courseValue = addedCoursesValue.get(indexOfSelectedCourse);
+					
+				String[] allCourses = new String[3];
 		
 				allCourses[0] = (courseName);
-				allCourses[1] = (courseId.toString());
+				allCourses[1] = (courseId);
+				allCourses[2] = (courseValue);
 				
 				courseTableModel.addRow(allCourses);
 			}
@@ -325,17 +355,28 @@ public class EnrollStudentDecorator extends PersonDecorator {
 				
 				int selectedRow = tableOfAddedCourses.getSelectedRow();
 
-				String courseName = (String) courseTableModel.getValueAt(selectedRow, 0);
-				String courseId = (String) courseTableModel.getValueAt(selectedRow, 1);
-								
-				coursesId.add(courseId);
-				coursesName.add(courseName);
+				if(selectedRow != NONE_ROW_SELECTED){
+					String courseName = (String) courseTableModel.getValueAt(selectedRow, 0);
+					String courseId = (String) courseTableModel.getValueAt(selectedRow, 1);
+					String courseValue = (String) courseTableModel.getValueAt(selectedRow, 2);				
+					
+					coursesId.add(courseId);
+					coursesName.add(courseName);
+					addedCoursesValue.add(courseValue);
+					
+					String value = calculateValue();
+					paymentValueField.setText(value);
+					
+					addedCoursesId.remove(selectedRow);
+					
+					availableCourses.addElement(courseName);
+					
+					courseTableModel.removeRow(selectedRow);
+				}
+				else{
+					showInfoMessage("Selecione um curso da lista de cursos adicionados");
+				}
 				
-				addedCoursesId.remove(selectedRow);
-				
-				availableCourses.addElement(courseName);
-				
-				courseTableModel.removeRow(selectedRow);
 			}
 			
 		});
@@ -348,21 +389,28 @@ public class EnrollStudentDecorator extends PersonDecorator {
 				
 				addPackageToAddedCourses(indexOfSelectedPackage);
 				
+				String value = calculateValue();
+				paymentValueField.setText(value);
+				
 				availablePackages.removeElementAt(indexOfSelectedPackage);
 				addedPackagesId.add(packagesId.get(indexOfSelectedPackage));
 				packagesId.remove(indexOfSelectedPackage);
 				packagesName.remove(indexOfSelectedPackage);
+				addedPackagesValue.remove(indexOfSelectedPackage);
+
 			}
 			
 			private void addPackageToAddedCourses(int indexOfSelectedPackage){
 				
 				String packageId = packagesId.get(indexOfSelectedPackage);
 				String packageName = packagesName.get(indexOfSelectedPackage);
+				String packageValue = addedPackagesValue.get(indexOfSelectedPackage);
 
-				String[] allPackages = new String[2];
+				String[] allPackages = new String[3];
 		
 				allPackages[0] = (packageName);
-				allPackages[1] = (packageId.toString());
+				allPackages[1] = (packageId);
+				allPackages[2] = (packageValue);
 				
 				packageTableModel.addRow(allPackages);
 			}
@@ -377,17 +425,26 @@ public class EnrollStudentDecorator extends PersonDecorator {
 				
 				int selectedRow = tableOfAddedPackages.getSelectedRow();
 
-				String packageName = (String) packageTableModel.getValueAt(selectedRow, 0);
-				String packageId = (String) packageTableModel.getValueAt(selectedRow, 1);
-								
-				packagesId.add(packageId);
-				packagesName.add(packageName);
-				
-				addedPackagesId.remove(selectedRow);
-				
-				availablePackages.addElement(packageName);
+				if(selectedRow != NONE_ROW_SELECTED){
+					String packageName = (String) packageTableModel.getValueAt(selectedRow, 0);
+					String packageId = (String) packageTableModel.getValueAt(selectedRow, 1);
+					String packageValue = (String) packageTableModel.getValueAt(selectedRow, 2);
+									
+					packagesId.add(packageId);
+					packagesName.add(packageName);
+					addedPackagesValue.add(packageValue);
 					
-				packageTableModel.removeRow(selectedRow);
+					addedPackagesId.remove(selectedRow);
+					
+					availablePackages.addElement(packageName);
+						
+					packageTableModel.removeRow(selectedRow);
+					String value = calculateValue();
+					paymentValueField.setText(value);
+				}	
+				else{
+					showInfoMessage("Selecione um curso da lista de pacotes adicionados");
+				}
 			}
 			
 		});
@@ -395,6 +452,50 @@ public class EnrollStudentDecorator extends PersonDecorator {
 	}
 	
 	
+	private String calculateValue() {
+		
+		String value = "";
+		Integer serviceValue = 0;
+		
+		ArrayList<String> addedCoursesValue = new ArrayList<String>();
+		ArrayList<String> addedPackagesValue = new ArrayList<String>();
+		
+		addedCoursesValue = getAddedItemsValue(tableOfAddedCourses);
+		addedPackagesValue = getAddedItemsValue(tableOfAddedPackages);
+		
+		for(int i = 0; i < addedCoursesValue.size(); i++){
+			String courseValue = addedCoursesValue.get(i);
+			serviceValue += Integer.parseInt((courseValue));
+		}
+		
+		for(int i = 0; i < addedPackagesValue.size(); i++){
+			String packageValue = addedPackagesValue.get(i);
+			serviceValue += Integer.parseInt((packageValue));
+		}
+		
+		value = serviceValue.toString();
+		if(value.length() != MAX_VALUE_LENGTH){
+			value = "0" + value;
+		}
+		else{
+			// Nothing to do
+		}		
+		
+		return value;
+	}
+
+	private ArrayList<String> getAddedItemsValue(JTable tableOfItems) {
+		
+		ArrayList<String> values = new ArrayList<String>();
+		
+		for (int i = 0; i < tableOfItems.getRowCount(); i++) {
+			String value = (String) tableOfItems.getValueAt(i, 2);
+			values.add(value);
+		}
+		
+		return values;
+	}
+
 	/**
 	 * Dispose the id and duration columns
 	 * @param table - Receives the table to dispose columns
@@ -406,6 +507,10 @@ public class EnrollStudentDecorator extends PersonDecorator {
 		tableModel.getColumn(1).setMinWidth(0);     
 		tableModel.getColumn(1).setPreferredWidth(0);  
 		tableModel.getColumn(1).setMaxWidth(0);    
+		
+		tableModel.getColumn(2).setMinWidth(0);     
+		tableModel.getColumn(2).setPreferredWidth(0);  
+		tableModel.getColumn(2).setMaxWidth(0);    
 	}
 	
 	/**
@@ -424,9 +529,11 @@ public class EnrollStudentDecorator extends PersonDecorator {
 			Package currentPackage = packages.get(indexOfPackages);
 			Integer packageId = currentPackage.getId();
 			String packageName = (currentPackage.getName());
-
+			Integer packageValue = currentPackage.getValue();
+			
 			packagesId.add(packageId.toString());
 			packagesName.add(packageName);
+			addedPackagesValue.add(packageValue.toString());
 			
 			availablePackages.addElement(packageName);
 			
@@ -450,9 +557,11 @@ public class EnrollStudentDecorator extends PersonDecorator {
 			Course course = courses.get(indexOfCourses);
 			Integer courseId = course.getId();
 			String courseName = (course.getName());
-
+			Integer courseValue = course.getValue();
+			
 			coursesId.add(courseId.toString());
 			coursesName.add(courseName);
+			addedCoursesValue.add(courseValue.toString());
 			
 			availableCourses.addElement(courseName);
 			
@@ -465,10 +574,12 @@ public class EnrollStudentDecorator extends PersonDecorator {
 		
 		String message = "";
 		try{
-			
+		
 			String studentName = nameField.getText();
 			
 			String cpf = cpfField.getText();
+			cpf = cpf.replace(".", "");
+			cpf = cpf.replace("-", "");
 			CPF studentCpf = new CPF(cpf);
 			
 			String rgNumber = rgField.getText();
@@ -546,7 +657,6 @@ public class EnrollStudentDecorator extends PersonDecorator {
 					break;
 			}
 			
-			
 			String paymentInstallments = paymentInstallmentsField.getText(); 
 			
 			Integer installments;
@@ -557,10 +667,15 @@ public class EnrollStudentDecorator extends PersonDecorator {
 				installments = 0;
 			}
 			
+			String value = paymentValueField.getText();
+			value = value.replace("R$", "");
+			value = value.replace(",", "");
+			Integer serviceValue = new Integer(value);
+			
 			EnrollController enroll = new EnrollController();
-			enroll.enrollStudent(studentName, studentCpf, studentRg, birthdate, email, address,
+			student = enroll.enrollStudent(studentName, studentCpf, studentRg, birthdate, email, address,
 											 principalPhone, secondaryPhone, motherName, fatherName,
-											 addedCoursesId, addedPackagesId, paymentType, paymentForm, installments);
+											 addedCoursesId, addedPackagesId, paymentType, paymentForm, installments, serviceValue);
 			
 			message = "Aluno matriculado com sucesso.";
 		}
@@ -589,6 +704,12 @@ public class EnrollStudentDecorator extends PersonDecorator {
 		}
 		finally{
 			showInfoMessage(message);
+			if(student != null){
+				dispose();
+				PersonView showStudentFrame = new ShowStudentDecorator(new StudentForm());
+				showStudentFrame.buildScreen(showStudentFrame, student);
+				showStudentFrame.setVisible(true);
+			}
 		}
 	}
 }

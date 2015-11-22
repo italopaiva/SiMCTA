@@ -10,15 +10,15 @@ import model.Payment;
 import model.Service;
 import model.ServiceItem;
 import model.Student;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.CourseException;
@@ -48,6 +48,7 @@ public class ServiceTest {
 	private CPF cpf;
 	private RG rg;
 	private String email;
+	private Integer value;
 	
 	@Before
 	public void setUp() throws Exception{
@@ -72,6 +73,8 @@ public class ServiceTest {
 		package1 = new Package(1, "Aplicação top", 300000);
 		package1.addServiceItem(course1);
 		package1.addServiceItem(course2);
+		
+		value = new Integer(100000);
 	}
 	
 	/** Tests for constructors */
@@ -106,7 +109,7 @@ public class ServiceTest {
 	public void testValidServiceId(){
 		
 		try{
-			service = new Service(1, student, contractDate, payment);
+			service = new Service(1, student, contractDate, payment, value);
 			assertEquals(service.getServiceId(), new Integer(1));
 		}
 		catch(ServiceException e){
@@ -117,13 +120,13 @@ public class ServiceTest {
 	@Test(expected = ServiceException.class)
 	public void testInvalidNullServiceId() throws ServiceException{
 		
-		service = new Service(null, student, contractDate, payment);
+		service = new Service(null, student, contractDate, payment, value);
 	}
 	
 	@Test(expected = ServiceException.class)
 	public void testInvalidNegativeServiceId() throws ServiceException{
 		
-		service = new Service(-1, student, contractDate, payment);
+		service = new Service(-1, student, contractDate, payment, value);
 	}
 	
 	/** Tests for contract date **/
@@ -132,7 +135,7 @@ public class ServiceTest {
 	public void testValidContractDate(){
 		
 		try{
-			service = new Service(1, student, contractDate, payment);
+			service = new Service(1, student, contractDate, payment, value);
 			assertEquals(service.getContractsDate(), contractDate);
 		}
 		catch(ServiceException e){
@@ -143,7 +146,7 @@ public class ServiceTest {
 	@Test(expected = ServiceException.class)
 	public void testInvalidNullDate() throws ServiceException{
 		
-		service = new Service(1, student, null, payment);
+		service = new Service(1, student, null, payment, value);
 	}
 	
 	/** Tests for service payment **/
@@ -152,7 +155,7 @@ public class ServiceTest {
 	public void testValidPayment(){
 		
 		try{
-			service = new Service(1, student, contractDate, payment);
+			service = new Service(1, student, contractDate, payment, value);
 			assertEquals(service.getPayment(), payment);
 		}
 		catch(ServiceException e){
@@ -163,7 +166,7 @@ public class ServiceTest {
 	@Test(expected = ServiceException.class)
 	public void testInvalidNullPayment() throws ServiceException{
 		
-		service = new Service(1, student, contractDate, null);
+		service = new Service(1, student, contractDate, null, value);
 	}
 	
 	/** Tests for service student **/
@@ -172,7 +175,7 @@ public class ServiceTest {
 	public void testValidStudent(){
 		
 		try{
-			service = new Service(1, student, contractDate, payment);
+			service = new Service(1, student, contractDate, payment, value);
 			assertEquals(service.getStudent(), student);
 		}
 		catch(ServiceException e){
@@ -183,7 +186,7 @@ public class ServiceTest {
 	@Test(expected = ServiceException.class)
 	public void testInvalidNullStudentOfService() throws ServiceException{
 		
-		service = new Service(1, null, contractDate, payment);
+		service = new Service(1, null, contractDate, payment, value);
 	}
 	
 	/** Test for addItem() */
@@ -192,7 +195,7 @@ public class ServiceTest {
 		
 		try{
 						
-			service = new Service(1, student, contractDate, payment);
+			service = new Service(1, student, contractDate, payment, value);
 			service.addItem(course1);
 			
 			assertEquals(service.getItens().get(0), course1);
@@ -207,7 +210,7 @@ public class ServiceTest {
 		
 		try{
 						
-			service = new Service(1, student, contractDate, payment);
+			service = new Service(1, student, contractDate, payment, value);
 			service.addItem(package1);
 			
 			assertEquals(service.getItens().get(0), package1);
@@ -220,52 +223,19 @@ public class ServiceTest {
 	@Test(expected = ServiceException.class)
 	public void testIfAddInvalidNullItem() throws ServiceException{
 						
-		service = new Service(1, student, contractDate, payment);
+		service = new Service(1, student, contractDate, payment, value);
 		service.addItem(null);
 	}
 	
 	/** Tests for get methods*/
 	@Test
-	public void testIfGetServiceValueWithPackage(){
-		
-		try{
-						
-			service = new Service(1, student, contractDate, payment);
-			service.addItem(package1);
-			
-			assertEquals(new Integer(300000), service.getTotalValue());
-		}
-		catch(ServiceException e){
-			fail("Should not throw this exception:" + e.getMessage());
-		}
-	}
-	
-	@Test
-	public void testIfGetServiceValueWithCourses(){
-		
-		try{
-						
-			service = new Service(1, student, contractDate, payment);
-			service.addItem(course1);
-			service.addItem(course2);
-			
-			assertEquals(new Integer(400000), service.getTotalValue());
-		}
-		catch(ServiceException e){
-			fail("Should not throw this exception:" + e.getMessage());
-		}
-	}
-	
-	@Test
 	public void testIfGetFormattedServiceValue(){
 		
 		try{
 						
-			service = new Service(1, student, contractDate, payment);
-			service.addItem(course1);
-			service.addItem(course2);
+			service = new Service(1, student, contractDate, payment, value);
 			
-			assertEquals("R$ 4000,00", service.getTotalValueFormatted());
+			assertEquals("R$ 1000,00", service.getTotalValueFormatted());
 		}
 		catch(ServiceException e){
 			fail("Should not throw this exception:" + e.getMessage());
@@ -277,11 +247,9 @@ public class ServiceTest {
 		
 		try{
 						
-			service = new Service(1, student, contractDate, payment);
-			service.addItem(course1);
-			service.addItem(course2);
+			service = new Service(1, student, contractDate, payment, value);
 			
-			assertEquals("R$ 2000,00", service.getInstallmentsValue());
+			assertEquals("R$ 500,00", service.getInstallmentsValue());
 		}
 		catch(ServiceException e){
 			fail("Should not throw this exception:" + e.getMessage());
@@ -295,7 +263,7 @@ public class ServiceTest {
 		
 		try{
 						
-			service = new Service(1, student, contractDate, payment);
+			service = new Service(1, student, contractDate, payment, value);
 			service.addItem(course1);
 			service.addItem(package1);
 			
@@ -313,7 +281,7 @@ public class ServiceTest {
 		
 		try{
 						
-			service = new Service(1, student, contractDate, payment);
+			service = new Service(1, student, contractDate, payment, value);
 			service.addItem(course1);
 			service.addItem(package1);
 			

@@ -2,17 +2,17 @@ package controller;
 
 import java.util.ArrayList;
 
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.PaymentException;
 import exception.ServiceException;
 import exception.StudentException;
 import model.Payment;
 import model.Service;
 import model.Student;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 
 public class EnrollController extends Enroll {
 	
@@ -49,22 +49,32 @@ public class EnrollController extends Enroll {
 	 * @throws ServiceException
 	 * @throws PaymentException
 	 */
-	public void enrollStudent(String studentName, CPF studentCpf, RG studentRg, Date birthdate, String email, Address address,
+	public Student enrollStudent(String studentName, CPF studentCpf, RG studentRg, Date birthdate, String email, Address address,
 			   Phone principalPhone, Phone secondaryPhone, String motherName, String fatherName,
-			   ArrayList<String> courses, ArrayList<String> packages, int paymentType, int paymentForm, Integer installments) throws StudentException, ServiceException, PaymentException{
+			   ArrayList<String> courses, ArrayList<String> packages, int paymentType, int paymentForm, Integer installments, Integer value) throws StudentException, ServiceException, PaymentException{
 		
-		Student student = studentController.newStudent(studentName, studentCpf, studentRg, birthdate, email, address,
+		try{
+		
+			Student student = studentController.newStudent(studentName, studentCpf, studentRg, birthdate, email, address,
 				 									   principalPhone, secondaryPhone, motherName, fatherName);
-		this.student = student;
 		
-		Service service = serviceController.newService(student, courses, packages);
-		
-		Payment payment = paymentController.newPayment(service, paymentType, paymentForm, installments);
-		
-		service.addPayment(payment);
-		this.service = service;
-		
-		enroll();
+			this.student = student;
+			
+			Service service = serviceController.newService(student, courses, packages, value);
+			System.out.println(service.getTotalValue());
+			Payment payment = paymentController.newPayment(service, paymentType, paymentForm, installments);
+			
+			service.addPayment(payment);
+			this.service = service;
+			
+			enroll();
+		}
+		catch(StudentException e){
+			student = null;
+			throw new StudentException(e.getMessage());
+		}
+	
+		return student;
 	}
 	
 	@Override

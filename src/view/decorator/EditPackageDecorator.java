@@ -1,6 +1,7 @@
 package view.decorator;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -29,14 +30,20 @@ import model.Package;
 import model.ServiceItem;
 import view.SearchPackage;
 import view.ServiceItemView;
+import view.forms.ServiceItemForm;
 
 public class EditPackageDecorator extends ServiceItemDecorator {
 
-	protected static final int SELECTED_ROW = -1;
+	// The "-1" means that doesn't have a row selected
+	private static final int NONE_ROW_SELECTED = -1;
 	
-	ArrayList<String> coursesName = new ArrayList<String>(); 
-	ArrayList<String> coursesId = new ArrayList<String>(); 
-	ArrayList<String> coursesDuration = new ArrayList<String>();
+	// The max length of a value (0000.00)
+	private static final int MAX_VALUE_LENGTH = 6;
+	
+	private ArrayList<String> coursesName = new ArrayList<String>(); 
+	private ArrayList<String> coursesId = new ArrayList<String>(); 
+	private ArrayList<String> coursesDuration = new ArrayList<String>();
+	private ArrayList<String> coursesValue = new ArrayList<String>();
 	private DefaultTableModel tableModel;
 	private DefaultTableModel tableSecondModel;
 	private Package packageToEdit;
@@ -57,8 +64,13 @@ public class EditPackageDecorator extends ServiceItemDecorator {
 		
 		this.packageToEdit = (Package) serviceItem;
 		
+		JLabel requiredFieldsLbl = new JLabel("Os campos com * são obrigatórios");
+		requiredFieldsLbl.setFont(new Font("DejaVu Sans Condensed", Font.BOLD | Font.ITALIC,12));
+		requiredFieldsLbl.setBounds(284, 40, 370, 17);
+        frame.getContentPane().add(requiredFieldsLbl);
+		
 		nameField = new JTextField();
-		nameField.setBounds(276, 74, 346, 30);
+		nameField.setBounds(276, 84, 346, 30);
 		frame.getContentPane().add(nameField);
 		nameField.setColumns(10);
 		
@@ -68,20 +80,20 @@ public class EditPackageDecorator extends ServiceItemDecorator {
 		frame.getContentPane().add(updatePackageLbl);
 	
 		final JTextArea listAddedCourses = new JTextArea();
-		listAddedCourses.setBounds(276, 259, 294, -55);
+		listAddedCourses.setBounds(276, 279, 294, -55);
 		frame.getContentPane().add(listAddedCourses);
 
 		JLabel label = new JLabel("Adicionados:");
-		label.setBounds(576, 244, 144, 15);
+		label.setBounds(576, 264, 144, 15);
 		frame.getContentPane().add(label);
 				
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(76, 259, 353, 169);
+		scrollPane.setBounds(76, 279, 353, 169);
 		frame.getContentPane().add(scrollPane);
 		scrollPane.setBackground(Color.WHITE);
 		
 		JScrollPane scrollPaneAddedCourses = new JScrollPane();
-		scrollPaneAddedCourses.setBounds(576, 259, 353, 169);
+		scrollPaneAddedCourses.setBounds(576, 279, 353, 169);
 		frame.getContentPane().add(scrollPaneAddedCourses);
 		scrollPaneAddedCourses.setBackground(Color.WHITE);
 		
@@ -123,11 +135,11 @@ public class EditPackageDecorator extends ServiceItemDecorator {
 		}
 	
 		valueField = new JFormattedTextField(valueMask);
-		valueField.setBounds(276, 214, 124, 28);
+		valueField.setBounds(276, 234, 124, 28);
 		frame.getContentPane().add(valueField);
 		
 		durationField = new JFormattedTextField(durationMask);
-		durationField.setBounds(276, 147, 124, 28);
+		durationField.setBounds(276, 167, 124, 28);
 		frame.getContentPane().add(durationField);
 		durationField.setColumns(10);
 		durationField.setEditable(false);
@@ -167,13 +179,13 @@ public class EditPackageDecorator extends ServiceItemDecorator {
 											
 					if(!coursesId.isEmpty()){
 						PackageController packageController = new PackageController();
-						packageController.updatePackage(packageId, packageName, packageValue, coursesId);
+						packageToEdit = packageController.updatePackage(packageId, packageName, packageValue, coursesId);
 						
 						String message = "Pacote alterado com sucesso.";
 						
 						showInfoMessage(message);
 						dispose();
-						ServiceItemView searchPackageFrame = new SearchPackage();
+						ServiceItemView searchPackageFrame = new ShowPackageDecorator(new ServiceItemForm());
 						searchPackageFrame.buildScreen(searchPackageFrame, packageToEdit);
 						searchPackageFrame.setVisible(true);
 					}
@@ -188,7 +200,7 @@ public class EditPackageDecorator extends ServiceItemDecorator {
 			}
 
 		});
-		updatePackageButton.setBounds(456, 525, 114, 25);
+		updatePackageButton.setBounds(379, 545, 114, 25);
 		frame.getContentPane().add(updatePackageButton);
 
 		JButton addCourseButton = new JButton("Adicionar");
@@ -200,7 +212,7 @@ public class EditPackageDecorator extends ServiceItemDecorator {
 				
 				int currentRow = tableOfCourses.getSelectedRow();
 							    
-				if(currentRow != SELECTED_ROW){
+				if(currentRow != NONE_ROW_SELECTED){
 					
 					// Gets the name of the selected course 
 					String addedCourse = (String) tableOfCourses.getValueAt(currentRow, 0);
@@ -214,19 +226,28 @@ public class EditPackageDecorator extends ServiceItemDecorator {
 					String addedCourseDuration = (String) tableOfCourses.getValueAt(currentRow, 2);
 					coursesDuration.add(addedCourseDuration);
 				    
+					// Gets the value of the selected course
+					String addedCourseValue = (String) tableOfCourses.getValueAt(currentRow, 3);
+					coursesValue.add(addedCourseValue);
+				    
 					// Remove the course from available courses table
 					tableModel.removeRow(currentRow);
 					
 				    // Show added courses
-					String [] allCourses = new String[3];
+					String [] allCourses = new String[4];
 					allCourses[0] = addedCourse;
 					allCourses[1] = addedCourseId;
 					allCourses[2] = addedCourseDuration;
+					allCourses[3] = addedCourseValue;
 					tableSecondModel.addRow(allCourses);
 	
 				    //Show the current duration
-				    Integer duration = calculateDuration(coursesDuration);
-				    durationField.setText(duration.toString());
+				    String duration = calculateDuration(coursesDuration);
+				    durationField.setText(duration);
+				    
+				    //Show the current value
+				    String value = calculateValue(coursesValue);
+				    valueField.setText(value);
 				}	
 				else{
 					showInfoMessage("Selecione um curso da lista de cursos disponíveis");
@@ -235,7 +256,7 @@ public class EditPackageDecorator extends ServiceItemDecorator {
 			
 
 		});
-		addCourseButton.setBounds(452, 259, 114, 25);
+		addCourseButton.setBounds(452, 279, 114, 25);
 		frame.getContentPane().add(addCourseButton);
 		
 		JButton removeAddedCourseButton = new JButton("Remover");
@@ -247,7 +268,7 @@ public class EditPackageDecorator extends ServiceItemDecorator {
 				
 				int currentRow = tableOfAddedCourses.getSelectedRow();
 			
-				if(currentRow != SELECTED_ROW){
+				if(currentRow != NONE_ROW_SELECTED){
 				
 					// Gets the id of the selected course
 					String removeCourseId = (String) tableOfAddedCourses.getValueAt(currentRow, 1);
@@ -266,10 +287,11 @@ public class EditPackageDecorator extends ServiceItemDecorator {
 						
 					}
 					
-					String [] courseAvailable = new String[3];
+					String [] courseAvailable = new String[4];
 					courseAvailable[0] = coursesName.get(index);
 					courseAvailable[1] = coursesId.get(index);
 					courseAvailable[2] = coursesDuration.get(index);
+					courseAvailable[3] = coursesValue.get(index);
 					
 					// Add the course to available courses table
 					tableModel.addRow(courseAvailable);
@@ -278,14 +300,19 @@ public class EditPackageDecorator extends ServiceItemDecorator {
 					coursesDuration.remove(index);
 					coursesName.remove(index);
 					coursesId.remove(index);
+					coursesValue.remove(index);
 					
 					// Remove the course from added courses table
 					tableSecondModel.removeRow(currentRow);
 					
 	
 				    //Show the current duration
-				    Integer duration = calculateDuration(coursesDuration);
+				    String duration = calculateDuration(coursesDuration);
 				    durationField.setText(duration.toString());
+
+				    //Show the current value
+				    String value = calculateValue(coursesValue);
+				    valueField.setText(value.toString());
 				    
 				}
 				else{
@@ -294,8 +321,22 @@ public class EditPackageDecorator extends ServiceItemDecorator {
 			}
 
 		});
-		removeAddedCourseButton.setBounds(452, 309, 114, 25);
+		removeAddedCourseButton.setBounds(452, 329, 114, 25);
 		frame.getContentPane().add(removeAddedCourseButton);
+		
+		JButton backBtn = new JButton("Voltar");
+		frame.getContentPane().add(backBtn);
+		backBtn.setBounds(500, 545, 117, 25);
+		backBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e){			
+				dispose();
+				ServiceItemView packageFrame;
+				packageFrame = new ShowPackageDecorator(new ServiceItemForm());
+				packageFrame.buildScreen(packageFrame,packageToEdit);
+				packageFrame.setVisible(true);
+			}
+		});
 
 	}
 
@@ -314,6 +355,12 @@ public class EditPackageDecorator extends ServiceItemDecorator {
 		nameField.setText(packageName);
 		durationField.setText(packageDuration);
 		durationField.setEditable(false);
+		if(packageValue.length() != MAX_VALUE_LENGTH){
+			packageValue = "0" + packageValue;
+		}
+		else{
+			// Nothing to do
+		}
 		valueField.setText(packageValue);
 		buildTableAddedCourses(currentPackage);
 		
@@ -371,7 +418,7 @@ public class EditPackageDecorator extends ServiceItemDecorator {
 	 * @param coursesDuration
 	 * @return
 	 */
-	private Integer calculateDuration(ArrayList<String> coursesDuration) {
+	private String calculateDuration(ArrayList<String> coursesDuration) {
 		
 		Integer packageDuration = 0;
 		
@@ -379,8 +426,36 @@ public class EditPackageDecorator extends ServiceItemDecorator {
 			packageDuration += Integer.parseInt((coursesDuration.get(i)));
 		}
 		
-		return packageDuration;
+		return packageDuration.toString();
 		
+	}
+	
+	/**
+	 * Calculate the value of package based on courses duration
+	 * @param coursesValue - the values of the courses
+	 * @return packageValue
+	 */
+	private String calculateValue(ArrayList<String> coursesValue) {
+		
+		Integer packageValue = 0;
+		String value = "";
+		
+		for(int i = 0; i < coursesValue.size(); i++){
+
+			String courseValue = coursesValue.get(i);
+			packageValue += Integer.parseInt((courseValue));
+		}
+		
+		value = packageValue.toString();
+		if(value.length() != MAX_VALUE_LENGTH){
+			value = "0" + value;
+		}
+		else{
+			// Nothing to do
+		}		
+		
+		return value;
+	
 	}
 	
 	/**

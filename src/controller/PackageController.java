@@ -31,26 +31,35 @@ public class PackageController {
 	 * @return - TRUE if the package was created or FALSE if it does not
 	 * @throws PackageException
 	 */
-	public void newPackage(String packageName, Integer packageValue, ArrayList<String> coursesId) throws PackageException{
+	public Package newPackage(String packageName, Integer packageValue, ArrayList<String> coursesId) throws PackageException{
 		
-		Integer packageId = packageDAO.getTheLastId() + 1; 
-		
-		Package packageInstance = new Package(packageId, packageName, packageValue);
+		Package newPackage;
+		try{
+			Integer packageId = packageDAO.getTheLastId() + 1; 
+			
+			newPackage = new Package(packageId, packageName, packageValue);
+					
+			for(String courseId : coursesId){
 				
-		for(String courseId : coursesId){
-			
-			Integer id = new Integer(courseId);
-			Course course = courseController.get(id);
-			
-			if(course != null){
-				packageInstance.addServiceItem(course);
+				Integer id = new Integer(courseId);
+				Course course = courseController.get(id);
+				
+				if(course != null){
+					newPackage.addServiceItem(course);
+				}
+				else{
+					// Nothing to do because the course is invalid
+				}
 			}
-			else{
-				// Nothing to do because the course is invalid
-			}
+			
+			packageDAO.save(newPackage);
 		}
-		
-		packageDAO.save(packageInstance);
+		catch(PackageException e){
+			newPackage = null;
+			throw new PackageException(e.getMessage());
+		}
+	
+		return newPackage;
 
 	}
 	
@@ -64,24 +73,32 @@ public class PackageController {
 	 * @return TRUE if the package was updated or FALSE if it does not
 	 * @throws PackageException
 	 */
-	public void updatePackage(Integer packageId, String packageName, Integer packageValue, ArrayList<String> packageCourses)
+	public Package updatePackage(Integer packageId, String packageName, Integer packageValue, ArrayList<String> packageCourses)
 		throws PackageException{
 	
 		Package newPackage = new Package(packageId, packageName, packageValue);
-		
-		for(String courseId : packageCourses){
-			Integer id = new Integer(courseId);
-			Course course = courseController.get(id);
+	
+		try{
+			for(String courseId : packageCourses){
+				Integer id = new Integer(courseId);
+				Course course = courseController.get(id);
+				
+				if(course != null){
+					newPackage.addServiceItem(course);
+				}
+				else{
+					// Nothing to do because the course is invalid
+				}
+			}
 			
-			if(course != null){
-				newPackage.addServiceItem(course);
-			}
-			else{
-				// Nothing to do because the course is invalid
-			}
+			packageDAO.update(newPackage);
+		}
+		catch(PackageException e){
+			newPackage = null;
+			throw new PackageException(e.getMessage());
 		}
 		
-		packageDAO.update(newPackage);
+		return newPackage;
 	}
 	
 	public Package getPackage(int packageId){

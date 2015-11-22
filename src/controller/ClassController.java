@@ -2,12 +2,12 @@ package controller;
 
 import dao.ClassDAO;
 import dao.CourseDAO;
+import datatype.CPF;
+import datatype.Date;
 import exception.ClassException;
 import exception.CourseException;
 import exception.DateException;
 import exception.PersonException;
-import model.datatype.CPF;
-import model.datatype.Date;
 import model.Class;
 import model.Course;
 import model.Teacher;

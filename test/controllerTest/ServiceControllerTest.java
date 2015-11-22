@@ -15,11 +15,6 @@ import model.Package;
 import model.Payment;
 import model.Service;
 import model.Student;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 import controller.PaymentController;
 import controller.ServiceController;
 import controller.StudentController;
@@ -27,6 +22,11 @@ import dao.CourseDAO;
 import dao.PackageDAO;
 import dao.PaymentDAO;
 import dao.ServiceDAO;
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.CourseException;
@@ -87,8 +87,10 @@ public class ServiceControllerTest {
 		Payment payment1_ = new Payment(1);
 		Payment payment2_ = new Payment(2);
 		
-		Service service1 = new Service(5, student, new Date(17,10,2015), payment1_);
-		Service service2 = new Service(3, student, new Date(20,10,2015), payment2_);
+		Integer value = new Integer(100000);
+		
+		Service service1 = new Service(5, student, new Date(17,10,2015), payment1_, value);
+		Service service2 = new Service(3, student, new Date(20,10,2015), payment2_,value);
 
 		ArrayList<Service> services = new ArrayList<Service>();
 		services.add(service1);
@@ -108,9 +110,9 @@ public class ServiceControllerTest {
 		ArrayList<Service> arrayListOfService =  serviceController.searchService(studentCpf);
 		
 		ArrayList<Service> arrayListExpected = new ArrayList<Service>();
-	
-		Service service1_ = new Service(5, student, new Date(17,10,2015), payment1);
-		Service service2_ = new Service(3, student, new Date(20,10,2015), payment2);
+
+		Service service1_ = new Service(5, student, new Date(17,10,2015), payment1, value);
+		Service service2_ = new Service(3, student, new Date(20,10,2015), payment2, value);
 		arrayListExpected.add(service1_);
 		arrayListExpected.add(service2_);
 		

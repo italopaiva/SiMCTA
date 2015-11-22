@@ -10,14 +10,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import controller.TeacherController;
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.TeacherException;
 import model.Person;
 import model.Teacher;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 import view.SearchTeacher;
 import view.PersonView;
 import view.forms.TeacherForm;
@@ -210,7 +210,7 @@ public class ShowTeacherDecorator extends PersonDecorator {
 	public void createButtons(final JFrame frame) {
 		editTeacherBtn = new JButton("Editar");
 		frame.getContentPane().add(editTeacherBtn);
-		editTeacherBtn.setBounds(599, 55, 117, 25);
+		editTeacherBtn.setBounds(322, 611, 117, 25);
 		editTeacherBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			
@@ -223,8 +223,7 @@ public class ShowTeacherDecorator extends PersonDecorator {
 				
 		disableTeacherBtn = new JButton("Desativar professor");
 		frame.getContentPane().add(disableTeacherBtn);
-		disableTeacherBtn.setBounds(599, 95, 155, 25);
-		//editTeacherBtn.setBounds
+		disableTeacherBtn.setBounds(370, 645, 208, 25);
 		
 		status = teacher.getStatus();
 				
@@ -287,7 +286,7 @@ public class ShowTeacherDecorator extends PersonDecorator {
 		
 		backBtn = new JButton("Voltar");
 		frame.getContentPane().add(backBtn);
-		backBtn.setBounds(799, 55, 117, 25);
+		backBtn.setBounds(492, 611, 117, 25);
 		backBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			

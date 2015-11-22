@@ -7,14 +7,13 @@ import model.Package;
 import model.Payment;
 import model.Service;
 import model.Student;
-import model.datatype.CPF;
 import dao.ServiceDAO;
 import exception.AddressException;
 import exception.CPFException;
+import datatype.CPF;
 import exception.CourseException;
 import exception.DateException;
 import exception.PaymentException;
-import exception.PersonException;
 import exception.PersonException;
 import exception.PhoneException;
 import exception.RGException;
@@ -43,9 +42,9 @@ public class ServiceController {
 	 * @param packages - The packages requested
 	 * @throws ServiceException
 	 */	
-	public Service newService(Student student, ArrayList<String> courses, ArrayList<String> packages) throws ServiceException{
+	public Service newService(Student student, ArrayList<String> courses, ArrayList<String> packages, Integer value) throws ServiceException{
 
-		Service service = new Service(student);
+		Service service = new Service(student, value);
 		
 		service = addCoursesToService(service, courses);
 		service = addPackagesToService(service, packages);

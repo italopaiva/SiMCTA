@@ -21,13 +21,13 @@ import javax.swing.table.DefaultTableModel;
 import model.Person;
 import model.Student;
 import model.Teacher;
-import model.datatype.CPF;
 import util.ButtonColumn;
 import view.decorator.ShowTeacherDecorator;
 import view.decorator.PersonDecorator;
 import view.forms.TeacherForm;
 import controller.StudentController;
 import controller.TeacherController;
+import datatype.CPF;
 import exception.CPFException;
 import exception.PersonException;
 import exception.TeacherException;
@@ -62,7 +62,7 @@ public class SearchTeacher extends PersonView {
         contentPane.setLayout(null);
 	
         searchedTeacherField = new JTextField();
-		searchedTeacherField.setBounds(141, 24, 446, 30);
+        searchedTeacherField.setBounds(227, 56, 446, 29);
 		add(searchedTeacherField);
 		searchedTeacherField.setColumns(10);
 		
@@ -79,7 +79,24 @@ public class SearchTeacher extends PersonView {
 		
 		String [] columns = { "Professor", "Ação", "CPF"};
 		
-		tableModel = new DefaultTableModel(null, columns);
+		tableModel = new DefaultTableModel(null, columns){
+			// Overriding the method to set non editable the name and cpf columns
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				
+				boolean isEditable = false;
+				
+				if(column == 0 || column == 2){
+					isEditable = false;
+				}
+				else{
+					isEditable = true;
+				}
+				
+				return isEditable;
+				
+			};
+		};
 		tableOfTeachers = new JTable(tableModel);
 		
 		fillTableWithAllTeachers();
@@ -103,7 +120,7 @@ public class SearchTeacher extends PersonView {
 					teacherFrame.setVisible(true);
 				} 
 				catch (CPFException | TeacherException | PersonException e1) {
-					
+					showInfoMessage(e1.getMessage());
 				}
 				
 			}
@@ -144,7 +161,7 @@ public class SearchTeacher extends PersonView {
 			}
 		} 
 		catch (TeacherException e) {
-			throw new TeacherException(e.getMessage());
+			showInfoMessage(e.getMessage());
 		}	
 		
 	}
@@ -159,7 +176,7 @@ public class SearchTeacher extends PersonView {
 	public void createButtons(JFrame frame) {
 		searchTeacherBtn = new JButton("Pesquisar");
 		add(searchTeacherBtn);
-		searchTeacherBtn.setBounds(599, 26, 117, 25);
+		searchTeacherBtn.setBounds(675, 56, 117, 29);
 		searchTeacherBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			

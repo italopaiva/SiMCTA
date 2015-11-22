@@ -4,15 +4,15 @@ import static org.junit.Assert.*;
 import model.Class;
 import model.Course;
 import model.Teacher;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.ClassException;

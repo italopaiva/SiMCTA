@@ -10,10 +10,16 @@ import java.text.ParseException;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
 import controller.TeacherController;
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
@@ -23,11 +29,6 @@ import exception.RGException;
 import exception.TeacherException;
 import model.Person;
 import model.Teacher;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 import view.SearchTeacher;
 import view.PersonView;
 import view.forms.TeacherForm;
@@ -48,6 +49,11 @@ public class EditTeacherDecorator extends PersonDecorator {
 		this.frame = viewToDecorate;
 		super.createLabelsAndFields(viewToDecorate, teacher);
 		this.teacher = (Teacher) teacher;
+		
+		JLabel requiredFieldsLbl = new JLabel("Os campos com * são obrigatórios");
+		requiredFieldsLbl.setFont(new Font("DejaVu Sans Condensed", Font.BOLD | Font.ITALIC,12));
+		requiredFieldsLbl.setBounds(115, 30, 370, 17);
+        frame.getContentPane().add(requiredFieldsLbl);
 				
 		registerPersonLbl.setText(teacher.getName());
 		registerPersonLbl.setBounds(407, 12, 475, 31);
@@ -115,11 +121,6 @@ public class EditTeacherDecorator extends PersonDecorator {
 		
         fillTheFields(this.teacher);
 
-		String cpf = teacher.getCpf().getCpf();
-		cpfField = new JTextField(cpf);
-		cpfField.setBounds(102, 97, 129, 27);
-		cpfField.setEditable(false);
-		frame.getContentPane().add(cpfField);
 	}
 	
 	private void fillTheFields(Teacher teacher) {
@@ -217,7 +218,7 @@ public class EditTeacherDecorator extends PersonDecorator {
 		
 		alterTeacherBtn = new JButton("Alterar");
 		frame.getContentPane().add(alterTeacherBtn);
-		alterTeacherBtn.setBounds(599, 55, 117, 25);
+		alterTeacherBtn.setBounds(399, 610, 117, 25);
 		alterTeacherBtn.addMouseListener(new MouseAdapter() {
 			private TeacherController teacherController;
 
@@ -303,6 +304,13 @@ public class EditTeacherDecorator extends PersonDecorator {
 				} 					
 				finally{
 					showInfoMessage(message);
+					if(teacher != null){
+						dispose();
+						PersonView showTeacherFrame = new ShowTeacherDecorator(new TeacherForm());
+						showTeacherFrame.buildScreen(showTeacherFrame, teacher);
+						showTeacherFrame.setVisible(true);
+					}
+					
 				}
 	
 			}
@@ -310,7 +318,7 @@ public class EditTeacherDecorator extends PersonDecorator {
 		
 		backBtn = new JButton("Voltar");
 		frame.getContentPane().add(backBtn);
-		backBtn.setBounds(799, 55, 117, 25);
+		backBtn.setBounds(520, 610, 117, 25);
 		backBtn.addMouseListener(new MouseAdapter() {
 
 			@Override
@@ -333,13 +341,26 @@ public class EditTeacherDecorator extends PersonDecorator {
 			birthdateMask = new MaskFormatter("##/##/####");
 			birthdateMask.setValidCharacters("0123456789");
 			birthdateMask.setValueContainsLiteralCharacters(true);
-			String birthdate = teacher.getBirthdate().getSlashFormattedDate();
-			birthdateMask.setMask(birthdate);
 
 	        birthdateField = new JFormattedTextField(birthdateMask);
 	        birthdateField.setBounds(70, 195, 190, 27);
+			String birthdate = teacher.getBirthdate().getWholeDate();
+			birthdateField.setText(birthdate);
 	        frame.getContentPane().add(birthdateField);
 	        birthdateField.setColumns(10);
+	        
+	        // Mask for cpf
+	        MaskFormatter cpfMask = new MaskFormatter("###.###.###-##");
+	        cpfMask.setValidCharacters("0123456789");
+	        cpfMask.setValueContainsLiteralCharacters(false);
+
+			String cpf = teacher.getCpf().getCpf();
+			cpfField = new JFormattedTextField(cpfMask);
+			cpfField.setText(cpf);
+			cpfField.setBounds(102, 97, 129, 27);
+			cpfField.setEditable(false);
+			frame.getContentPane().add(cpfField);
+			
 		} 
 		catch(ParseException e){
 

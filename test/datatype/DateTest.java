@@ -1,11 +1,11 @@
 package datatype;
 
 import static org.junit.Assert.*;
-import model.datatype.Date;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import datatype.Date;
 import exception.DateException;
 
 public class DateTest {

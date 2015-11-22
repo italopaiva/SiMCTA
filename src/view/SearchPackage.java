@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -11,6 +12,7 @@ import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -47,8 +49,13 @@ public class SearchPackage extends ServiceItemView {
         setContentPane(contentPane);
         contentPane.setLayout(null);
         
+		JLabel searchLabel = new JLabel("Pacotes");
+		searchLabel.setBounds(350, 14, 446, 30);
+		searchLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+		contentPane.add(searchLabel);
+		
 		searchedPackageField = new JTextField();
-		searchedPackageField.setBounds(140, 56, 446, 29);
+		searchedPackageField.setBounds(227, 56, 446, 29);
 		add(searchedPackageField);
 		searchedPackageField.setColumns(10);
 
@@ -59,7 +66,24 @@ public class SearchPackage extends ServiceItemView {
 		
 		String [] columns = { "Nome", "Valor", "Duração", "Status", "Id", "Ações" };
 
-		tableModel = new DefaultTableModel(null, columns);
+		tableModel = new DefaultTableModel(null, columns){
+			// Overriding the method to set non editable the name, value, duration and status columns
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				
+				boolean isEditable = false;
+				
+				if(column == 0 || column == 1 || column == 2 || column == 3){
+					isEditable = false;
+				}
+				else{
+					isEditable = true;
+				}
+				
+				return isEditable;
+				
+			};
+		};
 		final JTable tableOfPackages = new JTable(tableModel);
 		tableOfPackages.setBackground(Color.WHITE);
 			
@@ -149,7 +173,7 @@ public class SearchPackage extends ServiceItemView {
 	public void createButtons(JFrame frame) {
 		
 		btnPesquisar = new JButton("Listar Pacotes");
-		btnPesquisar.setBounds(598, 53, 117, 25);
+		btnPesquisar.setBounds(675, 56, 117, 29);
 		add(btnPesquisar);
 		btnPesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

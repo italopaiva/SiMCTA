@@ -4,6 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
@@ -13,11 +18,6 @@ import exception.RGException;
 import exception.StudentException;
 import model.Course;
 import model.Student;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Phone;
-import model.datatype.RG;
-import model.datatype.Date;
 
 public class StudentDAO extends DAO {
 

@@ -16,13 +16,14 @@ import javax.swing.text.MaskFormatter;
 
 import model.Person;
 import model.Teacher;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 import view.PersonView;
+import view.forms.TeacherForm;
 import controller.TeacherController;
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
@@ -45,6 +46,11 @@ public class NewTeacherDecorator extends PersonDecorator {
 		
 		super.createLabelsAndFields(frame,teacher);
         
+		JLabel requiredFieldsLbl = new JLabel("Os campos com * são obrigatórios");
+		requiredFieldsLbl.setFont(new Font("DejaVu Sans Condensed", Font.BOLD | Font.ITALIC,12));
+		requiredFieldsLbl.setBounds(115, 30, 370, 17);
+        frame.getContentPane().add(requiredFieldsLbl);
+				
 		registerPersonLbl.setText("Cadastrar novo professor");
 		registerPersonLbl.setBounds(407, 12, 475, 31);
 		registerPersonLbl.setFont(new Font("Dialog", Font.BOLD, 20));
@@ -117,7 +123,7 @@ public class NewTeacherDecorator extends PersonDecorator {
         MaskFormatter cpfMask = null;
 		try{
 	        // Mask for cpf
-	        cpfMask = new MaskFormatter("###########");
+	        cpfMask = new MaskFormatter("###.###.###-##");
 	        cpfMask.setValidCharacters("0123456789");
 	        cpfMask.setValueContainsLiteralCharacters(false);
 
@@ -167,10 +173,13 @@ public class NewTeacherDecorator extends PersonDecorator {
 	private void newTeacher() throws TeacherException {
 		String message = "";
 		
+		Teacher teacher = null;
 		try{
 			String teacherName = nameField.getText();
 						
 			String cpf = cpfField.getText();
+			cpf = cpf.replace(".", "");
+			cpf = cpf.replace("-", "");
 			CPF teacherCpf = new CPF(cpf);
 
 			String rgNumber = rgField.getText();
@@ -220,7 +229,7 @@ public class NewTeacherDecorator extends PersonDecorator {
 			String qualification = qualificationField.getText();
 			
 			TeacherController teacherController = new TeacherController();
-			teacherController.newTeacher(teacherName, teacherCpf, teacherRg, birthdate, email, address,
+			teacher = teacherController.newTeacher(teacherName, teacherCpf, teacherRg, birthdate, email, address,
 					 					 principalPhone, secondaryPhone, motherName, fatherName, qualification);
 			
 			message = "Professor cadastrado com sucesso.";
@@ -230,6 +239,12 @@ public class NewTeacherDecorator extends PersonDecorator {
 		} 					
 		finally{
 			showInfoMessage(message);
+			if(teacher != null){
+				dispose();
+				PersonView showTeacherFrame = new ShowTeacherDecorator(new TeacherForm());
+				showTeacherFrame.buildScreen(showTeacherFrame, teacher);
+				showTeacherFrame.setVisible(true);
+			}
 		}
 		
 	}

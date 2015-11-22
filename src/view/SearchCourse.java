@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -12,6 +13,7 @@ import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -42,23 +44,6 @@ public class SearchCourse extends ServiceItemView {
 
 	private CourseController courseController;
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SearchCourse frame = new SearchCourse();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-
 	@Override
 	public void createLabelsAndFields(JFrame frame, ServiceItem course) {
 		contentPane = new JPanel();
@@ -66,8 +51,13 @@ public class SearchCourse extends ServiceItemView {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		JLabel searchLabel = new JLabel("Cursos");
+		searchLabel.setBounds(350, 14, 446, 30);
+		searchLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+		contentPane.add(searchLabel);
+		
 		searchedCourseField = new JTextField();
-		searchedCourseField.setBounds(140, 56, 446, 39);
+		searchedCourseField.setBounds(227, 56, 446, 29);
 		add(searchedCourseField);
 		searchedCourseField.setColumns(10);
 				
@@ -80,7 +70,24 @@ public class SearchCourse extends ServiceItemView {
 		
 		String [] columns = { "Curso", "Status", "Ação", "Id"};
 		
-		tableModel = new DefaultTableModel(null, columns);
+		tableModel = new DefaultTableModel(null, columns){
+			// Overriding the method to set non editable the name and status columns
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				
+				boolean isEditable = false;
+				
+				if(column == 0 || column == 1){
+					isEditable = false;
+				}
+				else{
+					isEditable = true;
+				}
+				
+				return isEditable;
+				
+			};
+		};
 		tableOfCourses = new JTable(tableModel);
 		
 		tableOfCourses.removeColumn(tableOfCourses.getColumnModel().getColumn(3));
@@ -141,7 +148,7 @@ public class SearchCourse extends ServiceItemView {
 	public void createButtons(JFrame frame) {
 
 		JButton btnConsultar = new JButton("Pesquisar");
-		btnConsultar.setBounds(598, 53, 117, 25);
+		btnConsultar.setBounds(675, 56, 117, 29);
 		add(btnConsultar);
 		
 		btnConsultar.addActionListener(new ActionListener() {

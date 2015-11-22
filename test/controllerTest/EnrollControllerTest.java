@@ -7,12 +7,6 @@ import java.util.ArrayList;
 import model.Payment;
 import model.Service;
 import model.Student;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
@@ -21,6 +15,11 @@ import controller.EnrollController;
 import controller.PaymentController;
 import controller.ServiceController;
 import controller.StudentController;
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
@@ -59,6 +58,7 @@ public class EnrollControllerTest {
 	private String email;
 	private ArrayList<String> courses;
 	private ArrayList<String> packages;
+	private Integer value;
 	
 	@Before
 	public void setUp() throws AddressException, DateException, PhoneException, CPFException, RGException, PersonException{
@@ -75,16 +75,22 @@ public class EnrollControllerTest {
 		courses = new ArrayList<String>();
 		packages = new ArrayList<String>();
 		
+		value = new Integer(100000);
+		
 	}
 	
 	@Test
 	public void enrollStudentTest() throws StudentException, ServiceException, PaymentException{
 		
 		Mockito.when(studentController.newStudent("Ana Julia Costa", cpf, rg, date, email, address, phone1, phone2, "Maria Julia", "Julio Costa")).thenReturn(studentMock);
-		Mockito.when(serviceController.newService(studentMock, courses, packages)).thenReturn(serviceMock);
+		Mockito.when(serviceController.newService(studentMock, courses, packages, value)).thenReturn(serviceMock);
 		Mockito.when(paymentController.newPayment(serviceMock, 1, 1, 1)).thenReturn(paymentMock);
 		
-		enrollControllerTester.enrollStudent("Ana Julia Costa", cpf, rg, date, email, address, phone1, phone2, "Maria Julia", "Julio Costa", courses, packages, 1, 1, 1);
-
+		try{
+			enrollController.enrollStudent("Ana Julia Costa", cpf, rg, date, email, address, phone1, phone2, "Maria Julia", "Julio Costa", courses, packages, 1, 1, 2, value);
+		}
+		catch (StudentException | ServiceException | PaymentException e){
+			fail("Should not throw this exception: " + e.getMessage());
+		}
 	}
 }

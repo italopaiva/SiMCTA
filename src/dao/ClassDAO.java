@@ -3,12 +3,12 @@ package dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import datatype.Date;
 import exception.ClassException;
 import exception.DateException;
 import model.Class;
 import model.Course;
 import model.Teacher;
-import model.datatype.Date;
 
 public class ClassDAO extends DAO {
 	
