@@ -44,7 +44,7 @@ public class TeacherController {
 	 * @throws PersonException
 	 * @throws TeacherException 
 	 */
-	public void newTeacher(String teacherName, CPF teacherCpf, RG teacherRg, Date birthdate, 
+	public Teacher newTeacher(String teacherName, CPF teacherCpf, RG teacherRg, Date birthdate, 
 							String email, Address address, Phone principalPhone, Phone secondaryPhone, 
 							String motherName, String fatherName, String qualification) throws PersonException, TeacherException{
 		
@@ -55,10 +55,11 @@ public class TeacherController {
 			teacherDAO.save(teacher);
 		} 
 		catch (PersonException e) {
-			
+			teacher = null;
 			throw new PersonException(COULDNT_SAVE_TEACHER);
-	
 		}
+		
+		return teacher;
 
 	}
 	
@@ -141,11 +142,18 @@ public class TeacherController {
 	public Teacher updateTeacher(String teacherName, CPF teacherCpf,
 			RG teacherRg, Date birthdate, String email, Address address,
 			Phone principalPhone, Phone secondaryPhone, String motherName,
-			String fatherName, String qualification) throws PersonException, TeacherException {
+			String fatherName, String qualification) throws TeacherException {
 		
-		Teacher teacher = new Teacher(teacherName, teacherCpf, teacherRg, birthdate, email, address, principalPhone, secondaryPhone, motherName, fatherName, qualification);
+		Teacher teacher; 
+		try{
+			teacher = new Teacher(teacherName, teacherCpf, teacherRg, birthdate, email, address, principalPhone, secondaryPhone, motherName, fatherName, qualification);
 
-		teacher = teacherDAO.update(teacher);
+			teacher = teacherDAO.update(teacher);
+		}
+		catch(TeacherException | PersonException e){
+			teacher = null;
+			throw new TeacherException(e.getMessage());
+		}
 
 		return teacher;
 	}
@@ -159,7 +167,8 @@ public class TeacherController {
 		
 		if(teacher != null){
 			updateTeacherStatus(teacher, Teacher.INACTIVE);
-		}else{
+		}
+		else{
 			throw new TeacherException(CANT_UPDATE_NULL_TEACHER);
 		}
 	}
@@ -172,9 +181,10 @@ public class TeacherController {
 	public void activateTeacher(Teacher teacher) throws TeacherException{
 		
 		if(teacher != null){
-			updateTeacherStatus(teacher, Teacher.INACTIVE);
-		}else{
 			updateTeacherStatus(teacher, Teacher.ACTIVE);
+		}
+		else{
+			throw new TeacherException(CANT_UPDATE_NULL_TEACHER);
 		}
 	}
 	
