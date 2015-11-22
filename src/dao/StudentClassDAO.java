@@ -98,6 +98,62 @@ public class StudentClassDAO extends DAO {
 	}
 	
 	/**
+	 * Get the situation of students of a class
+	 * @param enrolledClass
+	 * @return An array with the situation of students of the class
+	 * @throws StudentClassException
+	 * @throws CPFException
+	 */
+	public ArrayList<StudentClass> get(Class enrolledClass, boolean selectStudentClass) throws StudentClassException, CPFException {
+		
+		String enrolledClassId = enrolledClass.getClassId();
+				
+		ArrayList<StudentClass> students = new ArrayList<StudentClass>();
+
+		if(selectStudentClass){
+			String query = "";
+			query = "SELECT * FROM " + STUDENT_CLASS_TABLE;
+			query += " WHERE " + ID_CLASS_COLUMN + " = '" + enrolledClassId + "'";
+			
+			try{			
+	
+				ResultSet resultSelectStudentClass = this.search(query);
+				
+				while(resultSelectStudentClass.next()){
+
+					String cpf = resultSelectStudentClass.getString(STUDENT_CPF_COLUMN);
+					CPF studentCPF = new CPF(cpf);
+					
+					StudentDAO studentDao = new StudentDAO();
+					Student student = null;
+					try {
+						student = studentDao.get(studentCPF);
+					} 
+					catch (PhoneException | DateException | AddressException
+							| RGException | StudentException | PersonException e) {
+						throw new StudentClassException(COULDNT_FIND_STUDENT_OF_CLASS);
+					}
+										
+					Integer absences = resultSelectStudentClass.getInt(ABSENCE_COLUMN);
+					Integer grade = resultSelectStudentClass.getInt(GRADE_COLUMN);
+					String situation = resultSelectStudentClass.getString(SITUATION_COLUMN);
+					
+					StudentClass studentClass = new StudentClass(student, enrolledClass, absences, grade, situation);
+					students.add(studentClass);
+			
+				}
+			}
+			catch(SQLException e){
+				throw new StudentClassException(COULDNT_FIND_STUDENT_OF_CLASS);
+			}
+		}
+		
+
+		return students;
+	
+	}
+	
+	/**
 	 * Updates a student in a class
 	 * @param studentClass
 	 * @throws StudentClassException

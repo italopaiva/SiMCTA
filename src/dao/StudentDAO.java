@@ -48,6 +48,7 @@ public class StudentDAO extends DAO {
 	private static final String CPF_ALREADY_EXISTS = "O CPF informado já está cadastrado.";
 	private static final String COULDNT_CHECK_STUDENT = "Não foi possível checar se o estudante está cadastrado. Tente novamente.";
 	private static final String COULDNT_LOAD_STUDENTS_OF_COURSE = "Não foi possível carregar os estudantes do curso informado.";
+	private static final String COULDNT_FIND_STUDENTS = "Não foi possível encontrar os estudantes";
 
 	public void save(Student student) throws StudentException, PersonException{
 		
@@ -160,7 +161,7 @@ public class StudentDAO extends DAO {
 			}
 		}
 		catch(SQLException e){
-			
+			throw new StudentException(COULDNT_FIND_STUDENTS);
 		}
 		return student;
 	}

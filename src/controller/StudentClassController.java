@@ -151,11 +151,22 @@ public class StudentClassController{
 		this.studentClassDAO = studentClassDAO;
 	}
 
-	public ArrayList<StudentClass> getStudentSituation(ArrayList<String> studentsCpf) {
+	public ArrayList<StudentClass> getStudentSituation(Class enrolledClass) throws StudentClassException {
 		
 		ArrayList<StudentClass> studentsClass = new ArrayList<StudentClass>();
-
-		
+	
+		if(enrolledClass != null){
+			try {
+				studentsClass = studentClassDAO.get(enrolledClass, true);
+			} 
+			catch (StudentClassException | CPFException e) {
+				throw new StudentClassException(COULDNT_FIND_STUDENT_OF_CLASS);
+			}
+			
+		}
+		else{
+			throw new StudentClassException(CLASS_CANT_BE_NULL);
+		}
 		
 		return studentsClass;
 	}

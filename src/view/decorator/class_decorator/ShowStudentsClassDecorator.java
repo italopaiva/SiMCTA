@@ -23,6 +23,7 @@ import model.Class;
 import model.Student;
 import model.StudentClass;
 import view.ClassView;
+import view.SearchClass;
 import controller.ClassController;
 import controller.StudentClassController;
 import datatype.CPF;
@@ -35,6 +36,11 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 		
 	private static final Integer OPEN_CLASS = 1;
 	
+	private static final Integer MAX_LENGTH_ABSENCE = 2;
+
+	private static final Integer MAX_LENGTH_GRADE = 3;
+
+	
 	private Class enrolledClass;
 	private DefaultTableModel tableModel;
 	private JTable tableOfStudents;
@@ -43,7 +49,6 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 	private JFormattedTextField gradeField;
 	private MaskFormatter absenceMask;
 	private JFormattedTextField absenceField;
-	private ArrayList<String> studentsCpf = new ArrayList<String>();
 	private ArrayList<StudentClass> studentsClass = new ArrayList<StudentClass>();
 
 	public ShowStudentsClassDecorator(ClassView classViewToDecorate) {
@@ -102,6 +107,7 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 		ArrayList<Student> students;
 		try {
 			students = studentClassController.getStudents(enrolledClass);
+			
 			for(Student student : students){
 				String [] studentsClass = new String [5];
 				studentsClass[0] = student.getName();
@@ -111,7 +117,6 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 				CPF studentCPF = student.getCpf();			
 				studentsClass[4] = studentCPF.getCpf();
 				
-				studentsCpf.add(studentsClass[4]);
 				tableModel.addRow(studentsClass);
 			}
 		} 
@@ -144,28 +149,26 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 
 		    gradeField = new JFormattedTextField(gradeMask);
 
-		    TableColumn gradeCollumn = tableOfStudents.getColumnModel().getColumn(2);  
-		    gradeCollumn.setCellEditor(new DefaultCellEditor(gradeField));
-		 
 			absenceMask = new MaskFormatter("##");
 			absenceMask.setValidCharacters("0123456789");
 			absenceMask.setPlaceholder("00");
 
 			absenceField = new JFormattedTextField(absenceMask); 
 		    absenceField.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT); 
-  
-		    TableColumn absenceCollumn = tableOfStudents.getColumnModel().getColumn(1);  
-		    absenceCollumn.setCellEditor(new DefaultCellEditor(absenceField));
 	    
-			getAllStudentsClass();
-
 			if(enrolledClass.getStatus() != OPEN_CLASS){
 				getSituationOfStudentsClass();
 				fillTheFields();
 			}
 			else{
-				
+				getAllStudentsClass();
+			 
 			}
+			TableColumn absenceCollumn = tableOfStudents.getColumnModel().getColumn(1);  
+		    absenceCollumn.setCellEditor(new DefaultCellEditor(absenceField));
+
+		    TableColumn gradeCollumn = tableOfStudents.getColumnModel().getColumn(2);  
+		    gradeCollumn.setCellEditor(new DefaultCellEditor(gradeField));
 				
 	    } 
 	    catch (ParseException e) {
@@ -175,10 +178,12 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 
 	private void fillTheFields() {
 		
+		
 		for (int i = 0; i < studentsClass.size(); i++) {
 			
 			Student student = studentsClass.get(i).getStudent();
 			String studentName = student.getName();
+			String studentCpf = student.getCpf().getCpf();
 			
 			Integer absences = studentsClass.get(i).getAbsences();
 			String absence = absences.toString();
@@ -188,11 +193,24 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 			
 			String situation = studentsClass.get(i).getStudentSituation();
 			
-			tableModel.setValueAt(studentName, 0, i);
-			tableModel.setValueAt(absence, 1, i);
-			tableModel.setValueAt(grade, 2, i);
-			tableModel.setValueAt(situation, 3, i);
-
+			if(absence.length() != MAX_LENGTH_ABSENCE){
+				absence = "0" + absence;
+			}
+			
+			if(grade.length() != MAX_LENGTH_GRADE){
+				grade = "0" +  grade;
+			}
+			
+			absenceField.setText(absence);
+			gradeField.setText(grade);
+			
+			String [] students = new String [5];
+			students[0] = studentName;
+			students[1] = absenceField.getText();
+			students[2] = gradeField.getText();
+			students[3] = situation;
+			students[4] = studentCpf;
+			tableModel.addRow(students);
 		}
 
 	}
@@ -201,7 +219,12 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 		
 		StudentClassController studentClassController = new StudentClassController();
 		
-		studentsClass = studentClassController.getStudentSituation(studentsCpf);
+		try {
+			studentsClass = studentClassController.getStudentSituation(enrolledClass);
+		} 
+		catch (StudentClassException e) {
+			showInfoMessage(e.getMessage());
+		}
 		
 		
 	}
@@ -214,11 +237,13 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 		String buttonText = getButtonText();
 		actionBtn = new JButton(buttonText);
 		frame.getContentPane().add(actionBtn);
-		actionBtn.setBounds(679, 42, 117, 25);
+		actionBtn.setBounds(579, 42, 217, 25);
 		actionBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			
-			
+				
+				StudentClass studentClass = null;
+
 				for (int i = 0; i < tableModel.getRowCount(); i++) {
 					
 					String studentCpf = tableModel.getValueAt(i, 4).toString();
@@ -226,34 +251,38 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 					String absence = tableModel.getValueAt(i, 1).toString();
 					
 					try {
-						StudentClass studentClass = setStudentSituation(studentCpf, grade, absence);
+						studentClass = setStudentSituation(studentCpf, grade, absence);
 						tableModel.setValueAt(studentClass.getStudentSituation(), i, 3);
-					
-						if(enrolledClass.getStatus() == OPEN_CLASS){
-							showInfoMessage("Notas e faltas inseridas com sucesso");
-							
-							int confirm = 0;				
-							confirm = JOptionPane.showConfirmDialog(tableOfStudents, "Deseja realmente fechar a turma?", "Fechar turma", JOptionPane.YES_NO_OPTION);
-							
-							if (confirm == JOptionPane.YES_OPTION) {
-								closeClass(enrolledClass);
-							}
-							else{
-								// Voltar para consulta
-							}
-
-						}
-						else{
-							showInfoMessage("Notas e faltas atualizadas com sucesso");
-						}
 
 					} 
 					catch (StudentClassException | CPFException
 							| PersonException e1) {
 						showInfoMessage(e1.getMessage());
+						studentClass = null;
+						break;
 					}
 				}
-
+				
+				if(studentClass != null){
+					if(enrolledClass.getStatus() == OPEN_CLASS){
+						showInfoMessage("Notas e faltas inseridas com sucesso");
+						
+						int confirm = 0;				
+						confirm = JOptionPane.showConfirmDialog(tableOfStudents, "Deseja realmente fechar a turma?", "Fechar turma", JOptionPane.YES_NO_OPTION);
+						
+						if (confirm == JOptionPane.YES_OPTION) {
+							closeClass(enrolledClass);
+						}
+						else{
+							dispose();	
+							SearchClass searchClassFrame = new SearchClass();
+							searchClassFrame.setVisible(true);
+						}
+					}
+					else{
+						showInfoMessage("Notas e faltas atualizadas com sucesso");
+					}
+				}
 			}
 
 		});	
@@ -265,6 +294,8 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 			@Override
 			public void mouseClicked(MouseEvent e){			
 				dispose();	
+				SearchClass searchClassFrame = new SearchClass();
+				searchClassFrame.setVisible(true);
 			}
 		});
 	}
@@ -299,7 +330,7 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 		try {
 			classController.closeClass(enrolledClass);
 			showInfoMessage("Turma fechada com sucesso");
-			actionBtn.setVisible(false);
+			actionBtn.setText("Atualizar notas e faltas");
 		} 
 		catch (ClassException e) {
 			showInfoMessage(e.getMessage());

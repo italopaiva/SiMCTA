@@ -20,7 +20,7 @@ public class ClassShowForm extends ClassView {
 		
 		titleLbl = new JLabel("Turma " + classInstance.getClassId());
 		titleLbl.setFont(new Font("Dialog", Font.BOLD, 18));
-		titleLbl.setBounds(410, 0, 300, 30);
+		titleLbl.setBounds(410, 0, 400, 30);
 		frame.getContentPane().add(titleLbl);
 		
 		startDateLbl = new JLabel("Data de início: " + classInstance.getStartDate().getSlashFormattedDate());

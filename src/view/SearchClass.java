@@ -33,6 +33,9 @@ import view.decorator.ShowTeacherDecorator;
 import view.decorator.class_decorator.ClassDecorator;
 import view.decorator.class_decorator.EditClassDecorator;
 import view.decorator.class_decorator.NewClassDecorator;
+import view.decorator.class_decorator.ShowStudentsClassDecorator;
+import view.forms.ClassForm;
+import view.forms.ClassShowForm;
 import view.forms.TeacherForm;
 
 import com.sun.javafx.collections.MappingChange.Map;
@@ -280,7 +283,7 @@ public class SearchClass extends View {
 		scrollPane.setBackground(Color.WHITE);
 
 		String[] columns = { "Código", "Curso", "Professor", "Turno", "Início",
-				"Término", "Ações" };
+				"Término", "Editar", "Visualizar alunos" };
 
 		tableModel = new DefaultTableModel(null, columns);
 		final JTable tableOfClasses = new JTable(tableModel);
@@ -314,6 +317,28 @@ public class SearchClass extends View {
 		
 		ButtonColumn buttonColumn2 = new ButtonColumn(tableOfClasses, editClass, 6);
 		
+		Action showStudentsClass = new AbstractAction(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				JTable table = (JTable)e.getSource();
+				int selectedRow = table.getSelectedRow();
+				
+				String code  = table.getModel().getValueAt(selectedRow,0).toString();
+				
+				Class enrolledClass = classController.getClass(code);
+				dispose();
+				classFrame = new ShowStudentsClassDecorator(new ClassShowForm());
+				classFrame.buildScreen(classFrame, enrolledClass);
+				classFrame.setVisible(true);
+				
+			}
+			
+		};
+		
+		ButtonColumn buttonColumn3 = new ButtonColumn(tableOfClasses, showStudentsClass, 7);
+
 		((JScrollPane) scrollPane).setViewportView(tableOfClasses);
 		
 	}
@@ -326,7 +351,7 @@ public class SearchClass extends View {
 	 */
 	public String[] getLineOfStringByClass(Class cls) {
 
-		String[] classeString = new String[7];
+		String[] classeString = new String[8];
 		classeString[0] = cls.getClassId();
 		classeString[1] = cls.getCourse().getName();
 		classeString[2] = cls.getTeacher().getName();
@@ -334,6 +359,7 @@ public class SearchClass extends View {
 		classeString[4] = cls.getStartDate().getHyphenFormattedDate();
 		classeString[5] = cls.getEndDate().getHyphenFormattedDate();
 		classeString[6] = "Editar";
+		classeString[7] = "Visualizar alunos";
 		return classeString;
 	}
 

@@ -25,7 +25,6 @@ import model.Service;
 
 public class StudentController {
 	
-	private static final String STUDENT_WITHOUT_SERVICE = "Um aluno deve possuir um serviço associado";
 	private static final String STUDENT_NULL = "Não foi possível encontrar o estudante";
 	private static final String CANT_SAVE_NULL_STUDENT = "Não é possível salvar um estudante nulo.";
 	private static final int ACTIVE_STATUS	= 1;
@@ -121,40 +120,13 @@ public class StudentController {
 		return foundStudents;
 	}
 	
+
 	/**
-	 * Search the student selected by the user
-	 * @param studentCPF - the 'cpf' of the selected student 
-	 * @return an object with the data of the selected student
-	 * @throws SQLException
+	 * Get the students of the course
+	 * @param course
+	 * @return
 	 * @throws StudentException
-	 * @throws PhoneException
-	 * @throws CPFException
-	 * @throws DateException
-	 * @throws AddressException
-	 * @throws RGException
-	 * @throws CourseException
-	 * @throws ServiceException
-	 * @throws PaymentException 
-	 * @throws PersonException 
 	 */
-	/*public ArrayList<Service> searchStudent(CPF studentCPF) throws SQLException, StudentException, PhoneException, CPFException, DateException, AddressException, RGException, CourseException, ServiceException, PaymentException, PersonException {
-		
-		Student basicDataOfStudent = studentDAO.get(studentCPF);
-		ArrayList<Service> servicesOfStudent = new ArrayList<Service>();
-		servicesOfStudent = null;
-		if(basicDataOfStudent != null){
-						
-			servicesOfStudent = serviceController.searchService(basicDataOfStudent);		
-			
-		}
-		else{	
-			throw new StudentException(STUDENT_WITHOUT_SERVICE);
-		}
-		
-		return servicesOfStudent;
-	}
-	*/
-	
 	public ArrayList<Student> getStudentsOfCourse(Course course) throws StudentException{
 		
 		ArrayList<Student> studentsOfCourse = studentDAO.get(course);

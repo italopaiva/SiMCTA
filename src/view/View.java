@@ -13,6 +13,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
+import datatype.CPF;
+import datatype.Date;
 import model.Class;
 import model.Course;
 import model.Teacher;
@@ -22,9 +24,11 @@ import view.decorator.NewPackageDecorator;
 import view.decorator.NewTeacherDecorator;
 import view.decorator.class_decorator.EditClassDecorator;
 import view.decorator.class_decorator.NewClassDecorator;
+import view.decorator.class_decorator.ShowStudentsClassDecorator;
 import exception.AddressException;
 import view.decorator.ServiceItemDecorator;
 import view.forms.ClassForm;
+import view.forms.ClassShowForm;
 import view.forms.ServiceItemForm;
 import view.forms.StudentForm;
 import view.forms.TeacherForm;
@@ -91,7 +95,12 @@ public class View extends JFrame {
 		
 		addTeacherOptionsToMenu();
 		
-		addClassOptionsToMenu();
+		try {
+			addClassOptionsToMenu();
+		} catch (CourseException | PersonException | CPFException | ClassException | DateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		addDirectorOptionsToMenu();
 	}
@@ -122,11 +131,11 @@ public class View extends JFrame {
 		directorMenu.add(updatePassword);
 	}
 
-	private void addClassOptionsToMenu(){
+	private void addClassOptionsToMenu() throws CourseException, PersonException, CPFException, ClassException, DateException{
 		
 		JMenu classMenu = new JMenu("Turmas");
 		menuBar.add(classMenu);
-		
+
 		JMenuItem newClass = new JMenuItem("Abrir turma");
 		newClass.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
