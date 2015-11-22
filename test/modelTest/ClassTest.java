@@ -75,7 +75,7 @@ public class ClassTest {
 		try{
 			classInstance = new Class(new Date(10, 02, 2015), "MA", teacher, course);
 			
-			assertEquals("2015-2-25", classInstance.getEndDate().getHyphenFormattedDate());
+			assertEquals("2015-3-3", classInstance.getEndDate().getHyphenFormattedDate());
 		}
 		catch(ClassException | DateException e){
 			fail("Should not throw this exception:" + e.getMessage());

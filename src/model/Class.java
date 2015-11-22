@@ -23,10 +23,10 @@ public class Class extends Model {
 	private static final String INVALID_STATUS = "Status da turma inválido";
 
 	// Number of days in a week
-	private static final Integer DAYS_IN_WEEK = 5;
+	private static final Integer DAYS_IN_WEEK = 7;
 
-	private static final int OPEN_CLASS = 1;
-	private static final int CLOSED_CLASS = 0;
+	public static final int OPEN_CLASS = 1;
+	public static final int CLOSED_CLASS = 0;
 
 	private String classId;
 	private Date startDate;
@@ -110,11 +110,6 @@ public class Class extends Model {
 		classId = classId.toUpperCase();
 
 		setClassId(classId);
-	}
-
-	// Tirar esse metodo
-	public void ssetCourse(Course course) {
-		this.course = course;
 	}
 
 	private String getCourseFirstName() {

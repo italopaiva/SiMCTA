@@ -40,7 +40,7 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 
 	private static final Integer MAX_LENGTH_GRADE = 3;
 
-	
+	private SearchClass classSearch;
 	private Class enrolledClass;
 	private DefaultTableModel tableModel;
 	private JTable tableOfStudents;
@@ -51,8 +51,10 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 	private JFormattedTextField absenceField;
 	private ArrayList<StudentClass> studentsClass = new ArrayList<StudentClass>();
 
-	public ShowStudentsClassDecorator(ClassView classViewToDecorate) {
+	public ShowStudentsClassDecorator(ClassView classViewToDecorate, SearchClass searchClass) {
 		super(classViewToDecorate);
+		
+		this.classSearch = searchClass;
 	}
 	
 	@Override
@@ -265,7 +267,7 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 				
 				if(studentClass != null){
 					if(enrolledClass.getStatus() == OPEN_CLASS){
-						showInfoMessage("Notas e faltas inseridas com sucesso");
+						showInfoMessage("Notas e faltas inseridas com sucesso!");
 						
 						int confirm = 0;				
 						confirm = JOptionPane.showConfirmDialog(tableOfStudents, "Deseja realmente fechar a turma?", "Fechar turma", JOptionPane.YES_NO_OPTION);
@@ -294,8 +296,7 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 			@Override
 			public void mouseClicked(MouseEvent e){			
 				dispose();	
-				SearchClass searchClassFrame = new SearchClass();
-				searchClassFrame.setVisible(true);
+				classSearch.setVisible(true);
 			}
 		});
 	}
@@ -331,6 +332,7 @@ public class ShowStudentsClassDecorator extends ClassDecorator{
 			classController.closeClass(enrolledClass);
 			showInfoMessage("Turma fechada com sucesso");
 			actionBtn.setText("Atualizar notas e faltas");
+			this.enrolledClass = new Class(enrolledClass.getClassId(), enrolledClass.getStartDate(), enrolledClass.getEndDate(), enrolledClass.getShift(), enrolledClass.getTeacher(), enrolledClass.getCourse(), Class.CLOSED_CLASS);
 		} 
 		catch (ClassException e) {
 			showInfoMessage(e.getMessage());

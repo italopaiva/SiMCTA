@@ -17,5 +17,9 @@ public class M015_UpdatingIdClassColumnToClass extends Migration {
 		changeColumn+= "ALTER TABLE Class CHANGE id_class id_class VARCHAR(100) NOT NULL ;";
 		setQuery(changeColumn);
 		run();
+		
+		changeColumn = "ALTER TABLE StudentClass CHANGE id_class id_class VARCHAR(100) NOT NULL ;";
+		setQuery(changeColumn);
+		run();
 	}
 }

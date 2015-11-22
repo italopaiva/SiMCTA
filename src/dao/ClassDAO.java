@@ -74,7 +74,6 @@ public class ClassDAO extends DAO {
 				this.execute(query);
 			}
 			catch(SQLException e){
-				System.out.print(e.getMessage());
 				throw new ClassException(COULDNT_SAVE_CLASS);
 			}
 		}

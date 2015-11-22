@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -49,6 +50,7 @@ import controller.CourseController;
 import controller.TeacherController;
 import exception.ClassException;
 import exception.CourseException;
+import exception.StudentException;
 import exception.TeacherException;
 
 public class SearchClass extends View {
@@ -278,12 +280,12 @@ public class SearchClass extends View {
 	 */
 	public void createStructOfResultTable() {
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(37, 217, 901, 317);
+		scrollPane.setBounds(17, 217, 1000, 317);
 		panel_0.add(scrollPane);
 		scrollPane.setBackground(Color.WHITE);
 
 		String[] columns = { "Código", "Curso", "Professor", "Turno", "Início",
-				"Término", "Editar", "Visualizar alunos" };
+				"Término", "Editar", "Visualizar alunos" , "Matricular alunos"};
 
 		tableModel = new DefaultTableModel(null, columns);
 		final JTable tableOfClasses = new JTable(tableModel);
@@ -301,16 +303,13 @@ public class SearchClass extends View {
 				JTable table = (JTable)e.getSource();
 				int selectedRow = table.getSelectedRow();
 				
-				String code  = table.getModel().getValueAt(selectedRow,1).toString();
+				String code  = table.getModel().getValueAt(selectedRow,0).toString();
 				
 				Class cls = classController.getClass(code);
 				dispose();
 				classFrame = new NewClassDecorator(new ClassForm());
 				classFrame.buildScreen(classFrame, null);
-				classFrame.setVisible(true);
-				
-
-				
+				classFrame.setVisible(true);				
 			}
 			
 		};
@@ -329,7 +328,7 @@ public class SearchClass extends View {
 				
 				Class enrolledClass = classController.getClass(code);
 				dispose();
-				classFrame = new ShowStudentsClassDecorator(new ClassShowForm());
+				classFrame = new ShowStudentsClassDecorator(new ClassShowForm(), SearchClass.this);
 				classFrame.buildScreen(classFrame, enrolledClass);
 				classFrame.setVisible(true);
 				
@@ -339,6 +338,33 @@ public class SearchClass extends View {
 		
 		ButtonColumn buttonColumn3 = new ButtonColumn(tableOfClasses, showStudentsClass, 7);
 
+		Action enrollStudents = new AbstractAction(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				JTable table = (JTable)e.getSource();
+				int selectedRow = table.getSelectedRow();
+				
+				String code  = table.getModel().getValueAt(selectedRow,0).toString();
+				
+				Class enrollClass = classController.getClass(code);
+				dispose();
+				EnrollStudentToClass enrollFrame;
+				try {
+					enrollFrame = new EnrollStudentToClass(enrollClass, SearchClass.this);
+					enrollFrame.setVisible(true);				
+				} 
+				catch (CourseException | SQLException | StudentException e1) {
+					showInfoMessage(e1.getMessage());
+					SearchClass.this.setVisible(true);
+				}
+			}
+			
+		};
+		
+		ButtonColumn buttonColumn4 = new ButtonColumn(tableOfClasses, enrollStudents, 8);
+		
 		((JScrollPane) scrollPane).setViewportView(tableOfClasses);
 		
 	}
@@ -351,7 +377,7 @@ public class SearchClass extends View {
 	 */
 	public String[] getLineOfStringByClass(Class cls) {
 
-		String[] classeString = new String[8];
+		String[] classeString = new String[9];
 		classeString[0] = cls.getClassId();
 		classeString[1] = cls.getCourse().getName();
 		classeString[2] = cls.getTeacher().getName();
@@ -360,6 +386,7 @@ public class SearchClass extends View {
 		classeString[5] = cls.getEndDate().getHyphenFormattedDate();
 		classeString[6] = "Editar";
 		classeString[7] = "Visualizar alunos";
+		classeString[8] = "Matricular alunos";
 		return classeString;
 	}
 

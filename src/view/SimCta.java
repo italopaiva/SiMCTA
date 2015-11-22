@@ -106,7 +106,7 @@ public class SimCta extends View{
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
 			dispose();			
-							
+			new SearchClass().setVisible(true); 	
 		}
 	});
 	}
