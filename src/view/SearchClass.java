@@ -2,12 +2,18 @@ package view;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.HashMap;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,6 +27,26 @@ import javax.swing.table.TableModel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+
+import util.ButtonColumn;
+import view.decorator.ShowTeacherDecorator;
+import view.decorator.class_decorator.ClassDecorator;
+import view.decorator.class_decorator.EditClassDecorator;
+import view.decorator.class_decorator.NewClassDecorator;
+import view.forms.TeacherForm;
+
+import com.sun.javafx.collections.MappingChange.Map;
+
+import model.Class;
+import model.Course;
+import model.Teacher;
+import model.datatype.CPF;
+import controller.ClassController;
+import controller.CourseController;
+import controller.TeacherController;
+import exception.ClassException;
+import exception.CourseException;
+import exception.TeacherException;
 
 public class SearchClass extends View {
 
@@ -38,19 +64,23 @@ public class SearchClass extends View {
 	private JTable jTable;
 	private JButton btnSearch;
 	
-	
+	private ClassController classController;
+	private ClassView classFrame;
+
+
 	/**
 	 * Contructor's method of SearchClass.
 	 */
 	public SearchClass() {
 
 		super();
-		
+
 		getContentPane().setLayout(null);
 
 		initialize();
 		rbtnCode.setSelected(true);
 		txtCodigo.requestFocus();
+		rbtnFilter.setEnabled(false);
 
 	}
 
@@ -58,20 +88,22 @@ public class SearchClass extends View {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		
-		
+
 		createStructOfWindow();
 
 		createLabelsAndFields();
-		
+
 		createComboBoxes();
-		
+
 		createButtonsAndListeners();
-		
+
 		createStructOfResultTable();
 
 	}
 
+	/**
+	 * Initialize the struct of the frame.
+	 */
 	public void createStructOfWindow() {
 		panel_0 = new JPanel();
 		panel_0.setBounds(100, 100, 788, 617);
@@ -94,13 +126,16 @@ public class SearchClass extends View {
 
 	}
 
+	/**
+	 * Create labels and fields.
+	 */
 	public void createLabelsAndFields() {
 		JLabel lblConsultarTurma = new JLabel("Consultar Turma");
 		lblConsultarTurma.setBounds(268, 12, 124, 15);
 		panel_0.add(lblConsultarTurma);
 
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(90, 10, 114, 23);
+		txtCodigo.setBounds(90, 10, 154, 23);
 		panel.add(txtCodigo);
 		txtCodigo.setColumns(10);
 
@@ -117,8 +152,11 @@ public class SearchClass extends View {
 		panel_1.add(lblTurno);
 
 	}
-	
-	public void createComboBoxes(){
+
+	/**
+	 * Create Comboxes.
+	 */
+	public void createComboBoxes() {
 		cmbCourse = new JComboBox<String>();
 		cmbCourse.setBounds(67, 7, 186, 24);
 		cmbCourse.addItem("Teste");
@@ -135,6 +173,9 @@ public class SearchClass extends View {
 
 	}
 
+	/**
+	 * Create buttons and listeners.
+	 */
 	public void createButtonsAndListeners() {
 
 		rbtnCode = new JRadioButton("Código");
@@ -191,9 +232,35 @@ public class SearchClass extends View {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frame, "Teste1");
+
+				resetTable();
+
 				if (rbtnCode.isSelected()) {
-					JOptionPane.showMessageDialog(frame, "Teste2");
+					classController = new ClassController();
+					try {
+						ArrayList<Class> cls = classController
+								.searchClass(txtCodigo.getText().toString());
+
+						if (cls == null) {
+							JOptionPane.showMessageDialog(rbtnCode,
+									"Turma não encontrada.");
+						} else {
+							int arrayListSize = cls.size();
+							int i = 0;
+							while (i < arrayListSize) {
+								String[] classeString = getLineOfStringByClass(cls
+										.get(i));
+								((DefaultTableModel) tableModel)
+										.addRow(classeString);
+								i++;
+							}
+
+						}
+
+					} catch (ClassException e1) {
+						JOptionPane.showMessageDialog(frame, "Ocorreu um erro:"
+								+ e1.getMessage());
+					}
 				} else if (rbtnFilter.isSelected()) {
 					JOptionPane.showMessageDialog(frame, "Teste3");
 				}
@@ -202,10 +269,13 @@ public class SearchClass extends View {
 		});
 
 	}
-
+	
+	/** 
+	 * Create a struct of result table
+	 */
 	public void createStructOfResultTable() {
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(37, 217, 707, 317);
+		scrollPane.setBounds(37, 217, 901, 317);
 		panel_0.add(scrollPane);
 		scrollPane.setBackground(Color.WHITE);
 
@@ -213,11 +283,66 @@ public class SearchClass extends View {
 				"Término", "Ações" };
 
 		tableModel = new DefaultTableModel(null, columns);
-		final JTable tableOfPackages = new JTable(tableModel);
-		tableOfPackages.setBackground(Color.WHITE);
+		final JTable tableOfClasses = new JTable(tableModel);
+		tableOfClasses.setBackground(Color.WHITE);
 
-		scrollPane.setViewportView(tableOfPackages);
+		scrollPane.setViewportView(tableOfClasses);
 
-		jTable = tableOfPackages;
+		jTable = tableOfClasses;
+		
+		Action editClass = new AbstractAction(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				JTable table = (JTable)e.getSource();
+				int selectedRow = table.getSelectedRow();
+				
+				String code  = table.getModel().getValueAt(selectedRow,1).toString();
+				
+				Class cls = classController.getClass(code);
+				dispose();
+				classFrame = new NewClassDecorator(new ClassForm());
+				classFrame.buildScreen(classFrame, null);
+				classFrame.setVisible(true);
+				
+
+				
+			}
+			
+		};
+		
+		ButtonColumn buttonColumn2 = new ButtonColumn(tableOfClasses, editClass, 6);
+		
+		((JScrollPane) scrollPane).setViewportView(tableOfClasses);
+		
 	}
+
+	/**
+	 * Used to return a String[] with the values of Class
+	 * 
+	 * @param cls
+	 * @return classeString - String[]
+	 */
+	public String[] getLineOfStringByClass(Class cls) {
+
+		String[] classeString = new String[7];
+		classeString[0] = cls.getClassId();
+		classeString[1] = cls.getCourse().getName();
+		classeString[2] = cls.getTeacher().getName();
+		classeString[3] = cls.getShift();
+		classeString[4] = cls.getStartDate().getHyphenFormattedDate();
+		classeString[5] = cls.getEndDate().getHyphenFormattedDate();
+		classeString[6] = "Editar";
+		return classeString;
+	}
+
+	/**
+	 * Used to reset the table of result.
+	 */
+	public void resetTable() {
+		DefaultTableModel model = (DefaultTableModel) jTable.getModel();
+		model.setRowCount(0);
+	}
+	
 }
