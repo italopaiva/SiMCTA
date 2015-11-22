@@ -45,6 +45,4 @@ public abstract class PersonView extends View {
 	
 	public abstract void createButtons(JFrame frame);
 
-
-
 }

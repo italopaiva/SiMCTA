@@ -19,6 +19,14 @@ public class Phone extends Model{
 		setNumber(number);
 	}
 	
+	public Phone(String phone) throws PhoneException{
+		String ddd = phone.substring(0,2);
+		String number = phone.substring(2,10);
+		
+		setDDD(ddd);
+		setNumber(number);
+	}
+	
 	private void setDDD(String DDD) throws PhoneException{
 		
 		boolean DDDValidLength = DDD.length() == DDD_LENGTH;

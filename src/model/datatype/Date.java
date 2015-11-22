@@ -4,7 +4,6 @@ import exception.DateException;
 import model.Model;
 
 public class Date extends Model{
-
 	
 	private static final int MIN_YEAR = 1900;
 	private static final int MIN_MONTH = 1;
@@ -12,11 +11,12 @@ public class Date extends Model{
 	private static final int MIN_DAY = 1;
 	private static final int MAX_DAY = 31;
 	private static final int FEBRUARY_BISSEXTILE_MAX_DAYS = 29;
+	private static final int STRING_DATE_LENGTH = 10;
 
-	private static final String YEAR_INVALID = "O ano de nascimento informado é inválido";
-	private static final String DAY_INVALID = "O dia de nascimento informado é inválido";
-	private static final String DATE_INVALID = "A data de nascimento informada é inválida";
-	private static final String MONTH_INVALID = "O mês de nascimento informado é inválido";;
+	private static final String YEAR_INVALID = "O ano informado é inválido";
+	private static final String DAY_INVALID = "O dia informado é inválido";
+	private static final String DATE_INVALID = "A data informada é inválida";
+	private static final String MONTH_INVALID = "O mês informado é inválido";;
 	
 	private Integer day;
 	private Integer month;
@@ -28,6 +28,38 @@ public class Date extends Model{
 		setDay(day);
 	}
 	
+	public Date(String date) throws DateException{
+		
+		getDateFromString(date);
+	}
+	
+	private void getDateFromString(String date) throws DateException{
+		
+		if(date.length() == STRING_DATE_LENGTH){
+			
+			String year;
+			String month;
+			String day;
+			
+			if(date.charAt(2) == '/'){
+				day = date.substring(0, 2);
+				month = date.substring(3,5);
+				year = date.substring(6, 10);
+			}else{
+				year = date.substring(0,4);
+				month = date.substring(5,7);
+				day = date.substring(8,10);
+			}
+			
+			setYear(new Integer(year));
+			setMonth(new Integer(month));
+			setDay(new Integer(day));
+			
+		}else{
+			throw new DateException(DATE_INVALID);
+		}
+	}
+
 	private void setYear(Integer year) throws DateException {
 		
 		boolean yearIsValid = year != null && (year >= MIN_YEAR);
@@ -137,9 +169,15 @@ public class Date extends Model{
 	
 	public String getSlashFormattedDate(){
 		
+		String month = getMonth().toString();
+		
+		if(month.length() == 1){
+			month = "0" + month;
+		}
+		
 		String date = getDay() + "/" ;
-		date+= getMonth() + "/";
-		date+= getYear();
+		date += month + "/";
+		date += getYear();
 
 		return date;
 	}
@@ -177,7 +215,6 @@ public class Date extends Model{
 			date += (("0" + month) + year);
 		}
 
-		System.out.print(date);
 		return date;
 	}
 }

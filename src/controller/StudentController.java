@@ -161,10 +161,15 @@ public class StudentController {
 		else{	
 			throw new StudentException(STUDENT_WITHOUT_SERVICE);
 		}
-				
-		
 		
 		return servicesOfStudent;
+	}
+	
+	public ArrayList<Student> getStudentsOfCourse(Course course) throws StudentException{
+		
+		ArrayList<Student> studentsOfCourse = studentDAO.get(course);
+		
+		return studentsOfCourse;
 	}
 
 	public boolean alterStatusOfTheStudent(Student student) throws StudentException {

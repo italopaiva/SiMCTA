@@ -13,8 +13,15 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
+import model.Class;
+import model.Course;
 import model.Teacher;
 import view.decorator.EnrollStudentDecorator;
+import model.datatype.Address;
+import model.datatype.CPF;
+import model.datatype.Date;
+import model.datatype.Phone;
+import model.datatype.RG;
 import view.decorator.NewCourseDecorator;
 import view.decorator.NewPackageDecorator;
 import view.decorator.NewTeacherDecorator;
@@ -22,9 +29,20 @@ import view.decorator.ServiceItemDecorator;
 import view.forms.ServiceItemForm;
 import view.forms.StudentForm;
 import view.forms.TeacherForm;
+import view.decorator.class_decorator.EditClassDecorator;
+import view.decorator.class_decorator.NewClassDecorator;
+import exception.AddressException;
 import exception.AuthenticationException;
+import exception.CPFException;
+import exception.ClassException;
 import exception.CourseException;
+import exception.DateException;
 import exception.PackageException;
+import exception.PersonException;
+import exception.PhoneException;
+import exception.RGException;
+import exception.StudentException;
+import exception.TeacherException;
 
 @SuppressWarnings("serial")
 public class View extends JFrame {
@@ -32,6 +50,7 @@ public class View extends JFrame {
 	protected JMenuBar menuBar;
 	protected static JFrame frame = new JFrame();
 	private PersonView teacherFrame;
+	private ClassView classFrame;
 
 	/**
 	 * Launch the application.
@@ -62,8 +81,27 @@ public class View extends JFrame {
 		
 		addTeacherOptionsToMenu();
 		
+		addClassOptionsToMenu();
 	}
 	
+	private void addClassOptionsToMenu(){
+		
+		JMenu classMenu = new JMenu("Turmas");
+		menuBar.add(classMenu);
+		
+		JMenuItem newClass = new JMenuItem("Abrir turma");
+		newClass.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				dispose();
+				classFrame = new NewClassDecorator(new ClassForm());
+				classFrame.buildScreen(classFrame, null);
+				classFrame.setVisible(true);
+			}
+		});
+		classMenu.add(newClass);
+	}
+
 	private void addTeacherOptionsToMenu(){
 		JMenu teacherMenu = new JMenu("Professores");
 		menuBar.add(teacherMenu);

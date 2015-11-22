@@ -33,12 +33,18 @@ public class Service extends Model{
 		setStudent(student);
 	}
 	
-	public Service(Integer serviceId, Student student, Date contractsDate, Payment payment) throws ServiceException, PaymentException{
+	public Service(Integer serviceId, Student student, Date contractsDate, Payment payment) throws ServiceException{
 		
 		setServiceId(serviceId);
 		setContractsDate(contractsDate);
 		setStudent(student);
-		setPayment(payment);
+		
+		try{
+			addPayment(payment);
+		}
+		catch(PaymentException e){
+			throw new ServiceException(e.getMessage());
+		}
 	}
 	
 	public void addItem(ServiceItem item) throws ServiceException{
