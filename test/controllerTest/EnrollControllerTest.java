@@ -59,7 +59,7 @@ public class EnrollControllerTest {
 		packages.add("7");
 		
 		try{
-			enrollController.enrollStudent("Ana Julia Costa", cpf, rg, date, email, address, phone1, phone2, "Maria Julia", "Julio Costa", courses, packages, 1, 1, 2);
+			enrollController.enrollStudent("Ana Julia Costa", cpf, rg, date, email, address, phone1, phone2, "Maria Julia", "Julio Costa", courses, packages, 1, 1, 2, new Integer(100000));
 		}
 		catch (StudentException | ServiceException | PaymentException e){
 			fail("Should not throw this exception: " + e.getMessage());

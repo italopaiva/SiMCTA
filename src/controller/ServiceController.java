@@ -38,9 +38,9 @@ public class ServiceController {
 	 * @param packages - The packages requested
 	 * @throws ServiceException
 	 */	
-	public Service newService(Student student, ArrayList<String> courses, ArrayList<String> packages) throws ServiceException{
+	public Service newService(Student student, ArrayList<String> courses, ArrayList<String> packages, Integer value) throws ServiceException{
 
-		Service service = new Service(student);
+		Service service = new Service(student, value);
 		
 		service = addCoursesToService(service, courses);
 		service = addPackagesToService(service, packages);

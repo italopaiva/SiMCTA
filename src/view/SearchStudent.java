@@ -108,7 +108,24 @@ public class SearchStudent extends PersonView {
 		
 		String [] columns = { "Aluno", "Ação", "CPF"};
 		
-		tableModel = new DefaultTableModel(null, columns);
+		tableModel = new DefaultTableModel(null, columns){
+			// Overriding the method to set non editable the name and CPF columns
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				
+				boolean isEditable = false;
+				
+				if(column == 0 || column == 2){
+					isEditable = false;
+				}
+				else{
+					isEditable = true;
+				}
+				
+				return isEditable;
+				
+			};
+		};
 		tableOfStudents = new JTable(tableModel);
 		
 		tableOfStudents.removeColumn(tableOfStudents.getColumnModel().getColumn(2));
@@ -161,7 +178,7 @@ public class SearchStudent extends PersonView {
 	public void createButtons(JFrame frame) {
 
 		searchButtton = new JButton("Pesquisar");
-		searchButtton.setBounds(599, 26, 117, 25);
+		searchButtton.setBounds(599, 26, 117, 30);
 		contentPane.add(searchButtton);
 		searchButtton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

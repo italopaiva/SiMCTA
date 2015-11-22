@@ -376,11 +376,11 @@ public class NewPackageDecorator extends ServiceItemDecorator{
 	
 				    //Show the current duration
 				    String duration = calculateDuration(coursesDuration);
-				    durationField.setText(duration.toString());
+				    durationField.setText(duration);
 
 				    //Show the current value
 				    String value = calculateValue(coursesValue);
-				    valueField.setText(value.toString());
+				    valueField.setText(value);
 				}
 				else{
 					showInfoMessage("Selecione um curso da lista de cursos adicionados");

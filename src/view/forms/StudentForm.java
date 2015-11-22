@@ -22,12 +22,12 @@ public class StudentForm extends PersonForm {
 	public void createLabelsAndFields(JFrame frame, Person teacher) {
 		super.createLabelsAndFields(frame, teacher);
 	
-		JLabel coursesLabel = new JLabel("Cursos");
-		coursesLabel.setBounds(586, 73, 70, 17);
+		JLabel coursesLabel = new JLabel("*Cursos");
+		coursesLabel.setBounds(581, 73, 70, 17);
 		 frame.getContentPane().add(coursesLabel);
 		
-		JLabel packagesLabel = new JLabel("Pacotes");
-        packagesLabel.setBounds(586, 348, 70, 17);
+		JLabel packagesLabel = new JLabel("*Pacotes");
+        packagesLabel.setBounds(581, 348, 70, 17);
         frame.getContentPane().add(packagesLabel);
         
         JLabel dataOfPaymentLbl = new JLabel("DADOS DO PAGAMENTO");
