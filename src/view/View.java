@@ -77,8 +77,36 @@ public class View extends JFrame {
 		addTeacherOptionsToMenu();
 		
 		addClassOptionsToMenu();
+		
+		addDirectorOptionsToMenu();
 	}
 	
+	private void addDirectorOptionsToMenu() {
+		
+		JMenu directorMenu = new JMenu("Diretor");
+		menuBar.add(directorMenu);
+		
+		JMenuItem updatePassword = new JMenuItem("Trocar senha");
+		updatePassword.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				boolean permissionToAccess = getPermissionToAccess();
+				
+				if(permissionToAccess){
+					dispose();
+					UpdateDirectorPassword directorFrame = new UpdateDirectorPassword();
+					directorFrame.setVisible(true);
+				}
+				else{
+					dispose();
+					View frame = new View();
+					frame.setVisible(true);
+				}
+			}
+		});
+		directorMenu.add(updatePassword);
+	}
+
 	private void addClassOptionsToMenu(){
 		
 		JMenu classMenu = new JMenu("Turmas");
