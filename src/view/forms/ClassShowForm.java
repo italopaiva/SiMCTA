@@ -1,10 +1,11 @@
-package view;
+package view.forms;
 
 import java.awt.Font;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import view.ClassView;
 import model.Class;
 
 // Default form

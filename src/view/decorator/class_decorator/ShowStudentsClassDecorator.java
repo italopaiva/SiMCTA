@@ -1,6 +1,7 @@
-package view;
+package view.decorator.class_decorator;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
@@ -21,7 +22,7 @@ import javax.swing.text.MaskFormatter;
 import model.Class;
 import model.Student;
 import model.StudentClass;
-import view.decorator.class_decorator.ClassDecorator;
+import view.ClassView;
 import controller.ClassController;
 import controller.StudentClassController;
 import datatype.CPF;
@@ -30,8 +31,10 @@ import exception.ClassException;
 import exception.PersonException;
 import exception.StudentClassException;
 
-public class CloseClass extends ClassDecorator{
+public class ShowStudentsClassDecorator extends ClassDecorator{
 		
+	private static final Integer OPEN_CLASS = 1;
+	
 	private Class enrolledClass;
 	private DefaultTableModel tableModel;
 	private JTable tableOfStudents;
@@ -40,8 +43,10 @@ public class CloseClass extends ClassDecorator{
 	private JFormattedTextField gradeField;
 	private MaskFormatter absenceMask;
 	private JFormattedTextField absenceField;
+	private ArrayList<String> studentsCpf = new ArrayList<String>();
+	private ArrayList<StudentClass> studentsClass = new ArrayList<StudentClass>();
 
-	public CloseClass(ClassView classViewToDecorate) {
+	public ShowStudentsClassDecorator(ClassView classViewToDecorate) {
 		super(classViewToDecorate);
 	}
 	
@@ -49,6 +54,7 @@ public class CloseClass extends ClassDecorator{
 	public void createLabelsAndFields(JFrame frame, Class enrolledClass) {
 
 		super.createLabelsAndFields(frame, enrolledClass);
+		this.enrolledClass = enrolledClass;
 						
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(86, 91, 853, 569);
@@ -82,9 +88,7 @@ public class CloseClass extends ClassDecorator{
 		disposeColumns(tableOfStudents);
 		tableOfStudents.setBackground(Color.WHITE);
 		scrollPane.setViewportView(tableOfStudents);
-		
-		this.enrolledClass = enrolledClass;
-		
+
 	}
 
 
@@ -107,6 +111,7 @@ public class CloseClass extends ClassDecorator{
 				CPF studentCPF = student.getCpf();			
 				studentsClass[4] = studentCPF.getCpf();
 				
+				studentsCpf.add(studentsClass[4]);
 				tableModel.addRow(studentsClass);
 			}
 		} 
@@ -153,10 +158,52 @@ public class CloseClass extends ClassDecorator{
 		    absenceCollumn.setCellEditor(new DefaultCellEditor(absenceField));
 	    
 			getAllStudentsClass();
+
+			if(enrolledClass.getStatus() != OPEN_CLASS){
+				getSituationOfStudentsClass();
+				fillTheFields();
+			}
+			else{
+				
+			}
+				
 	    } 
 	    catch (ParseException e) {
 		
 		}  
+	}
+
+	private void fillTheFields() {
+		
+		for (int i = 0; i < studentsClass.size(); i++) {
+			
+			Student student = studentsClass.get(i).getStudent();
+			String studentName = student.getName();
+			
+			Integer absences = studentsClass.get(i).getAbsences();
+			String absence = absences.toString();
+			
+			Integer grade_ = studentsClass.get(i).getGrade();
+			String grade = grade_.toString();
+			
+			String situation = studentsClass.get(i).getStudentSituation();
+			
+			tableModel.setValueAt(studentName, 0, i);
+			tableModel.setValueAt(absence, 1, i);
+			tableModel.setValueAt(grade, 2, i);
+			tableModel.setValueAt(situation, 3, i);
+
+		}
+
+	}
+
+	private void getSituationOfStudentsClass() {
+		
+		StudentClassController studentClassController = new StudentClassController();
+		
+		studentsClass = studentClassController.getStudentSituation(studentsCpf);
+		
+		
 	}
 
 	@Override
@@ -164,13 +211,14 @@ public class CloseClass extends ClassDecorator{
 		
 		super.createButtons(frame);
 
-		actionBtn = new JButton("Fechar turma");
+		String buttonText = getButtonText();
+		actionBtn = new JButton(buttonText);
 		frame.getContentPane().add(actionBtn);
 		actionBtn.setBounds(679, 42, 117, 25);
 		actionBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			
-				
+			
 				for (int i = 0; i < tableModel.getRowCount(); i++) {
 					
 					String studentCpf = tableModel.getValueAt(i, 4).toString();
@@ -180,16 +228,23 @@ public class CloseClass extends ClassDecorator{
 					try {
 						StudentClass studentClass = setStudentSituation(studentCpf, grade, absence);
 						tableModel.setValueAt(studentClass.getStudentSituation(), i, 3);
-						showInfoMessage("Notas e faltas inseridas com sucesso");
-						
-						int confirm = 0;				
-						confirm = JOptionPane.showConfirmDialog(tableOfStudents, "Deseja realmente fechar a turma?", "Fechar turma", JOptionPane.YES_NO_OPTION);
-						
-						if (confirm == JOptionPane.YES_OPTION) {
-							closeClass(enrolledClass);
+					
+						if(enrolledClass.getStatus() == OPEN_CLASS){
+							showInfoMessage("Notas e faltas inseridas com sucesso");
+							
+							int confirm = 0;				
+							confirm = JOptionPane.showConfirmDialog(tableOfStudents, "Deseja realmente fechar a turma?", "Fechar turma", JOptionPane.YES_NO_OPTION);
+							
+							if (confirm == JOptionPane.YES_OPTION) {
+								closeClass(enrolledClass);
+							}
+							else{
+								// Voltar para consulta
+							}
+
 						}
 						else{
-							// Voltar para consulta
+							showInfoMessage("Notas e faltas atualizadas com sucesso");
 						}
 
 					} 
@@ -212,6 +267,20 @@ public class CloseClass extends ClassDecorator{
 				dispose();	
 			}
 		});
+	}
+
+	private String getButtonText() {
+
+		String buttonText = "";
+		
+		if(enrolledClass.getStatus() == OPEN_CLASS){
+			buttonText = "Fechar turma";
+		}
+		else{
+			buttonText = "Atualizar notas e faltas";
+		}
+		
+		return buttonText;
 	}
 
 	private StudentClass setStudentSituation(String studentCpf, String grade, String absence) throws StudentClassException, CPFException, PersonException{

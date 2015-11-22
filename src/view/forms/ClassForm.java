@@ -1,8 +1,9 @@
-package view;
+package view.forms;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import view.ClassView;
 import model.Class;
 
 // Default form

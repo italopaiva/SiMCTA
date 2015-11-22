@@ -24,6 +24,7 @@ import view.decorator.class_decorator.EditClassDecorator;
 import view.decorator.class_decorator.NewClassDecorator;
 import exception.AddressException;
 import view.decorator.ServiceItemDecorator;
+import view.forms.ClassForm;
 import view.forms.ServiceItemForm;
 import view.forms.StudentForm;
 import view.forms.TeacherForm;

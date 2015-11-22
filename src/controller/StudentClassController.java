@@ -150,4 +150,13 @@ public class StudentClassController{
 	public void setDAO(StudentClassDAO studentClassDAO) {
 		this.studentClassDAO = studentClassDAO;
 	}
+
+	public ArrayList<StudentClass> getStudentSituation(ArrayList<String> studentsCpf) {
+		
+		ArrayList<StudentClass> studentsClass = new ArrayList<StudentClass>();
+
+		
+		
+		return studentsClass;
+	}
 }
