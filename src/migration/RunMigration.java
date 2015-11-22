@@ -8,7 +8,7 @@ public class RunMigration {
 
 	public static void main(String[] args) {
 		
-		M014_AddingStudentClassAttributes m = new M014_AddingStudentClassAttributes();
+		M015_UpdatingIdClassColumnToClass m = new M015_UpdatingIdClassColumnToClass();
 		
 		String message = "";
 		try {

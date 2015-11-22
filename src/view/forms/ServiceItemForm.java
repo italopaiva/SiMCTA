@@ -6,6 +6,8 @@ import javax.swing.border.EmptyBorder;
 
 import model.ServiceItem;
 import view.ServiceItemView;
+import java.awt.BorderLayout;
+import java.awt.Font;
 
 public class ServiceItemForm extends ServiceItemView {
 
@@ -15,17 +17,17 @@ public class ServiceItemForm extends ServiceItemView {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frame.setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		JLabel courseNameLabel = new JLabel("Nome do curso");
-		courseNameLabel.setBounds(284, 45, 124, 17);
+
+		JLabel courseNameLabel = new JLabel("* Nome");
+		courseNameLabel.setBounds(274, 65, 124, 17);
 		frame.getContentPane().add(courseNameLabel);
 
-        JLabel durationLabel = new JLabel("Duração");
-        durationLabel.setBounds(286, 116, 70, 15);
+        JLabel durationLabel = new JLabel("* Duração");
+        durationLabel.setBounds(274, 136, 70, 15);
         frame.getContentPane().add(durationLabel);
         
-        JLabel valueLabel = new JLabel("Valor");
-        valueLabel.setBounds(286, 197, 70, 15);
+        JLabel valueLabel = new JLabel("* Valor");
+        valueLabel.setBounds(274, 217, 70, 15);
         frame.getContentPane().add(valueLabel);
 
 		

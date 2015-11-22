@@ -55,8 +55,7 @@ public abstract class DAO {
 	
 	private Connection connectToDB() throws SQLException{
 		
-		FactoryConnection factoryConnection = new FactoryConnection();
-		Connection connection = factoryConnection.establishConnection();
+		Connection connection = FactoryConnection.establishConnection();
 		
 		return connection;
 	}

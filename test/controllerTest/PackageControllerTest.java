@@ -2,8 +2,6 @@ package controllerTest;
 
 import static org.junit.Assert.*;
 
-import java.awt.ItemSelectable;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -17,11 +15,6 @@ import org.junit.Test;
 import static org.mockito.Mockito.*;
 
 import org.mockito.*;
-
-import view.NewPackage;
-
-import com.mysql.jdbc.Connection;
-
 import controller.PackageController;
 import exception.CourseException;
 import exception.PackageException;
@@ -100,7 +93,7 @@ public class PackageControllerTest {
 	public void testSearchPackageByNamePackageNotFound() throws PackageException{
 		
 		ArrayList<Package> array = new ArrayList<Package>();
-		when(packageDAOMock.searchPackageByName("txt")).thenReturn(array);
+		when(packageDAOMock.get("txt")).thenReturn(array);
 		packageController.setPackageDAO(packageDAOMock);
 		
 		ArrayList<Package> array1 = new ArrayList<Package>();
@@ -128,7 +121,7 @@ public class PackageControllerTest {
 		
 		packagesArray.add(pacote1);
 		packagesArray.add(pacote2);
-		when(packageDAOMock.searchPackageByName("pacote")).thenReturn(packagesArray);
+		when(packageDAOMock.get("pacote")).thenReturn(packagesArray);
 		packageController.setPackageDAO(packageDAOMock);
 		
 		ArrayList<Package> array1 = new ArrayList<Package>();

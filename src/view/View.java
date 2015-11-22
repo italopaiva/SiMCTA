@@ -13,36 +13,22 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
-import model.Class;
-import model.Course;
-import model.Teacher;
 import view.decorator.EnrollStudentDecorator;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 import view.decorator.NewCourseDecorator;
 import view.decorator.NewPackageDecorator;
 import view.decorator.NewTeacherDecorator;
 import view.decorator.ServiceItemDecorator;
+import view.decorator.class_decorator.NewClassDecorator;
+import view.forms.ClassForm;
 import view.forms.ServiceItemForm;
 import view.forms.StudentForm;
 import view.forms.TeacherForm;
-import view.decorator.class_decorator.EditClassDecorator;
-import view.decorator.class_decorator.NewClassDecorator;
-import exception.AddressException;
 import exception.AuthenticationException;
 import exception.CPFException;
 import exception.ClassException;
 import exception.CourseException;
 import exception.DateException;
-import exception.PackageException;
 import exception.PersonException;
-import exception.PhoneException;
-import exception.RGException;
-import exception.StudentException;
-import exception.TeacherException;
 
 @SuppressWarnings("serial")
 public class View extends JFrame {
@@ -51,6 +37,7 @@ public class View extends JFrame {
 	protected static JFrame frame = new JFrame();
 	private PersonView teacherFrame;
 	private ClassView classFrame;
+	private PersonView personFrame;
 
 	/**
 	 * Launch the application.
@@ -73,6 +60,20 @@ public class View extends JFrame {
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
+		JMenu homePage = new JMenu("Início");
+		menuBar.add(homePage);
+		
+		JMenuItem backHomepage = new JMenuItem("Voltar para página inicial");
+		backHomepage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				dispose();
+				SimCta frame = new SimCta();
+				frame.setVisible(true);
+			}
+		});
+		homePage.add(backHomepage);
+		
 		addCourseOptionsToMenu();
 		
 		addPackageOptionsToMenu();
@@ -81,14 +82,47 @@ public class View extends JFrame {
 		
 		addTeacherOptionsToMenu();
 		
-		addClassOptionsToMenu();
+		try {
+			addClassOptionsToMenu();
+		} catch (CourseException | PersonException | CPFException | ClassException | DateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		addDirectorOptionsToMenu();
 	}
 	
-	private void addClassOptionsToMenu(){
+	private void addDirectorOptionsToMenu() {
+		
+		JMenu directorMenu = new JMenu("Diretor");
+		menuBar.add(directorMenu);
+		
+		JMenuItem updatePassword = new JMenuItem("Trocar senha");
+		updatePassword.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				boolean permissionToAccess = getPermissionToAccess();
+				
+				if(permissionToAccess){
+					dispose();
+					UpdateDirectorPassword directorFrame = new UpdateDirectorPassword();
+					directorFrame.setVisible(true);
+				}
+				else{
+					dispose();
+					View frame = new View();
+					frame.setVisible(true);
+				}
+			}
+		});
+		directorMenu.add(updatePassword);
+	}
+
+	private void addClassOptionsToMenu() throws CourseException, PersonException, CPFException, ClassException, DateException{
 		
 		JMenu classMenu = new JMenu("Turmas");
 		menuBar.add(classMenu);
-		
+
 		JMenuItem newClass = new JMenuItem("Abrir turma");
 		newClass.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -99,7 +133,24 @@ public class View extends JFrame {
 				classFrame.setVisible(true);
 			}
 		});
+		
 		classMenu.add(newClass);
+		
+		JMenuItem searchClass = new JMenuItem("Visualizar turma");
+		searchClass.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				
+				dispose();
+				SearchClass searchClassFrame;
+				searchClassFrame = new SearchClass();
+				searchClassFrame.setVisible(true);
+				
+			}
+		});
+		
+		classMenu.add(searchClass);
+		
 	}
 
 	private void addTeacherOptionsToMenu(){
@@ -111,9 +162,9 @@ public class View extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				dispose();
-				teacherFrame = new NewTeacherDecorator(new TeacherForm());
-				teacherFrame.buildScreen(teacherFrame, null);
-				teacherFrame.setVisible(true);
+				personFrame = new NewTeacherDecorator(new TeacherForm());
+				personFrame.buildScreen(personFrame, null);
+				personFrame.setVisible(true);
 			}
 		});
 		teacherMenu.add(newTeacher);
@@ -123,9 +174,9 @@ public class View extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				dispose();
-				teacherFrame = new SearchTeacher();
-				teacherFrame.buildScreen(teacherFrame, null);
-				teacherFrame.setVisible(true);
+				personFrame = new SearchTeacher();
+				personFrame.buildScreen(personFrame, null);
+				personFrame.setVisible(true);
 			}
 		});
 		teacherMenu.add(searchTeacher);
@@ -136,7 +187,7 @@ public class View extends JFrame {
 		JMenu studentMenu = new JMenu("Alunos");
 		menuBar.add(studentMenu);
 		
-		JMenuItem newStudent = new JMenuItem("Cadastrar aluno");
+		JMenuItem newStudent = new JMenuItem("Matricular aluno");
 		newStudent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -148,11 +199,12 @@ public class View extends JFrame {
 		});
 		studentMenu.add(newStudent);
 
-		JMenuItem searchStudent = new JMenuItem("Visualizar Aluno");
+		JMenuItem searchStudent = new JMenuItem("Visualizar aluno");
 		searchStudent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
-				SearchStudent searchStudentFrame = new SearchStudent();
+				PersonView searchStudentFrame = new SearchStudent();
+				searchStudentFrame.buildScreen(searchStudentFrame, null);
 				searchStudentFrame.setVisible(true);
 			}
 		});
@@ -193,16 +245,9 @@ public class View extends JFrame {
 				
 				dispose();
 
-				try {
-					SearchPackage newPackageFrame = new SearchPackage();
-					newPackageFrame.setVisible(true);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (PackageException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}				
+				ServiceItemView searchPackageFrame = new SearchPackage();
+				searchPackageFrame.buildScreen(searchPackageFrame, null);
+				searchPackageFrame.setVisible(true);				
 			}
 		});
 		packageMenu.add(searchPackage);		

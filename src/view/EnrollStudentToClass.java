@@ -29,16 +29,18 @@ public class EnrollStudentToClass extends View {
 	private static final int SELECTED_ROW = -1;
 	
 	private Class classToEnroll;
+	private SearchClass classSearch;
 	
 	private JPanel contentPane;
 	private DefaultTableModel availableStudentsTableModel;
 	private ArrayList <String> studentsCpf;
 	private DefaultTableModel addedStudentsTableModel;
 	
-	public EnrollStudentToClass(Class classToEnroll) throws CourseException, SQLException, StudentException{
+	public EnrollStudentToClass(Class classToEnroll, SearchClass classSearch) throws CourseException, SQLException, StudentException{
 		super();
 		
 		this.classToEnroll = classToEnroll;
+		this.classSearch = classSearch;
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -80,6 +82,8 @@ public class EnrollStudentToClass extends View {
 					message = e1.getMessage();
 				}finally{
 					showInfoMessage(message);
+					dispose();
+					classSearch.setVisible(true);
 				}
 			}
 
@@ -133,7 +137,7 @@ public class EnrollStudentToClass extends View {
 		final JTable tableOfAddedStudents = new JTable(addedStudentsTableModel);
 		scrollPaneAddedStudents.setViewportView(tableOfAddedStudents);
 		
-		addStudent(tableOfStudentsToSelect, tableOfAddedStudents);
+		addButtons(tableOfStudentsToSelect, tableOfAddedStudents);
 	}
 
 	/**
@@ -141,7 +145,7 @@ public class EnrollStudentToClass extends View {
 	 * @param tableOfStudents
 	 * @param tableOfAddedStudents 
 	 */
-	private void addStudent(final JTable tableOfStudents, final JTable tableOfAddedStudents){
+	private void addButtons(final JTable tableOfStudents, final JTable tableOfAddedStudents){
 		 
 		studentsCpf = new ArrayList<String>();
 					
@@ -215,6 +219,21 @@ public class EnrollStudentToClass extends View {
 		});
 		contentPane.add(removeStudentButton);
 		
+		JButton backButton = new JButton("Voltar");
+		backButton.setBounds(455, 400, 114, 25);
+		backButton.setBackground(Color.WHITE);
+		backButton.addMouseListener(new MouseAdapter(){
+			
+			@Override
+			public void mouseClicked(MouseEvent e){		
+				
+				dispose();
+				classSearch.setVisible(true);
+			}
+
+		});
+		contentPane.add(backButton);
+		
 	}
 
 	/**
@@ -228,18 +247,22 @@ public class EnrollStudentToClass extends View {
 		StudentController studentController = new StudentController();
 		ArrayList<Student> students = studentController.getStudentsOfCourse(classToEnroll.getCourse());
 		
+		if(students.isEmpty()){
+			throw new StudentException("Não há alunos matriculados no curso desta turma.");
+		}
+		
 		int indexOfCourses = 0;
 		while(indexOfCourses < students.size()){
 			
 			Student student = students.get(indexOfCourses);
 			String studentCpf = student.getCpf().getCpf();
 
-			String[] allCourses = new String[3];
+			String[] allStudents = new String[2];
 	
-			allCourses[0] = (studentCpf);
-			allCourses[1] = (student.getName());
+			allStudents[0] = (studentCpf);
+			allStudents[1] = (student.getName());
 			
-			availableStudentsTableModel.addRow(allCourses);
+			availableStudentsTableModel.addRow(allStudents);
 			
 			indexOfCourses++;
 		}

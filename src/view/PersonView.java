@@ -29,7 +29,7 @@ public abstract class PersonView extends View {
     protected JTextField numberField = new JTextField();
     protected JTextField complementField = new JTextField();
     protected JTextField qualificationField = new JTextField();
-	protected JLabel registerTeacherLbl = new JLabel();
+	protected JLabel registerPersonLbl = new JLabel();
 	
 	protected JFrame frame = new JFrame();
 

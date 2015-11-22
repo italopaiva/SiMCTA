@@ -15,7 +15,7 @@ public class TeacherForm extends PersonForm {
 	public void createLabelsAndFields(JFrame frame, Person teacher) {
 		super.createLabelsAndFields(frame, teacher);
 		
-        JLabel qualificationLabel = new JLabel("Qualificação");
+        JLabel qualificationLabel = new JLabel("*Qualificação");
         qualificationLabel.setBounds(70, 444, 105, 17);
         frame.getContentPane().add(qualificationLabel);
 

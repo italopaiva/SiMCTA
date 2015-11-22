@@ -10,17 +10,15 @@ import dao.DatabaseConfig;
 public class FactoryConnection {
 	
 	private static FactoryConnection instance;
-
-	public FactoryConnection(){}
 	
 	/**
 	 * Establish the connection with the database
 	 * @return the established connection
 	 * @throws SQLException
 	 */
-	public Connection establishConnection() throws SQLException{
+	public static Connection establishConnection() throws SQLException{
 		
-		Connection connection = this.getInstance().getConnection();
+		Connection connection = getInstance().getConnection();
 		
 		return connection;
 	}
@@ -29,7 +27,7 @@ public class FactoryConnection {
 	 * Get the current instance of the class
 	 * @return the current instance, if it exists, or creates a new one and then return it
 	 */
-	private FactoryConnection getInstance(){
+	private static FactoryConnection getInstance(){
 		
 		if(instance == null){
 			

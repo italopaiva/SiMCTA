@@ -4,13 +4,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import model.Course;
 import model.Teacher;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
@@ -47,6 +47,7 @@ public class TeacherDAO extends DAO{
 	private static final String COULDNT_CHECK_TEACHER = "Não foi possível checar se o professor está cadastrado. Tente novamente.";
 	private static final String CANT_FOUND_TEACHERS = "Não foi possível encontrar os professores cadastrados.";
 	private static final String CANT_FOUND_TEACHER = "Não foi possível encontrar os dados do professor selecionado.";;
+	private static final String CANT_UPDATE_TEACHER = "Não foi possível alterar os dados do professor informado.";
 	
 	/**
 	 * Save on database the received teacher 
@@ -309,8 +310,9 @@ public class TeacherDAO extends DAO{
 	 * @param courseId - The course to be updated
 	 * @param course - A Course object with the course new data
 	 * @return TRUE if the course was updated on database or FALSE if it does not
+	 * @throws TeacherException 
 	 */
-	public Teacher update(Teacher teacher){
+	public Teacher update(Teacher teacher) throws TeacherException{
 				
 		String teacherName = teacher.getName();		
 		String email = teacher.getEmail();
@@ -369,8 +371,7 @@ public class TeacherDAO extends DAO{
 			teacher = get(cpf);
 		}
 		catch(SQLException | PhoneException | CPFException | DateException | AddressException | RGException | TeacherException caughtException){
-			System.out.print("aqui:" + caughtException.getMessage());
-
+			throw new TeacherException(CANT_UPDATE_TEACHER);
 		}
 		
 		return teacher;

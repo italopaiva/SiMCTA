@@ -12,6 +12,9 @@ import model.Teacher;
 
 public abstract class ServiceItemView extends View {
 
+	protected static final Integer SERVICE_ACTIVE = 1;
+	protected static final Integer SERVICE_INACTIVE = 0;
+
     protected JPanel contentPane = new JPanel();
     protected JTextField nameField = new JTextField();
     protected JFormattedTextField durationField = new JFormattedTextField();

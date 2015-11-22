@@ -14,7 +14,7 @@ private static final int MIGRATION_VERSION = 13;
 		
 		String addStatusColumn = "";
 		
-		addStatusColumn+= "ALTER TABLE Class ADD status tinyint(1) NOT NULL";
+		addStatusColumn+= "ALTER TABLE Class ADD status tinyint(1) NOT NULL DEFAULT '1'";
 				
 		setQuery(addStatusColumn);
 		run();

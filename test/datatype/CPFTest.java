@@ -1,10 +1,10 @@
 package datatype;
 
 import static org.junit.Assert.*;
-import model.datatype.CPF;
 
 import org.junit.Test;
 
+import datatype.CPF;
 import exception.CPFException;
 
 public class CPFTest {

@@ -24,8 +24,6 @@ import controller.CourseController;
 import exception.CourseException;
 
 public class ShowCourseDecorator extends ServiceItemDecorator {
-
-	protected static final Integer COURSE_ACTIVE = 1;
 	
 	private JButton editTeacherBtn;
 	private JButton backBtn;
@@ -43,25 +41,30 @@ public class ShowCourseDecorator extends ServiceItemDecorator {
 		this.frame = viewToDecorate;
 		super.createLabelsAndFields(viewToDecorate, course);
 		this.course = (Course) course;
+		
+        
+        JLabel descriptionLabel = new JLabel("* Descrição do curso");
+        descriptionLabel.setBounds(276, 284, 144, 15);
+        frame.getContentPane().add(descriptionLabel);
 
-		nameField.setBounds(276, 74, 346, 30);
+		nameField.setBounds(276, 94, 346, 30);
 		frame.getContentPane().add(nameField);
 		nameField.setColumns(10);
 		
 		JLabel lblC = new JLabel(course.getName());
 		lblC.setFont(new Font("Dialog", Font.BOLD, 20));
-		lblC.setBounds(326, 12, 344, 15);
+		lblC.setBounds(400, 12, 344, 25);
 		frame.getContentPane().add(lblC);
 		
-		descriptionField.setBounds(284, 306, 446, 105);
+		descriptionField.setBounds(276, 326, 446, 105);
 		frame.getContentPane().add(descriptionField);
 		
 		durationField =  new JTextField();
-		durationField.setBounds(276, 143, 132, 25);
+		durationField.setBounds(276, 163, 132, 25);
 		frame.getContentPane().add(durationField);
 			
 		valueField = new JTextField();
-		valueField.setBounds(284, 224,124, 28);
+		valueField.setBounds(276, 244,124, 28);
 		frame.getContentPane().add(valueField);
 		
 		fillTheFields(this.course);
@@ -75,7 +78,7 @@ public class ShowCourseDecorator extends ServiceItemDecorator {
 		durationField.setText(course.getDuration().toString() + " semanas");
 		
 		Integer value = course.getValue();
-		valueField.setText(course.getFormattedValue(value));
+		valueField.setText("R$ " + course.getFormattedValue(value));
 		
 		setNonEditableAllFields();
 		
@@ -159,7 +162,7 @@ public class ShowCourseDecorator extends ServiceItemDecorator {
 			}
 
 			private void changeStatus() {
-				if(courseStatus == COURSE_ACTIVE){
+				if(courseStatus == SERVICE_ACTIVE){
 					courseStatus = 0;
 				}
 				else{

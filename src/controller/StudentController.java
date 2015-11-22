@@ -4,6 +4,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import dao.StudentDAO;
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.CourseException;
@@ -17,16 +22,10 @@ import exception.StudentException;
 import model.Course;
 import model.Student;
 import model.Service;
-import model.datatype.Address;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
-import model.datatype.CPF;
 
 public class StudentController {
 	
-	private static final String STUDENT_WITHOUT_SERVICE = "Um aluno deve possuir um serviço associado";
-	private static final String STUDENT_NULL = "Não foi possível encontrar o estudante para mudar o status";
+	private static final String STUDENT_NULL = "Não foi possível encontrar o estudante";
 	private static final String CANT_SAVE_NULL_STUDENT = "Não é possível salvar um estudante nulo.";
 	private static final int ACTIVE_STATUS	= 1;
 	private StudentDAO studentDAO;
@@ -105,14 +104,15 @@ public class StudentController {
 		return wasSaved;
 	}
 	
-	public Student getStudent(CPF cpf){
+	public Student getStudent(CPF cpf) throws StudentException{
 		
 		Student foundStudent;
 		try {
 			foundStudent = studentDAO.get(cpf);
-		} catch (PhoneException | CPFException | DateException
+		} 
+		catch (PhoneException | CPFException | DateException
 				| AddressException | RGException | StudentException | PersonException e) {
-			foundStudent = null;
+			throw new StudentException(STUDENT_NULL);
 		}
 		
 		return foundStudent;
@@ -131,40 +131,14 @@ public class StudentController {
 		
 		return foundStudents;
 	}
+	
 
 	/**
-	 * Search the student selected by the user
-	 * @param studentCPF - the 'cpf' of the selected student 
-	 * @return an object with the data of the selected student
-	 * @throws SQLException
+	 * Get the students of the course
+	 * @param course
+	 * @return
 	 * @throws StudentException
-	 * @throws PhoneException
-	 * @throws CPFException
-	 * @throws DateException
-	 * @throws AddressException
-	 * @throws RGException
-	 * @throws CourseException
-	 * @throws ServiceException
-	 * @throws PaymentException 
-	 * @throws PersonException 
 	 */
-	public ArrayList<Service> searchStudent(CPF studentCPF) throws SQLException, StudentException, PhoneException, CPFException, DateException, AddressException, RGException, CourseException, ServiceException, PaymentException, PersonException {
-		
-		Student basicDataOfStudent = studentDAO.get(studentCPF);
-		ArrayList<Service> servicesOfStudent = new ArrayList<Service>();
-		servicesOfStudent = null;
-		if(basicDataOfStudent != null){
-						
-			servicesOfStudent = serviceController.searchService(basicDataOfStudent);		
-			
-		}
-		else{	
-			throw new StudentException(STUDENT_WITHOUT_SERVICE);
-		}
-		
-		return servicesOfStudent;
-	}
-	
 	public ArrayList<Student> getStudentsOfCourse(Course course) throws StudentException{
 		
 		ArrayList<Student> studentsOfCourse = studentDAO.get(course);
@@ -186,4 +160,5 @@ public class StudentController {
 		return wasAltered;
 		
 	}
+	
 }

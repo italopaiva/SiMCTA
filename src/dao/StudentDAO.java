@@ -4,6 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
@@ -13,11 +18,6 @@ import exception.RGException;
 import exception.StudentException;
 import model.Course;
 import model.Student;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Phone;
-import model.datatype.RG;
-import model.datatype.Date;
 
 public class StudentDAO extends DAO {
 
@@ -48,6 +48,7 @@ public class StudentDAO extends DAO {
 	private static final String CPF_ALREADY_EXISTS = "O CPF informado já está cadastrado.";
 	private static final String COULDNT_CHECK_STUDENT = "Não foi possível checar se o estudante está cadastrado. Tente novamente.";
 	private static final String COULDNT_LOAD_STUDENTS_OF_COURSE = "Não foi possível carregar os estudantes do curso informado.";
+	private static final String COULDNT_FIND_STUDENTS = "Não foi possível encontrar os estudantes";
 
 	public void save(Student student) throws StudentException, PersonException{
 		
@@ -150,7 +151,7 @@ public class StudentDAO extends DAO {
 		ResultSet resultOfTheSearch = null;
 		String receivedCPF = studentCpf.getCpf();
 		
-		String query = "SELECT * FROM " + STUDENT_TABLE_NAME + " WHERE " + CPF_COLUMN + "= \"" + receivedCPF + "\""; 
+		String query = "SELECT * FROM " + STUDENT_TABLE_NAME + " WHERE " + CPF_COLUMN + "= '" + receivedCPF + "'"; 
 		Student student = null;
 
 		try{
@@ -160,7 +161,7 @@ public class StudentDAO extends DAO {
 			}
 		}
 		catch(SQLException e){
-			
+			throw new StudentException(COULDNT_FIND_STUDENTS);
 		}
 		return student;
 	}

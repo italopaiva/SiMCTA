@@ -24,9 +24,9 @@ import javax.swing.text.MaskFormatter;
 
 import model.Course;
 import model.Package;
-import model.datatype.Address;
-import model.datatype.Date;
-import model.datatype.Phone;
+import datatype.Address;
+import datatype.Date;
+import datatype.Phone;
 import controller.CourseController;
 import controller.PackageController;
 import controller.StudentController;

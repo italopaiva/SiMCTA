@@ -1,4 +1,4 @@
-package model.datatype;
+package datatype;
 
 import model.Model;
 import exception.RGException;
