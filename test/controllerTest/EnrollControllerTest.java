@@ -4,16 +4,15 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import controller.EnrollController;
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;

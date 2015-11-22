@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import dao.StudentClassDAO;
+import datatype.CPF;
 import exception.CPFException;
 import exception.PersonException;
 import exception.StudentClassException;
 import model.Class;
 import model.Student;
 import model.StudentClass;
-import model.datatype.CPF;
 
 public class StudentClassController{
 

@@ -35,11 +35,6 @@ import model.Service;
 import model.ServiceItem;
 import model.Student;
 import model.Package;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 import controller.CourseController;
 import controller.ServiceController;
 import controller.StudentController;
@@ -61,6 +56,12 @@ import exception.StudentException;
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.ListSelectionModel;
+
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 
 
 public class SearchStudent extends PersonView {

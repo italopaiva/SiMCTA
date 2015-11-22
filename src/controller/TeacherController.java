@@ -3,6 +3,11 @@ package controller;
 import java.util.ArrayList;
 
 import dao.TeacherDAO;
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
@@ -11,11 +16,6 @@ import exception.PhoneException;
 import exception.RGException;
 import exception.TeacherException;
 import model.Teacher;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 
 public class TeacherController {
 

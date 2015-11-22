@@ -18,13 +18,13 @@ import javax.swing.text.MaskFormatter;
 
 import controller.ClassController;
 import controller.TeacherController;
+import datatype.CPF;
+import datatype.Date;
 import exception.ClassException;
 import exception.DateException;
 import exception.TeacherException;
 import model.Class;
 import model.Teacher;
-import model.datatype.CPF;
-import model.datatype.Date;
 import view.ClassView;
 import view.decorator.ShowTeacherDecorator;
 

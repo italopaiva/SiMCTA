@@ -4,9 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import datatype.Date;
 import exception.ClassException;
 import exception.DateException;
-import model.datatype.Date;
 
 public class Class extends Model{
 	

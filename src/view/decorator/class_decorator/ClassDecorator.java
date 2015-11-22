@@ -5,8 +5,8 @@ import java.util.Map;
 
 import javax.swing.JFrame;
 
+import datatype.CPF;
 import model.Class;
-import model.datatype.CPF;
 import view.ClassView;
 
 public abstract class ClassDecorator extends ClassView {

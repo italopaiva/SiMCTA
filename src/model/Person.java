@@ -3,12 +3,12 @@ package model;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.PersonException;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 
 public class Person extends Model{
 

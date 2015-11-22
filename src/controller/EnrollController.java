@@ -2,17 +2,17 @@ package controller;
 
 import java.util.ArrayList;
 
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.PaymentException;
 import exception.ServiceException;
 import exception.StudentException;
 import model.Payment;
 import model.Service;
 import model.Student;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 
 public class EnrollController extends Enroll {
 	

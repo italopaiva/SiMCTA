@@ -1,10 +1,10 @@
 package datatype;
 
 import static org.junit.Assert.*;
-import model.datatype.RG;
 
 import org.junit.Test;
 
+import datatype.RG;
 import exception.RGException;
 
 public class RGTest {

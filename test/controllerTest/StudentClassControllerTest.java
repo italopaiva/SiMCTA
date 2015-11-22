@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 
 import model.Student;
-import model.datatype.CPF;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 import controller.StudentClassController;
 import dao.StudentClassDAO;
+import datatype.CPF;
 import exception.CPFException;
 import exception.PersonException;
 import exception.StudentClassException;

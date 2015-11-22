@@ -4,6 +4,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import dao.StudentDAO;
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.CourseException;
@@ -17,11 +22,6 @@ import exception.StudentException;
 import model.Course;
 import model.Student;
 import model.Service;
-import model.datatype.Address;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
-import model.datatype.CPF;
 
 public class StudentController {
 	

@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import model.Course;
 import model.Teacher;
 import model.Class;
-import model.datatype.CPF;
-import model.datatype.Date;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +18,8 @@ import org.mockito.MockitoAnnotations;
 import controller.ClassController;
 import dao.ClassDAO;
 import dao.CourseDAO;
+import datatype.CPF;
+import datatype.Date;
 import exception.CPFException;
 import exception.ClassException;
 import exception.CourseException;

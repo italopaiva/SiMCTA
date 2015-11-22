@@ -9,15 +9,15 @@ import model.Payment;
 import model.PaymentDescription;
 import model.Service;
 import model.Student;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.CourseException;

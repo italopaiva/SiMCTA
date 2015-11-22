@@ -2,7 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
-import model.datatype.Date;
+import datatype.Date;
 import model.Package;
 import exception.PaymentException;
 import exception.ServiceException;

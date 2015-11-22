@@ -8,6 +8,8 @@ import controller.CourseController;
 import controller.PackageController;
 import controller.PaymentController;
 import controller.StudentController;
+import datatype.CPF;
+import datatype.Date;
 import exception.CourseException;
 import exception.DateException;
 import exception.PaymentException;
@@ -18,8 +20,6 @@ import model.Service;
 import model.ServiceItem;
 import model.Student;
 import model.Package;
-import model.datatype.CPF;
-import model.datatype.Date;
 
 public class ServiceDAO extends DAO {
 

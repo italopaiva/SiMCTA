@@ -1,4 +1,4 @@
-package model.datatype;
+package datatype;
 
 import exception.CPFException;
 import model.Model;

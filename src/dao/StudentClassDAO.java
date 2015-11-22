@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import datatype.CPF;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
@@ -15,7 +16,6 @@ import exception.StudentException;
 import model.Class;
 import model.Student;
 import model.StudentClass;
-import model.datatype.CPF;
 
 public class StudentClassDAO extends DAO {
 
