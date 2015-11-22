@@ -137,7 +137,24 @@ public class View extends JFrame {
 				classFrame.setVisible(true);
 			}
 		});
+		
 		classMenu.add(newClass);
+		
+		JMenuItem searchClass = new JMenuItem("Visualizar turma");
+		searchClass.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				
+				dispose();
+				SearchClass searchClassFrame;
+				searchClassFrame = new SearchClass();
+				searchClassFrame.setVisible(true);
+				
+			}
+		});
+		
+		classMenu.add(searchClass);
+		
 	}
 
 	private void addTeacherOptionsToMenu(){
@@ -186,7 +203,7 @@ public class View extends JFrame {
 		});
 		studentMenu.add(newStudent);
 
-		JMenuItem searchStudent = new JMenuItem("Pesquisar Aluno");
+		JMenuItem searchStudent = new JMenuItem("Visualizar aluno");
 		searchStudent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
