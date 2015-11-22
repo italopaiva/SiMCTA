@@ -14,10 +14,13 @@ import model.datatype.Date;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import controller.ClassController;
+import controller.PaymentController;
 import dao.ClassDAO;
 import dao.CourseDAO;
 import exception.CPFException;
@@ -25,13 +28,22 @@ import exception.ClassException;
 import exception.CourseException;
 import exception.DateException;
 import exception.PersonException;
+import exception.TeacherException;
 
 public class ClassControllerTest {
-
-	private ClassController classController;
+	
+	@Mock (name = "classDAO")
+	ClassDAO classDAO;
+	@Mock
+	Class cls;
+	@Mock
+	ArrayList<Class> classes;
 	@Mock
 	private ClassDAO classDAOMock;
 	private Class enrolledClass;
+	
+	@InjectMocks
+	ClassController classController;
 	
 	@Before
 	public void setUp() throws CourseException, PersonException, CPFException, ClassException, DateException{
@@ -39,7 +51,7 @@ public class ClassControllerTest {
 		MockitoAnnotations.initMocks(this);
 		classDAOMock = mock(ClassDAO.class);
 		
-		classController = new ClassController();
+		//classController = new ClassController();
 		
 		Course course = new Course("Instalação", "lala", 5, 10000);
 
@@ -91,4 +103,35 @@ public class ClassControllerTest {
 		classController.closeClass(enrolledClass);
 
 	}
+	
+	@Test
+	public void searchClassTest() throws ClassException, CPFException, TeacherException, PersonException, DateException{
+		String classId = "TESTE - MA 12/11/15";
+		Mockito.when(classDAO.searchClassByCode(classId)).thenReturn(classes);
+		
+		classController.searchClass(classId);
+		
+	}
+	
+	@Test
+	public void getClassesTest() throws ClassException{
+		int courseId = 5;
+		String teacherCPF = "52717186549";
+		String shift = "MA";
+		
+		Mockito.when(classDAO.getClasses(courseId, teacherCPF, shift)).thenReturn(classes);
+		
+		classController.getClasses(courseId, teacherCPF, shift);
+	}
+	
+//	@Test (expected = ClassException.class)
+//	public void getClassesTestException() throws ClassException{
+//		int courseId = 5;
+//		String teacherCPF = "52717186549";
+//		String shift = "1234";
+//		
+//		Mockito.when(classController.getClasses(courseId, teacherCPF, shift)).thenThrow(new ClassException("Turno Invalido"));
+//		
+//		classController.getClasses(courseId, teacherCPF, shift);
+//	}
 }
