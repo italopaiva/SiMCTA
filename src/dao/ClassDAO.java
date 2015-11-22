@@ -173,7 +173,7 @@ public class ClassDAO extends DAO {
 		}
 	}
 	/**
-	 * Get a class by the code(classId)
+	 * Search a class by the code(classId)
 	 * @param classId
 	 * @throws DateException 
 	 * @throws PersonException 
@@ -182,40 +182,41 @@ public class ClassDAO extends DAO {
 	 * @throws ClassException
 	 * @return Class
 	 */
-	public Class getClassByCode(int classId) throws ClassException, CPFException, TeacherException, PersonException, DateException{
+	public ArrayList<Class> searchClassByCode(String classId) throws ClassException, CPFException, TeacherException, PersonException, DateException{
 		
 		ResultSet resultSet = null;
 		
-		String query = "SELECT * FROM " + CLASS_TABLE_NAME + " WHERE " + ID_CLASS_COLUMN + " = " + classId ;
+		String query = "SELECT * FROM " + CLASS_TABLE_NAME + " WHERE " + ID_CLASS_COLUMN + " LIKE \'%" + classId + "%\'";
 		
-		Class cls = null;
+		ArrayList<Class> classes = new ArrayList<Class>();
 		
 		try {
 			resultSet = this.search(query);
 			
-			if (!resultSet.next()){
+			if (!resultSet.isBeforeFirst()){
 				throw new ClassException(COULDNT_FIND_CLASS);
-			} 
-			else {
+			}	else {
 				while(resultSet.next()){
 					
-					cls = getClassByResultSet(resultSet);
+					classes.add(getClassByResultSet(resultSet));
 									
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		finally {
-			return cls;
+			return classes;
 		}		
 	}
 	/**
-	 * 
+	 * Get classes from parameters
 	 * @param courseId
 	 * @param teacherCPF
 	 * @param shift
 	 * @return
 	 */
-	public ArrayList<Class> getClass(Integer courseId, String teacherCPF, String shift){
+	public ArrayList<Class> getClasses(Integer courseId, String teacherCPF, String shift){
 		
 		String query = null;
 		
@@ -264,17 +265,46 @@ public class ClassDAO extends DAO {
 					classes.add(getClassByResultSet(resultSet));
 				}
 			}
-		} finally {
-			
-			return classes;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+				
+			return classes;
 		
+		
+	}
+	
+	public Class getClass(String classId){
+		ResultSet resultSet = null;
+		
+		String query = "SELECT * FROM " + CLASS_TABLE_NAME + " WHERE " + ID_CLASS_COLUMN + " = \'" + classId + "\'";
+		
+		Class cls = null;
+		
+		try {
+			resultSet = this.search(query);
+			
+			if (!resultSet.isBeforeFirst()){
+				throw new ClassException(COULDNT_FIND_CLASS);
+			}	else {
+				while(resultSet.next()){
+					
+					cls = getClassByResultSet(resultSet);
+									
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			return cls;
+		}		
 	}
 	
 	/**
 	 * Get a Class Object from a valid resulSet
 	 * @param resultSet
-	 * @return
+	 * @return class
 	 * @throws PersonException 
 	 * @throws TeacherException 
 	 * @throws CPFException 
@@ -287,8 +317,20 @@ public class ClassDAO extends DAO {
 		String classId_ = resultSet.getString(ID_CLASS_COLUMN);
 		int courseId = resultSet.getInt(ID_COURSE_COLUMN);
 		String teacherCPF = resultSet.getString(TEACHER_CPF_COLUMN);
-		Date classOpened = new Date(resultSet.getString(OPEN_CLASS));
-		Date classClosed = new Date(resultSet.getString(CLOSED_CLASS));
+		
+		String date = resultSet.getString(START_DATE_COLUMN);
+		String year = date.substring(0,4);
+		String month = date.substring(5,7);
+		String day = date.substring(8,10);
+		Date classOpened = new Date(new Integer(day),new Integer(month),new Integer(year));
+		
+		String date2 = resultSet.getString(END_DATE_COLUMN);
+		String year2 = date2.substring(0,4);
+		String month2 = date2.substring(5,7);
+		String day2 = date2.substring(8,10);
+		Date classClosed = new Date(new Integer(day2),new Integer(month2),new Integer(year2));
+		
+		
 		String shift = resultSet.getString(SHIFT_COLUMN);
 		Integer classStatus = resultSet.getInt(STATUS_COLUMN);
 		
