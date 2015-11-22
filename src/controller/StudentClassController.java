@@ -151,6 +151,12 @@ public class StudentClassController{
 		this.studentClassDAO = studentClassDAO;
 	}
 
+	/**
+	 * Gets the situation of the students 
+	 * @param enrolledClass students class
+	 * @return the student with his situation
+	 * @throws StudentClassException
+	 */
 	public ArrayList<StudentClass> getStudentSituation(Class enrolledClass) throws StudentClassException {
 		
 		ArrayList<StudentClass> studentsClass = new ArrayList<StudentClass>();
