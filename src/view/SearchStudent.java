@@ -72,22 +72,8 @@ public class SearchStudent extends PersonView {
 	private DefaultTableModel tableModel;
 	private Component scrollPane;
 	private JButton searchButtton;
-	private JInternalFrame internalFrame;
 	private JButton backButton;
-	private JLabel firstListLabel;
-	private JLabel secondListLabel;
-	private JList<String> firstList;
-	private JList<String> secondList;
-	private JLabel dateLabel;
-	private JTextField paymentFormField;
-	private JTextField paymentValueField;
-	private JTextField installmentsValueField;
-	private JTextField paymentInstallmentsField;
-	private JButton deactivateOrActivateButton;
 	private Student student;
-	private int status;
-	private String action;
-	
 
 	@Override
 	public void createLabelsAndFields(JFrame frame, Person person) {
@@ -95,9 +81,14 @@ public class SearchStudent extends PersonView {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+			
+		JLabel searchLabel = new JLabel("Pesquisa de Aluno");
+		searchLabel.setBounds(310, 14, 446, 30);
+		searchLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+		contentPane.add(searchLabel);
 		
 		searchedStudentField = new JTextField();
-		searchedStudentField.setBounds(141, 24, 446, 30);
+		searchedStudentField.setBounds(141, 54, 446, 30);
 		contentPane.add(searchedStudentField);
 		searchedStudentField.setColumns(10);
 		
@@ -179,7 +170,7 @@ public class SearchStudent extends PersonView {
 	public void createButtons(JFrame frame) {
 
 		searchButtton = new JButton("Pesquisar");
-		searchButtton.setBounds(599, 26, 117, 30);
+		searchButtton.setBounds(599, 54, 117, 30);
 		contentPane.add(searchButtton);
 		searchButtton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

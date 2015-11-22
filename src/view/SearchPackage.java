@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -11,6 +12,7 @@ import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -47,6 +49,11 @@ public class SearchPackage extends ServiceItemView {
         setContentPane(contentPane);
         contentPane.setLayout(null);
         
+		JLabel searchLabel = new JLabel("Pacotes");
+		searchLabel.setBounds(350, 14, 446, 30);
+		searchLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+		contentPane.add(searchLabel);
+		
 		searchedPackageField = new JTextField();
 		searchedPackageField.setBounds(227, 56, 446, 29);
 		add(searchedPackageField);

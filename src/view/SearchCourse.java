@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -12,6 +13,7 @@ import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -48,6 +50,11 @@ public class SearchCourse extends ServiceItemView {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		JLabel searchLabel = new JLabel("Cursos");
+		searchLabel.setBounds(350, 14, 446, 30);
+		searchLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+		contentPane.add(searchLabel);
 		
 		searchedCourseField = new JTextField();
 		searchedCourseField.setBounds(227, 56, 446, 29);

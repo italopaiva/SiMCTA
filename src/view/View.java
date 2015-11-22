@@ -68,6 +68,20 @@ public class View extends JFrame {
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
+		JMenu homePage = new JMenu("Início");
+		menuBar.add(homePage);
+		
+		JMenuItem backHomepage = new JMenuItem("Voltar para página inicial");
+		backHomepage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				dispose();
+				SimCta frame = new SimCta();
+				frame.setVisible(true);
+			}
+		});
+		homePage.add(backHomepage);
+		
 		addCourseOptionsToMenu();
 		
 		addPackageOptionsToMenu();
