@@ -7,6 +7,8 @@ import model.Class;
 
 // Default form
 public class ClassForm extends ClassView {
+	public ClassForm() {
+	}
 
 	@Override
 	public void createLabelsAndFields(JFrame frame, Class classInstance){

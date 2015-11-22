@@ -1,13 +1,18 @@
 package controller;
 
+import java.util.ArrayList;
+
 import dao.ClassDAO;
 import dao.CourseDAO;
 import datatype.CPF;
 import datatype.Date;
+import exception.CPFException;
 import exception.ClassException;
 import exception.CourseException;
 import exception.DateException;
 import exception.PersonException;
+
+import exception.TeacherException;
 import model.Class;
 import model.Course;
 import model.Teacher;
@@ -18,6 +23,7 @@ public class ClassController {
 	private static final String INVALID_COURSE = "O curso informado não é válido.";
 	private static final String COULDNT_SAVE_CLASS = "Não foi possível cadastrar a turma.";
 	private static final String INVALID_CLASS = "Turma inválida";
+	private static final String COULDNT_FIND_CLASS = "Não foi possível encontrar a turma.";
 
 	private static final int CLOSED_CLASS = 0;
 
@@ -115,6 +121,37 @@ public class ClassController {
 		}
 		else{
 			throw new ClassException(INVALID_CLASS);
+		}
+		
+	}
+	/**
+	 * Used to search classes by the code
+	 * @throws ClassException 
+	 */
+	public ArrayList<Class> searchClass(String code) throws ClassException{
+		
+		try {
+			return classDAO.searchClassByCode(code);
+		} catch (ClassException | CPFException | TeacherException
+				| PersonException | DateException e) {
+			throw new ClassException(COULDNT_FIND_CLASS + " (" + e.getMessage() + ")");
+		}
+		
+	}
+	
+	public Class getClass(String classId){
+		return classDAO.getClass(classId);
+	}
+	
+	/**
+	 * Used to search classes by the courseId, teacherCPF and  shift
+	 * @throws ClassException 
+	 */
+	public ArrayList<Class> getClasses(Integer courseId, String teacherCPF, String shift) throws ClassException{
+		try{
+			return classDAO.getClasses(courseId, teacherCPF, shift);
+		} catch (Exception e){
+			throw new ClassException(COULDNT_FIND_CLASS);
 		}
 		
 	}
