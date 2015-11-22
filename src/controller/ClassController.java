@@ -127,15 +127,19 @@ public class ClassController {
 	 * Used to search classes by the code
 	 * @throws ClassException 
 	 */
-	public Class getClass(String code) throws ClassException{
+	public ArrayList<Class> searchClass(String code) throws ClassException{
 		
 		try {
-			return classDAO.getClassByCode(code);
+			return classDAO.searchClassByCode(code);
 		} catch (ClassException | CPFException | TeacherException
 				| PersonException | DateException e) {
 			throw new ClassException(COULDNT_FIND_CLASS + " (" + e.getMessage() + ")");
 		}
 		
+	}
+	
+	public Class getClass(String classId){
+		return classDAO.getClass(classId);
 	}
 	
 	/**
