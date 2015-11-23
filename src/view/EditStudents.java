@@ -22,6 +22,9 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
+
+import view.decorator.ShowStudentDecorator;
+
 import java.text.SimpleDateFormat;
 
 import model.Course;
@@ -70,9 +73,13 @@ public class EditStudents  extends View{
 	private String number;
 	private String father;
 	private boolean isSaved;
-
+	private ShowStudentDecorator previousPage;
 	
-	public EditStudents(Student student) {
+	public EditStudents(Student student, ShowStudentDecorator previousPage) {
+		super();
+		
+		this.previousPage = previousPage;
+		
 		getContentPane().setLayout(null);
 		
 		JLabel editStudentLbl = new JLabel("Editar Aluno");
@@ -190,13 +197,9 @@ public class EditStudents  extends View{
         getContentPane().add(fatherField);
         	
 		
-		JButton registerStudentButton = new JButton("Alterar");
-		registerStudentButton.setBounds(557, 622, 117, 25);
-		getContentPane().add(registerStudentButton);
-		registerStudentButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
+		JButton updateStudentButton = new JButton("Alterar");
+		updateStudentButton.setBounds(280, 450, 117, 25);
+		getContentPane().add(updateStudentButton);
 		
 		this.currentStudent = student;
 
@@ -215,17 +218,24 @@ public class EditStudents  extends View{
 		birthdateField.setText(birthdate2);
 		emailField.setText(currentStudent.getEmail());
 		addressField.setText(currentStudent.getAddress().getAddressInfo());
-		cellField.setText(currentStudent.getSecondaryPhone().getNumber());
+		
+		if(currentStudent.getSecondaryPhone() != null){
+			cellField.setText(currentStudent.getSecondaryPhone().getNumber());
+			ddCellField.setText(currentStudent.getSecondaryPhone().getDDD());
+		}
+		else{
+			cellField.setText("");
+			ddCellField.setText("");
+		}
 		phoneField.setText(currentStudent.getPrincipalPhone().getNumber());
 		motherField.setText(currentStudent.getMotherName());
 		fatherField.setText(currentStudent.getFatherName());
 		cepField.setText(currentStudent.getAddress().getCep());
 		cityField.setText(currentStudent.getAddress().getCity());
-		ddCellField.setText(currentStudent.getSecondaryPhone().getDDD());
 		ddPhoneField.setText(currentStudent.getPrincipalPhone().getDDD());
 			
 		
-		registerStudentButton.addMouseListener(new MouseAdapter(){
+		updateStudentButton.addMouseListener(new MouseAdapter(){
 
 			@Override
 			public void mouseClicked(MouseEvent e){		
@@ -266,7 +276,6 @@ public class EditStudents  extends View{
 					
 					showInfoMessage(message);
 					
-					
 				}catch(Exception caughtException){
 					
 					showInfoMessage(caughtException.getMessage());
@@ -274,6 +283,15 @@ public class EditStudents  extends View{
 			}
 		});
 		
+		JButton backButton = new JButton("Voltar");
+		backButton.setBounds(430, 450, 117, 25);
+		getContentPane().add(backButton);
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				EditStudents.this.previousPage.setVisible(true);
+			}
+		});
 	}
 
 }

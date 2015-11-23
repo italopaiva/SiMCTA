@@ -336,7 +336,7 @@ public class View extends JFrame {
 	 */
 	public View(){
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		setBounds(100, 100, 1024, 1248);
 		
 		instantiateMenuBar();
