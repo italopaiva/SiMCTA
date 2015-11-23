@@ -32,6 +32,8 @@ import exception.CourseException;
 
 @SuppressWarnings("serial")
 public class SearchCourse extends ServiceItemView {
+	public SearchCourse() {
+	}
 		
 	private JPanel contentPane;
 	private DefaultTableModel tableModel;
@@ -58,14 +60,14 @@ public class SearchCourse extends ServiceItemView {
 		
 		searchedCourseField = new JTextField();
 		searchedCourseField.setBounds(227, 56, 446, 29);
-		add(searchedCourseField);
+		getContentPane().add(searchedCourseField);
 		searchedCourseField.setColumns(10);
 				
 		internalFrame = new JInternalFrame();
 		internalFrame.setEnabled(false);
 		internalFrame.setBackground(Color.WHITE);
 		internalFrame.setBounds(227, 141, 557, 317);
-		add(internalFrame);
+		getContentPane().add(internalFrame);
 		internalFrame.getContentPane().setLayout(null);
 		
 		String [] columns = { "Curso", "Status", "Ação", "Id"};
@@ -128,7 +130,7 @@ public class SearchCourse extends ServiceItemView {
 
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(227, 141, 557, 317);
-		add(scrollPane);
+		getContentPane().add(scrollPane);
 		scrollPane.setBackground(Color.WHITE);
 		scrollPane.setViewportView(tableOfCourses);
 
@@ -149,7 +151,7 @@ public class SearchCourse extends ServiceItemView {
 
 		JButton btnConsultar = new JButton("Pesquisar");
 		btnConsultar.setBounds(675, 56, 117, 29);
-		add(btnConsultar);
+		getContentPane().add(btnConsultar);
 		
 		btnConsultar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

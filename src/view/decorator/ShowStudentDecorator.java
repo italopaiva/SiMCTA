@@ -25,9 +25,11 @@ import model.Person;
 import model.Service;
 import model.ServiceItem;
 import model.Student;
+import view.EditStudents;
 import view.EnrollStudentInMoreCourses;
 import view.PersonView;
 import view.SearchStudent;
+import view.forms.StudentForm;
 import controller.ServiceController;
 import controller.StudentController;
 import datatype.Address;
@@ -436,10 +438,14 @@ public class ShowStudentDecorator extends PersonDecorator {
 		editStudentBtn = new JButton("Editar");
 		frame.getContentPane().add(editStudentBtn);
 		editStudentBtn.setBounds(322, 611, 117, 25);
+		
+		
 		editStudentBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			
+				EditStudents studentFrame = new EditStudents(student, ShowStudentDecorator.this);
 				dispose();
+				studentFrame.setVisible(true);
 			}
 		});
 		

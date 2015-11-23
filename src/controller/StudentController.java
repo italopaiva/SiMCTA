@@ -92,6 +92,19 @@ public class StudentController {
 		}
 	}
 	
+	public boolean updateStudent(String studentName, Date birthdate, String email, Address address,
+			   Phone principalPhone, Phone secondaryPhone, String motherName, String fatherName, CPF cpf)
+			 throws StudentException, PersonException{
+		
+		Student student = new Student(studentName, birthdate, email, address, principalPhone, secondaryPhone, motherName, fatherName, ACTIVE_STATUS, cpf);
+		
+		boolean wasSaved = false;
+		
+		wasSaved = studentDAO.updateStudent(student);
+		
+		return wasSaved;
+	}
+	
 	public Student getStudent(CPF cpf) throws StudentException{
 		
 		Student foundStudent;

@@ -92,18 +92,6 @@ public class PaymentTest{
 	}
 	
 	@Test
-	public void testValueOfServicePayment(){
-		
-		try{
-			payment = new Payment(service, 1, 1, 1);
-			assertEquals(SERVICE_VALUE, payment.getValue());
-		}
-		catch (PaymentException e){
-			fail("Should not throw this exception: "+ e.getMessage());
-		}
-	}
-	
-	@Test
 	public void testDescriptionOfServicePayment(){
 		
 		try{

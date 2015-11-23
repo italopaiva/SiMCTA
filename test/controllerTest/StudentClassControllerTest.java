@@ -59,17 +59,6 @@ public class StudentClassControllerTest {
 	}
 
 	@Test
-	public void testIfEnrollStudentToClass(){
-		
-		try{
-			studentClassController.enrollStudentToClass(classId, students);
-		}
-		catch(PersonException | StudentClassException e){
-			fail("Should not throw this exception: "+ e.getMessage());
-		}
-	}
-
-	@Test
 	public void testIfGetAllStudents() throws PersonException, CPFException{
 		
 		model.Class enrolledClass = new model.Class(classId);

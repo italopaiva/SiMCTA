@@ -1,6 +1,7 @@
 package view.decorator;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -84,6 +85,7 @@ public class EnrollStudentDecorator extends PersonDecorator {
 	private ArrayList<String> addedPackagesId = new ArrayList<String>();
 	private JLabel paymentTypeLbl;
 	private Person student;
+	private JComboBox<String> courses;
 	
 	public EnrollStudentDecorator(PersonView viewToDecorate) {
 		super(viewToDecorate);
@@ -172,12 +174,12 @@ public class EnrollStudentDecorator extends PersonDecorator {
         paymentInstallmentsField.setBounds(412, 581, 27, 27);
         frame.getContentPane().add(paymentInstallmentsField);
   
-        packages = new JComboBox<String>();
-        packages.setBounds(583, 97, 251, 31);
-        frame.getContentPane().add(packages);
+        courses = new JComboBox<String>();
+        courses.setBounds(583, 97, 251, 31);
+        frame.getContentPane().add(courses);
         availableCourses = new DefaultComboBoxModel<String>();
 		
-        packages.setModel(availableCourses);
+        courses.setModel(availableCourses);
         
 		JScrollPane scrollPaneAddedCourses = new JScrollPane();
 		scrollPaneAddedCourses.setBounds(583, 130, 251, 169);
@@ -220,7 +222,7 @@ public class EnrollStudentDecorator extends PersonDecorator {
         paymentFormsModel.addElement("Cheque");
         
         paymentForms.setModel(paymentFormsModel);
-		
+	
 		JScrollPane scrollPaneAddedPackages = new JScrollPane();
 		scrollPaneAddedPackages.setBounds(583, 410, 251, 169);
 		frame.getContentPane().add(scrollPaneAddedPackages);
@@ -317,7 +319,7 @@ public class EnrollStudentDecorator extends PersonDecorator {
 		addCourseBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				int indexOfSelectedCourse = packages.getSelectedIndex();
+				int indexOfSelectedCourse = courses.getSelectedIndex();
 				addCourseToAddedCourses(indexOfSelectedCourse);
 				
 				String value = calculateValue();

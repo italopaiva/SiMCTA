@@ -9,6 +9,11 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import model.Person;
+import model.Teacher;
+import view.PersonView;
+import view.SearchTeacher;
+import view.forms.TeacherForm;
 import controller.TeacherController;
 import datatype.Address;
 import datatype.CPF;
@@ -16,11 +21,6 @@ import datatype.Date;
 import datatype.Phone;
 import datatype.RG;
 import exception.TeacherException;
-import model.Person;
-import model.Teacher;
-import view.SearchTeacher;
-import view.PersonView;
-import view.forms.TeacherForm;
 
 public class ShowTeacherDecorator extends PersonDecorator {
 

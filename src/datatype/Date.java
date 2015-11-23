@@ -33,7 +33,7 @@ public class Date extends Model{
 		getDateFromString(date);
 	}
 	
-	private void getDateFromString(String date) throws DateException{
+	public Date getDateFromString(String date) throws DateException{
 		
 		if(date.length() == STRING_DATE_LENGTH){
 			
@@ -64,6 +64,8 @@ public class Date extends Model{
 		else{
 			throw new DateException(DATE_INVALID);
 		}
+		
+		return new Date(day, month, year);
 	}
 
 	private void setYear(Integer year) throws DateException {

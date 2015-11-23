@@ -201,6 +201,7 @@ public class SearchStudent extends PersonView {
 
 		});			
 	}
+	
 
 	/**
 	 * Builds the table to show the found students

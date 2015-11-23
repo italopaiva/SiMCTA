@@ -162,7 +162,7 @@ public class CourseDAO extends DAO {
 			}
 		}
 		catch(SQLException caughtException){
-			
+			System.out.println(caughtException.getMessage());
 			courses = null;
 		}
 		

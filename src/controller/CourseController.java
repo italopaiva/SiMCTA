@@ -93,6 +93,8 @@ public class CourseController {
 		return wasSaved;
 	}
 	
+	
+	
 	/**
 	 * Update a given course with the new information
 	 * @param courseId - The course id to be updated

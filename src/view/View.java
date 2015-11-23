@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.EventQueue;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -13,22 +15,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
-import datatype.CPF;
-import datatype.Date;
-import model.Class;
-import model.Course;
-import model.Teacher;
 import view.decorator.EnrollStudentDecorator;
 import view.decorator.NewCourseDecorator;
 import view.decorator.NewPackageDecorator;
 import view.decorator.NewTeacherDecorator;
-import view.decorator.class_decorator.EditClassDecorator;
-import view.decorator.class_decorator.NewClassDecorator;
-import view.decorator.class_decorator.ShowStudentsClassDecorator;
-import exception.AddressException;
 import view.decorator.ServiceItemDecorator;
+import view.decorator.class_decorator.NewClassDecorator;
 import view.forms.ClassForm;
-import view.forms.ClassShowForm;
 import view.forms.ServiceItemForm;
 import view.forms.StudentForm;
 import view.forms.TeacherForm;
@@ -37,18 +30,14 @@ import exception.CPFException;
 import exception.ClassException;
 import exception.CourseException;
 import exception.DateException;
-import exception.PackageException;
 import exception.PersonException;
-import exception.PhoneException;
-import exception.RGException;
-import exception.StudentException;
-import exception.TeacherException;
 
 @SuppressWarnings("serial")
 public class View extends JFrame {
 	
 	protected JMenuBar menuBar;
 	protected static JFrame frame = new JFrame();
+	private PersonView teacherFrame;
 	private ClassView classFrame;
 	private PersonView personFrame;
 
@@ -349,8 +338,10 @@ public class View extends JFrame {
 	 */
 	public View(){
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1024, 1248);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
+		
+		Toolkit kit = this.getToolkit();
+		setBounds(new Rectangle(kit.getScreenSize()));
 		
 		instantiateMenuBar();
 	}

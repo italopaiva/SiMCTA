@@ -133,7 +133,7 @@ public class StudentClassTest {
 	public void testInvalidAbsenceOnStudentSituation() throws StudentClassException{
 
 			// Greater than course duration
-			absences = new Integer("26"); 
+			absences = new Integer(100); 
 			studentClass = new StudentClass(student, enrolledClass, absences, grade);
 		
 	}
