@@ -99,7 +99,6 @@ public class EditStudents  extends View{
         JLabel birthdateLabel = new JLabel("Data de Nascimento");
         birthdateLabel.setBounds(30, 171, 200, 17);
         getContentPane().add(birthdateLabel);
-        
         MaskFormatter birthdateMask;
 		try{
 			birthdateMask = new MaskFormatter("##/##/####");
@@ -111,6 +110,7 @@ public class EditStudents  extends View{
 		catch(ParseException e2){
 			e2.printStackTrace();
 		}
+		
         birthdateField.setColumns(10);
         getContentPane().add(birthdateField);
         

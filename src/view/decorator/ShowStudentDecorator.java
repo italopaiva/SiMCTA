@@ -25,9 +25,11 @@ import model.Person;
 import model.Service;
 import model.ServiceItem;
 import model.Student;
+import view.EditStudents;
 import view.EnrollStudentInMoreCourses;
 import view.PersonView;
 import view.SearchStudent;
+import view.forms.StudentForm;
 import controller.ServiceController;
 import controller.StudentController;
 import datatype.Address;
@@ -439,7 +441,10 @@ public class ShowStudentDecorator extends PersonDecorator {
 		editStudentBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			
+				PersonView studentFrame = new ShowStudentDecorator(viewToDecorate);
 				dispose();
+				studentFrame.buildScreens(studentFrame,student);
+				studentFrame.setVisible(true);
 			}
 		});
 		

@@ -38,6 +38,12 @@ public abstract class PersonView extends View {
 		createMasks(teacherFrame);
 		createButtons(teacherFrame);
 	}
+	
+	public void buildScreens(PersonView studentFrame, Person person){
+		createLabelsAndFields(studentFrame, person);
+		createMasks(studentFrame);
+		createButtons(studentFrame);
+	}
 
 	public abstract void createLabelsAndFields(JFrame frame, Person person);
 	
