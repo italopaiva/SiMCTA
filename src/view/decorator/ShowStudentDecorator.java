@@ -438,12 +438,13 @@ public class ShowStudentDecorator extends PersonDecorator {
 		editStudentBtn = new JButton("Editar");
 		frame.getContentPane().add(editStudentBtn);
 		editStudentBtn.setBounds(322, 611, 117, 25);
+		
+		
 		editStudentBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			
-				PersonView studentFrame = new ShowStudentDecorator(viewToDecorate);
+				EditStudents studentFrame = new EditStudents();
 				dispose();
-				studentFrame.buildScreens(studentFrame,student);
 				studentFrame.setVisible(true);
 			}
 		});
