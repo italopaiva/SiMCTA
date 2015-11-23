@@ -4,6 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
@@ -11,12 +16,8 @@ import exception.PersonException;
 import exception.PhoneException;
 import exception.RGException;
 import exception.StudentException;
+import model.Course;
 import model.Student;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Phone;
-import model.datatype.RG;
-import model.datatype.Date;
 
 public class StudentDAO extends DAO {
 
@@ -38,9 +39,16 @@ public class StudentDAO extends DAO {
 	private static final String CEP_COLUMN	= "cep";
 	private static final String ADDRESS_COLUMN	= "address_info";
 	private static final String STATUS_COLUMN	= "status";
+	private static final String SERVICE_TABLE_NAME = "Service";
+	private static final String SERVICE_COURSE_TABLE_NAME = "ServiceCourse";
+	private static final String PACKAGE_COURSE_TABLE_NAME = "PackageCourse";
+	private static final String SERVICE_PACKAGE_TABLE_NAME = "ServicePackage";
+	
 	private static final String CANT_SAVE_STUDENT = "Não foi possível salvar os dados do estudante informado.";
 	private static final String CPF_ALREADY_EXISTS = "O CPF informado já está cadastrado.";
 	private static final String COULDNT_CHECK_STUDENT = "Não foi possível checar se o estudante está cadastrado. Tente novamente.";
+	private static final String COULDNT_LOAD_STUDENTS_OF_COURSE = "Não foi possível carregar os estudantes do curso informado.";
+	private static final String COULDNT_FIND_STUDENTS = "Não foi possível encontrar os estudantes";
 
 	public void save(Student student) throws StudentException, PersonException{
 		
@@ -143,7 +151,7 @@ public class StudentDAO extends DAO {
 		ResultSet resultOfTheSearch = null;
 		String receivedCPF = studentCpf.getCpf();
 		
-		String query = "SELECT * FROM " + STUDENT_TABLE_NAME + " WHERE " + CPF_COLUMN + "= \"" + receivedCPF + "\""; 
+		String query = "SELECT * FROM " + STUDENT_TABLE_NAME + " WHERE " + CPF_COLUMN + "= '" + receivedCPF + "'"; 
 		Student student = null;
 
 		try{
@@ -153,7 +161,7 @@ public class StudentDAO extends DAO {
 			}
 		}
 		catch(SQLException e){
-			
+			throw new StudentException(COULDNT_FIND_STUDENTS);
 		}
 		return student;
 	}
@@ -265,5 +273,73 @@ public class StudentDAO extends DAO {
 		
 		
 		return wasUpdate;
+	}
+
+	public ArrayList<Student> get(Course course) throws StudentException{
+		
+		Integer courseId = course.getId();
+		
+		String query = "";
+		
+		query += "SELECT DISTINCT s.* ";
+		query += "FROM "+ STUDENT_TABLE_NAME +" s, "+ SERVICE_TABLE_NAME +" sv, "+ SERVICE_COURSE_TABLE_NAME +" sc, "+ PACKAGE_COURSE_TABLE_NAME +" pc, "+ SERVICE_PACKAGE_TABLE_NAME +" sp";
+		query += " WHERE (sv.cpf = s.cpf AND sc.id_service = sv.id_service AND sc.id_course = "+ courseId +") OR";
+		query += " (sv.cpf = s.cpf AND sp.id_service = sv.id_service AND sp.id_package = pc.id_package AND pc.id_course = "+ courseId +")";
+		
+		ArrayList<Student> students = new ArrayList<Student>();
+		
+		try{
+			ResultSet foundStudents = this.search(query);
+			
+			while(foundStudents.next()){
+				
+				try{
+					String studentName = foundStudents.getString(NAME_COLUMN);
+					String cpf = foundStudents.getString(CPF_COLUMN);
+					CPF studentCpf = new CPF(cpf);
+					String rgNumber = foundStudents.getString(RG_NUMBER_COLUMN);
+					String rgIssuingInstitution = foundStudents.getString(ISSUING_INSTITUTION_COLUMN);
+					String uf = foundStudents.getString(UF_COLUMN);
+					RG studentRg = new RG(rgNumber, rgIssuingInstitution, uf);
+					Date birthdate = new Date(foundStudents.getString(BIRTHDATE_COLUMN));
+					String studentEmail = foundStudents.getString(EMAIL_COLUMN);
+					String addressInfo = foundStudents.getString(ADDRESS_COLUMN);
+					String number = foundStudents.getString(NUMBER_COLUMN);
+					String complement = foundStudents.getString(COMPLEMENT_COLUMN);
+					String cep = foundStudents.getString(CEP_COLUMN);
+					String city = foundStudents.getString(CITY_COLUMN);
+					Address address = new Address(addressInfo, number, complement, cep, city);
+					String phone1 = foundStudents.getString(PRINCIPAL_PHONE_COLUMN);
+					Phone principalPhone = new Phone(phone1);
+					
+					String phone2 = foundStudents.getString(SECONDARY_PHONE_COLUMN);
+					Phone secondaryPhone;
+					if(!phone2.isEmpty() && phone2 != "null"){
+						secondaryPhone = new Phone(phone2);
+					}
+					else{
+						secondaryPhone = null;
+					}
+					
+					String motherName = foundStudents.getString(MOTHER_COLUMN);
+					String fatherName = foundStudents.getString(FATHER_COLUMN);
+					Integer status = foundStudents.getInt(STATUS_COLUMN);
+					
+					Student student = new Student(studentName, studentCpf, studentRg, birthdate,
+												  studentEmail, address, principalPhone, secondaryPhone,
+												  motherName, fatherName, status);
+					
+					students.add(student);
+				}
+				catch(CPFException | RGException | DateException | AddressException | PhoneException | PersonException e){
+					// Just don't add this student
+				}
+			}
+		}
+		catch(SQLException e){
+			throw new StudentException(COULDNT_LOAD_STUDENTS_OF_COURSE);
+		}
+		
+		return students;
 	}
 }

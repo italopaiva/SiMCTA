@@ -1,10 +1,10 @@
 package model;
 
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.PersonException;
 
 public class Student extends Person{

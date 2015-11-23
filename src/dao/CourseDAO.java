@@ -8,7 +8,11 @@ import exception.CourseException;
 import model.Course;
 
 public class CourseDAO extends DAO {
-	
+
+	// Error messages
+	private static final String COULDNT_UPDATE_COURSE = "Não foi possível alterar o curso";
+	private static final String COULDNT_SAVE_COURSE = "Não foi possível cadastrar o curso";
+
 	// Course table on database constants
 	private static final String TABLE_NAME = "Course";
 	public static final String ID_COLUMN = "id_course";
@@ -17,14 +21,16 @@ public class CourseDAO extends DAO {
 	public static final String DURATION_COLUMN = "duration";
 	public static final String VALUE_COLUMN = "value";
 	public static final String STATUS_COLUMN = "status";
+
 	
 	/**
 	 * Save the informed course into the database
 	 * @param course - a Course object with the course information to be saved
 	 * @param hasId - inform if the Course object has an specific ID 
 	 * @return TRUE if the course was saved on the database, or FALSE if it does not
+	 * @throws CourseException 
 	 */
-	public boolean save(Course course, boolean hasId){
+	public void save(Course course, boolean hasId) throws CourseException{
 		
 		String courseName = course.getName();
 		String courseDescription = course.getCourseDescription();
@@ -48,19 +54,14 @@ public class CourseDAO extends DAO {
 			query += "VALUES('" + courseName + "','" + courseDescription + "', '"
 				  + courseDuration + "', '" + courseValue + "')";
 		}
-	
-		boolean wasSaved = false;
 		
 		try{
 			
 			this.execute(query);
-			wasSaved  = true;
-		}catch(SQLException caughtException){
-			
-			wasSaved = false;
 		}
-		
-		return wasSaved;
+		catch(SQLException caughtException){
+			throw new CourseException(COULDNT_SAVE_COURSE);
+		}
 	}
 	
 	/**
@@ -68,8 +69,9 @@ public class CourseDAO extends DAO {
 	 * @param courseId - The course to be updated
 	 * @param course - A Course object with the course new data
 	 * @return TRUE if the course was updated on database or FALSE if it does not
+	 * @throws CourseException 
 	 */
-	public boolean update(Integer courseId, Course course){
+	public void update(Integer courseId, Course course) throws CourseException{
 		
 		String courseDescription = course.getCourseDescription();
 		Integer courseDuration = course.getDuration();  
@@ -80,19 +82,14 @@ public class CourseDAO extends DAO {
 					   + DURATION_COLUMN + "='" + courseDuration + "', "
 					   + VALUE_COLUMN + "='" + courseValue + "' "
 					   + "WHERE " + ID_COLUMN + "='" + courseId + "'";
-	
-		boolean wasUpdated = false;
-		
+			
 		try{
 			
 			this.execute(query);
-			wasUpdated  = true;
-		}catch(SQLException caughtException){
-			
-			wasUpdated = false;
 		}
-		
-		return wasUpdated;
+		catch(SQLException caughtException){
+			throw new CourseException(COULDNT_UPDATE_COURSE);
+		}
 	}
 	
 	/**
@@ -215,7 +212,7 @@ public class CourseDAO extends DAO {
 	 * @return TRUE if the course's status was changed
 	 * @throws CourseException 
 	 */
-	public boolean alterCourseStatus(int courseId, int newCourseStatus) throws CourseException{
+	public boolean updateStatus(int courseId, int newCourseStatus) throws CourseException{
 
 		boolean statusWasAltered;
 		
@@ -239,7 +236,7 @@ public class CourseDAO extends DAO {
 	 * @return course if the course could be select in the database or null if not
 	 * @throws CourseException 
 	 */
-	public Course returnCourseById(int courseId) throws CourseException {
+	public Course get(int courseId) throws CourseException {
 		String query = "SELECT * FROM " + TABLE_NAME + "WHERE " + ID_COLUMN + "=" + courseId;
 		
 		Course course;
@@ -265,7 +262,7 @@ public class CourseDAO extends DAO {
 	 * @return status of the course or throws an error
 	 * @throws CourseException 
 	 */
-	public int returnStatusCourse(int courseId) {
+	public int getStatus(int courseId) {
 		String query = "SELECT " + STATUS_COLUMN + " FROM " + TABLE_NAME + " WHERE " + ID_COLUMN + "=" + courseId;
 		ResultSet result;
 		

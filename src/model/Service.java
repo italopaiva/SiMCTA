@@ -2,7 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
-import model.datatype.Date;
+import datatype.Date;
 import model.Package;
 import exception.PaymentException;
 import exception.ServiceException;
@@ -20,11 +20,13 @@ public class Service extends Model{
 	private Student student;	
 	private Payment payment;
 	private Date contractsDate;
+	private Integer totalValue;
 	private ArrayList<ServiceItem> itens = new ArrayList<ServiceItem>();
 	
-	public Service(Student student) throws ServiceException{
+	public Service(Student student, Integer value) throws ServiceException{
 
 		setStudent(student);
+		setTotalValue(value);
 	}
 	
 	public Service(Integer serviceId, Student student) throws ServiceException{
@@ -33,14 +35,25 @@ public class Service extends Model{
 		setStudent(student);
 	}
 	
-	public Service(Integer serviceId, Student student, Date contractsDate, Payment payment) throws ServiceException, PaymentException{
+	public Service(Integer serviceId, Student student, Date contractsDate, Payment payment, Integer value) throws ServiceException{
 		
 		setServiceId(serviceId);
 		setContractsDate(contractsDate);
 		setStudent(student);
-		setPayment(payment);
+		setTotalValue(value);
+		
+		try{
+			addPayment(payment);
+		}
+		catch(PaymentException e){
+			throw new ServiceException(e.getMessage());
+		}
 	}
 	
+	public Service(Student student) throws ServiceException {
+		setStudent(student);
+	}
+
 	public void addItem(ServiceItem item) throws ServiceException{
 		
 		if(item != null){
@@ -100,14 +113,13 @@ public class Service extends Model{
 		}
 	}
 	
+
+	private void setTotalValue(Integer value) {
+		this.totalValue = value;
+	}
+	
 	public Integer getTotalValue(){
-		
-		Integer serviceTotal = 0;
-		for(ServiceItem item : getItens()){
-			serviceTotal += item.getValue();
-		}
-		
-		return serviceTotal;
+		return this.totalValue;
 	}
 	
 	public Integer getServiceId(){

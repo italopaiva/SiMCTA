@@ -9,8 +9,13 @@ import model.Authentication;
 
 public class AuthenticationController{
 
+	private static final String COULDNT_GET_REGISTERED_PASSWORD = "Não foi possível ler os dados do banco de dados. Tente novamente.";
+	private static final String WRONG_PASSWORD = "Senha incorreta.";
+	
+	private AuthenticationDAO authenticationDAO;
+	
 	public AuthenticationController(){
-		
+		authenticationDAO = new AuthenticationDAO();
 	}
 	
 	/**
@@ -22,11 +27,11 @@ public class AuthenticationController{
 	public boolean checkDataFromUser(String enteredPassword) throws AuthenticationException, SQLException{
 		
 		Authentication authentication = new Authentication(enteredPassword);
-		AuthenticationDAO authenticationDao = new AuthenticationDAO();
+		
 		boolean correctPassword = false;
 		ResultSet resultOfTheSearch;
 		
-		resultOfTheSearch = authenticationDao.get(authentication);
+		resultOfTheSearch = authenticationDAO.get(authentication);
 		
 		while(resultOfTheSearch.next()){
 			correctPassword = enteredPassword.equals(resultOfTheSearch.getString("password"));
@@ -37,6 +42,35 @@ public class AuthenticationController{
 		}
 		
 		return correctPassword;
+	}
+
+	public void updateDirectorPassword(String currentPassword, String newPassword) throws AuthenticationException{
+		
+		Authentication currentPasswordAuth = new Authentication(currentPassword);
+		Authentication newPasswordAuth = new Authentication(newPassword);
+		
+		ResultSet result = authenticationDAO.get(currentPasswordAuth);
+		
+		String registeredPassword;
+		try{
+			if(result.first()){
+				registeredPassword = result.getString("password");
+				
+				if(registeredPassword.equals(currentPassword)){
+					authenticationDAO.update(newPassword);
+				}
+				else{
+					throw new AuthenticationException(WRONG_PASSWORD);
+				}
+				
+			}
+			else{
+				throw new AuthenticationException(WRONG_PASSWORD);
+			}
+		}
+		catch(SQLException e){
+			throw new AuthenticationException(COULDNT_GET_REGISTERED_PASSWORD);
+		}
 	}
 	
 }

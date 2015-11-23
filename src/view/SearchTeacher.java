@@ -18,19 +18,21 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import model.Person;
 import model.Student;
 import model.Teacher;
-import model.datatype.CPF;
 import util.ButtonColumn;
 import view.decorator.ShowTeacherDecorator;
-import view.decorator.TeacherDecorator;
+import view.decorator.PersonDecorator;
+import view.forms.TeacherForm;
 import controller.StudentController;
 import controller.TeacherController;
+import datatype.CPF;
 import exception.CPFException;
 import exception.PersonException;
 import exception.TeacherException;
 
-public class SearchTeacher extends TeacherView {
+public class SearchTeacher extends PersonView {
 
 	private JButton searchTeacherBtn;
 	private JTextField searchedTeacherField;
@@ -41,7 +43,7 @@ public class SearchTeacher extends TeacherView {
 	private TeacherController teacherController;
 
 	@Override
-	public void createLabelsAndFields(JFrame viewToDecorate, Teacher teacher) {
+	public void createLabelsAndFields(JFrame viewToDecorate, Person teacher) {
 		this.frame = viewToDecorate;
 		try {
 			addFields();
@@ -60,7 +62,7 @@ public class SearchTeacher extends TeacherView {
         contentPane.setLayout(null);
 	
         searchedTeacherField = new JTextField();
-		searchedTeacherField.setBounds(141, 24, 446, 30);
+        searchedTeacherField.setBounds(227, 56, 446, 29);
 		add(searchedTeacherField);
 		searchedTeacherField.setColumns(10);
 		
@@ -77,7 +79,24 @@ public class SearchTeacher extends TeacherView {
 		
 		String [] columns = { "Professor", "Ação", "CPF"};
 		
-		tableModel = new DefaultTableModel(null, columns);
+		tableModel = new DefaultTableModel(null, columns){
+			// Overriding the method to set non editable the name and cpf columns
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				
+				boolean isEditable = false;
+				
+				if(column == 0 || column == 2){
+					isEditable = false;
+				}
+				else{
+					isEditable = true;
+				}
+				
+				return isEditable;
+				
+			};
+		};
 		tableOfTeachers = new JTable(tableModel);
 		
 		fillTableWithAllTeachers();
@@ -96,12 +115,12 @@ public class SearchTeacher extends TeacherView {
 					CPF selectedTeacher = new CPF(cpfSelectedTeacher);
 					Teacher teacher = teacherController.getTeacher(selectedTeacher);
 					dispose();
-					TeacherView teacherFrame = new ShowTeacherDecorator(new TeacherForm());
+					PersonView teacherFrame = new ShowTeacherDecorator(new TeacherForm());
 					teacherFrame.buildScreen(teacherFrame, teacher);
 					teacherFrame.setVisible(true);
 				} 
 				catch (CPFException | TeacherException | PersonException e1) {
-					
+					showInfoMessage(e1.getMessage());
 				}
 				
 			}
@@ -142,7 +161,7 @@ public class SearchTeacher extends TeacherView {
 			}
 		} 
 		catch (TeacherException e) {
-			throw new TeacherException(e.getMessage());
+			showInfoMessage(e.getMessage());
 		}	
 		
 	}
@@ -157,7 +176,7 @@ public class SearchTeacher extends TeacherView {
 	public void createButtons(JFrame frame) {
 		searchTeacherBtn = new JButton("Pesquisar");
 		add(searchTeacherBtn);
-		searchTeacherBtn.setBounds(599, 26, 117, 25);
+		searchTeacherBtn.setBounds(675, 56, 117, 29);
 		searchTeacherBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			

@@ -8,10 +8,17 @@ import model.Payment;
 import model.Service;
 import model.Student;
 import dao.ServiceDAO;
+import exception.AddressException;
+import exception.CPFException;
+import datatype.CPF;
 import exception.CourseException;
 import exception.DateException;
 import exception.PaymentException;
+import exception.PersonException;
+import exception.PhoneException;
+import exception.RGException;
 import exception.ServiceException;
+import exception.StudentException;
 
 public class ServiceController {
 	
@@ -35,9 +42,9 @@ public class ServiceController {
 	 * @param packages - The packages requested
 	 * @throws ServiceException
 	 */	
-	public Service newService(Student student, ArrayList<String> courses, ArrayList<String> packages) throws ServiceException{
+	public Service newService(Student student, ArrayList<String> courses, ArrayList<String> packages, Integer value) throws ServiceException{
 
-		Service service = new Service(student);
+		Service service = new Service(student, value);
 		
 		service = addCoursesToService(service, courses);
 		service = addPackagesToService(service, packages);
@@ -103,35 +110,76 @@ public class ServiceController {
 			throw new ServiceException(CANT_SAVE_NULL_SERVICE);
 		}
 	}
+	
+	/**
+	 * Creates a new service with the requested courses and packages by a student
+	 * @param studentCPF - The student's CPF that requested the services
+	 * @param courses - The courses requested
+	 * @param packages - The packages requested
+	 * @param paymentType - The payment type of the chosen payment
+	 * @param paymentForm - The payment form of the chosen payment
+	 * @param installments - Quantity of installments of the payment
+	 * @throws ServiceException
+	 * @throws PaymentException
+	 * @throws PersonException 
+	 * @throws StudentException 
+	 * @throws RGException 
+	 * @throws AddressException 
+	 * @throws DateException 
+	 * @throws CPFException 
+	 * @throws PhoneException 
+	 */
+	public void newService(CPF studentCpf, String studentName, ArrayList<String> courses, ArrayList<String> packages,
+						   int paymentType, int paymentForm, Integer installments) throws ServiceException, PaymentException, PhoneException, CPFException, DateException, AddressException, RGException, StudentException, PersonException{
+		
+		Student student = new Student(studentName, studentCpf);
+		
+		Service service = new Service(student);
+		
+		service = addCoursesToService(service, courses);
+		service = addPackagesToService(service, packages);
+					
+		PaymentController paymentController = new PaymentController();
+		Payment payment = paymentController.newPayment(service, paymentType, paymentForm, installments);
+		
+		service.addPayment(payment);
+		
+		serviceDAO.save(service);
+	}
 
 	/**
 	 * Search a service of a specific student
-	 * @param basicDataOfStudent - contains the data of the student
+	 * @param studentCpf - contains the cpf of the student
 	 * @return and arrayList of services
 	 * @throws CourseException
 	 * @throws DateException
 	 * @throws ServiceException
 	 * @throws PaymentException 
 	 */
-	public ArrayList<Service> searchService(Student basicDataOfStudent) throws CourseException, DateException, ServiceException, PaymentException{
+	public ArrayList<Service> searchService(CPF studentCpf) throws ServiceException {
 		
 		ArrayList<Service> services = new ArrayList<Service>();
 		ArrayList<Service> servicesWithPayments = new ArrayList<Service>();
 
-		StudentController studentControl = new StudentController();
-		Student student = studentControl.getStudent(basicDataOfStudent.getCpf());
-		
-		services = serviceDAO.get(student);
-		
-		for(Service service : services){
-						
-			Payment payment = service.getPayment();
-			payment = paymentController.searchPayment(payment);
-
-			service.addPayment(payment);
+		Student student;
+		try {
+			student = new Student(studentCpf);
+			services = serviceDAO.get(student);
 			
-			servicesWithPayments.add(service);
-		}
+			for(Service service : services){
+							
+				Payment payment = service.getPayment();
+				payment = paymentController.searchPayment(payment);
+
+				service.addPayment(payment);
+				
+				servicesWithPayments.add(service);
+			}
+		} 
+		catch (PersonException | CourseException | DateException | PaymentException e1) {
+			throw new ServiceException(e1.getMessage());
+		}	
+		
 		
 		return servicesWithPayments;
 	}

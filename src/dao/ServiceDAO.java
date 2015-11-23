@@ -8,6 +8,8 @@ import controller.CourseController;
 import controller.PackageController;
 import controller.PaymentController;
 import controller.StudentController;
+import datatype.CPF;
+import datatype.Date;
 import exception.CourseException;
 import exception.DateException;
 import exception.PaymentException;
@@ -18,8 +20,6 @@ import model.Service;
 import model.ServiceItem;
 import model.Student;
 import model.Package;
-import model.datatype.CPF;
-import model.datatype.Date;
 
 public class ServiceDAO extends DAO {
 
@@ -75,7 +75,7 @@ public class ServiceDAO extends DAO {
 	/**
 	 * Save the courses and packages associated with the service
 	 * @param serviceId - The service to associate the courses with
-	 * @param service - The service with the courses and packagese to be associated
+	 * @param service - The service with the courses and packages to be associated
 	 * @throws SQLException
 	 */
 	private void saveServiceItens(Integer serviceId, Service service) throws SQLException{
@@ -140,11 +140,12 @@ public class ServiceDAO extends DAO {
 				String month = date.substring(5,7);
 				String day = date.substring(8,10);
 				Date contractsDate = new Date(new Integer(day),new Integer(month),new Integer(year));
+				Integer value = services.getInt(VALUE_COLUMN);
 				
 				int paymentId = services.getInt(PAYMENT_ID_COLUMN);
 				Payment payment = new Payment(paymentId);
 				
-				service = new Service(serviceId, student, contractsDate, payment);
+				service = new Service(serviceId, student, contractsDate, payment, value);
 				
 				service = addServiceCourses(service);
 				service = addServicePackages(service);

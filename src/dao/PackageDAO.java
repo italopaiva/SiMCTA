@@ -30,6 +30,7 @@ public class PackageDAO extends DAO{
 	private static final String STATUS_COLUMN = "status";
 	private static final String COULDNT_GET_PACKAGE_COURSES = "Não foi possível pegar os dados dos cursos do pacote.";
 	private static final String CANT_UPDATE_STATUS = "Não foi possível alterar o status do pacote";
+	private static final String PACKAGE_WASNT_UPDATE = "Não foi possível alterar o pacote";
 	
 	private CourseController courseController;
 	
@@ -103,9 +104,10 @@ public class PackageDAO extends DAO{
 	/**
 	 * Gets the last package id from database
 	 * @return the last ID
+	 * @throws PackageException 
 	 * @throws SQLException
 	 */
-	public int getTheLastId(){
+	public int getTheLastId() throws PackageException{
 		
 		int lastId = 0;
 		String query = "SELECT " + ID_COLUMN + " FROM " + TABLE_NAME + " ORDER BY ";
@@ -124,6 +126,7 @@ public class PackageDAO extends DAO{
 			}
 		} 
 		catch (NumberFormatException | SQLException e) {
+			throw new PackageException(PACKAGE_WASNT_SAVED);
 		} 
 			
 		return lastId;
@@ -163,8 +166,9 @@ public class PackageDAO extends DAO{
 				throw caughtException;
 			}
 			
-		}catch(SQLException caughtException){
-		
+		}
+		catch(SQLException caughtException){
+			throw new PackageException(PACKAGE_WASNT_UPDATE);
 		}
 	}
 	
@@ -193,7 +197,8 @@ public class PackageDAO extends DAO{
 				
 				this.execute(associateCoursesToPackage);
 			}
-		}else{
+		}
+		else{
 			throw new PackageException(COULD_NOT_DISASSOCIATE_PACKAGE_COURSES);
 		}
 	}
@@ -259,7 +264,6 @@ public class PackageDAO extends DAO{
 		catch(SQLException e){
 			foundPackage = null;
 		}catch(PackageException e){
-			System.out.println(e.getMessage());
 			foundPackage = null;
 		}
 		
@@ -324,16 +328,16 @@ public class PackageDAO extends DAO{
 	
 	/**
 	 * Search and get package(s) name that contains the string parameter package_name
-	 * @param package_name
+	 * @param packageName
 	 * @return ArrayList<Package> of founded packages or null if were not founded packages
 	 * @throws PackageException
 	 */
-	public ArrayList<Package> searchPackageByName(String package_name) throws PackageException{
+	public ArrayList<Package> get(String packageName) throws PackageException{
 		
 		ResultSet resultSet;
 		String query = "SELECT * FROM " + TABLE_NAME 
 				+ " WHERE " + NAME_COLUMN 
-				+ " LIKE \"%" + package_name + "%\"";
+				+ " LIKE \"%" + packageName + "%\"";
 		
 		ArrayList<Package> foundPackages = null;
 		
@@ -373,155 +377,7 @@ public class PackageDAO extends DAO{
 		
 		return foundPackages;		
 	}
-	/**
-	 * Get a package by a idPackage informed
-	 * @param idPackage
-	 * @return a Package that was founded by idPackage or null if doesn't exist a package to idPackage informed
-	 */
-	public Package showPackage(int idPackage){
-		
-		ResultSet resultSet;
-		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID_COLUMN + " = " + idPackage;
-		
-		Package foundPackage = null;
-		
-		try{
-			resultSet = search(query);
-			
-			if(!resultSet.isBeforeFirst()){ 
-				foundPackage = null;				
-			}else{
-				
-				Integer packageId = resultSet.getInt(ID_COLUMN);
-				
-				resultSet.next();
-				foundPackage = new Package(
-					packageId, 
-					resultSet.getString(NAME_COLUMN), 
-					resultSet.getInt(VALUE_COLUMN), 
-					resultSet.getInt(DURATION_COLUMN),
-					resultSet.getInt(STATUS_COLUMN)
-				);
-				
-				ArrayList<Course> packageCourses = new ArrayList<Course>();
-				packageCourses = getPackageCourses(packageId);
-				
-				for(Course course : packageCourses){
-					foundPackage.addServiceItem(course);
-				}
-			}
-			
-		} catch (SQLException | PackageException caughtException){
-			
-			caughtException.printStackTrace();
-			foundPackage = null;
-		}
-		
-		return foundPackage;
-	}
 	
-	/**
-	 * Get names of courses registered in package informed by idPackage
-	 * @param idPackage
-	 * @return ArrayList<String> of name of courses registered in package informed or null if doesn't exist courses to idPackage informed
-	 */
-	public ArrayList<String> getNameCoursesInPackages(int idPackage) {
-
-		ResultSet resultSet;
-		String query = "SELECT " + COURSE_NAME_COLUMN + " FROM "
-				+ COURSE_TABLE + " INNER JOIN "
-				+ ASSOCIATION_TABLE_NAME + " ON " + COURSE_TABLE
-				+ "." + ID_COURSE_COLUMN + " = " + ASSOCIATION_TABLE_NAME + "."
-				+ ID_COURSE_COLUMN + " WHERE " + ID_COLUMN	+ " = " + idPackage;
-
-		try {
-			
-			resultSet = search(query);
-			
-			if (!resultSet.isBeforeFirst()) {
-
-				return null;
-
-			} else {
-
-				ArrayList<String> arrayListNameCourse = new ArrayList<String>();
-
-				while (resultSet.next()) {
-					arrayListNameCourse.add(resultSet.getString(1));
-				}
-
-				return arrayListNameCourse;
-
-			}
-
-		} catch (SQLException caughtException) {
-
-			caughtException.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
-	 * Returns a package to the resulSet received with a ArrayList<String> of courses' name
-	 * @param resultSet
-	 * @return new package from a resultSet received
-	 * @throws PackageException
-	 * @throws SQLException
-	 */
-
-	public Package returnACompletePackageOfResultSet(ResultSet resultSet) throws PackageException, SQLException{
-		
-		// FIX THIS METHOD - IS NOT LOADING THE COURSES OF THE PACKAGE
-		ArrayList<String> arraylist;
-		arraylist = getNameCoursesInPackages(resultSet.getInt(1));
-		
-		Package newPackage = new Package(
-			resultSet.getInt(1), 
-			resultSet.getString(2), 
-			resultSet.getInt(3), 
-			resultSet.getInt(4), 
-			resultSet.getInt(5)
-		);
-		
-		return newPackage;
-	}
-
-	/**
-	 * Gets the courses id that form the package
-	 * @param idPackage
-	 * @return
-	 */
-	public ArrayList<String> getIdCourses(int idPackage) {
-		
-		ResultSet resultSet;
-		String query = "SELECT " + ID_COURSE_COLUMN + " FROM "
-				+ ASSOCIATION_TABLE_NAME + " WHERE " + ID_COLUMN	+ " = " + idPackage;
-		
-		
-		try {
-			resultSet = search(query);
-			if (!resultSet.isBeforeFirst()) {
-
-				return null;
-
-			} 
-			else {
-				ArrayList<String> coursesId = new ArrayList<String>();
-				while (resultSet.next()) {
-					Integer idCourse = resultSet.getInt(ID_COURSE_COLUMN);
-					String addedCourse = idCourse.toString();
-					coursesId.add(addedCourse);
-				}
-				return coursesId;
-			}
-		} 
-		catch (SQLException caughtException) {
-
-			caughtException.printStackTrace();
-			return null;
-		}
-	}
-
 	public void update(int packageId, int status) throws PackageException {
 		
 		String query = "UPDATE "+ TABLE_NAME + " SET "

@@ -5,10 +5,11 @@ import exception.ServiceItemException;
 public abstract class ServiceItem extends Model{
 	
 	// Error constants
-		protected static final String VALUE_CANT_BE_ZERO = "O valor do curso não pode ser menor ou igual a zero.";
-		protected static final String DURATION_CANT_BE_ZERO = "Um curso deve durar pelo menos uma semana.";
-		protected static final String NAME_CANT_BE_NULL = "O nome do curso não pode ficar em branco.";
-		protected static final String ID_MUST_BE_GREATER_THAN_ZERO = "O id do curso não pode ser menor que 0";
+	protected static final String INVALID_STATUS = "O status deve ser 1 ou 0.";
+	protected static final String VALUE_CANT_BE_ZERO = "O valor não pode ser menor ou igual a zero.";
+	protected static final String DURATION_CANT_BE_ZERO = "A duração deve ser pelo menos uma semana.";
+	protected static final String NAME_CANT_BE_NULL = "O nome não pode ficar em branco.";
+	protected static final String ID_MUST_BE_GREATER_THAN_ZERO = "O id não pode ser menor que 0";
 	
 	/**
 	 * The max and min duration are these because the duration must have at least 1 digit and
@@ -26,6 +27,9 @@ public abstract class ServiceItem extends Model{
 	 */
 	protected static final int MAX_VALUE = 999999;
 	protected static final int MIN_VALUE = 1;
+	
+	protected static final Integer ACTIVE_STATUS = 1;
+	protected static final Integer DISABLED_STATUS = 0;
 	
 	protected Integer id;
 	protected String name;
@@ -47,7 +51,7 @@ public abstract class ServiceItem extends Model{
 	
 	protected void setName(String name) throws ServiceItemException{
 		
-		boolean nameIsValid = name != null && !name.isEmpty();  
+		boolean nameIsValid = isNotEmpty(name);
 		
 		if(nameIsValid){
 			this.name = name;
@@ -58,8 +62,8 @@ public abstract class ServiceItem extends Model{
 	
 	protected void setDuration(Integer duration) throws ServiceItemException{
 		
-		boolean durationIsValid = duration >= MIN_DURATION 
-										&& duration <= MAX_DURATION;
+		boolean durationIsValid = duration != null && duration >= MIN_DURATION 
+												   && duration <= MAX_DURATION;
 		
 		if(durationIsValid){
 			
@@ -72,8 +76,8 @@ public abstract class ServiceItem extends Model{
 	
 	protected void setValue(Integer value) throws ServiceItemException{
 				
-		boolean courseValueIsValid = value >= MIN_VALUE 
-										&& value <= MAX_VALUE;
+		boolean courseValueIsValid = value != null && value >= MIN_VALUE 
+												   && value <= MAX_VALUE;
 		if(courseValueIsValid){
 			
 			this.value = value;
@@ -85,9 +89,9 @@ public abstract class ServiceItem extends Model{
 	
 	protected void setId(Integer id) throws ServiceItemException{
 		
-		boolean courseIdIsValid = id != null && id > 0;
+		boolean idIsValid = id != null && id > 0;
 		
-		if(courseIdIsValid){
+		if(idIsValid){
 			
 			this.id = id;
 		}else{
@@ -96,8 +100,24 @@ public abstract class ServiceItem extends Model{
 		}
 	}
 	
-	protected void setStatus(int status){
-		this.status = status;
+	protected void setStatus(Integer status) throws ServiceItemException{
+		
+		if(status != null){
+		
+			switch(status){
+				case 1:
+					this.status = ACTIVE_STATUS;
+					break;
+				case 0:
+					this.status = DISABLED_STATUS;
+					break;
+				default:
+					throw new ServiceItemException(INVALID_STATUS);
+			}
+		}
+		else{
+			throw new ServiceItemException(INVALID_STATUS);
+		}
 	}
 	
 /** End of Setters */
@@ -122,6 +142,27 @@ public abstract class ServiceItem extends Model{
 	
 	public int getStatus(){
 		return this.status;
+	}
+
+	/**
+	 * Method used to pass the course value to monetary form
+	 * @param value - Receives the course value on entire form
+	 * @return - Return the course value on monetary form (R$)
+	 */
+	public String getFormattedValue(Integer value) {
+		
+		String valueText= "";
+		String entireValue = "";
+		String decimalValue = "";
+		int lengthOfValue = 0;
+		
+		valueText = value.toString();
+		lengthOfValue = valueText.length();
+		entireValue = valueText.substring(0, (lengthOfValue - 2));
+		decimalValue = valueText.substring((lengthOfValue - 2), lengthOfValue);
+		valueText = entireValue + "," + decimalValue;
+		
+		return valueText;
 	}
 
 /** End of Getters */

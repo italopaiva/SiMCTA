@@ -4,13 +4,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import model.Course;
 import model.Teacher;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
@@ -41,11 +41,13 @@ public class TeacherDAO extends DAO{
 	private static final String ADDRESS_COLUMN	= "address_info";
 	private static final String STATUS_COLUMN	= "status";
 	private static final String QUALIFICATION_COLUMN = "qualification";
+	
 	private static final String CANT_SAVE_TEACHER = "Não foi possível salvar os dados do professor informado.";
 	private static final String CPF_ALREADY_EXISTS = "O CPF informado já está cadastrado.";
 	private static final String COULDNT_CHECK_TEACHER = "Não foi possível checar se o professor está cadastrado. Tente novamente.";
 	private static final String CANT_FOUND_TEACHERS = "Não foi possível encontrar os professores cadastrados.";
 	private static final String CANT_FOUND_TEACHER = "Não foi possível encontrar os dados do professor selecionado.";;
+	private static final String CANT_UPDATE_TEACHER = "Não foi possível alterar os dados do professor informado.";
 	
 	/**
 	 * Save on database the received teacher 
@@ -253,15 +255,14 @@ public class TeacherDAO extends DAO{
 
 		// Birthdate
 		String date = resultOfTheSearch.getString(BIRTHDATE_COLUMN);
-		String year = date.substring(0,4);
-		String month = date.substring(5,7);
-		String day = date.substring(8,10);
-		Date birthdate = new Date(new Integer(day),new Integer(month),new Integer(year));
+		Date birthdate = new Date(date);
 		
 		String qualification = resultOfTheSearch.getString(QUALIFICATION_COLUMN);
-				
+		
+		int status = resultOfTheSearch.getInt(STATUS_COLUMN);
+		
 		Teacher teacher = new Teacher(teacherName, teacherCpf, teacherRg, birthdate, email, address,
-									 principalPhone, secondaryPhone, motherName, fatherName, qualification);
+									 principalPhone, secondaryPhone, motherName, fatherName, qualification, status);
 	
 		return teacher;
 	}
@@ -309,8 +310,9 @@ public class TeacherDAO extends DAO{
 	 * @param courseId - The course to be updated
 	 * @param course - A Course object with the course new data
 	 * @return TRUE if the course was updated on database or FALSE if it does not
+	 * @throws TeacherException 
 	 */
-	public Teacher update(Teacher teacher){
+	public Teacher update(Teacher teacher) throws TeacherException{
 				
 		String teacherName = teacher.getName();		
 		String email = teacher.getEmail();
@@ -331,6 +333,7 @@ public class TeacherDAO extends DAO{
 		String cep = address.getCep();
 		String addressInfo = address.getAddressInfo();
 		String complement = address.getComplement();
+		String number = address.getNumber();
 	
 		//Phones
 		Phone principalPhone = teacher.getPrincipalPhone();
@@ -355,6 +358,7 @@ public class TeacherDAO extends DAO{
 					   + BIRTHDATE_COLUMN + "='" + birthdate + "', "
 					   + ADDRESS_COLUMN + "='" + addressInfo + "', "
 					   + COMPLEMENT_COLUMN + "='" + complement + "', "
+					   + NUMBER_COLUMN + "='" + number + "', "
 					   + CITY_COLUMN + "='" + city + "', "
 					   + CEP_COLUMN + "='" + cep + "', "
 					   + PRINCIPAL_PHONE_COLUMN + "='" + cellPhone + "', "
@@ -367,10 +371,31 @@ public class TeacherDAO extends DAO{
 			teacher = get(cpf);
 		}
 		catch(SQLException | PhoneException | CPFException | DateException | AddressException | RGException | TeacherException caughtException){
-			System.out.print("aqui:" + caughtException.getMessage());
-
+			throw new TeacherException(CANT_UPDATE_TEACHER);
 		}
 		
 		return teacher;
+	}
+	
+	/**
+	 * Updates the status of the given teacher on database
+	 * @param teacher - Teacher to update the status
+	 * @param newStatus - New status of the teacher
+	 * @throws TeacherException
+	 */
+	public void updateStatus(Teacher teacher, int newStatus) throws TeacherException{
+		
+		CPF cpf = teacher.getCpf();
+		String teacherCpf  = cpf.getCpf();
+		
+		String query = "UPDATE "+ TEACHER_TABLE_NAME + " SET "
+				     + STATUS_COLUMN + "='" + newStatus + "'"
+				     + " WHERE " + CPF_COLUMN + "='" + teacherCpf + "'";
+		try{
+			this.execute(query);
+		}
+		catch(SQLException e){
+			throw new TeacherException(CANT_SAVE_TEACHER);
+		}
 	}
 }

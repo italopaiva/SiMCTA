@@ -1,11 +1,16 @@
 package dao;
 
 import java.sql.ResultSet;
+
 import java.sql.SQLException;
 
 import model.Authentication;
 
+import exception.AuthenticationException;
+
 public class AuthenticationDAO extends DAO {
+	
+	private static final String COULDNT_UPDATE_PASSWORD = "Não foi possível atualizar a senha informada. Tente novamente.";
 	
 	private final static String TABLE_NAME = "User";
 	private final static String COLUMN_NAME = "password";
@@ -29,6 +34,18 @@ public class AuthenticationDAO extends DAO {
 		}
 		
 		return resultOfTheSearch;
+	}
+
+	public void update(String newPassword) throws AuthenticationException{
+		
+		String query = "UPDATE "+ TABLE_NAME +" SET "+ COLUMN_NAME + " = '"+newPassword+"'";
+		
+		try{
+			this.execute(query);
+		}
+		catch(SQLException e){
+			throw new AuthenticationException(COULDNT_UPDATE_PASSWORD);
+		}
 	}
 
 }

@@ -4,11 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import datatype.CPF;
 import exception.PaymentException;
 import model.Payment;
 import model.PaymentDescription;
 import model.Service;
-import model.datatype.CPF;
 
 public class PaymentDAO extends DAO{
 	

@@ -3,6 +3,11 @@ package controller;
 import java.util.ArrayList;
 
 import dao.TeacherDAO;
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
@@ -11,15 +16,12 @@ import exception.PhoneException;
 import exception.RGException;
 import exception.TeacherException;
 import model.Teacher;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 
 public class TeacherController {
 
-	private static final String COULDNT_SAVE_TEACHER = "Não foi possível cadastrar o professor";
+	private static final String COULDNT_SAVE_TEACHER = "Não foi possível cadastrar o professor.";
+	private static final String CANT_UPDATE_NULL_TEACHER = "Não é possível atualizar um professor nulo.";
+	
 	TeacherDAO teacherDAO;
 	
 	public TeacherController(){
@@ -42,7 +44,7 @@ public class TeacherController {
 	 * @throws PersonException
 	 * @throws TeacherException 
 	 */
-	public void newTeacher(String teacherName, CPF teacherCpf, RG teacherRg, Date birthdate, 
+	public Teacher newTeacher(String teacherName, CPF teacherCpf, RG teacherRg, Date birthdate, 
 							String email, Address address, Phone principalPhone, Phone secondaryPhone, 
 							String motherName, String fatherName, String qualification) throws PersonException, TeacherException{
 		
@@ -53,10 +55,11 @@ public class TeacherController {
 			teacherDAO.save(teacher);
 		} 
 		catch (PersonException e) {
-			
+			teacher = null;
 			throw new PersonException(COULDNT_SAVE_TEACHER);
-	
 		}
+		
+		return teacher;
 
 	}
 	
@@ -139,13 +142,60 @@ public class TeacherController {
 	public Teacher updateTeacher(String teacherName, CPF teacherCpf,
 			RG teacherRg, Date birthdate, String email, Address address,
 			Phone principalPhone, Phone secondaryPhone, String motherName,
-			String fatherName, String qualification) throws PersonException, TeacherException {
+			String fatherName, String qualification) throws TeacherException {
 		
-		Teacher teacher = new Teacher(teacherName, teacherCpf, teacherRg, birthdate, email, address, principalPhone, secondaryPhone, motherName, fatherName, qualification);
+		Teacher teacher; 
+		try{
+			teacher = new Teacher(teacherName, teacherCpf, teacherRg, birthdate, email, address, principalPhone, secondaryPhone, motherName, fatherName, qualification);
 
-		teacher = teacherDAO.update(teacher);
+			teacher = teacherDAO.update(teacher);
+		}
+		catch(TeacherException | PersonException e){
+			teacher = null;
+			throw new TeacherException(e.getMessage());
+		}
 
 		return teacher;
 	}
 	
+	/**
+	 * Deactivate a teacher
+	 * @param teacher - Teacher to be deactivated
+	 * @throws TeacherException
+	 */
+	public void disableTeacher(Teacher teacher) throws TeacherException{
+		
+		if(teacher != null){
+			updateTeacherStatus(teacher, Teacher.INACTIVE);
+		}
+		else{
+			throw new TeacherException(CANT_UPDATE_NULL_TEACHER);
+		}
+	}
+	
+	/**
+	 * Activate a teacher
+	 * @param teacher - Teacher to be activated
+	 * @throws TeacherException
+	 */
+	public void activateTeacher(Teacher teacher) throws TeacherException{
+		
+		if(teacher != null){
+			updateTeacherStatus(teacher, Teacher.ACTIVE);
+		}
+		else{
+			throw new TeacherException(CANT_UPDATE_NULL_TEACHER);
+		}
+	}
+	
+	/**
+	 * Change the status of a teacher
+	 * @param teacher - Teacher to change the status
+	 * @param newStatus - New status to be setted to the teacher
+	 * @throws TeacherException
+	 */
+	private void updateTeacherStatus(Teacher teacher, int newStatus) throws TeacherException{
+		
+		teacherDAO.updateStatus(teacher, newStatus);
+	}
 }

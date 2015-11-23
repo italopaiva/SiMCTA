@@ -10,17 +10,20 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
+import model.Person;
 import model.Teacher;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
-import view.TeacherView;
+import view.PersonView;
+import view.forms.TeacherForm;
 import controller.TeacherController;
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
@@ -29,24 +32,29 @@ import exception.PhoneException;
 import exception.RGException;
 import exception.TeacherException;
 
-public class NewTeacherDecorator extends TeacherDecorator {
+public class NewTeacherDecorator extends PersonDecorator {
 	
-    protected JButton registerTeacherBtn;
-	
-	public NewTeacherDecorator(TeacherView viewToDecorate) {
+    private JButton registerTeacherBtn;
+
+	public NewTeacherDecorator(PersonView viewToDecorate) {
 		super(viewToDecorate);
 	}
 
 
 	@Override
-	public void createLabelsAndFields(JFrame frame, Teacher teacher) {
+	public void createLabelsAndFields(JFrame frame, Person teacher) {
 		
 		super.createLabelsAndFields(frame,teacher);
         
-		registerTeacherLbl.setText("Cadastrar novo professor");
-		registerTeacherLbl.setBounds(407, 12, 475, 31);
-		registerTeacherLbl.setFont(new Font("Dialog", Font.BOLD, 20));
-		frame.getContentPane().add(registerTeacherLbl);
+		JLabel requiredFieldsLbl = new JLabel("Os campos com * são obrigatórios");
+		requiredFieldsLbl.setFont(new Font("DejaVu Sans Condensed", Font.BOLD | Font.ITALIC,12));
+		requiredFieldsLbl.setBounds(115, 30, 370, 17);
+        frame.getContentPane().add(requiredFieldsLbl);
+				
+		registerPersonLbl.setText("Cadastrar novo professor");
+		registerPersonLbl.setBounds(407, 12, 475, 31);
+		registerPersonLbl.setFont(new Font("Dialog", Font.BOLD, 20));
+		frame.getContentPane().add(registerPersonLbl);
 		
         nameField.setBounds(115, 55, 434, 27);
         frame.getContentPane().add(nameField);
@@ -115,7 +123,7 @@ public class NewTeacherDecorator extends TeacherDecorator {
         MaskFormatter cpfMask = null;
 		try{
 	        // Mask for cpf
-	        cpfMask = new MaskFormatter("###########");
+	        cpfMask = new MaskFormatter("###.###.###-##");
 	        cpfMask.setValidCharacters("0123456789");
 	        cpfMask.setValueContainsLiteralCharacters(false);
 
@@ -165,10 +173,13 @@ public class NewTeacherDecorator extends TeacherDecorator {
 	private void newTeacher() throws TeacherException {
 		String message = "";
 		
+		Teacher teacher = null;
 		try{
 			String teacherName = nameField.getText();
 						
 			String cpf = cpfField.getText();
+			cpf = cpf.replace(".", "");
+			cpf = cpf.replace("-", "");
 			CPF teacherCpf = new CPF(cpf);
 
 			String rgNumber = rgField.getText();
@@ -218,7 +229,7 @@ public class NewTeacherDecorator extends TeacherDecorator {
 			String qualification = qualificationField.getText();
 			
 			TeacherController teacherController = new TeacherController();
-			teacherController.newTeacher(teacherName, teacherCpf, teacherRg, birthdate, email, address,
+			teacher = teacherController.newTeacher(teacherName, teacherCpf, teacherRg, birthdate, email, address,
 					 					 principalPhone, secondaryPhone, motherName, fatherName, qualification);
 			
 			message = "Professor cadastrado com sucesso.";
@@ -228,6 +239,12 @@ public class NewTeacherDecorator extends TeacherDecorator {
 		} 					
 		finally{
 			showInfoMessage(message);
+			if(teacher != null){
+				dispose();
+				PersonView showTeacherFrame = new ShowTeacherDecorator(new TeacherForm());
+				showTeacherFrame.buildScreen(showTeacherFrame, teacher);
+				showTeacherFrame.setVisible(true);
+			}
 		}
 		
 	}

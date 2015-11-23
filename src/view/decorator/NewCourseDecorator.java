@@ -15,33 +15,43 @@ import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
 import model.Course;
-import view.CourseView;
+import model.ServiceItem;
+import view.ServiceItemView;
 import view.SimCta;
+import view.forms.ServiceItemForm;
 import controller.CourseController;
 import exception.CourseException;
 
 @SuppressWarnings("serial")
-public class NewCourseDecorator extends CourseDecorator{
+public class NewCourseDecorator extends ServiceItemDecorator{
 	
 
-	public NewCourseDecorator(CourseView viewToDecorate) {
+	public NewCourseDecorator(ServiceItemView viewToDecorate) {
 		super(viewToDecorate);
 	}
 	
 	@Override
-	public void createLabelsAndFields(JFrame frame, Course course) {
+	public void createLabelsAndFields(JFrame frame, ServiceItem course) {
 		super.createLabelsAndFields(frame, course);
-		courseNameField.setBounds(276, 74, 346, 30);
-		frame.getContentPane().add(courseNameField);
-		courseNameField.setColumns(10);
-
+		nameField.setBounds(276, 94, 346, 30);
+		frame.getContentPane().add(nameField);
+		nameField.setColumns(10);
+		
+		JLabel requiredFieldsLbl = new JLabel("Os campos com * são obrigatórios");
+		requiredFieldsLbl.setFont(new Font("DejaVu Sans Condensed", Font.BOLD | Font.ITALIC,12));
+		requiredFieldsLbl.setBounds(284, 40, 370, 17);
+        frame.getContentPane().add(requiredFieldsLbl);
+		        
+        JLabel descriptionLabel = new JLabel("* Descrição do curso");
+        descriptionLabel.setBounds(276, 284, 144, 15);
+        frame.getContentPane().add(descriptionLabel);
 		
 		JLabel lblC = new JLabel("Novo curso");
 		lblC.setFont(new Font("Dialog", Font.BOLD, 20));
-		lblC.setBounds(426, 12, 144, 15);
+		lblC.setBounds(426, 15, 144, 15);
 		frame.getContentPane().add(lblC);
 		
-		descriptionField.setBounds(284, 306, 446, 105);
+		descriptionField.setBounds(276, 326, 446, 105);
 		frame.getContentPane().add(descriptionField);
 	}
 
@@ -52,10 +62,12 @@ public class NewCourseDecorator extends CourseDecorator{
 			
 			MaskFormatter durationMask = new MaskFormatter("## semanas");
 			durationMask.setValidCharacters("0123456789");
+			durationMask.setPlaceholder("00");
 			durationMask.setValueContainsLiteralCharacters(false);
 			
 			durationField = new JFormattedTextField(durationMask);
-			durationField.setBounds(276, 143, 132, 25);
+			durationField.setBounds(276, 163, 132, 25);
+			durationField.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT); 
 			frame.getContentPane().add(durationField);
 			
 			MaskFormatter valueMask = new MaskFormatter("R$ ####,##");
@@ -63,7 +75,7 @@ public class NewCourseDecorator extends CourseDecorator{
 			valueMask.setValueContainsLiteralCharacters(false);
 			
 			valueField = new JFormattedTextField(valueMask);
-			valueField.setBounds(284, 224,124, 28);
+			valueField.setBounds(276, 244,124, 28);
 			frame.getContentPane().add(valueField);
 			
 		}catch (ParseException e){
@@ -82,7 +94,7 @@ public class NewCourseDecorator extends CourseDecorator{
 			@Override
 			public void mouseClicked(MouseEvent e){		
 				
-				String courseName = courseNameField.getText();
+				String courseName = nameField.getText();
 				String courseDescription = descriptionField.getText();
 				
 				Integer courseDuration;
@@ -109,7 +121,7 @@ public class NewCourseDecorator extends CourseDecorator{
 											
 					CourseController courseController = new CourseController();
 					
-					boolean courseWasSaved = courseController.newCourse(
+					Course course = courseController.newCourse(
 						courseName,
 						courseDescription,
 						courseDuration,
@@ -117,18 +129,20 @@ public class NewCourseDecorator extends CourseDecorator{
 					);
 					
 					String message = "";
-					if(courseWasSaved){
+					if(course != null){
 						message = "Curso cadastrado com sucesso.";
-					}else{
+
+						dispose();
+						
+						ServiceItemView showCourseFrame = new ShowCourseDecorator(new ServiceItemForm());
+						showCourseFrame.buildScreen(showCourseFrame, course);
+						showCourseFrame.setVisible(true);
+					}
+					else{
 						message = "Não foi possível cadastrar o curso informado. Tente novamente.";
 					}
-					
 					showInfoMessage(message);
-					
-					dispose();
-					
-					SimCta mainPage = new SimCta();
-					mainPage.setVisible(true);
+
 					
 				}catch(CourseException caughtException){
 					

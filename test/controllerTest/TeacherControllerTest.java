@@ -1,19 +1,13 @@
 package controllerTest;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 
 import model.Package;
 import model.Student;
 import model.Teacher;
-import model.datatype.Address;
-import model.datatype.CPF;
-import model.datatype.Date;
-import model.datatype.Phone;
-import model.datatype.RG;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +17,11 @@ import org.mockito.MockitoAnnotations;
 import controller.ServiceController;
 import controller.TeacherController;
 import dao.TeacherDAO;
+import datatype.Address;
+import datatype.CPF;
+import datatype.Date;
+import datatype.Phone;
+import datatype.RG;
 import exception.AddressException;
 import exception.CPFException;
 import exception.DateException;
@@ -68,7 +67,7 @@ public class TeacherControllerTest {
 
 		teacher = new Teacher("Jacó Mário Souza", cpf, rg, date, email,
 				address, phone1, phone2, "Milene Souza Medeiros",
-				"Mário Souza Filho", qualification);
+				"Mário Souza Filho", qualification, Teacher.ACTIVE);
 	}
 	
 	
@@ -138,5 +137,35 @@ public class TeacherControllerTest {
 		receivedTeacher = teacherController.getTeacher(cpf);
 				
 		assertEquals(teacher.getName(), receivedTeacher.getName());	
+	}
+	
+	@Test
+	public void testIfDisableATeacher(){
+		
+		
+		doNothing().when(teacherDAOMock);
+		teacherController.setTeacherDAO(teacherDAOMock);
+		
+		try{
+			teacherController.disableTeacher(teacher);
+		}
+		catch (TeacherException e){
+			fail("Should not trow this exception: " + e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testIfActivateATeacher(){
+		
+		
+		doNothing().when(teacherDAOMock);
+		teacherController.setTeacherDAO(teacherDAOMock);
+		
+		try{
+			teacherController.activateTeacher(teacher);
+		}
+		catch (TeacherException e){
+			fail("Should not trow this exception: " + e.getMessage());
+		}
 	}
 }
