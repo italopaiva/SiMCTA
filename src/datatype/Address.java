@@ -18,12 +18,20 @@ public class Address extends Model{
 	private String cep;
 	private String city;
 	
+	
 	public Address(String addressInfo, String number, String complement,
 			String cep, String city) throws AddressException {
 
 		setAddressInfo(addressInfo);
 		setNumber(number);
 		setComplement(complement);
+		setCep(cep);
+		setCity(city);
+	}
+	
+	public Address(String addressInfo, String cep, String city) throws AddressException {
+
+		setAddressInfo(addressInfo);
 		setCep(cep);
 		setCity(city);
 	}

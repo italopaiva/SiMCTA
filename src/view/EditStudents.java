@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -21,10 +22,13 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
+import java.text.SimpleDateFormat;
 
 import model.Course;
 import model.Package;
+import model.Student;
 import datatype.Address;
+import datatype.CPF;
 import datatype.Date;
 import datatype.Phone;
 import controller.CourseController;
@@ -49,9 +53,26 @@ public class EditStudents  extends View{
 	private JTextField fatherField;
 	private JTextField ddCellField;
 	private JTextField ddPhoneField;
+	private StudentController studentController;
+	private SimpleDateFormat format;
+	private Student currentStudent;
+	private String name;
+	private String address;
+	private String birthdate;
+	private String email;
+	private String cep;
+	private String city;
+	private String cell;
+	private String phone;
+	private String mother;
+	private String dddPhone;
+	private String dddCell;
+	private String number;
+	private String father;
+	private boolean isSaved;
 
 	
-	public EditStudents() {
+	public EditStudents(Student student) {
 		getContentPane().setLayout(null);
 		
 		JLabel editStudentLbl = new JLabel("Editar Aluno");
@@ -170,46 +191,74 @@ public class EditStudents  extends View{
         	
 		
 		JButton registerStudentButton = new JButton("Alterar");
+		registerStudentButton.setBounds(557, 622, 117, 25);
+		getContentPane().add(registerStudentButton);
 		registerStudentButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		registerStudentButton.setBounds(557, 622, 117, 25);
-		getContentPane().add(registerStudentButton);
 		
-registerStudentButton.addMouseListener(new MouseAdapter(){
+		this.currentStudent = student;
+
+		int day = currentStudent.getBirthdate().getDay();
+		int month = currentStudent.getBirthdate().getMonth();
+		int year = currentStudent.getBirthdate().getYear();
+		
+		String dayString = day <=9 ? "0" + Integer.toString(day) : Integer.toString(day);
+		String monthString = month<=9 ? "0" + Integer.toString(month) : Integer.toString(month);
+		String yearString = Integer.toString(year);
+		
+		String birthdate2 = dayString+monthString+yearString; 
+		
+		
+		nameField.setText(currentStudent.getName());
+		birthdateField.setText(birthdate2);
+		emailField.setText(currentStudent.getEmail());
+		addressField.setText(currentStudent.getAddress().getAddressInfo());
+		cellField.setText(currentStudent.getSecondaryPhone().getNumber());
+		phoneField.setText(currentStudent.getPrincipalPhone().getNumber());
+		motherField.setText(currentStudent.getMotherName());
+		fatherField.setText(currentStudent.getFatherName());
+		cepField.setText(currentStudent.getAddress().getCep());
+		cityField.setText(currentStudent.getAddress().getCity());
+		ddCellField.setText(currentStudent.getSecondaryPhone().getDDD());
+		ddPhoneField.setText(currentStudent.getPrincipalPhone().getDDD());
 			
+		
+		registerStudentButton.addMouseListener(new MouseAdapter(){
+
 			@Override
 			public void mouseClicked(MouseEvent e){		
-				
-				
-				String studentName = nameField.getText();
-				Date birthdate = (Date) birthdateField.getValue();
-				String email = emailField.getText();
-				Address address = (Address) ((JFormattedTextField) addressField).getValue();
-				Phone principalPhone = (Phone) ((JFormattedTextField)  cellField).getValue();
-				Phone secondaryPhone = (Phone) ((JFormattedTextField) phoneField).getValue();
-				String motherName = motherField.getText();
-				String fatherName = fatherField.getText();
-				
-				try{
-											
+				try{	
+					
 					StudentController studentController = new StudentController();
 					
-					boolean studentWasUpdated = studentController.updateStudent(
-						studentName,
-						birthdate,
-						email,
-						address,
-						principalPhone,
-						secondaryPhone,
-						motherName,
-						fatherName
-					);
+					format = new SimpleDateFormat("dd/MM/yyyy");
+							
+					name = nameField.getText();
+					birthdate = birthdateField.getText();
+					email = emailField.getText();
+					address = addressField.getText();
+					dddCell = ddCellField.getText();
+					dddPhone = ddPhoneField.getText();
+					cep = cepField.getText();
+					city = cityField.getText();
+					cell = cellField.getText();
+					phone = phoneField.getText();
+					mother = motherField.getText();
+					father = fatherField.getText();
+					Address currentAddress = new Address(address, cep, city);
+					Phone currentPhone = new Phone(dddPhone, phone);
+					Phone currentCell = new Phone(dddCell, cell);
+					Date date = new Date(birthdate);
 					
+					CPF cpf = currentStudent.getCpf();
+					
+			        isSaved = studentController.updateStudent(name, date.getDateFromString(birthdate), email, currentAddress,currentCell, currentPhone, mother, father, cpf);
+			        
 					String message = "";
-					if(studentWasUpdated){
-						message = "Aluno alterado com sucesso.";
+					if(isSaved==true){
+						message = "Usuário alterado com sucesso!";
 					}
 					else{
 						message = "Não foi possível alterar o aluno informado. Tente novamente.";
@@ -217,10 +266,6 @@ registerStudentButton.addMouseListener(new MouseAdapter(){
 					
 					showInfoMessage(message);
 					
-					dispose();
-					
-					SearchStudent searchStudent = new SearchStudent();
-					searchStudent.setVisible(true);
 					
 				}catch(Exception caughtException){
 					
@@ -228,8 +273,6 @@ registerStudentButton.addMouseListener(new MouseAdapter(){
 				}
 			}
 		});
-		registerStudentButton.setBounds(422, 631, 117, 25);
-		getContentPane().add(registerStudentButton);
 		
 	}
 

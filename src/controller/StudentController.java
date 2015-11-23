@@ -93,13 +93,14 @@ public class StudentController {
 	}
 	
 	public boolean updateStudent(String studentName, Date birthdate, String email, Address address,
-			   Phone principalPhone, Phone secondaryPhone, String motherName, String fatherName)
+			   Phone principalPhone, Phone secondaryPhone, String motherName, String fatherName, CPF cpf)
 			 throws StudentException, PersonException{
-
-		Student student = new Student(studentName, birthdate, email, address, principalPhone, secondaryPhone, motherName, fatherName, ACTIVE_STATUS);
+		
+		Student student = new Student(studentName, birthdate, email, address, principalPhone, secondaryPhone, motherName, fatherName, ACTIVE_STATUS, cpf);
 		
 		boolean wasSaved = false;
-		wasSaved = studentDAO.update(student);
+		
+		wasSaved = studentDAO.updateStudent(student);
 		
 		return wasSaved;
 	}

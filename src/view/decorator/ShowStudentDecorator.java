@@ -443,7 +443,7 @@ public class ShowStudentDecorator extends PersonDecorator {
 		editStudentBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){			
-				EditStudents studentFrame = new EditStudents();
+				EditStudents studentFrame = new EditStudents(student);
 				dispose();
 				studentFrame.setVisible(true);
 			}

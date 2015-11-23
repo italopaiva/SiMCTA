@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import datatype.Address;
@@ -243,6 +244,41 @@ public class StudentDAO extends DAO {
 									 principalPhone, secondaryPhone, motherName, fatherName, status);
 	
 		return student;
+	}
+	
+	public boolean updateStudent(Student student){
+		String birthdate = Integer.toString(student.getBirthdate().getYear()) + "-" +
+				Integer.toString(student.getBirthdate().getMonth()) + "-" +
+				Integer.toString(student.getBirthdate().getDay());
+		
+		
+		String query = "UPDATE " + STUDENT_TABLE_NAME + " SET "
+				+ NAME_COLUMN + " = '" + student.getName() + "', "
+				+ BIRTHDATE_COLUMN + " = '" + birthdate + "', "
+				+ EMAIL_COLUMN + " = '" + student.getEmail() + "', "
+				+ MOTHER_COLUMN + " = '" + student.getMotherName() + "', "
+				+ FATHER_COLUMN + " = '" + student.getFatherName() + "', "
+				+ PRINCIPAL_PHONE_COLUMN + " = '" + student.getPrincipalPhone().getWholePhone() + "', "
+				+ SECONDARY_PHONE_COLUMN + " = '" + student.getSecondaryPhone().getWholePhone() + "', "
+				+ ADDRESS_COLUMN + " = '" + student.getAddress().getAddressInfo() + "', "
+				+ CITY_COLUMN + " = '" + student.getAddress().getCity() + "', "
+				+ CEP_COLUMN + " = '" + student.getAddress().getCep() + "'"
+				+ " WHERE " + CPF_COLUMN + " = '" + student.getCpf().getCpf() + "'"
+				;
+
+		boolean wasUpdate;
+		try {
+			this.execute(query);
+			wasUpdate = true;
+		} catch (SQLException e) {
+			wasUpdate = false;
+		}
+		
+		
+		return wasUpdate;
+
+		
+		
 	}
 
 	public boolean update(Student student) {
