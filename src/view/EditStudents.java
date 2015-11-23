@@ -301,6 +301,68 @@ public class EditStudents  extends View{
 		scrollPane_1.setBounds(553, 369, 251, 169);
 		getContentPane().add(scrollPane_1);
 		
+		JButton registerStudentButton = new JButton("Alterar");
+		registerStudentButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		registerStudentButton.setBounds(557, 622, 117, 25);
+		getContentPane().add(registerStudentButton);
+		
+registerStudentButton.addMouseListener(new MouseAdapter(){
+			
+			@Override
+			public void mouseClicked(MouseEvent e){		
+				
+				
+				String studentName = nameField.getText();
+				Date birthdate = (Date) birthdateField.getValue();
+				String email = emailField.getText();
+				Address address = (Address) ((JFormattedTextField) addressField).getValue();
+				Phone principalPhone = (Phone) ((JFormattedTextField)  cellField).getValue();
+				Phone secondaryPhone = (Phone) ((JFormattedTextField) phoneField).getValue();
+				String motherName = motherField.getText();
+				String fatherName = fatherField.getText();
+				
+				try{
+											
+					StudentController studentController = new StudentController();
+					
+					boolean studentWasUpdated = studentController.updateStudent(
+						studentName,
+						birthdate,
+						email,
+						address,
+						principalPhone,
+						secondaryPhone,
+						motherName,
+						fatherName
+					);
+					
+					String message = "";
+					if(studentWasUpdated){
+						message = "Aluno alterado com sucesso.";
+					}
+					else{
+						message = "Não foi possível alterar o aluno informado. Tente novamente.";
+					}
+					
+					showInfoMessage(message);
+					
+					dispose();
+					
+					SearchStudent searchStudent = new SearchStudent();
+					searchStudent.setVisible(true);
+					
+				}catch(Exception caughtException){
+					
+					showInfoMessage(caughtException.getMessage());
+				}
+			}
+		});
+		registerStudentButton.setBounds(422, 631, 117, 25);
+		getContentPane().add(registerStudentButton);
+		
 	}
 
 	private void disposeColumns(JTable table) {
@@ -366,65 +428,6 @@ public class EditStudents  extends View{
 			
 		}
 	
-	
-		JButton registerStudentButton = new JButton("Alterar");
-		registerStudentButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		registerStudentButton.addMouseListener(new MouseAdapter(){
-			
-			@Override
-			public void mouseClicked(MouseEvent e){		
-				
-				
-				String studentName = nameField.getText();
-				Date birthdate = (Date) birthdateField.getValue();
-				String email = emailField.getText();
-				Address address = (Address) ((JFormattedTextField) addressField).getValue();
-				Phone principalPhone = (Phone) ((JFormattedTextField)  cellField).getValue();
-				Phone secondaryPhone = (Phone) ((JFormattedTextField) phoneField).getValue();
-				String motherName = motherField.getText();
-				String fatherName = fatherField.getText();
-				
-				try{
-											
-					StudentController studentController = new StudentController();
-					
-					boolean studentWasUpdated = studentController.updateStudent(
-						studentName,
-						birthdate,
-						email,
-						address,
-						principalPhone,
-						secondaryPhone,
-						motherName,
-						fatherName
-					);
-					
-					String message = "";
-					if(studentWasUpdated){
-						message = "Aluno alterado com sucesso.";
-					}
-					else{
-						message = "Não foi possível alterar o aluno informado. Tente novamente.";
-					}
-					
-					showInfoMessage(message);
-					
-					dispose();
-					
-					SearchStudent searchStudent = new SearchStudent();
-					searchStudent.setVisible(true);
-					
-				}catch(Exception caughtException){
-					
-					showInfoMessage(caughtException.getMessage());
-				}
-			}
-		});
-		registerStudentButton.setBounds(422, 631, 117, 25);
-		getContentPane().add(registerStudentButton);
 	
 	JButton addCourseBtn = new JButton("Adicionar Curso");
 	addCourseBtn.setBounds(835, 97, 151, 31);
